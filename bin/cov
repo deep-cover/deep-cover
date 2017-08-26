@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+
+require "coverage"
+require "deep_cover"
+
+def show(fn)
+	convert = Hash.new(' ')
+	convert[0] = 'x'
+	convert[nil] = '-'
+	fn = File.expand_path(fn)
+	Coverage.start
+	require fn
+	results = Coverage.result.fetch(fn)
+	lines = File.readlines(fn)
+	results.zip(lines).each do |cover, line|
+		puts "#{convert[cover]} #{line}"
+	end
+end
+
+example = ARGV[0] || 'simple_if'
+show("./spec/samples/#{example}.rb")
