@@ -32,9 +32,14 @@ end
 def show_bc(fn)
 	cover = DeepCover.rewrite(fn)
 	show(cover.original_code, cover.coverage)
+	cover
 end
 
 example = ARGV[0] || 'simple_if'
 fn = "./spec/samples/#{example}.rb"
+puts "Builtin:\n"
 show_builtin(fn)
-show_bc(fn)
+puts "\nPure Ruby:\n"
+cover = show_bc(fn)
+puts "\nGenerated code:\n"
+puts cover.covered_code
