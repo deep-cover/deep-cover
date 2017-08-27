@@ -5,7 +5,7 @@ require "bundler/setup"
 require "coverage"
 require "deep_cover"
 
-def show(fn)
+def show_builtin(fn)
 	convert = Hash.new(' ')
 	convert[0] = 'x'
 	convert[nil] = '-'
@@ -19,5 +19,12 @@ def show(fn)
 	end
 end
 
+def show_bc(fn)
+	code = DeepCover.rewrite(fn)
+	puts code
+end
+
 example = ARGV[0] || 'simple_if'
-show("./spec/samples/#{example}.rb")
+fn = "./spec/samples/#{example}.rb"
+show_builtin(fn)
+show_bc(fn)
