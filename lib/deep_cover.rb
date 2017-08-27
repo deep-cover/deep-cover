@@ -5,20 +5,16 @@ require "deep_cover/version"
 require "deep_cover/branch_cover"
 
 module DeepCover
+
   extend self
 
   def rewrite(filename)
-    code = File.read(filename)
+    cover         = BranchCover.new
     buffer = Parser::Source::Buffer.new(filename)
-    buffer.source = code
+    cover.original_code = buffer.source = File.read(filename)
     parser        = Parser::CurrentRuby.new
     ast           = parser.parse(buffer)
-    rewriter      = BranchCover.new
-    coverred_code = rewriter.rewrite(buffer, ast)
-
-    puts ast
-    puts coverred_code
-
-    coverred_code
+    cover.covered_code = cover.rewrite(buffer, ast)
+    cover
   end
 end
