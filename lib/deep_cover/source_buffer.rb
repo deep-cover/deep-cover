@@ -1,6 +1,6 @@
 module DeepCover
-	class SourceBuffer < ::Parser::Source::Buffer
-		attr_accessor :ast, :covered_source, :node_list
+  class SourceBuffer < ::Parser::Source::Buffer
+    attr_accessor :ast, :covered_source, :node_list
     @@counter = 0
 
     def initialize(*)

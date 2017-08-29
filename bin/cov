@@ -10,31 +10,31 @@ CONVERT[0] = 'x'
 CONVERT[nil] = '-'
 
 def show(code, results)
-	lines = code.lines
-	results.zip(lines).each do |cover, line|
-		puts "#{CONVERT[cover]} #{line}"
-	end
+  lines = code.lines
+  results.zip(lines).each do |cover, line|
+    puts "#{CONVERT[cover]} #{line}"
+  end
 end
 
 def show_builtin(fn)
-	fn = File.expand_path(fn)
-	Coverage.start
-	require fn
-	results = Coverage.result.fetch(fn)
-	code = File.read(fn)
-	show(code, results)
+  fn = File.expand_path(fn)
+  Coverage.start
+  require fn
+  results = Coverage.result.fetch(fn)
+  code = File.read(fn)
+  show(code, results)
 end
 
 def mark(ln)
-	p ln
+  p ln
 end
 
 def show_bc(fn)
-	DeepCover.start
-	DeepCover.require fn
-	results = DeepCover.coverage(fn)
-	code = File.read(fn)
-	show(code, results)
+  DeepCover.start
+  DeepCover.require fn
+  results = DeepCover.coverage(fn)
+  code = File.read(fn)
+  show(code, results)
 end
 
 example = ARGV[0] || 'simple_if'
