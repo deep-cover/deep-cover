@@ -25,10 +25,6 @@ def show_builtin(fn)
   show(code, results)
 end
 
-def mark(ln)
-  p ln
-end
-
 def show_bc(fn)
   DeepCover.start
   DeepCover.require fn
