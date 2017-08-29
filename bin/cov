@@ -30,9 +30,11 @@ def mark(ln)
 end
 
 def show_bc(fn)
-	cover = DeepCover.rewrite(fn)
-	show(cover.original_code, cover.coverage)
-	cover
+	DeepCover.start
+	DeepCover.require fn
+	results = DeepCover.coverage(fn)
+	code = File.read(fn)
+	show(code, results)
 end
 
 example = ARGV[0] || 'simple_if'
@@ -42,4 +44,4 @@ show_builtin(fn)
 puts "\nPure Ruby:\n"
 cover = show_bc(fn)
 puts "\nGenerated code:\n"
-puts cover.covered_code
+puts DeepCover.buffer(fn).covered_source

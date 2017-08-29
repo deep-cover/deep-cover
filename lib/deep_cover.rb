@@ -1,20 +1,30 @@
 require "parser"
-require "unparser"
 
 require "deep_cover/version"
-require "deep_cover/branch_cover"
+require "deep_cover/node"
+require "deep_cover/rewriter"
+require "deep_cover/source_buffer"
+require "deep_cover/coverage"
 
 module DeepCover
+  class << self
+    def start
+    end
 
-  extend self
+    def require(filename)
+      cover.require(filename)
+    end
 
-  def rewrite(filename)
-    cover         = BranchCover.new
-    buffer = Parser::Source::Buffer.new(filename)
-    cover.original_code = buffer.source = File.read(filename)
-    parser        = Parser::CurrentRuby.new
-    ast           = parser.parse(buffer)
-    cover.covered_code = cover.rewrite(buffer, ast)
-    cover
+    def coverage(filename)
+      cover.coverage(filename)
+    end
+
+    def buffer(filename)
+      cover.source_buffer(filename)
+    end
+
+    def cover
+      @cover ||= Coverage.new
+    end
   end
 end
