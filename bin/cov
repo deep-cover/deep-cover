@@ -41,3 +41,5 @@ puts "\nPure Ruby:\n"
 cover = show_bc(fn)
 puts "\nGenerated code:\n"
 puts DeepCover.buffer(fn).covered_source
+puts "\nParsed code:\n"
+puts DeepCover.buffer(fn).ast
