@@ -13,6 +13,7 @@ class Parser::AST::Node
   end
 
   def buffer
+    binding.pry unless location.expression
     location.expression.source_buffer
   end
 end
