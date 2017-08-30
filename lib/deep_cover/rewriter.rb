@@ -21,7 +21,7 @@ module DeepCover
     end
 
     patch(
-      cover_entry: %i[int str or begin],
+      cover_entry: %i[int str or send def],
     )
   end
 end
