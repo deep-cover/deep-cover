@@ -1,5 +1,5 @@
 require 'parser'
-require "unparser"
+require 'parser/current'
 
 module DeepCover
   class Coverage
