@@ -23,13 +23,13 @@ module DeepCover
 
     def coverage
       cover
-      c0 = Array.new(covered_source.lines.size)
+      hits = Array.new(covered_source.lines.size)
       @node_list.each do |node|
         ln = node.loc.expression.line - 1
-        c0[ln] ||= 0
-        c0[ln] = [c0[ln], @cover[node.nb]].max
+        hits[ln] ||= 0
+        hits[ln] = [hits[ln], @cover[node.nb]].max
       end
-      c0
+      hits
     end
 
     def nb
