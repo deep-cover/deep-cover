@@ -25,7 +25,9 @@ module DeepCover
       cover
       c0 = Array.new(covered_source.lines.size)
       @node_list.each do |node|
-        c0[node.loc.expression.line - 1] = @cover[node.nb]
+        ln = node.loc.expression.line - 1
+        c0[ln] ||= 0
+        c0[ln] = [c0[ln], @cover[node.nb]].max
       end
       c0
     end
