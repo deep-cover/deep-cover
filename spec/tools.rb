@@ -20,6 +20,12 @@ def builtin_coverage(fn)
   Coverage.result.fetch(fn)
 end
 
+def branch_coverage(fn)
+  DeepCover.start
+  DeepCover.require fn
+  DeepCover.branch_coverage(fn)
+end
+
 def our_coverage(fn)
   DeepCover.start
   DeepCover.require fn

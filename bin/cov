@@ -9,7 +9,7 @@ def show_builtin(fn)
   puts format(fn, builtin_coverage(fn))
 end
 
-def show_bc(fn)
+def show_our_cov(fn)
   puts format(fn, our_coverage(fn))
 end
 
@@ -18,8 +18,20 @@ fn = "./spec/samples/#{example}.rb"
 puts "Builtin:\n"
 show_builtin(fn)
 puts "\nPure Ruby:\n"
-cover = show_bc(fn)
+cover = show_our_cov(fn)
 puts "\nGenerated code:\n"
-puts DeepCover.buffer(fn).covered_source
+buffer = DeepCover.buffer(fn)
+puts buffer.covered_source
 puts "\nParsed code:\n"
-puts DeepCover.buffer(fn).ast
+puts buffer.ast
+puts "\nBranch coverage:\n"
+
+bc = buffer.branch_cover
+require 'term/ansicolor'
+o = buffer.source_lines.map.with_index do |line, line_index|
+  line.chars.map.with_index do |c, c_index|
+    color = bc[line_index][c_index] == ' ' ? :green : :red
+    Term::ANSIColor.send(color, c)
+  end.join
+end
+puts o

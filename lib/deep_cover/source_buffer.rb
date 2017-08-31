@@ -15,10 +15,11 @@ module DeepCover
     end
 
     def cover
-      return if @cover
+      return @cover if @cover
       $_cov ||= {}
-      $_cov[nb] = @cover = Array.new(@node_list.size, 0)
+      $_cov[nb] = @cover = Array.new(@node_list.size * 2, 0)
       eval(covered_source)
+      @cover
     end
 
     def coverage
@@ -27,9 +28,22 @@ module DeepCover
       @node_list.each do |node|
         ln = node.loc.expression.line - 1
         hits[ln] ||= 0
-        hits[ln] = [hits[ln], @cover[node.nb]].max
+        hits[ln] = [hits[ln], node.entry_runs].max
       end
       hits
+    end
+
+    def branch_cover
+      cover = source_lines.map{|line| ' ' * line.size}
+      @node_list.each do |node|
+        unless node.was_called?
+          bad = node.proper_range
+          bad.each do |pos|
+            cover[line_for_position(pos)-1][column_for_position(pos)] = 'x'
+          end
+        end
+      end
+      cover
     end
 
     def nb

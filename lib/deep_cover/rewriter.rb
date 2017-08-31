@@ -16,8 +16,8 @@ module DeepCover
     end
 
     def cover_entry(node)
-      @source_rewriter.insert_before_multi node.loc.expression, " ($_cov[#{node.buffer.nb}][#{node.nb}]+=1;"
-      @source_rewriter.insert_after_multi node.loc.expression, ')'
+      @source_rewriter.insert_before_multi node.loc.expression, " ($_cov[#{node.buffer.nb}][#{node.nb*2}]+=1;"
+      @source_rewriter.insert_after_multi node.loc.expression, ").tap{$_cov[#{node.buffer.nb}][#{node.nb*2+1}]+=1}"
     end
 
     patch(
