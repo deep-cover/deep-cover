@@ -17,7 +17,7 @@ class Parser::AST::Node
     case type
     when :send
       receiver, method, *args = children
-      ran_exit? || args.compact.all?(&:ran_exit?)
+      ran_exit? || (ran_entry? && args.compact.all?(&:ran_exit?))
     else
       ran_entry?
     end
