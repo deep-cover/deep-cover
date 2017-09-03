@@ -1,10 +1,13 @@
 require "parser"
 
-require "deep_cover/version"
-require "deep_cover/node"
-require "deep_cover/rewriter"
-require "deep_cover/source_buffer"
-require "deep_cover/coverage"
+def require_relative_dir(dir_name)
+  dir = File.dirname(caller.first.partition(/\.rb:\d/).first)
+  Dir["#{dir}/#{dir_name}/*.rb"].each do |file|
+    require file
+  end
+end
+
+require_relative_dir 'deep_cover'
 
 module DeepCover
   class << self
@@ -19,8 +22,8 @@ module DeepCover
       cover.coverage(filename)
     end
 
-    def buffer(filename)
-      cover.source_buffer(filename)
+    def context(filename)
+      cover.context(filename)
     end
 
     def cover

@@ -4,7 +4,11 @@ RSpec::Matchers.define :match_coverage do
   match do |fn|
     @our = our_coverage(fn)
     @builtin = builtin_coverage(fn)
-    @our == @builtin
+    @our.zip(@builtin).all? do |us, ruby|
+      # accept us > ruby > 0; can happen for example with `def foo(arg = this_can_run_many_times)`
+      cmp = us <=> ruby
+      cmp == 0 || (cmp > 0 && ruby > 0) # either equal, or us > ruby > 1
+    end
   end
   failure_message_for_should do |fn|
     format(fn, @builtin, @our).join

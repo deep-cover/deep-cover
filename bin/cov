@@ -20,15 +20,15 @@ show_builtin(fn)
 puts "\nPure Ruby:\n"
 cover = show_our_cov(fn)
 puts "\nGenerated code:\n"
-buffer = DeepCover.buffer(fn)
-puts buffer.covered_source
+context = DeepCover.context(fn)
+puts context.covered_source
 puts "\nParsed code:\n"
-puts buffer.ast
+puts context.ast
 puts "\nBranch coverage:\n"
 
-bc = buffer.branch_cover
+bc = context.branch_cover
 require 'term/ansicolor'
-o = buffer.source_lines.map.with_index do |line, line_index|
+o = context.buffer.source_lines.map.with_index do |line, line_index|
   line.chars.map.with_index do |c, c_index|
     color = bc[line_index][c_index] == ' ' ? :green : :red
     Term::ANSIColor.send(color, c)

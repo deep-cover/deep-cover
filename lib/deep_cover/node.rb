@@ -1,46 +1,47 @@
-class Parser::AST::Node
-  # AST::Node insists on freezing itself.
-  # It's inconvenient.
-  def freeze
-    self
+module DeepCover
+  class Node < Parser::AST::Node
   end
+end
 
-  def nb
-    @nb ||= buffer.register_node(self)
-  end
+require_relative_dir 'node'
 
-  def proper_range
-    location.expression.to_a - children.flat_map{|n| n.respond_to?(:location) && n.location && n.location.expression.to_a }
-  end
+module DeepCover
+  class Node < Parser::AST::Node
+    attr_reader :context, :nb
 
-  def was_called?
-    case type
-    when :send
-      receiver, method, *args = children
-      ran_exit? || (ran_entry? && args.compact.all?(&:ran_exit?))
-    else
-      ran_entry?
+    def self.factory(type)
+      class_name = type.capitalize
+      const_defined?(class_name) ? const_get(class_name) : self
     end
-  end
 
-  def ran_entry?
-    entry_runs > 0
-  end
+    def assign_properties(context:, nb:, **)
+      @context = context
+      @nb = nb
+      super
+    end
 
-  def ran_exit?
-    exit_runs > 0
-  end
+    def proper_range
+      location.expression.to_a - children.flat_map{|n| n.respond_to?(:location) && n.location && n.location.expression.to_a }
+    end
 
-  def entry_runs
-    @nb ? buffer.cover.fetch(2 * nb) : 0
-  end
+    def was_called?
+      false
+    end
 
-  def exit_runs
-    @nb ? buffer.cover.fetch(2 * nb + 1) : 0
-  end
+    def runs
+      0
+    end
 
-  def buffer
-    binding.pry unless location.expression
-    location.expression.source_buffer
+    def changed_control_flow?
+      children.any? do |child|
+        child.is_a?(Node) && child.changed_control_flow?
+      end
+    end
+
+    def prefix
+    end
+
+    def suffix
+    end
   end
 end
