@@ -14,7 +14,7 @@ module DeepCover
       const_defined?(class_name) ? const_get(class_name) : self
     end
 
-    def assign_properties(context:, nb:, **)
+    def assign_properties(context: raise, nb: raise, **)
       @context = context
       @nb = nb
       super
