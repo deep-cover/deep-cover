@@ -28,9 +28,10 @@ puts "\nBranch coverage:\n"
 
 bc = context.branch_cover
 require 'term/ansicolor'
+COLOR = {'x' => :red, ' ' => :green, '.' => :faint}
 o = context.buffer.source_lines.map.with_index do |line, line_index|
   line.chars.map.with_index do |c, c_index|
-    color = bc[line_index][c_index] == ' ' ? :green : :red
+    color = COLOR[bc[line_index][c_index]]
     Term::ANSIColor.send(color, c)
   end.join
 end

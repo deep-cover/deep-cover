@@ -43,7 +43,7 @@ module DeepCover
         unless node.was_called?
           bad = node.proper_range
           bad.each do |pos|
-            cover[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = 'x'
+            cover[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = node.callable? ? 'x' : '.'
           end
         end
       end

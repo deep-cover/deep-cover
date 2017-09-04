@@ -28,6 +28,10 @@ module DeepCover
       false
     end
 
+    def callable?
+      true
+    end
+
     def runs
       0
     end
