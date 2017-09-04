@@ -29,6 +29,11 @@ module DeepCover
         children[2]
       end
       alias_method :next_instruction, :body
+
+      def naive_cover
+        # Ruby doesn't cover the rescue clause itself, so skip till the body
+        body.naive_cover if body
+      end
     end
 
     class Kwbegin < Node
