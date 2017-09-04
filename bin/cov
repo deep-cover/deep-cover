@@ -23,7 +23,7 @@ puts "\nGenerated code:\n"
 context = DeepCover.context(fn)
 puts context.covered_source
 puts "\nParsed code:\n"
-puts context.ast
+puts context.covered_ast
 puts "\nBranch coverage:\n"
 
 bc = context.branch_cover

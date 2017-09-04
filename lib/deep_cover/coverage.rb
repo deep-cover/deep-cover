@@ -9,8 +9,10 @@ module DeepCover
 
     def require(filename)
       ctxt = context(filename) { |path| Context.new(path) }
-      ctxt.ast = Parser::CurrentRuby.new.parse(ctxt.buffer)
-      ctxt.covered_source = Rewriter.new(ctxt).rewrite(ctxt.buffer, ctxt.ast)
+      rewriter = Rewriter.new(ctxt)
+      ast = Parser::CurrentRuby.new.parse(ctxt.buffer)
+      ctxt.covered_source = rewriter.rewrite(ctxt.buffer, ast)
+      ctxt.covered_ast = rewriter.root_node
       ctxt.cover
 
       self

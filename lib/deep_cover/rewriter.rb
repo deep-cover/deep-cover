@@ -1,6 +1,7 @@
 require 'pry'
 module DeepCover
   class Rewriter < ::Parser::Rewriter
+    attr_reader :root_node
 
     def initialize(context)
       @context = context
@@ -17,7 +18,7 @@ module DeepCover
       if suffix = covered_node.suffix
         @source_rewriter.insert_after_multi node.loc.expression, suffix
       end
-      covered_node
+      @root_node = covered_node
     end
   end
 end

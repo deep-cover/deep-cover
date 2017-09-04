@@ -1,6 +1,6 @@
 module DeepCover
   class Context
-    attr_accessor :ast, :covered_source, :node_list, :buffer
+    attr_accessor :covered_source, :node_list, :buffer, :covered_ast
     @@counter = 0
 
     # TODO: Support non path based
