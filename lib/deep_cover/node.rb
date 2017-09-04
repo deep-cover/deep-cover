@@ -14,9 +14,9 @@ module DeepCover
       const_defined?(class_name) ? const_get(class_name) : self
     end
 
-    def assign_properties(context: raise, nb: raise, **)
-      @context = context
-      @nb = nb
+    def assign_properties(properties = {})
+      @context = properties.fetch(:context)
+      @nb = properties.fetch(:nb)
       super
     end
 
