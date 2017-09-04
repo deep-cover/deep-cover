@@ -54,9 +54,11 @@ module DeepCover
     # Returns true iff it changed the usual control flow (e.g. anything that raises, return, ...)
     # TODO: may not be that useful, e.g. `next`...
     def changed_control_flow?
-      children.any? do |child|
-        child.is_a?(Node) && child.changed_control_flow?
-      end
+      children_nodes.any?(&:changed_control_flow?)
+    end
+
+    def children_nodes
+      children.select{|c| c.is_a? Node }
     end
 
     # Protected
