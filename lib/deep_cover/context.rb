@@ -25,16 +25,16 @@ module DeepCover
       @cover
     end
 
-    def coverage
+    def naive_coverage
       cover
-      hits = Array.new(covered_source.lines.size)
-      @node_list.each do |node|
-        next unless ex = node.loc.expression
-        ln = ex.line - 1
-        hits[ln] ||= 0
-        hits[ln] = [hits[ln], node.runs].max
-      end
-      hits
+      @naive_hits = Array.new(covered_source.lines.size)
+      covered_ast.naive_cover
+      @naive_hits
+    end
+
+    def naive_hit(line, runs = 1)
+      @naive_hits[line] ||= 0
+      @naive_hits[line] = [@naive_hits[line], runs].max
     end
 
     def branch_cover

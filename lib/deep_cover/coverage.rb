@@ -18,8 +18,8 @@ module DeepCover
       self
     end
 
-    def coverage(filename)
-      context(filename).coverage
+    def naive_coverage(filename)
+      context(filename).naive_coverage
     end
 
     def context(filename, &block)

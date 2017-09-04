@@ -29,6 +29,6 @@ end
 def our_coverage(fn)
   DeepCover.start
   DeepCover.require fn
-  DeepCover.coverage(fn)
+  DeepCover.naive_coverage(fn)
 end
 

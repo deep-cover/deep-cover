@@ -18,8 +18,8 @@ module DeepCover
       cover.require(filename)
     end
 
-    def coverage(filename)
-      cover.coverage(filename)
+    def naive_coverage(filename)
+      cover.naive_coverage(filename)
     end
 
     def context(filename)

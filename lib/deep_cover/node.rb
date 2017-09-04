@@ -61,6 +61,14 @@ module DeepCover
       children.select{|c| c.is_a? Node }
     end
 
+    ### Internal API
+
+    def naive_cover
+      return unless ex = loc.expression
+      context.naive_hit(ex.line - 1, runs)
+      children_nodes.each(&:naive_cover)
+    end
+
     # Protected
     def assign_properties(properties = {})
       @context = properties.fetch(:context)
