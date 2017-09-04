@@ -3,6 +3,8 @@ module DeepCover
   end
 end
 
+require_relative 'node/cover_entry'
+require_relative 'node/cover_entry_and_exit'
 require_relative_dir 'node'
 
 module DeepCover
