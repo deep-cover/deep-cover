@@ -3,6 +3,6 @@ module DeepCover
     class Literal < Node
       include Node::CoverEntry
     end
-    Int = True = False = Str = Nil = Node::Literal
+    Int = True = False = Str = Nil = Sym = Node::Literal
   end
 end
