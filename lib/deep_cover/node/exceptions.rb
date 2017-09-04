@@ -5,7 +5,7 @@ module DeepCover
         ";$_cov[#{context.nb}][#{nb*2}]+=1;nil" unless next_instruction
       end
 
-      def was_called?
+      def was_executed?
         runs > 0
       end
 

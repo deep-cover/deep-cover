@@ -1,7 +1,7 @@
 module DeepCover
   class Node
     class Arguments < Node
-      def callable?
+      def executable?
         false
       end
     end

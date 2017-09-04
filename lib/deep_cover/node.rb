@@ -26,11 +26,11 @@ module DeepCover
       location.expression.to_a - children.flat_map{|n| n.respond_to?(:location) && n.location && n.location.expression.to_a }
     end
 
-    def was_called?
+    def was_executed?
       false
     end
 
-    def callable?
+    def executable?
       true
     end
 

@@ -40,10 +40,10 @@ module DeepCover
     def branch_cover
       cover = buffer.source_lines.map{|line| ' ' * line.size}
       @node_list.each do |node|
-        unless node.was_called?
+        unless node.was_executed?
           bad = node.proper_range
           bad.each do |pos|
-            cover[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = node.callable? ? 'x' : '.'
+            cover[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = node.executable? ? 'x' : '.'
           end
         end
       end

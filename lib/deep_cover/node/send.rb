@@ -14,7 +14,7 @@ module DeepCover
       children.drop(2)
     end
 
-    def was_called?
+    def was_executed?
       ran_exit? || (ran_entry? && arguments.none?(&:changed_control_flow?))
     end
   end

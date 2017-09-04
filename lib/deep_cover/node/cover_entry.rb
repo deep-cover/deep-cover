@@ -8,7 +8,7 @@ module DeepCover
       ')'
     end
 
-    def was_called?
+    def was_executed?
       ran_entry?
     end
 
