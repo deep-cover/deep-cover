@@ -14,6 +14,11 @@ module DeepCover
         @buffer.read
       end
       @node_list = []
+
+      rewriter = Rewriter.new(self)
+      ast = Parser::CurrentRuby.new.parse(@buffer)
+      @covered_source = rewriter.rewrite(@buffer, ast)
+      @covered_ast = rewriter.root_node
     end
 
     # Create a covered node from the argument
