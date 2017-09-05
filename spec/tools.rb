@@ -32,7 +32,7 @@ def our_coverage(fn)
   DeepCover.line_coverage(fn)
 end
 
-COLOR = {'x' => :red, ' ' => :green, '.' => :faint}
+COLOR = {'x' => :red, ' ' => :green, '-' => :faint}
 def format_branch_cover(context)
   bc = context.branch_cover
   require 'term/ansicolor'

@@ -55,7 +55,7 @@ module DeepCover
         unless node.was_executed?
           bad = node.proper_range
           bad.each do |pos|
-            bc[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = node.executable? ? 'x' : '.'
+            bc[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = node.executable? ? 'x' : '-'
           end
         end
       end
