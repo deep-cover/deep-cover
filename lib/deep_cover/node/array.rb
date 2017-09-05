@@ -1,5 +1,5 @@
 module DeepCover
   class Node::Array < Node
-    include Node::CoverEntry
+    include NodeBehavior::CoverEntry
   end
 end

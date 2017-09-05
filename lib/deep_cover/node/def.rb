@@ -1,5 +1,5 @@
 module DeepCover
   class Node::Def < Node
-    include Node::CoverEntryAndExit
+    include NodeBehavior::CoverEntryAndExit
   end
 end

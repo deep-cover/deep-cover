@@ -1,6 +1,6 @@
 module DeepCover
   class Node::Send < Node
-    include Node::CoverEntryAndExit
+    include NodeBehavior::CoverEntryAndExit
 
     def receiver
       children.first

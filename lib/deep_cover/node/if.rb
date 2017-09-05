@@ -1,5 +1,5 @@
 module DeepCover
   class Node::If < Node
-    include Node::CoverEntry
+    include NodeBehavior::CoverEntry
   end
 end
