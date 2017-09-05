@@ -1,25 +1,7 @@
 module DeepCover
   class Node
-    module CoverWithNextInstruction
-      def suffix
-        ";$_cov[#{context.nb}][#{nb*2}]+=1;nil" unless next_instruction
-      end
-
-      def was_executed?
-        runs > 0
-      end
-
-      def runs
-        next_instruction ? next_instruction.runs : context.cover.fetch(nb*2)
-      end
-
-      def next_instruction # Override if it's not the first child
-        children[0]
-      end
-    end
-
     class Resbody < Node
-      include CoverWithNextInstruction
+      include NodeBehavior::CoverWithNextInstruction
 
       def exception
         children[0]
@@ -41,15 +23,15 @@ module DeepCover
     end
 
     class Kwbegin < Node
-      include CoverWithNextInstruction
+      include NodeBehavior::CoverWithNextInstruction
     end
 
     class Rescue < Node
-      include CoverWithNextInstruction
+      include NodeBehavior::CoverWithNextInstruction
     end
 
     class Begin < Node
-      include CoverWithNextInstruction
+      include NodeBehavior::CoverWithNextInstruction
     end
   end
 end
