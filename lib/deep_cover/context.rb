@@ -4,9 +4,15 @@ module DeepCover
     @@counter = 0
 
     # TODO: Support non path based
-    def initialize(path)
+    def initialize(path: nil, source: nil)
+      raise "Must provide either path or source" unless path || source
+
       @buffer = ::Parser::Source::Buffer.new(path)
-      @buffer.read
+      if source
+        @buffer.source = source
+      else
+        @buffer.read
+      end
       @node_list = []
     end
 
