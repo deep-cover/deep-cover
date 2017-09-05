@@ -62,6 +62,15 @@ module DeepCover
 
     ### Internal API
 
+    def each_node(&block)
+      return to_enum :each_node unless block_given?
+      yield self
+      children_nodes.each do |child|
+        child.each_node(&block)
+      end
+      self
+    end
+
     def line_cover
       return unless ex = loc.expression
       context.line_hit(ex.line - 1, runs)
