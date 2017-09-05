@@ -2,11 +2,11 @@ module DeepCover
   module NodeBehavior
     module CoverEntry
       def prefix
-        " ($_cov[#{context.nb}][#{nb*2}]+=1;"
+        " (($_cov[#{context.nb}][#{nb*2}]+=1;"
       end
 
       def suffix
-        ')'
+        '))'
       end
 
       def was_executed?
