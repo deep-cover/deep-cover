@@ -1,0 +1,82 @@
+require "spec_helper"
+
+SECTION = /^### (.*)$/
+EXAMPLE = /^#### (.*)$/
+ANSWER = /^#> /
+FULLY_EXECUTED = /^[ -]*$/
+
+def parse(lines)
+  code = []
+  answers = []
+  lines.chunk{|line| line !~ ANSWER}.each do |is_code, chunk|
+    chunk.map!{|line| line[4..-1]}
+    if is_code
+      code.concat(chunk)
+    else
+      raise "Hey" unless chunk.size == 1
+      answers[code.size-1] = chunk.first.chomp
+    end
+  end
+  answers[code.size] ||= nil
+  answers.map!{|a| a || FULLY_EXECUTED }
+  [code, answers]
+end
+
+RSpec::Matchers.define :have_correct_branch_coverage do
+  match do |lines|
+    code, answers = parse(lines)
+    @context = DeepCover::Context.new(source: code.join)
+    cov = @context.branch_cover
+    errors = cov.zip(answers).each_with_index.reject do |(actual, expected), i|
+      if expected.is_a?(Regexp)
+        actual =~ expected
+      else
+        actual == expected
+      end
+    end
+    @errors = errors.map(&:last)
+    @errors.empty?
+  end
+  failure_message do |fn|
+    puts format_branch_cover(@context)
+    "Branch cover does not match on lines #{@errors.join(', ')}"
+  end
+end
+
+def check(lines)
+  lines.trim_blank.should have_correct_branch_coverage
+end
+
+module BranchCoverHelpers
+  # Breaks the lines of code into sub sections and sub tests
+  def process_grouped_examples(lines, pattern )
+    lines
+      .slice_before(pattern)
+      .map(&:trim_blank)
+      .compact
+      .each { |lines_chunk| process_example(lines_chunk) }
+  end
+
+  def process_example(lines)
+    case lines.first
+    when SECTION
+      context($1) { process_grouped_examples(lines.drop(1), EXAMPLE) }
+    when EXAMPLE
+      it($1) { check(lines.drop(1)) }
+    else
+      it { check(lines) }
+    end
+  end
+end
+
+class RSpec::Core::ExampleGroup
+  extend BranchCoverHelpers
+end
+
+RSpec.describe 'branch cover' do
+  Dir.glob('./spec/branch_cover/*.rb').each do |fn|
+    describe File.basename(fn, '.rb') do
+      process_grouped_examples(File.read(fn).lines, SECTION)
+    end
+  end
+end
