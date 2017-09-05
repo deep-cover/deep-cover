@@ -34,9 +34,9 @@ module DeepCover
       end
       alias_method :next_instruction, :body
 
-      def naive_cover
+      def line_cover
         # Ruby doesn't cover the rescue clause itself, so skip till the body
-        body.naive_cover if body
+        body.line_cover if body
       end
     end
 

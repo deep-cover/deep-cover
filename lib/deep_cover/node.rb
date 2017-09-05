@@ -63,10 +63,10 @@ module DeepCover
 
     ### Internal API
 
-    def naive_cover
+    def line_cover
       return unless ex = loc.expression
-      context.naive_hit(ex.line - 1, runs)
-      children_nodes.each(&:naive_cover)
+      context.line_hit(ex.line - 1, runs)
+      children_nodes.each(&:line_cover)
     end
 
     # Protected

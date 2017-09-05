@@ -29,7 +29,7 @@ end
 def our_coverage(fn)
   DeepCover.start
   DeepCover.require fn
-  DeepCover.naive_coverage(fn)
+  DeepCover.line_coverage(fn)
 end
 
 COLOR = {'x' => :red, ' ' => :green, '.' => :faint}

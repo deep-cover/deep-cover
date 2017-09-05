@@ -36,16 +36,16 @@ module DeepCover
       @cover
     end
 
-    def naive_coverage
+    def line_coverage
       cover
-      @naive_hits = Array.new(covered_source.lines.size)
-      covered_ast.naive_cover
-      @naive_hits
+      @line_hits = Array.new(covered_source.lines.size)
+      covered_ast.line_cover
+      @line_hits
     end
 
-    def naive_hit(line, runs = 1)
-      @naive_hits[line] ||= 0
-      @naive_hits[line] = [@naive_hits[line], runs].max
+    def line_hit(line, runs = 1)
+      @line_hits[line] ||= 0
+      @line_hits[line] = [@line_hits[line], runs].max
     end
 
     def branch_cover

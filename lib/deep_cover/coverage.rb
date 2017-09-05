@@ -14,8 +14,8 @@ module DeepCover
       self
     end
 
-    def naive_coverage(filename)
-      context(filename).naive_coverage
+    def line_coverage(filename)
+      context(filename).line_coverage
     end
 
     def context(filename, &block)
