@@ -5,17 +5,18 @@ EXAMPLE = /^#### (.*)$/
 ANSWER = /^#>/
 FULLY_EXECUTED = /^[ -]*$/
 NOT_EXECUTED = /^[ -]*[x-]+$/
+UNIMPORTANT_CHARACTERS = /[ \t();,]/
 
 def parse(lines)
   code = []
   answers = []
   lines.chunk{|line| line !~ ANSWER}.each do |is_code, chunk|
-    chunk.map!{|line| line[2..-1]}
+    chunk.map!{|line| line[2..-1] || ''}.map!(&:chomp)
     if is_code
       code.concat(chunk)
     else
       raise "Hey" unless chunk.size == 1
-      answer = chunk.first.chomp
+      answer = chunk.first
       answer = NOT_EXECUTED if answer == 'X'
       answers[code.size-1] = answer
     end
@@ -27,14 +28,19 @@ end
 
 RSpec::Matchers.define :have_correct_branch_coverage do
   match do |lines|
+    lines = lines.trim_blank
     code, answers = parse(lines)
-    @context = DeepCover::Context.new(source: code.join)
+    @context = DeepCover::Context.new(source: code.join("\n"))
     cov = @context.branch_cover
     errors = cov.zip(answers).each_with_index.reject do |(actual, expected), i|
       if expected.is_a?(Regexp)
         actual =~ expected
       else
-        actual == expected
+        (actual == expected) ||
+          code[i].chars.each_with_index.all? do |char, i|
+            (char =~ UNIMPORTANT_CHARACTERS) ||
+            actual[i] == (expected[i] || ' ')
+          end
       end
     end
     @errors = errors.map(&:last)
@@ -47,7 +53,7 @@ RSpec::Matchers.define :have_correct_branch_coverage do
 end
 
 def check(lines)
-  lines.trim_blank.should have_correct_branch_coverage
+  lines.should have_correct_branch_coverage
 end
 
 module BranchCoverHelpers
