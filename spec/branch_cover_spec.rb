@@ -2,19 +2,22 @@ require "spec_helper"
 
 SECTION = /^### (.*)$/
 EXAMPLE = /^#### (.*)$/
-ANSWER = /^#> /
+ANSWER = /^#>/
 FULLY_EXECUTED = /^[ -]*$/
+NOT_EXECUTED = /^[ -]*[x-]+$/
 
 def parse(lines)
   code = []
   answers = []
   lines.chunk{|line| line !~ ANSWER}.each do |is_code, chunk|
-    chunk.map!{|line| line[4..-1]}
+    chunk.map!{|line| line[2..-1]}
     if is_code
       code.concat(chunk)
     else
       raise "Hey" unless chunk.size == 1
-      answers[code.size-1] = chunk.first.chomp
+      answer = chunk.first.chomp
+      answer = NOT_EXECUTED if answer == 'X'
+      answers[code.size-1] = answer
     end
   end
   answers[code.size] ||= nil

@@ -4,6 +4,6 @@
     begin
       raise
       "foo"
-#>    xxxxx
+#>X
     rescue
     end
