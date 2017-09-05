@@ -43,11 +43,11 @@ RSpec::Matchers.define :have_correct_branch_coverage do
           end
       end
     end
-    @errors = errors.map(&:last)
+    @errors = errors.map{|_, i| i + 1}
     @errors.empty?
   end
   failure_message do |fn|
-    puts format_branch_cover(@context)
+    puts format_branch_cover(@context, show_line_nbs: true)
     "Branch cover does not match on lines #{@errors.join(', ')}"
   end
 end
