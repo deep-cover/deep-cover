@@ -12,6 +12,10 @@ module DeepCover
       def runs
         next_instruction ? next_instruction.runs : context.cover.fetch(nb*2)
       end
+
+      def next_instruction # Override if it's not the first child
+        children[0]
+      end
     end
 
     class Resbody < Node
@@ -38,19 +42,14 @@ module DeepCover
 
     class Kwbegin < Node
       include CoverWithNextInstruction
-
-      def next_instruction
-        children[0]
-      end
     end
 
     class Rescue < Node
       include CoverWithNextInstruction
-
-      def next_instruction
-        children[0]
-      end
     end
 
+    class Begin < Node
+      include CoverWithNextInstruction
+    end
   end
 end
