@@ -2,6 +2,7 @@
     1...42
     1.0...4.2
     1..(2+2)
+    raise..42 rescue nil
     'a'..'z'
     a = 42
     1..a
@@ -16,6 +17,7 @@
 ### Symbols
     :hello
     :"he#{'l'*2}o"
+    :"h#{3}l#{raise}o#{2}" rescue nil
     %s[hello]
     %i[hello world]
 ### Strings
@@ -24,6 +26,7 @@
 ### Regexp
     /regexp/
     /re#{'g'}exp/i
+    /re#{raise}g#{3}p/i rescue nil
     %r[regexp]
 ### Array
     [1, 2, 3]
