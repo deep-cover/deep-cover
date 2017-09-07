@@ -97,5 +97,11 @@ module DeepCover
       children_nodes.each(&:line_cover)
     end
 
+    def fancy_type
+      class_name = self.class.to_s.rpartition('::').last
+      t = super
+      t.casecmp(class_name) == 0 ? t : "#{t}[#{class_name}]"
+    end
+
   end
 end
