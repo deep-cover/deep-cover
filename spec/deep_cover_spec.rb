@@ -10,7 +10,7 @@ RSpec::Matchers.define :match_coverage do
       cmp && (cmp == 0 || (cmp > 0 && ruby > 0)) # either equal, or us > ruby > 1
     end
   end
-  failure_message_for_should do |fn|
+  failure_message do |fn|
     format(fn, @builtin, @our).join
   end
 end
