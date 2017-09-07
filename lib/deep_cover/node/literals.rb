@@ -3,7 +3,18 @@ module DeepCover
     class Literal < Node
       include NodeBehavior::CoverEntry
     end
-    Int = True = False = Str = Nil = Float = Complex = Regexp = Erange = Node::Literal
+    Int = True = False = Str = Nil = Float = Complex = Erange = Node::Literal
+
+    class StaticFragment < Node
+      include NodeBehavior::CoverFromParent
+    end
+    Regopt = StaticFragment
+
+    class Regexp < Node::Literal
+      def self.factory(type)
+        type == :str ? Node::StaticFragment : super
+      end
+    end
 
     class Node::Sym < Node
       include NodeBehavior::CoverEntry
