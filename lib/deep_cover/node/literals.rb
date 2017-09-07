@@ -16,6 +16,12 @@ module DeepCover
       end
     end
 
+    class Dsym < Node::Literal
+      def self.factory(type)
+        type == :str ? Node::StaticFragment : super
+      end
+    end
+
     class Node::Sym < Node
       include NodeBehavior::CoverEntry
 
