@@ -9,39 +9,22 @@ module DeepCover
 
       # Most literals have no children, but those that do (Dsym, Regexp, Dstring)
       # must not track those
+      REMAP = {str: StaticFragment, sym: StaticFragment}
       def self.factory(type)
-        type == :str ? StaticFragment : super
+        REMAP[type] || super
       end
     end
     Int = True = False = Str = Nil = Float = Complex = Erange = Regexp = Dsym = Dstr = Node::Literal
 
-    Regopt = Literal::StaticFragment
+    StaticSym = Regopt = Literal::StaticFragment
 
-    class Node::Sym < Node
-      include NodeBehavior::CoverEntry
-
-      def regular_form?
-        location.expression.source =~ /^(:|%s)/
-      end
-
-      # def short_hash_form?
-      #   location.expression.source[-1] == ':'
-      # end
-
-      # def symbol_literal_form?
-      #   !regular_form? && !short_hash_form?
-      # end
-
-      def prefix
-        super if regular_form?
-      end
-
-      def suffix
-        super if regular_form?
-      end
-
-      def executable?
-        regular_form?
+    class Node::Sym < Node::Literal
+      def self.create(base_node, *args)
+        if base_node.location.expression.source =~ /^(:|%s)/
+          super
+        else
+          Node::StaticSym.create(base_node, *args)
+        end
       end
     end
   end

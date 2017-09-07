@@ -16,7 +16,7 @@
 ### Symbols
     :hello
     :"he#{'l'*2}o"
-    :"h#{3}l#{raise}o#{2}" rescue nil
+    :"h#{3}l#{raise}o#{'2'}#{:x}" rescue nil
     %s[hello]
     %i[hello world]
 ### Strings
@@ -25,7 +25,7 @@
 ### Regexp
     /regexp/
     /re#{'g'}exp/i
-    /re#{raise}g#{3}p/i rescue nil
+    /re#{raise}g#{'e'}p#{:x}/i rescue nil
     %r[regexp]
 ### Array
     [1, 2, 3]

@@ -1,6 +1,18 @@
+require_relative 'literals'
+
 module DeepCover
   class Node::Array < Node
     include NodeBehavior::CoverEntry
+
+    Static = Node::Literal
+
+    def self.create(base_node, *args)
+      if base_node.location.expression.source[0] == '%'
+        Static.create(base_node, *args)
+      else
+        super
+      end
+    end
   end
 
   class Node::Hash < Node
