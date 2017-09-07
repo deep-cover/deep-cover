@@ -17,13 +17,6 @@ module DeepCover
       rewrite
     end
 
-    # Create a covered node from the argument
-    def create(node, children)
-      covered_node = Node.factory(node.type).new(node.type, children, location: node.location, context: self, nb: @node_count)
-      @node_count += 1
-      covered_node
-    end
-
     def cover
       return @cover if @cover
       $_cov ||= {}
@@ -67,7 +60,9 @@ module DeepCover
       # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
       return node unless node.is_a? ::Parser::AST::Node
       children = node.children.map{|child| augment(child)}
-      create(node, children)
+      covered_node = Node.factory(node.type).new(node.type, children, location: node.location, context: self, nb: @node_count)
+      @node_count += 1
+      covered_node
     end
 
     def rewrite
