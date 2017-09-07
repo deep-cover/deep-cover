@@ -39,7 +39,7 @@ module DeepCover
     # Returns a subclass or itself, according to type
     def self.factory(type)
       class_name = type.capitalize
-      const_defined?(class_name) ? const_get(class_name) : self
+      const_defined?(class_name) ? const_get(class_name) : Node
     end
 
     def self.augment(node, context)
