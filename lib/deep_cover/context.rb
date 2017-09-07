@@ -60,14 +60,16 @@ module DeepCover
       @nb ||= (@@counter += 1)
     end
 
+    def create_node_nb
+      @node_count = (prev = @node_count) + 1
+      prev
+    end
 
     def augment(node)
       # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
       return node unless node.is_a? ::Parser::AST::Node
       children = node.children.map{|child| augment(child)}
-      covered_node = Node.factory(node.type).new(node.type, children, location: node.location, context: self, nb: @node_count)
-      @node_count += 1
-      covered_node
+      Node.factory(node.type).new(node.type, children, location: node.location, context: self, nb: create_node_nb)
     end
 
     def rewrite
