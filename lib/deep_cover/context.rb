@@ -1,6 +1,6 @@
 module DeepCover
   class Context
-    attr_accessor :covered_source, :node_list, :buffer, :covered_ast
+    attr_accessor :covered_source, :buffer, :covered_ast
     @@counter = 0
 
     # TODO: Support non path based
@@ -13,21 +13,21 @@ module DeepCover
       else
         @buffer.read
       end
-      @node_list = []
+      @node_count = 0
       rewrite
     end
 
     # Create a covered node from the argument
     def create(node, children)
-      covered_node = Node.factory(node.type).new(node.type, children, location: node.location, context: self, nb: @node_list.size)
-      @node_list.push(covered_node)
+      covered_node = Node.factory(node.type).new(node.type, children, location: node.location, context: self, nb: @node_count)
+      @node_count += 1
       covered_node
     end
 
     def cover
       return @cover if @cover
       $_cov ||= {}
-      $_cov[nb] = @cover = Array.new(@node_list.size * 2, 0)
+      $_cov[nb] = @cover = Array.new(@node_count * 2, 0)
       eval(covered_source)
       @cover
     end
