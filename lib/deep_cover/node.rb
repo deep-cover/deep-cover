@@ -9,12 +9,13 @@ require_relative_dir 'node'
 module DeepCover
   # Base class to handle covered nodes.
   class Node < Parser::AST::Node
-    attr_reader :context, :nb
+    attr_reader :context, :nb, :parent
 
-    def initialize(base_node, context)
+    def initialize(base_node, context, parent = nil)
       @context = context
       augmented_children = base_node.children.map { |child| self.class.augment(child, context) }
       @nb = context.create_node_nb
+      @parent = parent
       super(base_node.type, augmented_children, location: base_node.location)
     end
 
@@ -49,10 +50,10 @@ module DeepCover
       const_defined?(class_name) ? const_get(class_name) : Node
     end
 
-    def self.augment(node, context)
+    def self.augment(node, context, parent = nil)
       # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
       return node unless node.is_a? Parser::AST::Node
-      factory(node.type).new(node, context)
+      factory(node.type).new(node, context, parent)
     end
 
     # Code to add before the node for covering purposes (or `nil`)
