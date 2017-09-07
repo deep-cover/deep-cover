@@ -47,7 +47,7 @@ module DeepCover
     def branch_cover
       cover
       bc = buffer.source_lines.map{|line| ' ' * line.size}
-      @node_list.each do |node|
+      @covered_ast.each_node do |node|
         unless node.was_executed?
           bad = node.proper_range
           bad.each do |pos|
