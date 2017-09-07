@@ -62,11 +62,20 @@ module DeepCover
       @nb ||= (@@counter += 1)
     end
 
+
+    def augment(node)
+      # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
+      return node unless node.is_a? ::Parser::AST::Node
+      children = node.children.map{|child| augment(child)}
+      create(node, children)
+    end
+
     def rewrite
       ast = Parser::CurrentRuby.new.parse(@buffer)
-      rewriter = Rewriter.new(self)
-      @covered_source = rewriter.rewrite(@buffer, ast)
-      @covered_ast = rewriter.root_node
+
+      @covered_ast = augment(ast)
+      rewriter = Rewriter.new
+      @covered_source = rewriter.rewrite(@buffer, @covered_ast)
     end
   end
 end

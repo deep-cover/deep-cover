@@ -1,24 +1,14 @@
 require 'pry'
 module DeepCover
   class Rewriter < ::Parser::Rewriter
-    attr_reader :root_node
-
-    def initialize(context)
-      @context = context
-    end
-
     def process(node)
-      # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
-      return node unless node.is_a? ::Parser::AST::Node
-
-      covered_node = @context.create(node, process_all(node.children))
-      if prefix = covered_node.prefix
+      node.children_nodes.each{|node| process(node)}
+      if prefix = node.prefix
         @source_rewriter.insert_before_multi node.loc.expression, prefix
       end
-      if suffix = covered_node.suffix
+      if suffix = node.suffix
         @source_rewriter.insert_after_multi node.loc.expression, suffix
       end
-      @root_node = covered_node
     end
   end
 end
