@@ -21,7 +21,12 @@ module DeepCover
       return @cover if @cover
       $_cov ||= {}
       $_cov[nb] = @cover = Array.new(@node_count * 2, 0)
-      eval(covered_source)
+      begin
+        eval(covered_source)
+      rescue Exception => e
+        puts "Failed to cover:"
+        puts e
+      end
       @cover
     end
 
