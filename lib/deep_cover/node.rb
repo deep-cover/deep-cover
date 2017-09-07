@@ -13,7 +13,7 @@ module DeepCover
 
     def initialize(base_node, context, parent = nil)
       @context = context
-      augmented_children = base_node.children.map { |child| self.class.augment(child, context, self) }
+      augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, context, self, child_index) }
       @nb = context.create_node_nb
       @parent = parent
       super(base_node.type, augmented_children, location: base_node.location)
@@ -47,7 +47,7 @@ module DeepCover
     ## Singleton methods
     class << self
       # Returns a subclass or the base Node, according to type
-      def factory(type)
+      def factory(type, **)
         class_name = type.capitalize
         const_defined?(class_name) ? const_get(class_name) : Node
       end
@@ -61,10 +61,10 @@ module DeepCover
       # It gives both the parent class and the child class a chance
       # to decide the class of the child with `factory` and `reclassify`
       # respectively.
-      def augment(child_base_node, context, parent = nil)
+      def augment(child_base_node, context, parent = nil, child_index = 0)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
-        klass = factory(child_base_node.type)
+        klass = factory(child_base_node.type, child_index: child_index)
         klass = klass.reclassify(child_base_node) || klass
         klass.new(child_base_node, context, parent)
       end

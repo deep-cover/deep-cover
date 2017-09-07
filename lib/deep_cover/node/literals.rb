@@ -10,7 +10,7 @@ module DeepCover
       # Most literals have no children, but those that do (Dsym, Regexp, Dstring)
       # must not track those
       REMAP = {str: StaticFragment, sym: StaticFragment}
-      def self.factory(type)
+      def self.factory(type, **)
         REMAP[type] || super
       end
     end

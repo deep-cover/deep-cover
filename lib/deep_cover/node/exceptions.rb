@@ -7,8 +7,8 @@ module DeepCover
     class Resbody < Node
       include NodeBehavior::CoverWithNextInstruction
 
-      def self.factory(type)
-        type == :lvasgn ? ExceptionCatchVariableAssign : super
+      def self.factory(type, child_index: )
+        child_index == 1 ? ExceptionCatchVariableAssign : super
       end
 
       def exception
