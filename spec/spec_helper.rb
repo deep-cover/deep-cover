@@ -1,4 +1,5 @@
 require "bundler/setup"
+require 'pry'
 require "deep_cover"
 require_relative "tools"
 

@@ -1,5 +1,6 @@
 require 'parser'
 require 'parser/current'
+require 'pry'
 
 module DeepCover
   class Coverage
