@@ -11,6 +11,13 @@ module DeepCover
   class Node < Parser::AST::Node
     attr_reader :context, :nb
 
+    def initialize(base_node, context)
+      @context = context
+      augmented_children = base_node.children.map { |child| self.class.augment(child, context) }
+      @nb = context.create_node_nb
+      super(base_node.type, augmented_children, location: base_node.location)
+    end
+
     ### High level API for coverage purposes
 
     # Returns an array of character numbers (in the original buffer) that
@@ -44,9 +51,8 @@ module DeepCover
 
     def self.augment(node, context)
       # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
-      return node unless node.is_a? ::Parser::AST::Node
-      children = node.children.map{|child| augment(child, context)}
-      factory(node.type).new(node.type, children, location: node.location, context: context, nb: context.create_node_nb)
+      return node unless node.is_a? Parser::AST::Node
+      factory(node.type).new(node, context)
     end
 
     # Code to add before the node for covering purposes (or `nil`)
@@ -85,11 +91,5 @@ module DeepCover
       children_nodes.each(&:line_cover)
     end
 
-    # Protected
-    def assign_properties(properties = {})
-      @context = properties.fetch(:context)
-      @nb = properties.fetch(:nb)
-      super
-    end
   end
 end
