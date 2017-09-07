@@ -55,9 +55,10 @@ module DeepCover
       def augment(child_base_node, context, parent = nil)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
-        factory(child_base_node.type).new(child_base_node, context, parent)
+        factory(child_base_node.type).create(child_base_node, context, parent)
       end
 
+      alias_method :create, :new
     end
 
     # Code to add before the node for covering purposes (or `nil`)
