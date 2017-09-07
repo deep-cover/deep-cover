@@ -1,26 +1,21 @@
 module DeepCover
   class Node
     class Literal < Node
+      class StaticFragment < Node
+        include NodeBehavior::CoverFromParent
+      end
+
       include NodeBehavior::CoverEntry
-    end
-    Int = True = False = Str = Nil = Float = Complex = Erange = Node::Literal
 
-    class StaticFragment < Node
-      include NodeBehavior::CoverFromParent
-    end
-    Regopt = StaticFragment
-
-    class Regexp < Node::Literal
+      # Most literals have no children, but those that do (Dsym, Regexp, Dstring)
+      # must not track those
       def self.factory(type)
-        type == :str ? Node::StaticFragment : super
+        type == :str ? StaticFragment : super
       end
     end
+    Int = True = False = Str = Nil = Float = Complex = Erange = Regexp = Dsym = Dstr = Node::Literal
 
-    class Dsym < Node::Literal
-      def self.factory(type)
-        type == :str ? Node::StaticFragment : super
-      end
-    end
+    Regopt = Literal::StaticFragment
 
     class Node::Sym < Node
       include NodeBehavior::CoverEntry
