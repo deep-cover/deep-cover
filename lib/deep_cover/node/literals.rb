@@ -19,12 +19,8 @@ module DeepCover
     StaticSym = Regopt = Literal::StaticFragment
 
     class Node::Sym < Node::Literal
-      def self.create(base_node, *args)
-        if base_node.location.expression.source =~ /^(:|%s)/
-          super
-        else
-          Node::StaticSym.create(base_node, *args)
-        end
+      def self.reclassify(base_node)
+        Node::StaticSym unless base_node.location.expression.source =~ /^(:|%s)/
       end
     end
   end

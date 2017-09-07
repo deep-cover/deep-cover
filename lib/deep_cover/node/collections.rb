@@ -6,12 +6,8 @@ module DeepCover
 
     Static = Node::Literal
 
-    def self.create(base_node, *args)
-      if base_node.location.expression.source[0] == '%'
-        Static.create(base_node, *args)
-      else
-        super
-      end
+    def self.reclassify(base_node)
+      Static if base_node.location.expression.source[0] == '%'
     end
   end
 
