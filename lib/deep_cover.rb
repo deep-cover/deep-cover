@@ -1,4 +1,5 @@
 require "parser"
+require 'active_support/core_ext/module/delegation'
 
 def require_relative_dir(dir_name)
   dir = File.dirname(caller.first.partition(/\.rb:\d/).first)
