@@ -1,7 +1,15 @@
 module DeepCover
   class Node
+    class ExceptionCatchVariableAssign < Node
+      include NodeBehavior::CoverFromParent
+    end
+
     class Resbody < Node
       include NodeBehavior::CoverWithNextInstruction
+
+      def self.factory(type)
+        type == :lvasgn ? ExceptionCatchVariableAssign : super
+      end
 
       def exception
         children[0]
