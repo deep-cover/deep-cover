@@ -74,8 +74,16 @@ module DeepCover
       ast = Parser::CurrentRuby.new.parse(@buffer)
 
       @covered_ast = augment(ast)
-      rewriter = Rewriter.new
-      @covered_source = rewriter.rewrite(@buffer, @covered_ast)
+      rewriter = ::Parser::Source::Rewriter.new(@buffer)
+      @covered_ast.each_node do |node|
+        if prefix = node.prefix
+          rewriter.insert_before_multi node.loc.expression, prefix
+        end
+        if suffix = node.suffix
+          rewriter.insert_after_multi node.loc.expression, suffix
+        end
+      end
+      @covered_source = rewriter.process
     end
   end
 end

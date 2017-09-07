@@ -62,12 +62,13 @@ module DeepCover
 
     ### Internal API
 
-    def each_node(&block)
-      return to_enum :each_node unless block_given?
-      yield self
+    def each_node(order = :postorder, &block)
+      return to_enum :each_node, order unless block_given?
+      yield self unless order == :postorder
       children_nodes.each do |child|
-        child.each_node(&block)
+        child.each_node(order, &block)
       end
+      yield self if order == :postorder
       self
     end
 
