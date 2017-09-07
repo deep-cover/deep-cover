@@ -44,16 +44,20 @@ module DeepCover
 
     ### Public API
 
-    # Returns a subclass or itself, according to type
-    def self.factory(type)
-      class_name = type.capitalize
-      const_defined?(class_name) ? const_get(class_name) : Node
-    end
+    ## Singleton methods
+    class << self
+      # Returns a subclass or itself, according to type
+      def factory(type)
+        class_name = type.capitalize
+        const_defined?(class_name) ? const_get(class_name) : Node
+      end
 
-    def self.augment(child_base_node, context, parent = nil)
-      # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
-      return child_base_node unless child_base_node.is_a? Parser::AST::Node
-      factory(child_base_node.node).new(child_base_node, context, parent)
+      def augment(child_base_node, context, parent = nil)
+        # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
+        return child_base_node unless child_base_node.is_a? Parser::AST::Node
+        factory(child_base_node.type).new(child_base_node, context, parent)
+      end
+
     end
 
     # Code to add before the node for covering purposes (or `nil`)
