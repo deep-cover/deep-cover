@@ -50,10 +50,10 @@ module DeepCover
       const_defined?(class_name) ? const_get(class_name) : Node
     end
 
-    def self.augment(node, context, parent = nil)
+    def self.augment(child_base_node, context, parent = nil)
       # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
-      return node unless node.is_a? Parser::AST::Node
-      factory(node.type).new(node, context, parent)
+      return child_base_node unless child_base_node.is_a? Parser::AST::Node
+      factory(child_base_node.node).new(child_base_node, context, parent)
     end
 
     # Code to add before the node for covering purposes (or `nil`)
