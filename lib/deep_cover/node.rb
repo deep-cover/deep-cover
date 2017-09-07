@@ -13,7 +13,7 @@ module DeepCover
 
     def initialize(base_node, context, parent = nil)
       @context = context
-      augmented_children = base_node.children.map { |child| self.class.augment(child, context) }
+      augmented_children = base_node.children.map { |child| self.class.augment(child, context, self) }
       @nb = context.create_node_nb
       @parent = parent
       super(base_node.type, augmented_children, location: base_node.location)
