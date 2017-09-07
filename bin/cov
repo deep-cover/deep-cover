@@ -16,6 +16,12 @@ end
 example = ARGV[0] || 'simple_if'
 fn = "./spec/samples/#{example}.rb"
 fn = "./spec/branch_cover/#{example}.rb" unless File.exist?(fn)
+unless File.exist?(fn)
+  require 'tempfile'
+  tmp = Tempfile.new(['example', '.rb'])
+  fn = tmp.path
+  File.write(fn, ARGV[0])
+end
 puts "Builtin:\n"
 show_builtin(fn)
 puts "\nPure Ruby:\n"
