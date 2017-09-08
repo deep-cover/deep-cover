@@ -40,6 +40,12 @@ module DeepCover
 
     class Kwbegin < Node
       include NodeBehavior::CoverWithNextInstruction
+      include NodeBehavior::CoverEntry
+
+      def next_instruction
+        n = children.first
+        n if n && n.type != :rescue
+      end
     end
 
     class Rescue < Node
