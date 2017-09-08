@@ -9,16 +9,12 @@ module DeepCover
         '))'
       end
 
-      def was_executed?
-        ran_entry?
-      end
-
       def ran_entry?
         entry_runs > 0
       end
 
       def entry_runs
-        @nb ? context.cover.fetch(nb*2) : 0
+        context.cover.fetch(nb*2)
       end
 
       def runs
