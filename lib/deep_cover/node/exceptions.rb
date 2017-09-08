@@ -5,7 +5,15 @@ module DeepCover
     end
 
     class Resbody < Node
-      include NodeBehavior::CoverWithNextInstruction
+      prepend NodeBehavior::CoverWithNextInstruction
+
+      def suffix # Only called when body is nil
+        ";$_cov[#{context.nb}][#{nb*2}]+=1;nil"
+      end
+
+      def runs # Only called when body is nil
+        context.cover.fetch(nb*2)
+      end
 
       def self.factory(type, child_index: )
         child_index == 1 ? ExceptionCatchVariableAssign : super
