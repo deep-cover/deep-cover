@@ -2,6 +2,7 @@ require_relative 'literals'
 
 module DeepCover
   class Node::Array < Node
+    include NodeBehavior::CoverWithNextInstruction
     include NodeBehavior::CoverEntry
 
     Static = Node::Literal
