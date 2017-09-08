@@ -5,7 +5,7 @@ module DeepCover
     end
 
     class Resbody < Node
-      prepend NodeBehavior::CoverWithNextInstruction
+      include NodeBehavior::CoverWithNextInstruction
 
       def suffix # Only called when body is nil
         ";$_cov[#{context.nb}][#{nb*2}]+=1;nil"
