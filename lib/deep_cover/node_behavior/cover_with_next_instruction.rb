@@ -5,10 +5,6 @@ module DeepCover
         ";$_cov[#{context.nb}][#{nb*2}]+=1;nil" unless next_instruction
       end
 
-      def was_executed?
-        runs > 0
-      end
-
       def runs
         next_instruction ? next_instruction.runs : context.cover.fetch(nb*2)
       end

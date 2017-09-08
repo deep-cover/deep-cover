@@ -34,7 +34,7 @@ module DeepCover
 
     # Returns true iff it is executable and if was successfully executed
     def was_executed?
-      false
+      runs > 0
     end
 
     # Returns the number of times it was executed (completely or not)
