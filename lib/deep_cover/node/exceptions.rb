@@ -15,7 +15,7 @@ module DeepCover
         context.cover.fetch(nb*2)
       end
 
-      def self.factory(type, child_index: )
+      def self.factory(type, child_index: raise)
         child_index == 1 ? ExceptionCatchVariableAssign : super
       end
 
