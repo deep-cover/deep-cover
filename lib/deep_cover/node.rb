@@ -65,6 +65,9 @@ module DeepCover
 
     ### Singleton methods
     class << self
+
+      ### These are refined by subclasses
+
       # Returns a subclass or the base Node, according to type
       def factory(type, **)
         class_name = type.capitalize
@@ -75,6 +78,8 @@ module DeepCover
       # be changed. `nil` is interpreted the same as `self`.
       def reclassify(base_node)
       end
+
+      ### Public API
 
       # Augment creates a covered node from the child_base_node.
       # It gives both the parent class and the child class a chance
