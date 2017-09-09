@@ -22,7 +22,9 @@ module DeepCover
 
     # Returns true iff it is executable and if was successfully executed
     def was_executed?
-      runs > 0
+      # There is a rare case of non executable nodes that have important data in runs / full_runs,
+      # like `if cond; end`, so make sure it's actually executable first...
+      executable? && runs > 0
     end
 
     # Returns the number of times it changed the usual control flow (e.g. raised, returned, ...)
