@@ -17,8 +17,8 @@ module DeepCover
 
       def assign_properties(*)
         @branches = [
-          true_branch || DeducedNilBranch.new(condition, false_branch),
-          false_branch || DeducedNilBranch.new(condition, true_branch)
+          true_branch || TrivialBranch.new(condition, false_branch),
+          false_branch || TrivialBranch.new(condition, true_branch)
         ]
         super
       end
@@ -37,7 +37,7 @@ module DeepCover
       end
     end
 
-    class DeducedNilBranch < Struct.new(:condition, :other_branch)
+    class TrivialBranch < Struct.new(:condition, :other_branch)
       def runs
         condition.full_runs - other_branch.runs
       end
