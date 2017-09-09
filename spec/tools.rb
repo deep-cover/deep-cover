@@ -33,13 +33,15 @@ def our_coverage(fn)
 end
 
 COLOR = {'x' => :red, ' ' => :green, '-' => :faint}
-def format_branch_cover(context, show_line_nbs: false)
+WHITESPACE_MAP = Hash.new{|_, v| v}.merge!(' ' => '·', "\t" => '→ ')
+def format_branch_cover(context, show_line_nbs: false, show_whitespace: false)
   bc = context.branch_cover
   require 'term/ansicolor'
   context.buffer.source_lines.map.with_index do |line, line_index|
     prefix = show_line_nbs ? Term::ANSIColor.faint((line_index+1).to_s.rjust(2) << ' | ') : ''
     prefix << line.chars.map.with_index do |c, c_index|
       color = COLOR[bc[line_index][c_index]]
+      c = WHITESPACE_MAP[c] if show_whitespace
       Term::ANSIColor.send(color, c)
     end.join
   end

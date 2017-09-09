@@ -33,4 +33,4 @@ puts "\nParsed code:\n"
 puts context.covered_ast
 puts "\nBranch coverage:\n"
 
-puts format_branch_cover(context)
+puts format_branch_cover(context, show_whitespace: !!ENV['W'])
