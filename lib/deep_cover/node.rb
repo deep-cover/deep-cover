@@ -27,14 +27,16 @@ module DeepCover
       location.expression.to_a - children.flat_map{|n| n.respond_to?(:location) && n.location && n.location.expression.to_a }
     end
 
-    # Returns true iff it is executable. Keywords like `end` are not executable, but literals like `42` are executable.
-    def executable?
-      true
-    end
-
     # Returns true iff it is executable and if was successfully executed
     def was_executed?
       runs > 0
+    end
+
+    ### These are refined by subclasses
+
+    # Returns true iff it is executable. Keywords like `end` are not executable, but literals like `42` are executable.
+    def executable?
+      true
     end
 
     # Returns the number of times it was executed (completely or not)
@@ -42,9 +44,21 @@ module DeepCover
       0
     end
 
-    ### Public API
+    # Code to add before the node for covering purposes (or `nil`)
+    def prefix
+    end
 
-    ## Singleton methods
+    # Code to add after the node for covering purposes (or `nil`)
+    def suffix
+    end
+
+    # Returns true iff it changed the usual control flow (e.g. anything that raises, return, ...)
+    # TODO: may not be that useful, e.g. `next`...
+    def changed_control_flow?
+      children_nodes.any?(&:changed_control_flow?)
+    end
+
+    ### Singleton methods
     class << self
       # Returns a subclass or the base Node, according to type
       def factory(type, **)
@@ -71,19 +85,7 @@ module DeepCover
 
     end
 
-    # Code to add before the node for covering purposes (or `nil`)
-    def prefix
-    end
-
-    # Code to add after the node for covering purposes (or `nil`)
-    def suffix
-    end
-
-    # Returns true iff it changed the usual control flow (e.g. anything that raises, return, ...)
-    # TODO: may not be that useful, e.g. `next`...
-    def changed_control_flow?
-      children_nodes.any?(&:changed_control_flow?)
-    end
+    ### Public API
 
     def children_nodes
       children.select{|c| c.is_a? Node }
