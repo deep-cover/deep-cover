@@ -78,13 +78,32 @@
 #>X
     end
 
-
-#### With raises
+### Empty branches
+#### Raises
     begin
       dummy_method(if raise
-#>    xxxxxxxxxxxx
-        42
-#>      xx
-      end)
+#>    xxxxxxxxxxxxx--
+     else
+#>   ----
+     end)
+#>   ---x
+   rescue
+   end
+
+   begin
+     dummy_method(unless raise
+#>   xxxxxxxxxxxxx------
+     end)
+#>   ---x
     rescue
+    end
+
+#### With elsif
+    if false
+    elsif false
+    elsif true
+    elsif :whatever
+#>  ----- xxxxxxxxx
+    else
+#>  ----
     end

@@ -27,6 +27,10 @@ module DeepCover
         condition.runs
       end
 
+      def full_runs
+        executable? ? super : condition.full_runs
+      end
+
       # If both branches are nil, mark as non-executable
       def executable?
         true_branch || false_branch
