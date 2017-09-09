@@ -28,6 +28,8 @@ module DeepCover
     end
 
     class Kwbegin < Node
+      has_children rest: :instructions
+
       include NodeBehavior::CoverWithNextInstruction
       include NodeBehavior::CoverEntry
 
@@ -39,9 +41,12 @@ module DeepCover
 
     class Rescue < Node
       include NodeBehavior::CoverWithNextInstruction
+      has_children :body, rest: :rescue_bodies
+
     end
 
     class Begin < Node
+      has_children rest: :instructions
       include NodeBehavior::CoverWithNextInstruction
     end
   end

@@ -1,6 +1,7 @@
 module DeepCover
   class Node::Const < Node
     include NodeBehavior::CoverEntryAndExit
+    has_children :scope, :const_name
   end
 
   class Node::Cbase < Node

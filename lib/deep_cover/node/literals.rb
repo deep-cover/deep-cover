@@ -1,20 +1,28 @@
 module DeepCover
   class Node
+    ### Static literals
+    class StaticLiteral < Node
+      include NodeBehavior::Static
+    end
+    Int = True = False = Str = Nil = Float = Complex = Erange = StaticLiteral
+
+    ### Dynamic literals
     class Literal < Node
       class StaticFragment < Node
         include NodeBehavior::CoverFromParent
       end
 
       include NodeBehavior::CoverEntry
+      has_children rest: :fragments
 
-      # Most literals have no children, but those that do (Dsym, Regexp, Dstring)
+      # The static strings or symbols when building
       # must not track those
       REMAP = {str: StaticFragment, sym: StaticFragment}
       def self.factory(type, **)
         REMAP[type] || super
       end
     end
-    Int = True = False = Str = Nil = Float = Complex = Erange = Regexp = Dsym = Dstr = Node::Literal
+    Regexp = Dsym = Dstr = Node::Literal
 
     StaticSym = Regopt = Literal::StaticFragment
 

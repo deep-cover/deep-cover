@@ -7,6 +7,7 @@ module DeepCover
 
     class Lvasgn < Node
       include NodeBehavior::CoverEntryAndExit
+      has_children :var_name, :value
     end
   end
 end
