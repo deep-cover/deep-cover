@@ -85,6 +85,27 @@ module DeepCover
         klass.new(child_base_node, context, parent)
       end
 
+      ### Internal
+
+      # Creates methods to return the children corresponding with the given `names`,
+      # `rest`, and alias for `next_instruction`.
+      # Also creates constants for the indices of the children.
+      def has_children(*names, rest: false, next_instruction: false)
+        names.each_with_index do |name, i|
+          class_eval <<-end_eval, __FILE__, __LINE__
+            def #{name}
+              children[#{i}]
+            end
+            #{name.upcase} = #{i}
+          end_eval
+        end
+        class_eval <<-end_eval, __FILE__, __LINE__
+          def #{rest}
+            children.drop(#{names.size})
+          end if #{!!rest}
+          alias_method :next_instruction, :#{next_instruction} if #{!!next_instruction}
+        end_eval
+      end
     end
 
     ### Public API

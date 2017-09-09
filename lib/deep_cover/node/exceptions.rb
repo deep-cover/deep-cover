@@ -6,6 +6,7 @@ module DeepCover
 
     class Resbody < Node
       include NodeBehavior::CoverWithNextInstruction
+      has_children :exception, :assignment, :body, next_instruction: :body
 
       def suffix # Only called when body is nil
         ";$_cov[#{context.nb}][#{nb*2}]+=1;nil"
@@ -16,21 +17,9 @@ module DeepCover
       end
 
       def self.factory(type, child_index: raise)
-        child_index == 1 ? ExceptionCatchVariableAssign : super
+        child_index == ASSIGNMENT ? ExceptionCatchVariableAssign : super
       end
 
-      def exception
-        children[0]
-      end
-
-      def assignment
-        children[1]
-      end
-
-      def body
-        children[2]
-      end
-      alias_method :next_instruction, :body
 
       def line_cover
         # Ruby doesn't cover the rescue clause itself, so skip till the body

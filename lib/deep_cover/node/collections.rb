@@ -23,14 +23,7 @@ module DeepCover
 
   class Node::Pair < Node
     include NodeBehavior::CoverWithNextInstruction
-
-    def value
-      children[1]
-    end
-
-    def next_instruction
-      value
-    end
+    has_children :key, :value, next_instruction: :value
   end
 
   class Node::Kwsplat < Node
