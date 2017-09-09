@@ -44,3 +44,7 @@ puts context.covered_ast
 puts "\nBranch coverage:\n"
 
 puts format_branch_cover(context, show_whitespace: !!ENV['W'])
+
+a = context.covered_ast
+b = a.children.first
+binding.pry
