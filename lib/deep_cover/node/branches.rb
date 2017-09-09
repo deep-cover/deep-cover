@@ -13,14 +13,12 @@ module DeepCover
     class If < Node
       include Branch
       has_children :condition, :true_branch, :false_branch
-      attr_reader :branches
 
-      def assign_properties(*)
-        @branches = [
+      def branches
+        [
           true_branch || TrivialBranch.new(condition, false_branch),
           false_branch || TrivialBranch.new(condition, true_branch)
         ]
-        super
       end
 
       def runs
