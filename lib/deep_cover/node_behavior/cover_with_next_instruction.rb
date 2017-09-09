@@ -21,6 +21,10 @@ module DeepCover
         def runs
           next_instruction ? next_instruction.runs : super
         end
+
+        def full_runs
+          next_instruction ? next_instruction.runs : super
+        end
       end
 
       def next_instruction # Overwrite if it's not the first child

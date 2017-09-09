@@ -32,6 +32,11 @@ module DeepCover
       runs > 0
     end
 
+    # Returns the number of times it changed the usual control flow (e.g. raised, returned, ...)
+    def interrupts
+      runs - full_runs
+    end
+
     ### These are refined by subclasses
 
     # Returns true iff it is executable. Keywords like `end` are not executable, but literals like `42` are executable.
@@ -44,6 +49,11 @@ module DeepCover
       0
     end
 
+    # Returns the number of times it was fully ran
+    def full_runs
+      runs
+    end
+
     # Code to add before the node for covering purposes (or `nil`)
     def prefix
     end
@@ -52,11 +62,6 @@ module DeepCover
     def suffix
     end
 
-    # Returns true iff it changed the usual control flow (e.g. anything that raises, return, ...)
-    # TODO: may not be that useful, e.g. `next`...
-    def interrupted_control?
-      children_nodes.any?(&:interrupted_control?)
-    end
 
     ### Singleton methods
     class << self
