@@ -54,8 +54,8 @@ module DeepCover
 
     # Returns true iff it changed the usual control flow (e.g. anything that raises, return, ...)
     # TODO: may not be that useful, e.g. `next`...
-    def changed_control_flow?
-      children_nodes.any?(&:changed_control_flow?)
+    def interrupted_control?
+      children_nodes.any?(&:interrupted_control?)
     end
 
     ### Singleton methods

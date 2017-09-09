@@ -16,14 +16,14 @@ module DeepCover
       end
 
       def was_executed?
-        ran_exit? || (ran_entry? && children_executed_before.none?(&:changed_control_flow?))
+        ran_exit? || (ran_entry? && children_executed_before.none?(&:interrupted_control?))
       end
 
       def children_executed_before # Override if different
         children_nodes
       end
 
-      def changed_control_flow?
+      def interrupted_control?
         !ran_exit? || super
       end
     end
