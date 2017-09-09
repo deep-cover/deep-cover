@@ -30,6 +30,16 @@ puts "\nGenerated code:\n"
 context = DeepCover.context(fn)
 puts context.covered_source
 puts "\nParsed code:\n"
+
+module ColorAST
+  def fancy_type
+    require 'term/ansicolor'
+    color = executable? ? (was_executed? ? :green : :red) : :faint
+    Term::ANSIColor.send(color, super)
+  end
+end
+DeepCover::Node.send :prepend, ColorAST
+
 puts context.covered_ast
 puts "\nBranch coverage:\n"
 
