@@ -4,7 +4,7 @@ SECTION = /^### (.*)$/
 EXAMPLE = /^#### (.*)$/
 ANSWER = /^#>/
 FULLY_EXECUTED = /^[ -]*$/
-NOT_EXECUTED = /^[ -]*[x-]+$/
+NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
 UNIMPORTANT_CHARACTERS = /[ \t();,]/
 
 def parse(lines)
@@ -26,21 +26,25 @@ def parse(lines)
   [code, answers]
 end
 
+def strip_when_unimportant(code, data)
+  data.chars.reject.with_index do |char, i|
+    code[i] =~ UNIMPORTANT_CHARACTERS
+  end.join
+end
+
 RSpec::Matchers.define :have_correct_branch_coverage do
   match do |lines|
     lines = lines.trim_blank
     code, answers = parse(lines)
     @context = DeepCover::Context.new(source: code.join("\n"))
     cov = @context.branch_cover
-    errors = cov.zip(answers).each_with_index.reject do |(actual, expected), i|
+    errors = cov.zip(answers, code).each_with_index.reject do |(a, expected, line), i|
+      actual = strip_when_unimportant(line, a)
       if expected.is_a?(Regexp)
         actual =~ expected
       else
-        (actual == expected) ||
-          code[i].chars.each_with_index.all? do |char, i|
-            (char =~ UNIMPORTANT_CHARACTERS) ||
-            actual[i] == (expected[i] || ' ')
-          end
+        expected = strip_when_unimportant(line, expected).ljust(actual.size, ' ')
+        actual == expected
       end
     end
     @errors = errors.map{|_, i| i + 1}

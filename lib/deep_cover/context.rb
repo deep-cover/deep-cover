@@ -53,6 +53,7 @@ module DeepCover
           end
         end
       end
+      bc.zip(buffer.source_lines){|cov, line| cov[line.size..-1] = ''} # remove extraneous character for end lines, in any
       bc
     end
 
