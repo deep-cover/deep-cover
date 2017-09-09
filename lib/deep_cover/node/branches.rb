@@ -5,9 +5,12 @@ module DeepCover
         branches.map(&:full_runs).inject(0, :+)
       end
 
+      # Define in sublasses:
       def branches
         raise NotImplementedError
       end
+
+      # Also define runs
     end
 
     class If < Node
