@@ -12,7 +12,7 @@ module DeepCover
       end
 
       def exit_runs
-        @nb ? context.cover.fetch(nb*2+1) : 0
+        context.cover.fetch(nb*2+1)
       end
 
       def was_executed?
