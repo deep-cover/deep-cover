@@ -16,6 +16,7 @@ module DeepCover
     # Returns an array of character numbers (in the original buffer) that
     # pertain exclusively to this node (and thus not to any children).
     def proper_range
+      return [] unless location
       location.expression.to_a - children.flat_map{|n| n.respond_to?(:location) && n.location && n.location.expression.to_a }
     end
 
@@ -132,7 +133,7 @@ module DeepCover
     end
 
     def line_cover
-      return unless ex = loc.expression
+      return unless ex = loc && loc.expression
       context.line_hit(ex.line - 1, runs)
       children_nodes.each(&:line_cover)
     end

@@ -63,15 +63,28 @@
 
 #### With elsif
     if false
-      42
+      :a
 #>X
     elsif false
-      42
+      :b
 #>X
     elsif true
-      4
+      :c
     elsif :whatever
+#>X
+      :d
 #>X
     else
 #>X
+    end
+
+
+#### With raises
+    begin
+      dummy_method(if raise
+#>    xxxxxxxxxxxx
+        42
+#>      xx
+      end)
+    rescue
     end

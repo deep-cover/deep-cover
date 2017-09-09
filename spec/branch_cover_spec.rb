@@ -7,6 +7,9 @@ FULLY_EXECUTED = /^[ -]*$/
 NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
 UNIMPORTANT_CHARACTERS = /[ \t();,]/
 
+def dummy_method(*)
+end
+
 def parse(lines)
   code = []
   answers = []
