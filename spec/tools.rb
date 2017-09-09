@@ -4,6 +4,9 @@ CONVERT = Hash.new('  ')
 CONVERT[0] = 'x '
 CONVERT[nil] = '- '
 
+def dummy_method(*)
+end
+
 def format(fn, *results)
   code =  File.read(fn)
   lines = code.lines
