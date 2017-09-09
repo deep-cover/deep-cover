@@ -126,6 +126,11 @@ module DeepCover
       self
     end
 
+    def each_branch(order = :postorder, &block)
+      return to_enum :each_branch, order unless block_given?
+      each_node(order) { |node| yield node if node.is_a? Branch }
+    end
+
     def line_cover
       return unless ex = loc.expression
       context.line_hit(ex.line - 1, runs)
