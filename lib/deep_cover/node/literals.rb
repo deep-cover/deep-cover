@@ -15,11 +15,10 @@ module DeepCover
       include NodeBehavior::CoverEntry
       has_children rest: :fragments
 
-      # The static strings or symbols when building
-      # must not track those
-      REMAP = {str: StaticFragment, sym: StaticFragment}
       def self.factory(type, **)
-        REMAP[type] || super
+        # The bits of strings when building dynamic symbols, strings
+        # or regexp are parsed as :str, but we don't want to track those.
+        type == :str ? StaticFragment : super
       end
     end
     Regexp = Dsym = Dstr = Node::Literal
