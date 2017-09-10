@@ -2,8 +2,8 @@ require "spec_helper"
 
 RSpec::Matchers.define :match_coverage do
   match do |fn|
-    @our = our_coverage(fn)
-    @builtin = builtin_coverage(fn)
+    @our = DeepCover::Tools.our_coverage(fn)
+    @builtin = DeepCover::Tools.builtin_coverage(fn)
     @our.zip(@builtin).all? do |us, ruby|
       # accept us > ruby > 0; can happen for example with `def foo(arg = this_can_run_many_times)`
       cmp = us <=> ruby
@@ -11,7 +11,7 @@ RSpec::Matchers.define :match_coverage do
     end
   end
   failure_message do |fn|
-    format(fn, @builtin, @our).join
+    DeepCover::Tools.format(fn, @builtin, @our).join
   end
 end
 
