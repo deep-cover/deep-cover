@@ -1,3 +1,5 @@
+require 'backports/2.1.0/enumerable/to_h'
+
 module DeepCover
   # Base class to handle covered nodes.
   class Node < Parser::AST::Node
