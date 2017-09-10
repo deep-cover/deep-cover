@@ -4,6 +4,7 @@ require "bundler/setup"
 
 require "deep_cover"
 require_relative "../spec/tools"
+require 'term/ansicolor'
 extend DeepCover::Tools
 
 def show_builtin(fn)
@@ -34,7 +35,6 @@ puts "\nParsed code:\n"
 
 module ColorAST
   def fancy_type
-    require 'term/ansicolor'
     color = executable? ? (was_executed? ? :green : :red) : :faint
     Term::ANSIColor.send(color, super)
   end
