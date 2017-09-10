@@ -1,12 +1,23 @@
-module DeepCover
-  class Node::Or < Node
-    has_children :first, :conditional
-    include NodeBehavior::CoverEntry
-  end
+require_relative 'branch'
 
-  class Node::And < Node
-    has_children :first, :conditional
-    include NodeBehavior::CoverEntry
+module DeepCover
+  class Node
+    class ShortCircuit < Node
+      include Branch
+      has_children :first, :conditional
+
+      def branches
+        [
+          conditional,
+          TrivialBranch.new(first, conditional)
+        ]
+      end
+
+      def runs
+        first.runs
+      end
+    end
+
+    Or = And = ShortCircuit
   end
 end
-
