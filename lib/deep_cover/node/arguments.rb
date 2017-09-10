@@ -8,8 +8,6 @@ module DeepCover
     end
 
     class Arg < Node
-      has_children :name
-
       def executable?
         false
       end
