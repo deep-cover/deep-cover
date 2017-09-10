@@ -40,6 +40,28 @@ module DeepCover
       DeepCover.line_coverage(fn)
     end
 
+    def format_generated_code(context)
+      inserts = []
+      generated_code = context.rewrite_source do |inserted, _node, expr_limit|
+        inserts << [expr_limit, inserted.size]
+        Term::ANSIColor.yellow(inserted)
+      end
+
+      inserts = inserts.sort_by{|exp, _| [exp.line, exp.column]}.reverse
+      generated_lines = generated_code.split("\n")
+
+      inserts.each do |exp_limit, size|
+        # Line index starts at 1, so array index returns the next line
+        comment_line = generated_lines[exp_limit.line]
+        next unless comment_line.present?
+        next unless comment_line.start_with?('#>')
+        next if comment_line.start_with?('#>X')
+        next unless comment_line.size >= exp_limit.column
+        comment_line.insert(exp_limit.column, ' ' * size) rescue binding.pry
+      end
+      generated_lines.join("\n")
+    end
+
     COLOR = {'x' => :red, ' ' => :green, '-' => :faint}
     WHITESPACE_MAP = Hash.new{|_, v| v}.merge!(' ' => '·', "\t" => '→ ')
     def format_branch_cover(context, show_line_nbs: false, show_whitespace: false)

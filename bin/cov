@@ -30,8 +30,8 @@ puts "\nPure Ruby:\n"
 cover = show_our_cov(fn)
 puts "\nGenerated code:\n"
 context = DeepCover.context(fn)
-generated_source = context.rewrite_source{|t| Term::ANSIColor.yellow(t)}
-puts generated_source
+
+puts format_generated_code(context)
 puts "\nParsed code:\n"
 
 module ColorAST
