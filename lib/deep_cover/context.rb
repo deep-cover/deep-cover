@@ -14,7 +14,7 @@ module DeepCover
         @buffer.read
       end
       @node_count = 0
-      rewrite
+      @covered_source = rewrite_source
     end
 
     def cover
@@ -66,20 +66,22 @@ module DeepCover
       prev
     end
 
-    def rewrite
+    def rewrite_source
       ast = Parser::CurrentRuby.new.parse(@buffer)
 
-      @covered_ast = Node.augment(ast, self)
+      @covered_ast ||= Node.augment(ast, self)
       rewriter = ::Parser::Source::Rewriter.new(@buffer)
       @covered_ast.each_node do |node|
         if prefix = node.prefix
+          prefix = yield prefix if block_given?
           rewriter.insert_before_multi node.loc.expression, prefix
         end
         if suffix = node.suffix
+          suffix = yield suffix if block_given?
           rewriter.insert_after_multi node.loc.expression, suffix
         end
       end
-      @covered_source = rewriter.process
+      rewriter.process
     end
   end
 end
