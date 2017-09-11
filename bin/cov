@@ -57,7 +57,14 @@ puts "\nParsed code:\n"
 
 module ColorAST
   def fancy_type
-    color = executable? ? (was_executed? ? :green : :red) : :faint
+    color = case
+    when !executable?
+      :faint
+    when !was_executed?
+      :red
+    else
+      :green
+    end
     Term::ANSIColor.send(color, super)
   end
 end
