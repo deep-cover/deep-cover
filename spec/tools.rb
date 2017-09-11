@@ -1,6 +1,14 @@
 require 'coverage'
 require 'term/ansicolor'
 
+require 'active_support/core_ext/object/blank'
+class Array
+  def trim_blank
+    drop_while(&:blank?)
+      .reverse.drop_while(&:blank?).reverse
+  end
+end
+
 def dummy_method(*)
 end
 
