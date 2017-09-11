@@ -34,7 +34,15 @@
     %{world}
     %q{w#{0}rld}
     %Q{w#{0}rld}
-
+#### Heredocs
+    insane = [<<-ONE, 1, <<-TWO, 2, <<-THREE, 3]
+      the first thing
+    ONE
+      the second thing
+    TWO
+      and the third thing
+    THREE
+    "ok"
 #### Raising
     dummy_method "oo#{raise}ps#{:never}" rescue nil
 #>  xxxxxxxxxxxx            xxxxxxxxxxx
