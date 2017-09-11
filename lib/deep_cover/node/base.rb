@@ -5,11 +5,12 @@ module DeepCover
   class Node < Parser::AST::Node
     attr_reader :context, :nb, :parent
 
-    def initialize(base_node, context, parent = nil)
+    def initialize(base_node, context, parent = nil, index = 0)
       @context = context
       augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, context, self, child_index) }
       @nb = context.create_node_nb
       @parent = parent
+      @index = index
       super(base_node.type, augmented_children, location: base_node.location)
     end
 
@@ -90,7 +91,7 @@ module DeepCover
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
         klass = factory(child_base_node.type, child_index: child_index)
         klass = klass.reclassify(child_base_node) || klass
-        klass.new(child_base_node, context, parent)
+        klass.new(child_base_node, context, parent, child_index)
       end
 
       ### Internal
@@ -118,6 +119,14 @@ module DeepCover
 
     def children_nodes
       children.select{|c| c.is_a? Node }
+    end
+
+    def next_sibbling
+      parent.children[@index + 1] if parent
+    end
+
+    def previous_sibbling
+      parent.children[@index - 1] if parent && @index > 0
     end
 
     ### Internal API
