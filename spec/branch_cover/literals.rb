@@ -14,6 +14,8 @@
 ### Numbers
     1_234
     1.23e4
+### Complex (Ruby 2.1+)
+    4.2i
 ### Symbols
     :hello
     :"he#{'l'*2}o"

@@ -60,7 +60,12 @@ RSpec.describe 'branch cover' do
       example_groups.each do |section, examples|
         context(section || '(General)') do
           examples.each do |title, lines|
-            it(title) { lines.should have_correct_branch_coverage }
+            msg = case [section, title].join
+            when /\(pending/i then :pending
+            when /\(Ruby 2\.(\d)/i
+              :skip if RUBY_VERSION < "2.#{$1}.0"
+            end
+            send(msg || :it, title) { lines.should have_correct_branch_coverage }
           end
         end
       end
