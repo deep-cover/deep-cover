@@ -66,3 +66,18 @@
 #>X
     end
 
+#### Nested
+    begin
+      begin
+        raise TypeError
+        "not here"
+#>X
+      rescue NotImplementedError
+#>    xxxxxx
+      end
+      "not here either"
+#>X
+    rescue TypeError
+      "here"
+    end
+    "here too"
