@@ -1,7 +1,5 @@
 require "spec_helper"
 
-SECTION = /^### (.*)$/
-EXAMPLE = /^#### (.*)$/
 ANSWER = /^#>/
 FULLY_EXECUTED = /^[ -]*$/
 NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
@@ -34,7 +32,6 @@ end
 
 RSpec::Matchers.define :have_correct_branch_coverage do
   match do |lines|
-    lines = lines.trim_blank
     code, answers = parse(lines)
     @context = DeepCover::Context.new(source: code.join("\n"))
     cov = @context.branch_cover
@@ -57,6 +54,9 @@ RSpec::Matchers.define :have_correct_branch_coverage do
 end
 
 class AnnotatedExamplesParser
+  SECTION = /^### (.*)$/
+  EXAMPLE = /^#### (.*)$/
+
   def self.process(lines)
     new.process_grouped_examples(lines, SECTION).example_groups
   end
@@ -78,14 +78,13 @@ class AnnotatedExamplesParser
   end
 
   def process_example(lines)
-    case lines.first
-    when SECTION
+    first = lines.first
+    if first =~ SECTION
       @section = $1
       process_grouped_examples(lines.drop(1), EXAMPLE)
-    when EXAMPLE
-      group[$1] = lines.drop(1)
     else
-      group[nil] = lines
+      lines = lines.drop(1).trim_blank if first =~ EXAMPLE
+      group[$1] = lines
     end
   end
 
