@@ -62,6 +62,8 @@ module ColorAST
       :faint
     when !was_executed?
       :red
+    when interrupts > 0
+      :yellow
     else
       :green
     end
