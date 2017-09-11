@@ -90,6 +90,7 @@ module DeepCover
       EXAMPLE = /^#### (.*)$/
 
       def self.process(lines)
+        lines = lines.lines if lines.is_a?(String)
         new.process_grouped_examples(lines, SECTION).example_groups
       end
 

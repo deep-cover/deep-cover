@@ -18,12 +18,33 @@ end
 example = ARGV[0] || 'simple_if'
 fn = "./spec/samples/#{example}.rb"
 fn = "./spec/branch_cover/#{example}.rb" unless File.exist?(fn)
-unless File.exist?(fn)
-  require 'tempfile'
-  tmp = Tempfile.new(['example', '.rb'])
-  fn = tmp.path
-  File.write(fn, ARGV[0])
+source = File.exist?(fn) ? File.read(fn) : ARGV[0]
+groups = DeepCover::Tools::AnnotatedExamplesParser.process(source)
+if groups.size == 1 && groups.first.last.size == 1
+  lines = groups.values.first.values.first
+else
+  menu = []
+  item = -1
+  examples = groups.flat_map do |title, examples|
+    menu << Term::ANSIColor.green(title) if title
+    menu.concat(examples.keys.map {|ex| "  #{item+=1}: #{ex || '(General)'}"})
+    examples.values
+  end
+  if ARGV[1]
+    answer = ARGV[1].to_i
+  else
+    require 'highline'
+    puts menu
+    answer = HighLine.new.ask(Term::ANSIColor.blue("Which?  "), Integer) { |q| q.in = 0...examples.size }
+  end
+  lines = examples[answer]
 end
+
+require 'tempfile'
+tmp = Tempfile.new(['example', '.rb'])
+fn = tmp.path
+File.write(fn, lines.join)
+
 puts "Builtin:\n"
 show_builtin(fn)
 puts "\nPure Ruby:\n"
