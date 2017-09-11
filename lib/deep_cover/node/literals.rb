@@ -4,7 +4,7 @@ module DeepCover
     class StaticLiteral < Node
       include NodeBehavior::Static
     end
-    Int = True = False = Str = Nil = Float = Complex = Erange = StaticLiteral
+    Int = True = False = Str = Nil = Float = Complex = Erange = Rational = StaticLiteral
 
     ### Dynamic literals
 
