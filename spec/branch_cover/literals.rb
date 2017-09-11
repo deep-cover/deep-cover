@@ -19,21 +19,39 @@
 ### Symbols
     :hello
     :"he#{'l'*2}o"
-    dummy_method :"h#{3}l#{raise}o#{'2'}-#{:x}" rescue nil
-#>  xxxxxxxxxxxx                  xxxxxx xxxxx
     %s[hello]
     %i[hello world]
+#### Raising (pending)
+    dummy_method :"h#{3}l#{raise}o#{'2'}o#{:x}" rescue nil
+#>  xxxxxxxxxxxx                 xxxxxxxxxxxxx
+
 ### Strings
     'world'
     "w#{0}rld"
+    %{world}
+    %q{w#{0}rld}
+    %Q{w#{0}rld}
+
+#### Raising (pending)
     dummy_method "oo#{raise}ps#{:never}" rescue nil
-#>  xxxxxxxxxxxx              xxxxxxxxx
+#>  xxxxxxxxxxxx            xxxxxxxxxxx
+    dummy_method """
+#>  xxxxxxxxxxxx
+    multi
+    #{raise}
+    line
+#>X
+    #{:never}" rescue nil
+#>  xxxxxxxxx
+
 ### Regexp
     /regexp/
     /re#{'g'}exp/i
-    dummy_method /re#{raise}g#{'e'}p#{:x}/i rescue nil
-#>  xxxxxxxxxxxx             xxxxxx xxxxx
     %r[regexp]
+#### Raising (pending)
+    dummy_method /re#{raise}g#{'e'}p#{:x}/i rescue nil
+#>  xxxxxxxxxxxx            xxxxxxxxxxxxx x
+
 ### Array
     [1, 2, 3]
     %w[hello world]

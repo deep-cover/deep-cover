@@ -7,19 +7,47 @@ module DeepCover
     Int = True = False = Str = Nil = Float = Complex = Erange = StaticLiteral
 
     ### Dynamic literals
-    class Literal < Node
-      class StaticFragment < Node
-        include NodeBehavior::CoverFromParent
-      end
 
-      include NodeBehavior::CoverEntry
-      has_children rest: :fragments
+    # Dynamic literals are complicated because the parsed AST can be an arbitrarily
+    # complicated tree of :dstr, :str, :begin, as well as :ivar, :cvar & :gvar
+    # The :begin are within #{} and easily tracked, the rest are not and are
+    # remapped to Literal::StaticFragment.
 
-      def self.factory(type, **)
+    module WithinStringFactory
+      def factory(type, **)
         # The bits of strings when building dynamic symbols, strings
         # or regexp are parsed as :str, but we don't want to track those.
-        type == :str ? StaticFragment : super
+        case type
+        when :begin
+          super
+        when :dstr
+          InnerDstr
+        else Literal::StaticFragment
+        end
       end
+    end
+
+    class InnerDstr < Node
+      extend WithinStringFactory
+      has_children rest: :fragments
+
+      def runs
+        if p = previous_sibbling
+          p.full_runs
+        else
+          parent.runs
+        end
+      end
+
+      def full_runs
+        children.last.full_runs
+      end
+    end
+
+    class Literal < Node
+      include NodeBehavior::CoverEntry
+      extend WithinStringFactory
+      has_children rest: :fragments
 
       def full_runs
         last_dynamic_node{ return runs }.full_runs
@@ -32,6 +60,19 @@ module DeepCover
     end
     Regexp = Dsym = Dstr = Node::Literal
 
+    class Literal::StaticFragment < Node
+      def runs
+        if p = previous_sibbling
+          p.full_runs
+        else
+          parent.runs
+        end
+      end
+
+      def full_runs
+        runs
+      end
+    end
     StaticSym = Regopt = Literal::StaticFragment
 
     class Node::Sym < Node::Literal
