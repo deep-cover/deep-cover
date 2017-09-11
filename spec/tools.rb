@@ -76,5 +76,45 @@ module DeepCover
         end.join
       end
     end
+
+    class AnnotatedExamplesParser
+      SECTION = /^### (.*)$/
+      EXAMPLE = /^#### (.*)$/
+
+      def self.process(lines)
+        new.process_grouped_examples(lines, SECTION).example_groups
+      end
+
+      attr_reader :example_groups
+      def initialize
+        @example_groups = {}
+        @section = nil
+      end
+
+      # Breaks the lines of code into sub sections and sub tests
+      def process_grouped_examples(lines, pattern )
+        lines
+          .slice_before(pattern)
+          .map(&:trim_blank)
+          .compact
+          .each { |lines_chunk| process_example(lines_chunk) }
+        self
+      end
+
+      def process_example(lines)
+        first = lines.first
+        if first =~ SECTION
+          @section = $1
+          process_grouped_examples(lines.drop(1), EXAMPLE)
+        else
+          lines = lines.drop(1).trim_blank if first =~ EXAMPLE
+          group[$1] = lines
+        end
+      end
+
+      def group
+        @example_groups[@section] ||= {}
+      end
+    end
   end
 end

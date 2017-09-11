@@ -53,50 +53,10 @@ RSpec::Matchers.define :have_correct_branch_coverage do
   end
 end
 
-class AnnotatedExamplesParser
-  SECTION = /^### (.*)$/
-  EXAMPLE = /^#### (.*)$/
-
-  def self.process(lines)
-    new.process_grouped_examples(lines, SECTION).example_groups
-  end
-
-  attr_reader :example_groups
-  def initialize
-    @example_groups = {}
-    @section = nil
-  end
-
-  # Breaks the lines of code into sub sections and sub tests
-  def process_grouped_examples(lines, pattern )
-    lines
-      .slice_before(pattern)
-      .map(&:trim_blank)
-      .compact
-      .each { |lines_chunk| process_example(lines_chunk) }
-    self
-  end
-
-  def process_example(lines)
-    first = lines.first
-    if first =~ SECTION
-      @section = $1
-      process_grouped_examples(lines.drop(1), EXAMPLE)
-    else
-      lines = lines.drop(1).trim_blank if first =~ EXAMPLE
-      group[$1] = lines
-    end
-  end
-
-  def group
-    @example_groups[@section] ||= {}
-  end
-end
-
 RSpec.describe 'branch cover' do
   Dir.glob('./spec/branch_cover/*.rb').each do |fn|
     describe File.basename(fn, '.rb') do
-      example_groups = AnnotatedExamplesParser.process(File.read(fn).lines)
+      example_groups = DeepCover::Tools::AnnotatedExamplesParser.process(File.read(fn).lines)
       example_groups.each do |section, examples|
         context(section || '(General)') do
           examples.each do |title, lines|
