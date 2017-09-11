@@ -20,6 +20,15 @@ module DeepCover
         # or regexp are parsed as :str, but we don't want to track those.
         type == :str ? StaticFragment : super
       end
+
+      def full_runs
+        last_dynamic_node{ return runs }.full_runs
+      end
+
+      def last_dynamic_node
+        children.reverse_each{|c| return c if c.is_a?(Node) && !c.is_a?(StaticFragment)}
+        yield if block_given?
+      end
     end
     Regexp = Dsym = Dstr = Node::Literal
 

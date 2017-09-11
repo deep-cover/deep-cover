@@ -17,18 +17,20 @@
 ### Symbols
     :hello
     :"he#{'l'*2}o"
-    :"h#{3}l#{raise}o#{'2'}-#{:x}" rescue nil
-#>                   xxxxxx xxxxx
+    dummy_method :"h#{3}l#{raise}o#{'2'}-#{:x}" rescue nil
+#>  xxxxxxxxxxxx                  xxxxxx xxxxx
     %s[hello]
     %i[hello world]
 ### Strings
     'world'
     "w#{0}rld"
+    dummy_method "oo#{raise}ps#{:never}" rescue nil
+#>  xxxxxxxxxxxx              xxxxxxxxx
 ### Regexp
     /regexp/
     /re#{'g'}exp/i
-    /re#{raise}g#{'e'}p#{:x}/i rescue nil
-#>              xxxxxx xxxxx
+    dummy_method /re#{raise}g#{'e'}p#{:x}/i rescue nil
+#>  xxxxxxxxxxxx             xxxxxx xxxxx
     %r[regexp]
 ### Array
     [1, 2, 3]
