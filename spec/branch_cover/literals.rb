@@ -55,12 +55,6 @@
     #{:never}" rescue nil
 #>  xxxxxxxxx
 
-#### parser gem error on expression location (pending)
-    "
-    #{raise}
-    """ rescue nil
-#>  xx
-
 ### Regexp
     /regexp/
     /re#{'g'}exp/i
