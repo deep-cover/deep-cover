@@ -50,12 +50,8 @@ module DeepCover
       has_children rest: :fragments
 
       def full_runs
-        last_dynamic_node{ return runs }.full_runs
-      end
-
-      def last_dynamic_node
-        children.reverse_each{|c| return c if c.is_a?(Node) && !c.is_a?(StaticFragment)}
-        yield if block_given?
+        return runs unless last = children_nodes.last
+        last.full_runs
       end
     end
     Regexp = Dsym = Dstr = Node::Literal

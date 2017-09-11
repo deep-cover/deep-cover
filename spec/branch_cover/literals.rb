@@ -21,7 +21,7 @@
     :"he#{'l'*2}o"
     %s[hello]
     %i[hello world]
-#### Raising (pending)
+#### Raising
     dummy_method :"h#{3}l#{raise}o#{'2'}o#{:x}" rescue nil
 #>  xxxxxxxxxxxx                 xxxxxxxxxxxxx
 
@@ -32,7 +32,7 @@
     %q{w#{0}rld}
     %Q{w#{0}rld}
 
-#### Raising (pending)
+#### Raising
     dummy_method "oo#{raise}ps#{:never}" rescue nil
 #>  xxxxxxxxxxxx            xxxxxxxxxxx
     dummy_method """
@@ -48,7 +48,7 @@
     /regexp/
     /re#{'g'}exp/i
     %r[regexp]
-#### Raising (pending)
+#### Raising
     dummy_method /re#{raise}g#{'e'}p#{:x}/i rescue nil
 #>  xxxxxxxxxxxx            xxxxxxxxxxxxx x
 

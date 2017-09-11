@@ -47,7 +47,7 @@ module DeepCover
 
     class Begin < Node
       has_children rest: :instructions
-      include NodeBehavior::CoverWithNextInstruction
+      include NodeBehavior::CoverFromArguments
     end
   end
 end
