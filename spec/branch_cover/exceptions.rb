@@ -44,6 +44,23 @@
 #>X
     end
 
+### With assignment, but no exception list
+
+    begin
+      raise
+      "foo"
+#>X
+    rescue => foo
+      "here"
+    end
+
+#### Without raise
+    begin
+      :dont_raise
+    rescue => foo
+#>X
+    end
+
 ### With assigned exception list
     begin
       raise
