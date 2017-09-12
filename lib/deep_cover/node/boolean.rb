@@ -28,7 +28,7 @@ module DeepCover
       def child_runs(child)
         case child.index
         when FIRST
-          runs
+          super
         when CONDITIONAL
           truthy_tracker_hits
         end
