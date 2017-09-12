@@ -9,6 +9,7 @@ module DeepCover
       @context = context
       augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, context, self, child_index) }
       @nb = context.create_node_nb
+      @tracker_offset = context.allocate_trackers(self.class::TRACKERS.size).begin
       @parent = parent
       @index = index
       super(base_node.type, augmented_children, location: base_node.location)
@@ -160,7 +161,27 @@ module DeepCover
         alias_method :next_instruction, next_instruction if next_instruction
         const_set :CHILDREN, map
       end
+
+      def has_trackers(*names)
+        const_set :TRACKERS, names.each_with_index.to_h
+        names.each_with_index do |name, i|
+          class_eval <<-end_eval, __FILE__, __LINE__
+            #{name.upcase} = #{i}
+            def #{name}_tracker_source
+              context.tracker_source(@tracker_offset + #{name.upcase})
+            end
+            def #{name}_tracker_hits
+              context.tracker_hits(@tracker_offset + #{name.upcase})
+            end
+          end_eval
+        end
+      end
+
+      def has_tracker(tracker) # Allow singular form
+        has_trackers(tracker)
+      end
     end
+    has_trackers
 
     ### Public API
 

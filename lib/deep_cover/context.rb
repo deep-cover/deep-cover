@@ -13,14 +13,14 @@ module DeepCover
       else
         @buffer.read
       end
-      @node_count = 0
+      @tracker_count = 0
       @covered_source = rewrite_source
     end
 
     def cover
       return @cover if @cover
       $_cov ||= {}
-      $_cov[nb] = @cover = Array.new(@node_count * 2, 0)
+      $_cov[nb] = @cover = Array.new(@tracker_count, 0)
       begin
         eval(covered_source)
       rescue Exception => e
@@ -61,9 +61,23 @@ module DeepCover
       @nb ||= (@@counter += 1)
     end
 
-    def create_node_nb
-      @node_count = (prev = @node_count) + 1
-      prev
+    def create_node_nb # Obsolete (and wasterful)
+      (allocate_trackers(3).begin + 1).div(2)
+    end
+
+    # Returns a range of tracker ids
+    def allocate_trackers(nb_needed)
+      prev = @tracker_count
+      @tracker_count += nb_needed
+      prev...@tracker_count
+    end
+
+    def tracker_source(tracker_id)
+      "$_cov[#{nb}][#{tracker_id}]+=1"
+    end
+
+    def tracker_hits(tracker_id)
+      cover.fetch(tracker_id)
     end
 
     def rewrite_source

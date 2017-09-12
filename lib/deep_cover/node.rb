@@ -5,7 +5,7 @@ require_relative_dir 'node'
 module DeepCover
   Node.constants.each do |name|
     klass = Node.const_get(name)
-    if klass < Node
+    if klass.is_a?(Class) && klass < Node
       if klass.const_defined?(:CHILDREN)
         if klass <  NodeBehavior::CoverWithNextInstruction
           indices = klass::CHILDREN.values
