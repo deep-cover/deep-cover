@@ -68,16 +68,17 @@ module DeepCover
 
     def rewrite_source
       ast = Parser::CurrentRuby.new.parse(@buffer)
+      root = AstRoot.new(self)
 
-      @covered_ast ||= Node.augment(ast, self)
+      @covered_ast ||= Node.augment(ast, self, root)
       rewriter = ::Parser::Source::Rewriter.new(@buffer)
       @covered_ast.each_node do |node|
-        if prefix = node.prefix
+        if prefix = node.full_prefix
           expression = node.loc.expression
           prefix = yield prefix, node, expression.begin, :prefix if block_given?
           rewriter.insert_before_multi expression, prefix
         end
-        if suffix = node.suffix
+        if suffix = node.full_suffix
           expression = node.loc.expression
           suffix = yield suffix, node, expression.end, :suffix if block_given?
           rewriter.insert_after_multi  expression, suffix

@@ -71,11 +71,15 @@
     [1, raise, *nil?, 3] rescue nil
 #>             xxxxx  x
     [1, *raise, 3] rescue nil
-#>              x
+#>      x       x
 ### Hash
     {:a => 1, :b => 2}
     {a: 1, b: 2}
     {a: 1, **{b: 2}}
+    {a: raise, **{b: 2}} rescue nil
+#>             xxxxx xx
+    {a: 1, **{b: raise}} rescue nil
+#>         xx
     {nil? => 1, :b => 2}
     {a: raise, :b => 2} rescue nil
 #>             xx xx x

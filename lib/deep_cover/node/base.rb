@@ -3,9 +3,9 @@ require 'backports/2.1.0/enumerable/to_h'
 module DeepCover
   # Base class to handle covered nodes.
   class Node < Parser::AST::Node
-    attr_reader :context, :nb, :parent
+    attr_reader :context, :index, :nb, :parent
 
-    def initialize(base_node, context, parent = nil, index = 0)
+    def initialize(base_node, context, parent, index = 0)
       @context = context
       augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, context, self, child_index) }
       @nb = context.create_node_nb
@@ -23,11 +23,15 @@ module DeepCover
       location.expression.to_a - children.flat_map{|n| n.respond_to?(:location) && n.location && n.location.expression.to_a }
     end
 
+    def [](v)
+      children[v]
+    end
+
     # Returns true iff it is executable and if was successfully executed
     def was_executed?
       # There is a rare case of non executable nodes that have important data in runs / full_runs,
       # like `if cond; end`, so make sure it's actually executable first...
-      executable? && runs > 0
+      executable? && proper_runs > 0
     end
 
     # Returns the number of times it changed the usual control flow (e.g. raised, returned, ...)
@@ -44,11 +48,27 @@ module DeepCover
 
     # Returns the number of times it was executed (completely or not)
     def runs
-      0
+      parent.child_runs(self)
+    end
+
+    def proper_runs
+      runs
+    end
+
+    # Returns the number of time this child_node was executed (completely or not)
+    def child_runs(child)
+      prev = child.previous_sibbling
+      if prev
+        prev.full_runs
+      else
+        runs
+      end
     end
 
     # Returns the number of times it was fully ran
     def full_runs
+      last = children_nodes.last
+      return last.full_runs if last
       runs
     end
 
@@ -56,10 +76,23 @@ module DeepCover
     def prefix
     end
 
+    def child_prefix(child)
+    end
+
+    def full_prefix
+      "#{prefix}#{parent.child_prefix(self)}"
+    end
+
     # Code to add after the node for covering purposes (or `nil`)
     def suffix
     end
 
+    def child_suffix(child)
+    end
+
+    def full_suffix
+      "#{parent.child_suffix(self)}#{suffix}"
+    end
 
     ### Singleton methods
     class << self
@@ -86,7 +119,7 @@ module DeepCover
       # It gives both the parent class and the child class a chance
       # to decide the class of the child with `factory` and `reclassify`
       # respectively.
-      def augment(child_base_node, context, parent = nil, child_index = 0)
+      def augment(child_base_node, context, parent, child_index = 0)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
         klass = factory(child_base_node.type, child_index: child_index)
@@ -97,11 +130,25 @@ module DeepCover
       ### Internal
 
       # Creates methods to return the children corresponding with the given `names`,
-      # `rest`, and alias for `next_instruction`.
+      # alias for `next_instruction`.
       # Also creates constants for the indices of the children.
-      def has_children(*names, rest: false, next_instruction: false)
-        map = names.each_with_index.to_h
-        map[rest] = names.size..-1 if rest
+      def has_children(*names, next_instruction: false)
+        map = {}
+        i = 0
+        names.each do |name|
+          if name.to_s.end_with?('__rest')
+            name = name.to_s.gsub(/__rest$/, '')
+            nb_after = names.size - i - 1
+            map[name] = i..(-1-nb_after)
+
+            # Now we cound from the end
+            i = -nb_after
+          else
+            map[name] = i
+            i += 1
+          end
+        end
+
         map.each do |name, i|
           class_eval <<-end_eval, __FILE__, __LINE__
             def #{name}
@@ -122,11 +169,11 @@ module DeepCover
     end
 
     def next_sibbling
-      parent.children[@index + 1] if parent
+      parent.children[(@index+1)..-1].detect { |sibling| sibling.is_a?(Node) }
     end
 
     def previous_sibbling
-      parent.children[@index - 1] if parent && @index > 0
+      parent.children[0...@index].reverse.detect { |sibling| sibling.is_a?(Node) }
     end
 
     ### Internal API

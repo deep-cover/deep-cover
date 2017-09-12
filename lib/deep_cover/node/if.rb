@@ -13,8 +13,26 @@ module DeepCover
         ]
       end
 
-      def runs
-        condition.runs
+      def child_prefix(child)
+        return unless child.index == CONDITION
+        "(("
+      end
+
+      def child_suffix(child)
+        return unless child.index == CONDITION
+        # The new value is still truthy
+        ")) && $_cov[#{context.nb}][#{nb*2}] += 1"
+      end
+
+      def child_runs(child)
+        case child.index
+        when CONDITION
+          super
+        when TRUE_BRANCH
+          context.cover.fetch(nb*2)
+        when FALSE_BRANCH
+          condition.full_runs - context.cover.fetch(nb*2)
+        end
       end
 
       def full_runs

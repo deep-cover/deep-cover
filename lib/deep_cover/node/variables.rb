@@ -1,13 +1,14 @@
 module DeepCover
   class Node
-    class Variables < Node
-      include NodeBehavior::CoverEntry
-    end
-    Ivar = Lvar = Cvar = Gvar = Back_ref = Variables
+    Ivar = Lvar = Cvar = Gvar = Back_ref = Node
 
     class Lvasgn < Node
-      include NodeBehavior::CoverEntryAndExit
       has_children :var_name, :value
+
+      def proper_runs
+        return super unless value
+        value.full_runs
+      end
     end
   end
 end

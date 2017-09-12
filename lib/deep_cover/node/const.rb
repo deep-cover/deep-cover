@@ -1,7 +1,23 @@
 module DeepCover
   class Node::Const < Node
-    include NodeBehavior::CoverEntryAndExit
     has_children :scope, :const_name
+
+    def full_runs
+      context.cover.fetch(nb*2)
+    end
+
+    def proper_runs
+      return super if scope.nil?
+      scope.full_runs
+    end
+
+    def prefix
+      "(("
+    end
+
+    def suffix
+      ")).tap{|v| $_cov[#{context.nb}][#{nb*2}] += 1}"
+    end
   end
 
   class Node::Cbase < Node

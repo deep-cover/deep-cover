@@ -1,7 +1,7 @@
 module DeepCover
   class Node
     class Args < Node
-      has_children rest: :arguments
+      has_children :arguments__rest
       def executable?
         false
       end

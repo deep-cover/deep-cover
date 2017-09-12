@@ -1,53 +1,65 @@
 module DeepCover
   class Node
-    class ExceptionCatchVariableAssign < Node
-      include NodeBehavior::CoverFromParent
-    end
+    class Rescue < Node
+      has_children :watched_body, :resbodies__rest, :else
 
-    class Resbody < Node
-      include NodeBehavior::CoverWithNextInstruction
-      has_children :exception, :assignment, :body, next_instruction: :body
-
-      def suffix # Only called when body is nil
-        ";$_cov[#{context.nb}][#{nb*2}]+=1;nil"
+      def full_runs
+        return super unless watched_body
+        resbodies.map(&:full_runs).sum + (self.else || watched_body).full_runs
       end
 
-      def runs # Only called when body is nil
+      def child_runs(child)
+        case child.index
+        when WATCHED_BODY
+          super
+
+        # TODO Better way to deal with rest children for this
+        when *(0...children.size).to_a[RESBODIES]
+          return 0 unless watched_body
+          prev = child.previous_sibbling
+
+          if prev.index == WATCHED_BODY
+            prev.runs - prev.full_runs
+          else # RESBODIES
+            # TODO is this okay?
+            prev.exception.full_runs - prev.proper_runs
+          end
+        when ELSE
+          return watched_body.full_runs if watched_body
+          super
+        else
+          binding.pry
+        end
+      end
+    end
+
+
+    class Resbody < Node
+      has_children :exception, :assignment, :body
+
+      def suffix
+        ";$_cov[#{context.nb}][#{nb*2}] += 1"
+      end
+
+      def full_runs
+        return body.full_runs if body
+        proper_runs
+      end
+
+      def proper_runs
         context.cover.fetch(nb*2)
       end
 
-      def self.factory(type, child_index: raise)
-        child_index == ASSIGNMENT ? ExceptionCatchVariableAssign : super
+      def child_runs(child)
+        case child.index
+        when EXCEPTION
+          super
+        when ASSIGNMENT
+          context.cover.fetch(nb*2)
+        when BODY
+          context.cover.fetch(nb*2)
+        end
       end
-
-
-      def line_cover
-        # Ruby doesn't cover the rescue clause itself, so skip till the body
-        body.line_cover if body
-      end
-    end
-
-    class Kwbegin < Node
-      has_children rest: :instructions
-
-      include NodeBehavior::CoverWithNextInstruction
-      include NodeBehavior::CoverEntry
-
-      def next_instruction
-        n = children.first
-        n if n && n.type != :rescue
-      end
-    end
-
-    class Rescue < Node
-      include NodeBehavior::CoverWithNextInstruction
-      has_children :body, rest: :rescue_bodies
-
-    end
-
-    class Begin < Node
-      has_children rest: :instructions
-      include NodeBehavior::CoverFromArguments
     end
   end
 end
