@@ -166,12 +166,11 @@ module DeepCover
         const_set :TRACKERS, names.each_with_index.to_h
         names.each_with_index do |name, i|
           class_eval <<-end_eval, __FILE__, __LINE__
-            #{name.upcase} = #{i}
             def #{name}_tracker_source
-              context.tracker_source(@tracker_offset + #{name.upcase})
+              context.tracker_source(@tracker_offset + #{i})
             end
             def #{name}_tracker_hits
-              context.tracker_hits(@tracker_offset + #{name.upcase})
+              context.tracker_hits(@tracker_offset + #{i})
             end
           end_eval
         end
