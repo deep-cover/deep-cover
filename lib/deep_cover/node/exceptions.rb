@@ -5,7 +5,7 @@ module DeepCover
 
       def full_runs
         return super unless watched_body
-        resbodies.map(&:full_runs).sum + (self.else || watched_body).full_runs
+        resbodies.map(&:full_runs).inject(0, :+) + (self.else || watched_body).full_runs
       end
 
       def proper_runs
