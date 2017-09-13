@@ -81,10 +81,12 @@ module DeepCover
     end
 
     def rewrite_source
-      ast = Parser::CurrentRuby.new.parse(@buffer)
-      root = AstRoot.new(self)
+      @covered_ast ||= begin
+        ast = Parser::CurrentRuby.new.parse(@buffer)
+        root = AstRoot.new(self)
+        Node.augment(ast, self, root)
+      end
 
-      @covered_ast ||= Node.augment(ast, self, root)
       rewriter = ::Parser::Source::Rewriter.new(@buffer)
       @covered_ast.each_node do |node|
         if prefix = node.full_prefix
