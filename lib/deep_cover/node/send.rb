@@ -8,11 +8,11 @@ module DeepCover
       end
 
       def suffix
-        ")).tap{$_cov[#{context.nb}][#{nb*2}] += 1}"
+        ")).tap{$_cov[#{file_coverage.nb}][#{nb*2}] += 1}"
       end
 
       def full_runs
-        context.cover.fetch(nb*2)
+        file_coverage.cover.fetch(nb*2)
       end
 
       def proper_runs

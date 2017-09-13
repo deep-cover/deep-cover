@@ -21,7 +21,7 @@ module DeepCover
       def child_suffix(child)
         return unless child.index == CONDITION
         # The new value is still truthy
-        ")) && $_cov[#{context.nb}][#{nb*2}] += 1"
+        ")) && $_cov[#{file_coverage.nb}][#{nb*2}] += 1"
       end
 
       def child_runs(child)
@@ -29,9 +29,9 @@ module DeepCover
         when CONDITION
           super
         when TRUE_BRANCH
-          context.cover.fetch(nb*2)
+          file_coverage.cover.fetch(nb*2)
         when FALSE_BRANCH
-          condition.full_runs - context.cover.fetch(nb*2)
+          condition.full_runs - file_coverage.cover.fetch(nb*2)
         end
       end
 

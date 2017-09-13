@@ -1,5 +1,5 @@
 module DeepCover
-  class Context
+  class FileCoverage
     attr_accessor :covered_source, :buffer, :covered_ast
     @@counter = 0
 

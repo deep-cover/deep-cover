@@ -3,13 +3,13 @@ require 'backports/2.1.0/enumerable/to_h'
 module DeepCover
   # Base class to handle covered nodes.
   class Node < Parser::AST::Node
-    attr_reader :context, :index, :nb, :parent
+    attr_reader :file_coverage, :index, :nb, :parent
 
-    def initialize(base_node, context, parent, index = 0)
-      @context = context
-      augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, context, self, child_index) }
-      @nb = context.create_node_nb
-      @tracker_offset = context.allocate_trackers(self.class::TRACKERS.size).begin
+    def initialize(base_node, file_coverage, parent, index = 0)
+      @file_coverage = file_coverage
+      augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, file_coverage, self, child_index) }
+      @nb = file_coverage.create_node_nb
+      @tracker_offset = file_coverage.allocate_trackers(self.class::TRACKERS.size).begin
       @parent = parent
       @index = index
       super(base_node.type, augmented_children, location: base_node.location)
@@ -109,11 +109,11 @@ module DeepCover
       ### Public API
 
       # Augment creates a covered node from the child_base_node.
-      def augment(child_base_node, context, parent, child_index = 0)
+      def augment(child_base_node, file_coverage, parent, child_index = 0)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
         klass = factory(child_base_node.type)
-        klass.new(child_base_node, context, parent, child_index)
+        klass.new(child_base_node, file_coverage, parent, child_index)
       end
 
       ### Internal
@@ -155,10 +155,10 @@ module DeepCover
         names.each_with_index do |name, i|
           class_eval <<-end_eval, __FILE__, __LINE__
             def #{name}_tracker_source
-              context.tracker_source(@tracker_offset + #{i})
+              file_coverage.tracker_source(@tracker_offset + #{i})
             end
             def #{name}_tracker_hits
-              context.tracker_hits(@tracker_offset + #{i})
+              file_coverage.tracker_hits(@tracker_offset + #{i})
             end
           end_eval
         end
@@ -203,7 +203,7 @@ module DeepCover
 
     def line_cover
       return unless ex = loc && loc.expression
-      context.line_hit(ex.line - 1, runs)
+      file_coverage.line_hit(ex.line - 1, runs)
       children_nodes.each(&:line_cover)
     end
 

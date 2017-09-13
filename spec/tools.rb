@@ -48,9 +48,9 @@ module DeepCover
       DeepCover.line_coverage(fn)
     end
 
-    def format_generated_code(context)
+    def format_generated_code(file_coverage)
       inserts = []
-      generated_code = context.rewrite_source do |inserted, _node, expr_limit|
+      generated_code = file_coverage.rewrite_source do |inserted, _node, expr_limit|
         inserts << [expr_limit, inserted.size]
         Term::ANSIColor.yellow(inserted)
       end
@@ -72,10 +72,10 @@ module DeepCover
 
     COLOR = {'x' => :red, ' ' => :green, '-' => :faint}
     WHITESPACE_MAP = Hash.new{|_, v| v}.merge!(' ' => '·', "\t" => '→ ')
-    def format_branch_cover(context, show_line_nbs: false, show_whitespace: false)
-      bc = context.branch_cover
+    def format_branch_cover(file_coverage, show_line_nbs: false, show_whitespace: false)
+      bc = file_coverage.branch_cover
 
-      context.buffer.source_lines.map.with_index do |line, line_index|
+      file_coverage.buffer.source_lines.map.with_index do |line, line_index|
         prefix = show_line_nbs ? Term::ANSIColor.faint((line_index+1).to_s.rjust(2) << ' | ') : ''
         next prefix + line if line.strip.start_with?("#")
         prefix << line.chars.map.with_index do |c, c_index|

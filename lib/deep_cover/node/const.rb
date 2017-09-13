@@ -3,7 +3,7 @@ module DeepCover
     has_children :scope, :const_name
 
     def full_runs
-      context.cover.fetch(nb*2)
+      file_coverage.cover.fetch(nb*2)
     end
 
     def proper_runs
@@ -16,7 +16,7 @@ module DeepCover
     end
 
     def suffix
-      ")).tap{|v| $_cov[#{context.nb}][#{nb*2}] += 1}"
+      ")).tap{|v| $_cov[#{file_coverage.nb}][#{nb*2}] += 1}"
     end
   end
 

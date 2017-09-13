@@ -36,7 +36,7 @@ end
 RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
   match do |lines|
     code, answers = parse(lines, lineno)
-    @context = DeepCover::Context.new(path: filename, source: code.join("\n"), lineno: lineno)
+    @context = DeepCover::FileCoverage.new(path: filename, source: code.join("\n"), lineno: lineno)
     cov = @context.branch_cover
     errors = cov.zip(answers, code).each_with_index.reject do |(a, expected, line), i|
       actual = strip_when_unimportant(line, a)
@@ -52,7 +52,7 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
     @errors.empty?
   end
   failure_message do |fn|
-    puts DeepCover::Tools.format_branch_cover(@context, show_line_nbs: true)
+    puts DeepCover::Tools.format_branch_cover(@file_coverage, show_line_nbs: true)
     "Branch cover does not match on lines #{@errors.join(', ')}"
   end
 end

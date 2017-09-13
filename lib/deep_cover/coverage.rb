@@ -5,23 +5,23 @@ require 'pry'
 module DeepCover
   class Coverage
     def initialize
-      @context = {}
+      @file_coverage = {}
     end
 
     def require(filename)
-      ctxt = context(filename) { |path| Context.new(path: path) }
-      ctxt.cover
+      file_cov = file_coverage(filename) { |path| FileCoverage.new(path: path) }
+      file_cov.cover
 
       self
     end
 
     def line_coverage(filename)
-      context(filename).line_coverage
+      file_coverage(filename).line_coverage
     end
 
-    def context(filename, &block)
+    def file_coverage(filename, &block)
       path = resolve_path(filename)
-      @context[path] ||= yield path
+      @file_coverage[path] ||= yield path
     end
 
     def resolve_path(filename)

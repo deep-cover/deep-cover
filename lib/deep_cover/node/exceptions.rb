@@ -10,7 +10,7 @@ module DeepCover
 
       def proper_runs
         return 0 unless self.else
-        context.cover.fetch(nb*2)
+        file_coverage.cover.fetch(nb*2)
       end
 
       def executable?
@@ -20,7 +20,7 @@ module DeepCover
       def child_prefix(child)
         return if child.index != ELSE + children.size
 
-        "$_cov[#{context.nb}][#{nb*2}]+=1;"
+        "$_cov[#{file_coverage.nb}][#{nb*2}]+=1;"
       end
 
       def child_runs(child)
@@ -53,7 +53,7 @@ module DeepCover
       has_children :exception, :assignment, :body
 
       def suffix
-        ";$_cov[#{context.nb}][#{nb*2}] += 1"
+        ";$_cov[#{file_coverage.nb}][#{nb*2}] += 1"
       end
 
       def full_runs
@@ -62,7 +62,7 @@ module DeepCover
       end
 
       def proper_runs
-        context.cover.fetch(nb*2)
+        file_coverage.cover.fetch(nb*2)
       end
 
       def child_runs(child)
@@ -70,9 +70,9 @@ module DeepCover
         when EXCEPTION
           super
         when ASSIGNMENT
-          context.cover.fetch(nb*2)
+          file_coverage.cover.fetch(nb*2)
         when BODY
-          context.cover.fetch(nb*2)
+          file_coverage.cover.fetch(nb*2)
         end
       end
     end
