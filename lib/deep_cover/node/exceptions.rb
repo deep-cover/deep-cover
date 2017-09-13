@@ -8,6 +8,21 @@ module DeepCover
         resbodies.map(&:full_runs).sum + (self.else || watched_body).full_runs
       end
 
+      def proper_runs
+        return 0 unless self.else
+        context.cover.fetch(nb*2)
+      end
+
+      def executable?
+        !!self.else
+      end
+
+      def child_prefix(child)
+        return if child.index != ELSE + children.size
+
+        "$_cov[#{context.nb}][#{nb*2}]+=1;"
+      end
+
       def child_runs(child)
         case child.index
         when WATCHED_BODY
@@ -24,7 +39,7 @@ module DeepCover
             # TODO is this okay?
             prev.exception.full_runs - prev.proper_runs
           end
-        when ELSE
+        when ELSE + children.size
           return watched_body.full_runs if watched_body
           super
         else
