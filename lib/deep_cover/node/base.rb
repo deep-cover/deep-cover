@@ -102,9 +102,6 @@ module DeepCover
 
       # Returns a subclass or the base Node, according to type
       def factory(type, **)
-        unless const_defined?(:CHILDREN) || self == Node || self < NodeBehavior::Static
-          warn "Class #{self} has children but hasn't declared them using has_children"
-        end
         class_name = type.capitalize
         const_defined?(class_name) ? const_get(class_name) : Node
       end
