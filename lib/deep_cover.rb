@@ -13,6 +13,7 @@ require_relative_dir 'deep_cover'
 module DeepCover
   class << self
     def start
+      require_relative 'deep_cover/core_ext/require_overrides'
     end
 
     def line_coverage(filename)
@@ -25,6 +26,10 @@ module DeepCover
 
     def cover
       @cover ||= Coverage.new
+    end
+
+    def custom_requirer
+      @custom_requirer = CustomRequirer.new
     end
   end
 end

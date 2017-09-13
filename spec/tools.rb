@@ -1,5 +1,7 @@
 require 'coverage'
 require 'term/ansicolor'
+require 'fileutils'
+require 'tmpdir'
 
 require 'active_support/core_ext/object/blank'
 class Array
@@ -44,7 +46,6 @@ module DeepCover
     end
 
     def our_coverage(fn)
-      DeepCover.start
       covered_code = DeepCover::CoveredCode.new(path: fn)
       covered_code.execute_code
       covered_code.line_coverage
@@ -87,6 +88,44 @@ module DeepCover
         end.join
       end
     end
+
+    # Creates a tree of directories and files for testing.
+    # This is meant to be used within `Dir.mktmpdir`
+    # The tree_content is an array of paths.
+    # * Each entry can be as deep as needed, intermediary directories will be created.
+    # * Finish an entry with a / for the last part to also be a directory.
+    # * Start an entry with "pwd:" and the current working directory will be set there.
+    # * if a file ends with .rb, it will contain code to set $last_test_tree_file_executed to the entry (without pwd:)
+    def self.file_tree(root, tree_contents)
+      set_pwd = nil
+      tree_contents.each do |tree_entry|
+        if tree_entry.start_with?('pwd:')
+          raise "Already have a pwd selected" if set_pwd
+          tree_entry = tree_entry.sub(/^pwd:/, '')
+          raise "#{tree_entry} is not a directory entry (must end with /), can't use as pwd" unless tree_entry.end_with?('/')
+          set_pwd = true # Set later
+        end
+
+        # Avoid a simple mistake
+        tree_entry = tree_entry[1..-1] if tree_entry[0] == '/'
+
+        path = File.absolute_path(tree_entry, root)
+        set_pwd = path if set_pwd == true
+
+        if tree_entry.end_with?('/')
+          FileUtils.mkdir_p(path)
+        else
+          FileUtils.mkdir_p(File.dirname(path))
+          content = <<-RUBY if tree_entry.end_with?('.rb')
+            $last_test_tree_file_executed = #{tree_entry.inspect}
+          RUBY
+          File.write(path, content)
+        end
+      end
+
+      Dir.chdir(set_pwd || '.')
+    end
+
 
     class AnnotatedExamplesParser
       SECTION = /^### (.*)$/
