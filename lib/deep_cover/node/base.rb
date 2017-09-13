@@ -58,7 +58,7 @@ module DeepCover
 
     # Returns the number of time this child_node was executed (completely or not)
     def child_runs(child)
-      prev = child.previous_sibbling
+      prev = child.previous_sibling
       if prev
         prev.full_runs
       else
@@ -188,11 +188,11 @@ module DeepCover
       children.select{|c| c.is_a? Node }
     end
 
-    def next_sibbling
+    def next_sibling
       parent.children[(@index+1)..-1].detect { |sibling| sibling.is_a?(Node) }
     end
 
-    def previous_sibbling
+    def previous_sibling
       parent.children[0...@index].reverse.detect { |sibling| sibling.is_a?(Node) }
     end
 

@@ -31,7 +31,7 @@ module DeepCover
         # TODO Better way to deal with rest children for this
         when *(0...children.size).to_a[RESBODIES]
           return 0 unless watched_body
-          prev = child.previous_sibbling
+          prev = child.previous_sibling
 
           if prev.index == WATCHED_BODY
             prev.runs - prev.full_runs
