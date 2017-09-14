@@ -107,7 +107,7 @@ module DeepCover
         chunks = chunks.map{|chunk| v = [chunk, lineno]; lineno += chunk.size; v }
         chunks.map do |chunk, chunk_lineno|
           trimmed_chunk = chunk.trim_blank
-          [trimmed_chunk, chunk_lineno - trimmed_chunk.size + chunk.size]
+          [trimmed_chunk, chunk_lineno + chunk.index(trimmed_chunk.first)]
         end
         chunks.each { |chunk, chunk_lineno| process_example(chunk, chunk_lineno) }
         self
@@ -121,7 +121,7 @@ module DeepCover
         else
           if first =~ EXAMPLE
             trimmed_lines = lines.drop(1).trim_blank
-            lineno = lineno - lines.size + trimmed_lines.size
+            lineno = lineno + lines.index(trimmed_lines.first)
             lines = trimmed_lines
           end
           group[$1] = [lines, lineno]
