@@ -10,7 +10,7 @@ module DeepCover
 
     def require(filename)
       file_cov = file_coverage(filename) { |path| FileCoverage.new(path: path) }
-      file_cov.cover
+      file_cov.execute_file
 
       self
     end

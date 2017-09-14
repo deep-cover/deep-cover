@@ -18,33 +18,32 @@ module DeepCover
       @covered_source = rewrite_source
     end
 
-    def cover
-      return @cover if @cover
+    def execute_file
       $_cov ||= {}
       $_cov[nb] = @cover = Array.new(@tracker_count, 0)
-      begin
-        execute_covered_source
-      rescue Exception => e
-        puts "Failed to cover: #{e}"
-        puts e.backtrace[0..5]
-      end
+      execute_covered_source
+    end
+
+    def cover
+      must_have_executed
       @cover
     end
 
     def line_coverage
-      cover
+      must_have_executed
       @line_hits = Array.new(covered_source.lines.size)
       covered_ast.line_cover
       @line_hits
     end
 
     def line_hit(line, runs = 1)
+      must_have_executed
       @line_hits[line] ||= 0
       @line_hits[line] = [@line_hits[line], runs].max
     end
 
     def branch_cover
-      cover
+      must_have_executed
       bc = buffer.source_lines.map{|line| ' ' * line.size}
       @covered_ast.each_node do |node|
         unless node.was_executed?
@@ -105,6 +104,10 @@ module DeepCover
     end
 
     protected
+    def must_have_executed
+      raise "cover not available, file wasn't executed" unless @executed
+    end
+
     def execute_covered_source
       # NOTE: the eval should be in a function alone, where no local variables are declared/used
       # Using Object.send(:binding) to make self be Object as require & load normally do.
