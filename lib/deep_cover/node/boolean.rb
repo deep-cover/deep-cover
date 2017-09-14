@@ -5,7 +5,7 @@ module DeepCover
     class ShortCircuit < Node
       include Branch
       has_children :first, :conditional
-      has_tracker :truthy
+      has_tracker :conditional
 
       def branches
         [
@@ -15,14 +15,14 @@ module DeepCover
       end
 
       def child_prefix(child)
-        return unless child.index == FIRST
-        "(("
+        return unless child.index == CONDITIONAL
+        "((#{conditional_tracker_source};"
       end
 
       def child_suffix(child)
-        return unless child.index == FIRST
+        return unless child.index == CONDITIONAL
         # The new value is still truthy
-        ")).tap{|v| #{truthy_tracker_source} #{self.class::TRACK_OPERATOR} v}"
+        "))"
       end
 
       def child_runs(child)
@@ -30,17 +30,12 @@ module DeepCover
         when FIRST
           super
         when CONDITIONAL
-          truthy_tracker_hits
+          conditional_tracker_hits
         end
       end
     end
 
-    class And < ShortCircuit
-      TRACK_OPERATOR = :if
-    end
+    And = Or = ShortCircuit
 
-    class Or < ShortCircuit
-      TRACK_OPERATOR = :unless
-    end
   end
 end
