@@ -21,7 +21,7 @@ fn = "./spec/branch_cover/#{example}.rb" unless File.exist?(fn)
 source = File.exist?(fn) ? File.read(fn) : ARGV[0]
 groups = DeepCover::Tools::AnnotatedExamplesParser.process(source)
 if groups.size == 1 && groups.first.last.size == 1
-  lines = groups.values.first.values.first
+  lines, _lineno = groups.values.first.values.first
 else
   menu = []
   item = -1
@@ -37,7 +37,7 @@ else
     puts menu
     answer = HighLine.new.ask(Term::ANSIColor.blue("Which?  "), Integer) { |q| q.in = 0...examples.size }
   end
-  lines = examples[answer]
+  lines, _lineno = examples[answer]
 end
 
 require 'tempfile'

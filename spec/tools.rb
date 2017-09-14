@@ -102,23 +102,29 @@ module DeepCover
       end
 
       # Breaks the lines of code into sub sections and sub tests
-      def process_grouped_examples(lines, pattern )
-        lines
-          .slice_before(pattern)
-          .map(&:trim_blank)
-          .compact
-          .each { |lines_chunk| process_example(lines_chunk) }
+      def process_grouped_examples(lines, pattern, lineno=1)
+        chunks = lines.slice_before(pattern)
+        chunks = chunks.map{|chunk| v = [chunk, lineno]; lineno += chunk.size; v }
+        chunks.map do |chunk, chunk_lineno|
+          trimmed_chunk = chunk.trim_blank
+          [trimmed_chunk, chunk_lineno - trimmed_chunk.size + chunk.size]
+        end
+        chunks.each { |chunk, chunk_lineno| process_example(chunk, chunk_lineno) }
         self
       end
 
-      def process_example(lines)
+      def process_example(lines, lineno)
         first = lines.first
         if first =~ SECTION
           @section = $1
-          process_grouped_examples(lines.drop(1), EXAMPLE)
+          process_grouped_examples(lines.drop(1), EXAMPLE, lineno + 1)
         else
-          lines = lines.drop(1).trim_blank if first =~ EXAMPLE
-          group[$1] = lines
+          if first =~ EXAMPLE
+            trimmed_lines = lines.drop(1).trim_blank
+            lineno = lineno - lines.size + trimmed_lines.size
+            lines = trimmed_lines
+          end
+          group[$1] = [lines, lineno]
         end
       end
 

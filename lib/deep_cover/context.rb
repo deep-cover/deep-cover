@@ -4,7 +4,7 @@ module DeepCover
     @@counter = 0
 
     # TODO: Support non path based
-    def initialize(path: nil, source: nil)
+    def initialize(path: nil, source: nil, lineno: nil)
       raise "Must provide either path or source" unless path || source
 
       @buffer = ::Parser::Source::Buffer.new(path)
@@ -13,6 +13,7 @@ module DeepCover
       else
         @buffer.read
       end
+      @lineno = lineno
       @tracker_count = 0
       @covered_source = rewrite_source
     end
@@ -22,10 +23,10 @@ module DeepCover
       $_cov ||= {}
       $_cov[nb] = @cover = Array.new(@tracker_count, 0)
       begin
-        eval(covered_source)
+        eval(covered_source, Object.send(:binding), @buffer.name || '<raw_code>', @lineno || 1)
       rescue Exception => e
-        puts "Failed to cover:"
-        puts e
+        puts "Failed to cover: #{e}"
+        puts e.backtrace[0..5]
       end
       @cover
     end
