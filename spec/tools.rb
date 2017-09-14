@@ -77,6 +77,7 @@ module DeepCover
 
       context.buffer.source_lines.map.with_index do |line, line_index|
         prefix = show_line_nbs ? Term::ANSIColor.faint((line_index+1).to_s.rjust(2) << ' | ') : ''
+        next line if line.strip.start_with?("#")
         prefix << line.chars.map.with_index do |c, c_index|
           color = COLOR[bc[line_index][c_index]]
           c = WHITESPACE_MAP[c] if show_whitespace
