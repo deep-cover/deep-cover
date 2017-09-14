@@ -101,27 +101,18 @@ module DeepCover
       ### These are refined by subclasses
 
       # Returns a subclass or the base Node, according to type
-      def factory(type, **)
+      def factory(type)
         class_name = type.capitalize
         const_defined?(class_name) ? const_get(class_name) : Node
-      end
-
-      # Override if a particular class associated for a child must
-      # be changed. `nil` is interpreted the same as `self`.
-      def reclassify(base_node)
       end
 
       ### Public API
 
       # Augment creates a covered node from the child_base_node.
-      # It gives both the parent class and the child class a chance
-      # to decide the class of the child with `factory` and `reclassify`
-      # respectively.
       def augment(child_base_node, context, parent, child_index = 0)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
-        klass = factory(child_base_node.type, child_index: child_index)
-        klass = klass.reclassify(child_base_node) || klass
+        klass = factory(child_base_node.type)
         klass.new(child_base_node, context, parent, child_index)
       end
 
