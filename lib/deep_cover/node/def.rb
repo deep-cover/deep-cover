@@ -1,5 +1,5 @@
 module DeepCover
   class Node::Def < Node
-    has_children :signature, :body
+    has_children :method_name, :signature, :body
   end
 end
