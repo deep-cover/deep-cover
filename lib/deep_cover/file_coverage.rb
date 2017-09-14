@@ -1,6 +1,6 @@
 module DeepCover
   class FileCoverage
-    attr_accessor :covered_source, :buffer, :covered_ast
+    attr_accessor :covered_source, :buffer, :covered_ast, :executed
     @@counter = 0
 
     # TODO: Support non path based
@@ -23,7 +23,7 @@ module DeepCover
       $_cov ||= {}
       $_cov[nb] = @cover = Array.new(@tracker_count, 0)
       begin
-        eval(covered_source, Object.send(:binding), @buffer.name || '<raw_code>', @lineno || 1)
+        execute_covered_source
       rescue Exception => e
         puts "Failed to cover: #{e}"
         puts e.backtrace[0..5]
@@ -102,6 +102,15 @@ module DeepCover
         end
       end
       rewriter.process
+    end
+
+    protected
+    def execute_covered_source
+      # NOTE: the eval should be in a function alone, where no local variables are declared/used
+      # Using Object.send(:binding) to make self be Object as require & load normally do.
+      return if @executed
+      @executed = true
+      eval(@covered_source, Object.send(:binding), @buffer.name || '<raw_code>', @lineno || 1)
     end
   end
 end
