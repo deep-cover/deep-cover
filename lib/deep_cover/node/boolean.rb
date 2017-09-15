@@ -25,7 +25,7 @@ module DeepCover
         "))"
       end
 
-      def child_runs(child)
+      def child_flow_entry_count(child)
         case child.index
         when FIRST
           super

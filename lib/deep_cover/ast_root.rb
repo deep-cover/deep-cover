@@ -9,7 +9,7 @@ module DeepCover
       @nb = file_coverage.create_node_nb
     end
 
-    def child_runs(_child)
+    def child_flow_entry_count(_child)
       file_coverage.cover.fetch(nb*2)
     end
 

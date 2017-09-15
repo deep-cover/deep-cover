@@ -6,7 +6,7 @@ module DeepCover
       file_coverage.cover.fetch(nb*2)
     end
 
-    def proper_runs
+    def proper_flow_entry_count
       return super if scope.nil?
       scope.flow_completion_count
     end

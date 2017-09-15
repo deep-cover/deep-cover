@@ -13,12 +13,12 @@ module DeepCover
     end
 
     module ClassMethods
-      def has_child(runs: nil, rewrite: nil, rest: false, **h)
+      def has_child(flow_entry_count: nil, rewrite: nil, rest: false, **h)
         name, type = h.first
         update_children_const(name, rest: rest)
         define_accessor(name)
         add_runtime_check(name, type)
-        define_handler(:"#{name}_runs", runs)
+        define_handler(:"#{name}_flow_entry_count", flow_entry_count)
         define_handler(:"rewrite_#{name}", rewrite)
       end
 

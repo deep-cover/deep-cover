@@ -6,7 +6,7 @@
 #
 # This is a script that does basically what wwtd is meant to do (run tests following
 # the config in travis-ci), but:
-#  * Only runs the tests that are coded to be run from here
+#  * Only flow_entry_count the tests that are coded to be run from here
 #  * ignores rails_head and ruby-head
 #
 # Other differences from wwtd:

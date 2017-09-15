@@ -24,7 +24,7 @@ module DeepCover
         ")) && $_cov[#{file_coverage.nb}][#{nb*2}] += 1"
       end
 
-      def child_runs(child)
+      def child_flow_entry_count(child)
         case child.index
         when CONDITION
           super

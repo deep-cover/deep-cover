@@ -15,7 +15,7 @@ module DeepCover
         file_coverage.cover.fetch(nb*2)
       end
 
-      def proper_runs
+      def proper_flow_entry_count
         last = children_nodes.last
         return last.flow_completion_count if last
         super
@@ -37,7 +37,7 @@ module DeepCover
         file_coverage.cover.fetch(nb*2)
       end
 
-      def proper_runs
+      def proper_flow_entry_count
         last = children_nodes.last
         return last.flow_completion_count if last
         super

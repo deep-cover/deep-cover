@@ -10,14 +10,14 @@ module DeepCover
         raise NotImplementedError
       end
 
-      # Also define runs
+      # Also define flow_entry_count
     end
 
     class TrivialBranch < Struct.new(:condition, :other_branch)
-      def runs
-        condition.flow_completion_count - other_branch.runs
+      def flow_entry_count
+        condition.flow_completion_count - other_branch.flow_entry_count
       end
-      alias_method :flow_completion_count, :runs
+      alias_method :flow_completion_count, :flow_entry_count
     end
 
   end

@@ -36,10 +36,10 @@ module DeepCover
       @line_hits
     end
 
-    def line_hit(line, runs = 1)
+    def line_hit(line, flow_entry_count = 1)
       must_have_executed
       @line_hits[line] ||= 0
-      @line_hits[line] = [@line_hits[line], runs].max
+      @line_hits[line] = [@line_hits[line], flow_entry_count].max
     end
 
     def branch_cover

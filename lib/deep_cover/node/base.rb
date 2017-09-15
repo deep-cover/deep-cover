@@ -31,14 +31,14 @@ module DeepCover
 
     # Returns true iff it is executable and if was successfully executed
     def was_executed?
-      # There is a rare case of non executable nodes that have important data in runs / flow_completion_count,
+      # There is a rare case of non executable nodes that have important data in flow_entry_count / flow_completion_count,
       # like `if cond; end`, so make sure it's actually executable first...
-      executable? && proper_runs > 0
+      executable? && proper_flow_entry_count > 0
     end
 
     # Returns the number of times it changed the usual control flow (e.g. raised, returned, ...)
     def interrupts
-      runs - flow_completion_count
+      flow_entry_count - flow_completion_count
     end
 
     ### These are refined by subclasses
@@ -49,21 +49,21 @@ module DeepCover
     end
 
     # Returns the number of times it was executed (completely or not)
-    def runs
-      parent.child_runs(self)
+    def flow_entry_count
+      parent.child_flow_entry_count(self)
     end
 
-    def proper_runs
-      runs
+    def proper_flow_entry_count
+      flow_entry_count
     end
 
     # Returns the number of time this child_node was executed (completely or not)
-    def child_runs(child)
+    def child_flow_entry_count(child)
       prev = child.previous_sibling
       if prev
         prev.flow_completion_count
       else
-        runs
+        flow_entry_count
       end
     end
 
@@ -71,7 +71,7 @@ module DeepCover
     def flow_completion_count
       last = children_nodes.last
       return last.flow_completion_count if last
-      runs
+      flow_entry_count
     end
 
     # Code to add before the node for covering purposes (or `nil`)
@@ -172,7 +172,7 @@ module DeepCover
 
     def line_cover
       return unless ex = loc && loc.expression
-      file_coverage.line_hit(ex.line - 1, runs)
+      file_coverage.line_hit(ex.line - 1, flow_entry_count)
       children_nodes.each(&:line_cover)
     end
 
