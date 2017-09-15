@@ -3,6 +3,7 @@ require 'backports/2.1.0/enumerable/to_h'
 module DeepCover
   # Base class to handle covered nodes.
   class Node < Parser::AST::Node
+    include HasTracker
     include HasChild
     attr_reader :file_coverage, :index, :nb, :parent
 
@@ -10,7 +11,6 @@ module DeepCover
       @file_coverage = file_coverage
       augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, file_coverage, self, child_index) }
       @nb = file_coverage.create_node_nb
-      @tracker_offset = file_coverage.allocate_trackers(self.class::TRACKERS.size).begin
       @parent = parent
       @index = index
       super(base_node.type, augmented_children, location: base_node.location)
@@ -133,25 +133,6 @@ module DeepCover
         klass.new(child_base_node, file_coverage, parent, child_index)
       end
 
-      ### Internal
-
-      def has_trackers(*names)
-        const_set :TRACKERS, names.each_with_index.to_h
-        names.each_with_index do |name, i|
-          class_eval <<-end_eval, __FILE__, __LINE__
-            def #{name}_tracker_source
-              file_coverage.tracker_source(@tracker_offset + #{i})
-            end
-            def #{name}_tracker_hits
-              file_coverage.tracker_hits(@tracker_offset + #{i})
-            end
-          end_eval
-        end
-      end
-
-      def has_tracker(tracker) # Allow singular form
-        has_trackers(tracker)
-      end
     end
     has_trackers
 
