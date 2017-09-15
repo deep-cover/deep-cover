@@ -53,8 +53,8 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
     @errors.empty?
   end
   failure_message do |fn|
-    puts DeepCover::Tools.format_branch_cover(@file_coverage, show_line_nbs: true)
-    "Branch cover does not match on lines #{@errors.join(', ')}"
+    formatted_branch_cover = DeepCover::Tools.format_branch_cover(@file_coverage, show_line_nbs: true)
+    "Branch cover does not match on lines #{@errors.join(', ')}\n#{formatted_branch_cover.join("\n")}"
   end
 end
 
