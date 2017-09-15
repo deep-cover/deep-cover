@@ -33,7 +33,7 @@ configs.each do |config|
   next if gemfile == "gemfiles/rails_head.gemfile"
 
   ruby_switcher = WWTD::Ruby.switch_statement(rvm)
-  env_vars = { "BUNDLE_GEMFILE" => gemfile }
+  env_vars = { "BUNDLE_GEMFILE" => gemfile, "WITHOUT_PENDING" => ENV["WITHOUT_PENDING"] || "1"}
   gemfile_text = gemfile || "Default gemfile"
   success = true
 
