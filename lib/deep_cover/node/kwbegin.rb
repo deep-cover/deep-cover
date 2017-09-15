@@ -1,7 +1,7 @@
 module DeepCover
   class Node
     class Kwbegin < Node
-      has_child instructions: Node, rest: true
+      has_extra_children instructions: Node
     end
   end
 end

@@ -1,7 +1,7 @@
 module DeepCover
   class Node
     class Collection < Node
-      has_child elements: Node, rest: true
+      has_extra_children elements: Node
     end
     Array = Hash = Collection
 

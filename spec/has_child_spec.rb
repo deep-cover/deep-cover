@@ -17,7 +17,7 @@ module DeepCover
 
   class ParentWithRest < Parent
     has_child foo: String
-    has_child bar: Integer, rest: true
+    has_extra_children bar: Integer
     has_child baz: Float
     has_child qux: Hash
   end

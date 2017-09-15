@@ -28,7 +28,7 @@ module DeepCover
 
     # Dynamic
     def self.has_evaluated_segments
-      has_child constituents: [String, Begin, Ivar, Cvar, Gvar, Dstr], rest: true
+      has_extra_children constituents: [String, Begin, Ivar, Cvar, Gvar, Dstr]
     end
     class DynamicLiteral < Node
     end

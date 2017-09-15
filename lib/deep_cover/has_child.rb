@@ -33,6 +33,10 @@ module DeepCover
         self
       end
 
+      def has_extra_children(**h)
+        has_child(rest: true, **h)
+      end
+
       def validate_children_types(nodes)
         mismatches = check_children_types(nodes)
         unless mismatches.empty?

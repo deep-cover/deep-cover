@@ -35,7 +35,7 @@ module DeepCover
 
     class Rescue < Node
       has_child watched_body: [Node, nil]
-      has_child resbodies: Resbody, rest: true
+      has_extra_children resbodies: Resbody
       has_child else: [Node, nil]
 
       def flow_completion_count

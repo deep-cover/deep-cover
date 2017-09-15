@@ -1,7 +1,7 @@
 module DeepCover
   class Node
     class Begin < Node
-      has_child expressions: Node, rest: true
+      has_extra_children expressions: Node
     end
   end
 end
