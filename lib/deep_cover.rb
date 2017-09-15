@@ -3,7 +3,7 @@ require 'active_support/core_ext/module/delegation'
 
 def require_relative_dir(dir_name)
   dir = File.dirname(caller.first.partition(/\.rb:\d/).first)
-  Dir["#{dir}/#{dir_name}/*.rb"].each do |file|
+  Dir["#{dir}/#{dir_name}/*.rb"].sort.each do |file|
     require file
   end
 end
