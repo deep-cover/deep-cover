@@ -4,6 +4,7 @@ module DeepCover
   class Node
     class If < Node
       include Branch
+      has_tracker :truthy
       has_child condition: Node
       has_child true_branch: [Node, nil]
       has_child false_branch: [Node, nil]
@@ -23,7 +24,7 @@ module DeepCover
       def child_suffix(child)
         return unless child.index == CONDITION
         # The new value is still truthy
-        ")) && $_cov[#{file_coverage.nb}][#{nb*2}] += 1"
+        ")) && #{truthy_tracker_source}"
       end
 
       def child_flow_entry_count(child)
@@ -31,9 +32,9 @@ module DeepCover
         when CONDITION
           super
         when TRUE_BRANCH
-          file_coverage.cover.fetch(nb*2)
+          truthy_tracker_hits
         when FALSE_BRANCH
-          condition.flow_completion_count - file_coverage.cover.fetch(nb*2)
+          condition.flow_completion_count - truthy_tracker_hits
         end
       end
 

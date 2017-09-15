@@ -4,12 +4,13 @@ require_relative 'collections'
 module DeepCover
   class Node
     class Resbody < Node
+      has_tracker :exception_match
       has_child exception: [Node::Array, nil]
       has_child assignment: [Lvasgn, nil]
       has_child body: [Node, nil]
 
       def suffix
-        ";$_cov[#{file_coverage.nb}][#{nb*2}] += 1"
+        ";#{exception_match_tracker_source}"
       end
 
       def flow_completion_count
@@ -18,7 +19,7 @@ module DeepCover
       end
 
       def execution_count
-        file_coverage.cover.fetch(nb*2)
+        exception_match_tracker_hits
       end
 
       def child_flow_entry_count(child)
@@ -26,14 +27,15 @@ module DeepCover
         when EXCEPTION
           super
         when ASSIGNMENT
-          file_coverage.cover.fetch(nb*2)
+          exception_match_tracker_hits
         when BODY
-          file_coverage.cover.fetch(nb*2)
+          exception_match_tracker_hits
         end
       end
     end
 
     class Rescue < Node
+      has_tracker :else
       has_child watched_body: [Node, nil]
       has_extra_children resbodies: Resbody
       has_child else: [Node, nil]
@@ -45,7 +47,7 @@ module DeepCover
 
       def execution_count
         return 0 unless self.else
-        file_coverage.cover.fetch(nb*2)
+        else_tracker_hits
       end
 
       def executable?
@@ -55,7 +57,7 @@ module DeepCover
       def child_prefix(child)
         return if child.index != ELSE + children.size
 
-        "$_cov[#{file_coverage.nb}][#{nb*2}]+=1;"
+        "#{else_tracker_source};"
       end
 
       def child_flow_entry_count(child)

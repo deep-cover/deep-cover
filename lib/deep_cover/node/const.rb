@@ -1,10 +1,11 @@
 module DeepCover
   class Node::Const < Node
+    has_tracker :completion
     has_child scope: [Node, nil]
     has_child const_name: Symbol
 
     def flow_completion_count
-      file_coverage.cover.fetch(nb*2)
+      completion_tracker_hits
     end
 
     def execution_count
@@ -17,7 +18,7 @@ module DeepCover
     end
 
     def suffix
-      ")).tap{|v| $_cov[#{file_coverage.nb}][#{nb*2}] += 1}"
+      ")).tap{|v| #{completion_tracker_source}}"
     end
   end
 

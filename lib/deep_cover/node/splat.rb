@@ -1,6 +1,7 @@
 module DeepCover
   class Node
     class Splat < Node
+      has_tracker :completion
       has_child receiver: Node
 
       def prefix
@@ -8,11 +9,11 @@ module DeepCover
       end
 
       def suffix
-        "].tap{$_cov[#{file_coverage.nb}][#{nb*2}] += 1}"
+        "].tap{#{completion_tracker_source}}"
       end
 
       def flow_completion_count
-        file_coverage.cover.fetch(nb*2)
+        completion_tracker_hits
       end
 
       def execution_count
@@ -23,6 +24,7 @@ module DeepCover
     end
 
     class Kwsplat < Node
+      has_tracker :completion
       has_child receiver: Node
 
       def prefix
@@ -30,11 +32,11 @@ module DeepCover
       end
 
       def suffix
-        "}.tap{$_cov[#{file_coverage.nb}][#{nb*2}] += 1}"
+        "}.tap{#{completion_tracker_source}}"
       end
 
       def flow_completion_count
-        file_coverage.cover.fetch(nb*2)
+        completion_tracker_hits
       end
 
       def execution_count
