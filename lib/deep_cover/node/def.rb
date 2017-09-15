@@ -1,3 +1,5 @@
+require_relative 'arguments'
+
 module DeepCover
   class Node::Def < Node
     has_child method_name: Symbol
