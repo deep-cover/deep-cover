@@ -20,6 +20,7 @@ module DeepCover
         add_runtime_check(name, type)
         define_handler(:"#{name}_flow_entry_count", flow_entry_count)
         define_handler(:"rewrite_#{name}", rewrite)
+        self
       end
 
       # Creates methods to return the children corresponding with the given `names`.
@@ -46,7 +47,7 @@ module DeepCover
           return name if i == index || (i == index - nb_children) ||
             (i.is_a?(Range) && i.begin <= index && i.end + nb_children >= index)
         end
-        raise IndexError, "index #{index} does not correspond to any child #{self::CHILDREN}"
+        raise IndexError, "index #{index} does not correspond to any child of #{self}"
       end
 
       private

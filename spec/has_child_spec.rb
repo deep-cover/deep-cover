@@ -22,6 +22,10 @@ module DeepCover
     has_child qux: Hash
   end
 
+  class ParentWithOptional < Parent
+    has_child optional: [Node, nil]
+  end
+
   RSpec.describe HasChild do
     describe "constants" do
       it "CHILDREN is set" do
