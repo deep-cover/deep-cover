@@ -12,6 +12,16 @@ module DeepCover
       self.class.validate_children_types(children) unless self.class::CHILDREN.empty?
     end
 
+    def call_handler name, child
+      child_name = self.class.child_index_to_name(child.index, children.size) rescue binding.pry
+      method_name = name % {name: child_name}
+      if respond_to?(method_name)
+        args = [child] unless method(method_name).arity == 0
+        answer = send(method_name, *args)
+      end
+      answer || yield
+    end
+
     module ClassMethods
       def has_child(flow_entry_count: nil, rewrite: nil, rest: false, **h)
         name, type = h.first
