@@ -5,7 +5,7 @@ module DeepCover
     class Lvasgn < Node
       has_children :var_name, :value
 
-      def proper_flow_entry_count
+      def execution_count
         return super unless value
         value.flow_completion_count
       end

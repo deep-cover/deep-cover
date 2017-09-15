@@ -8,7 +8,7 @@ module DeepCover
         resbodies.map(&:flow_completion_count).inject(0, :+) + (self.else || watched_body).flow_completion_count
       end
 
-      def proper_flow_entry_count
+      def execution_count
         return 0 unless self.else
         file_coverage.cover.fetch(nb*2)
       end
@@ -37,7 +37,7 @@ module DeepCover
             prev.flow_entry_count - prev.flow_completion_count
           else # RESBODIES
             # TODO is this okay?
-            prev.exception.flow_completion_count - prev.proper_flow_entry_count
+            prev.exception.flow_completion_count - prev.execution_count
           end
         when ELSE + children.size
           return watched_body.flow_completion_count if watched_body
@@ -58,10 +58,10 @@ module DeepCover
 
       def flow_completion_count
         return body.flow_completion_count if body
-        proper_flow_entry_count
+        execution_count
       end
 
-      def proper_flow_entry_count
+      def execution_count
         file_coverage.cover.fetch(nb*2)
       end
 

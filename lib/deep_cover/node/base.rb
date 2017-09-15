@@ -33,7 +33,7 @@ module DeepCover
     def was_executed?
       # There is a rare case of non executable nodes that have important data in flow_entry_count / flow_completion_count,
       # like `if cond; end`, so make sure it's actually executable first...
-      executable? && proper_flow_entry_count > 0
+      executable? && execution_count > 0
     end
 
     # Returns the number of times it changed the usual control flow (e.g. raised, returned, ...)
@@ -53,7 +53,7 @@ module DeepCover
       parent.child_flow_entry_count(self)
     end
 
-    def proper_flow_entry_count
+    def execution_count
       flow_entry_count
     end
 
