@@ -4,7 +4,9 @@ module DeepCover
   class Node
     class If < Node
       include Branch
-      has_children :condition, :true_branch, :false_branch
+      has_child condition: Node
+      has_child true_branch: [Node, nil]
+      has_child false_branch: [Node, nil]
 
       def branches
         [

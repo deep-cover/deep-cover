@@ -1,7 +1,7 @@
 module DeepCover
   class Node
     class Splat < Node
-      has_children :receiver
+      has_child receiver: Node
 
       def prefix
         "*["
@@ -23,7 +23,7 @@ module DeepCover
     end
 
     class Kwsplat < Node
-      has_children :receiver
+      has_child receiver: Node
 
       def prefix
         "**{"

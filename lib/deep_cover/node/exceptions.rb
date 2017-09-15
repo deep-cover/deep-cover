@@ -1,7 +1,42 @@
+require_relative 'variables'
+require_relative 'collections'
+
 module DeepCover
   class Node
+    class Resbody < Node
+      has_child exception: [Node::Array, nil]
+      has_child assignment: [Lvasgn, nil]
+      has_child body: [Node, nil]
+
+      def suffix
+        ";$_cov[#{file_coverage.nb}][#{nb*2}] += 1"
+      end
+
+      def flow_completion_count
+        return body.flow_completion_count if body
+        execution_count
+      end
+
+      def execution_count
+        file_coverage.cover.fetch(nb*2)
+      end
+
+      def child_flow_entry_count(child)
+        case child.index
+        when EXCEPTION
+          super
+        when ASSIGNMENT
+          file_coverage.cover.fetch(nb*2)
+        when BODY
+          file_coverage.cover.fetch(nb*2)
+        end
+      end
+    end
+
     class Rescue < Node
-      has_children :watched_body, :resbodies__rest, :else
+      has_child watched_body: [Node, nil]
+      has_child resbodies: Resbody, rest: true
+      has_child else: [Node, nil]
 
       def flow_completion_count
         return super unless watched_body
@@ -48,33 +83,5 @@ module DeepCover
       end
     end
 
-
-    class Resbody < Node
-      has_children :exception, :assignment, :body
-
-      def suffix
-        ";$_cov[#{file_coverage.nb}][#{nb*2}] += 1"
-      end
-
-      def flow_completion_count
-        return body.flow_completion_count if body
-        execution_count
-      end
-
-      def execution_count
-        file_coverage.cover.fetch(nb*2)
-      end
-
-      def child_flow_entry_count(child)
-        case child.index
-        when EXCEPTION
-          super
-        when ASSIGNMENT
-          file_coverage.cover.fetch(nb*2)
-        when BODY
-          file_coverage.cover.fetch(nb*2)
-        end
-      end
-    end
   end
 end

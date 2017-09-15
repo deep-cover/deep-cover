@@ -33,18 +33,6 @@ module DeepCover
         self
       end
 
-      # Creates methods to return the children corresponding with the given `names`.
-      # Also creates constants for the indices of the children.
-      def has_children(*names)
-        names.each do |name|
-          rest = name.to_s.end_with?('__rest')
-          if rest
-            name = name.to_s.gsub(/__rest$/, '').to_sym
-          end
-          has_child(name => :any, rest: rest)
-        end
-      end
-
       def validate_children_types(nodes)
         mismatches = check_children_types(nodes)
         unless mismatches.empty?

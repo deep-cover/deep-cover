@@ -1,12 +1,5 @@
 module DeepCover
   class Node
-    class Args < Node
-      has_children :arguments__rest
-      def executable?
-        false
-      end
-    end
-
     class Arg < Node
       def executable?
         false
@@ -15,12 +8,20 @@ module DeepCover
     Kwrestarg = Kwarg = Restarg = Arg
 
     class Optarg < Node
-      has_children :name, :default
+      has_child name: Symbol
+      has_child default: Node
 
       def executable?
         false
       end
     end
     Kwoptarg = Optarg
+
+    class Args < Node
+      has_child arguments: [Arg, Optarg, Restarg, Kwarg, Kwoptarg, Kwrestarg], rest: true
+      def executable?
+        false
+      end
+    end
   end
 end

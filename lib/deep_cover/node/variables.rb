@@ -3,7 +3,8 @@ module DeepCover
     Ivar = Lvar = Cvar = Gvar = Back_ref = Node
 
     class Lvasgn < Node
-      has_children :var_name, :value
+      has_child var_name: Symbol
+      has_child value: [Node, nil]
 
       def execution_count
         return super unless value

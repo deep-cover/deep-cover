@@ -1,7 +1,9 @@
 module DeepCover
   class Node
     class Send < Node
-      has_children :receiver, :method, :arguments__rest
+      has_child receiver: [Node, nil]
+      has_child method: Symbol
+      has_child arguments: Node, rest: true
 
       def prefix
         "(("

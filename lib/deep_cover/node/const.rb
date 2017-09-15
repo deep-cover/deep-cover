@@ -1,6 +1,7 @@
 module DeepCover
   class Node::Const < Node
-    has_children :scope, :const_name
+    has_child scope: [Node, nil]
+    has_child const_name: Symbol
 
     def flow_completion_count
       file_coverage.cover.fetch(nb*2)
