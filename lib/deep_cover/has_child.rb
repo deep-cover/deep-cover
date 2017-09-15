@@ -58,11 +58,7 @@ module DeepCover
       def expected_types(nodes)
         types = self::CHILDREN.flat_map do |name, i|
           type = self::CHILDREN_TYPES[name]
-          if i.is_a?(Range)
-            Array.new((nodes[i] || []).size, type)
-          else
-            type
-          end
+          Array.new(nodes.values_at(i).size, type)
         end
       end
 

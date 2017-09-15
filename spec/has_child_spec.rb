@@ -45,6 +45,7 @@ module DeepCover
 
     describe :check_children_types do
       it "works" do
+        ParentWithOptional.check_children_types([]).should eql []
         ParentNoRest.check_children_types(['x', 1]).should eql []
         ParentNoRest.check_children_types([1, 'x']).should eql [[1, String], ['x', Integer]]
         ParentWithRest.check_children_types(['x', 1, 2, 3, 4, 4.5, 'h']).should eql [['h', Hash]]
