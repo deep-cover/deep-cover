@@ -1,5 +1,13 @@
 module DeepCover
   class Node
-    Array = Hash = Node
+    class Collection < Node
+      has_child elements: Node, rest: true
+    end
+    Array = Hash = Collection
+
+    class Pair < Node
+      has_child key: Node
+      has_child value: Node
+    end
   end
 end
