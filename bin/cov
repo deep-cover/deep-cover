@@ -62,7 +62,7 @@ module ColorAST
       :faint
     when !was_executed?
       :red
-    when interrupts > 0
+    when flow_interrupt_count > 0
       :yellow
     else
       :green

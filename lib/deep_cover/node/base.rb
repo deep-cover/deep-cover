@@ -37,7 +37,7 @@ module DeepCover
     end
 
     # Returns the number of times it changed the usual control flow (e.g. raised, returned, ...)
-    def interrupts
+    def flow_interrupt_count
       flow_entry_count - flow_completion_count
     end
 
