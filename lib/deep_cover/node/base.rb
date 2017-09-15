@@ -27,7 +27,7 @@ module DeepCover
 
     def full_range
       return [] unless location
-      location.expression.to_a
+      location.to_hash.values.map(&:to_a).inject(:+)
     end
 
     def [](v)

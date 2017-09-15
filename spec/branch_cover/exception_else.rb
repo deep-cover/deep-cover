@@ -1,11 +1,5 @@
 ### Without rescue
-#### With raise (pending)
-
-    # The result we want for the else is not obvious.
-    # Either way (not executed or not executable), it is hard to do because the else,
-    # when there are no rescue in the begin, is only part of the kwbegin, so it is part
-    # of the sme proper_range as the begin and the end. So right now, we can only show
-    # it as executed.
+#### With raise
 
     begin
       begin
