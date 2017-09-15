@@ -41,6 +41,14 @@ module DeepCover
         end
       end
 
+      def child_index_to_name(index, nb_children)
+        self::CHILDREN.each do |name, i|
+          return name if i == index || (i == index - nb_children) ||
+            (i.is_a?(Range) && i.begin <= index && i.end + nb_children >= index)
+        end
+        raise IndexError, "index #{index} does not correspond to any child #{self::CHILDREN}"
+      end
+
       private
       def check_children_types(nodes)
         types = expected_types(nodes)
