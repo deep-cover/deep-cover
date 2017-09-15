@@ -4,8 +4,9 @@ module DeepCover
   class Node
     class ShortCircuit < Node
       include Branch
-      has_children :first, :conditional
       has_tracker :conditional
+      has_child first: Node
+      has_child conditional: Node, flow_entry_count: :conditional_tracker_hits
 
       def branches
         [
@@ -23,15 +24,6 @@ module DeepCover
         return unless child.index == CONDITIONAL
         # The new value is still truthy
         "))"
-      end
-
-      def child_flow_entry_count(child)
-        case child.index
-        when FIRST
-          super
-        when CONDITIONAL
-          conditional_tracker_hits
-        end
       end
     end
 
