@@ -14,3 +14,18 @@ RSpec.configure do |config|
     c.syntax = [:should, :expect]
   end
 end
+
+if %w(true 1).include?(ENV["WITHOUT_PENDING"])
+  # "Official" way of not showing pendings
+  # https://github.com/rspec/rspec-core/issues/2377
+  module FormatterOverrides
+    def example_pending(_)
+    end
+
+    def dump_pending(_)
+    end
+  end
+
+  RSpec::Core::Formatters::DocumentationFormatter.send(:prepend, FormatterOverrides)
+  RSpec::Core::Formatters::ProgressFormatter.send(:prepend, FormatterOverrides)
+end
