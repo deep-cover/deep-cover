@@ -2,13 +2,13 @@ module DeepCover
   class Node::Const < Node
     has_children :scope, :const_name
 
-    def full_runs
+    def flow_completion_count
       file_coverage.cover.fetch(nb*2)
     end
 
     def proper_runs
       return super if scope.nil?
-      scope.full_runs
+      scope.flow_completion_count
     end
 
     def prefix

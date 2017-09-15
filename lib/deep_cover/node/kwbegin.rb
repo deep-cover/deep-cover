@@ -1,9 +1,9 @@
 module DeepCover
   class Node
     class Kwbegin < Node
-      def full_runs
+      def flow_completion_count
         last = children.last
-        return last.full_runs if last
+        return last.flow_completion_count if last
         super
       end
     end

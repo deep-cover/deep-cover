@@ -3,9 +3,9 @@ module DeepCover
     class Rescue < Node
       has_children :watched_body, :resbodies__rest, :else
 
-      def full_runs
+      def flow_completion_count
         return super unless watched_body
-        resbodies.map(&:full_runs).inject(0, :+) + (self.else || watched_body).full_runs
+        resbodies.map(&:flow_completion_count).inject(0, :+) + (self.else || watched_body).flow_completion_count
       end
 
       def proper_runs
@@ -34,13 +34,13 @@ module DeepCover
           prev = child.previous_sibling
 
           if prev.index == WATCHED_BODY
-            prev.runs - prev.full_runs
+            prev.runs - prev.flow_completion_count
           else # RESBODIES
             # TODO is this okay?
-            prev.exception.full_runs - prev.proper_runs
+            prev.exception.flow_completion_count - prev.proper_runs
           end
         when ELSE + children.size
-          return watched_body.full_runs if watched_body
+          return watched_body.flow_completion_count if watched_body
           super
         else
           binding.pry
@@ -56,8 +56,8 @@ module DeepCover
         ";$_cov[#{file_coverage.nb}][#{nb*2}] += 1"
       end
 
-      def full_runs
-        return body.full_runs if body
+      def flow_completion_count
+        return body.flow_completion_count if body
         proper_runs
       end
 

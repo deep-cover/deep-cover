@@ -11,13 +11,13 @@ module DeepCover
         "].tap{$_cov[#{file_coverage.nb}][#{nb*2}] += 1}"
       end
 
-      def full_runs
+      def flow_completion_count
         file_coverage.cover.fetch(nb*2)
       end
 
       def proper_runs
         last = children_nodes.last
-        return last.full_runs if last
+        return last.flow_completion_count if last
         super
       end
     end
@@ -33,13 +33,13 @@ module DeepCover
         "}.tap{$_cov[#{file_coverage.nb}][#{nb*2}] += 1}"
       end
 
-      def full_runs
+      def flow_completion_count
         file_coverage.cover.fetch(nb*2)
       end
 
       def proper_runs
         last = children_nodes.last
-        return last.full_runs if last
+        return last.flow_completion_count if last
         super
       end
     end

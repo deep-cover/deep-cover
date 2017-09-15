@@ -7,7 +7,7 @@ module DeepCover
 
       def proper_runs
         return super unless value
-        value.full_runs
+        value.flow_completion_count
       end
     end
   end

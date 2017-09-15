@@ -31,12 +31,12 @@ module DeepCover
         when TRUE_BRANCH
           file_coverage.cover.fetch(nb*2)
         when FALSE_BRANCH
-          condition.full_runs - file_coverage.cover.fetch(nb*2)
+          condition.flow_completion_count - file_coverage.cover.fetch(nb*2)
         end
       end
 
-      def full_runs
-        executable? ? super : condition.full_runs
+      def flow_completion_count
+        executable? ? super : condition.flow_completion_count
       end
 
       # If both branches are nil, mark as non-executable

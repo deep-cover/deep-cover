@@ -31,14 +31,14 @@ module DeepCover
 
     # Returns true iff it is executable and if was successfully executed
     def was_executed?
-      # There is a rare case of non executable nodes that have important data in runs / full_runs,
+      # There is a rare case of non executable nodes that have important data in runs / flow_completion_count,
       # like `if cond; end`, so make sure it's actually executable first...
       executable? && proper_runs > 0
     end
 
     # Returns the number of times it changed the usual control flow (e.g. raised, returned, ...)
     def interrupts
-      runs - full_runs
+      runs - flow_completion_count
     end
 
     ### These are refined by subclasses
@@ -61,16 +61,16 @@ module DeepCover
     def child_runs(child)
       prev = child.previous_sibling
       if prev
-        prev.full_runs
+        prev.flow_completion_count
       else
         runs
       end
     end
 
     # Returns the number of times it was fully ran
-    def full_runs
+    def flow_completion_count
       last = children_nodes.last
-      return last.full_runs if last
+      return last.flow_completion_count if last
       runs
     end
 
