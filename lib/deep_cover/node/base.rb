@@ -22,7 +22,12 @@ module DeepCover
     # pertain exclusively to this node (and thus not to any children).
     def proper_range
       return [] unless location
-      location.expression.to_a - children.flat_map{|n| n.respond_to?(:location) && n.location && n.location.expression.to_a }
+      full_range - children_nodes.flat_map(&:full_range)
+    end
+
+    def full_range
+      return [] unless location
+      location.expression.to_a
     end
 
     def [](v)
