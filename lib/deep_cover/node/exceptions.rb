@@ -9,8 +9,8 @@ module DeepCover
       has_child assignment: [Lvasgn, nil], flow_entry_count: :exception_match_tracker_hits
       has_child body: [Node, nil], flow_entry_count: :exception_match_tracker_hits
 
-      def suffix
-        ";#{exception_match_tracker_source}"
+      def rewrite
+        "%{node};#{exception_match_tracker_source}"
       end
 
       def flow_completion_count

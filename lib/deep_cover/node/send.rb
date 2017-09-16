@@ -6,12 +6,8 @@ module DeepCover
       has_child method: Symbol
       has_extra_children arguments: Node
 
-      def prefix
-        "(("
-      end
-
-      def suffix
-        ")).tap{#{completion_tracker_source}}"
+      def rewrite
+      "((%{node})).tap{#{completion_tracker_source}}"
       end
 
       def flow_completion_count

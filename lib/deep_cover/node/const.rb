@@ -13,12 +13,8 @@ module DeepCover
       scope.flow_completion_count
     end
 
-    def prefix
-      "(("
-    end
-
-    def suffix
-      ")).tap{|v| #{completion_tracker_source}}"
+    def rewrite
+      "((%{node})).tap{|v| #{completion_tracker_source}}"
     end
   end
 

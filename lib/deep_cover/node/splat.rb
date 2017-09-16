@@ -4,12 +4,8 @@ module DeepCover
       has_tracker :completion
       has_child receiver: Node
 
-      def prefix
-        "*["
-      end
-
-      def suffix
-        "].tap{#{completion_tracker_source}}"
+      def rewrite
+        "*[%{node}].tap{#{completion_tracker_source}}"
       end
 
       def flow_completion_count
@@ -27,12 +23,8 @@ module DeepCover
       has_tracker :completion
       has_child receiver: Node
 
-      def prefix
-        "**{"
-      end
-
-      def suffix
-        "}.tap{#{completion_tracker_source}}"
+      def rewrite
+        "**{%{node}}.tap{#{completion_tracker_source}}"
       end
 
       def flow_completion_count
