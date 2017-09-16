@@ -1,5 +1,3 @@
-require_relative 'has_tracker'
-require_relative 'has_child'
 require_relative 'node'
 
 module DeepCover
