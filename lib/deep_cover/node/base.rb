@@ -87,12 +87,6 @@ module DeepCover
       end
     end
 
-    def child_prefix(child)
-    end
-
-    def child_suffix(child)
-    end
-
     # Code to add before and after the node for covering purposes
     def rewrite
       "%{node}"
@@ -100,7 +94,7 @@ module DeepCover
 
     def rewrite_child(child)
       super do
-        [child_prefix(child), child_suffix(child)].join('%{node}')
+        "%{node}"
       end
     end
 
