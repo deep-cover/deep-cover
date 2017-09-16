@@ -1,21 +1,8 @@
 module DeepCover
   class Node::Const < Node
-    has_tracker :completion
+    check_completion
     has_child scope: [Node, nil]
     has_child const_name: Symbol
-
-    def flow_completion_count
-      completion_tracker_hits
-    end
-
-    def execution_count
-      return super if scope.nil?
-      scope.flow_completion_count
-    end
-
-    def rewrite
-      '((%{node})).tap{|v| %{completion_tracker}}'
-    end
   end
 
   class Node::Cbase < Node
