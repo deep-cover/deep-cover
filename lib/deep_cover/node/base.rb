@@ -87,22 +87,15 @@ module DeepCover
       end
     end
 
-    # Code to add before the node for covering purposes (or `nil`)
-    def prefix
-    end
-
     def child_prefix(child)
-    end
-
-    # Code to add after the node for covering purposes (or `nil`)
-    def suffix
     end
 
     def child_suffix(child)
     end
 
+    # Code to add before and after the node for covering purposes
     def rewrite
-      "#{prefix}%{node}#{suffix}"
+      "%{node}"
     end
 
     def rewrite_child(child)
