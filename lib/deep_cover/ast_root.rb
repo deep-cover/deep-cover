@@ -9,7 +9,7 @@ module DeepCover
     include HasChild
 
     has_tracker :root
-    has_child main: Node
+    has_child main: Node, flow_entry_count: :root_tracker_hits
 
     attr_reader :file_coverage
 
@@ -17,10 +17,6 @@ module DeepCover
       @file_coverage = file_coverage
       @main_node = Node.augment(child_ast, file_coverage, self)
       super()
-    end
-
-    def child_flow_entry_count(_child)
-      root_tracker_hits
     end
 
     def child_prefix(_child)
