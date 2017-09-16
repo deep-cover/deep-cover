@@ -85,12 +85,13 @@ module DeepCover
 
       rewriter = ::Parser::Source::Rewriter.new(@buffer)
       @covered_ast.each_node do |node|
-        if prefix = node.full_prefix
+        prefix, suffix = node.rewrite_prefix_suffix
+        if prefix
           expression = node.loc.expression
           prefix = yield prefix, node, expression.begin, :prefix if block_given?
           rewriter.insert_before_multi expression, prefix
         end
-        if suffix = node.full_suffix
+        if suffix
           expression = node.loc.expression
           suffix = yield suffix, node, expression.end, :suffix if block_given?
           rewriter.insert_after_multi  expression, suffix

@@ -94,10 +94,6 @@ module DeepCover
     def child_prefix(child)
     end
 
-    def full_prefix
-      "#{prefix}#{parent.child_prefix(self)}"
-    end
-
     # Code to add after the node for covering purposes (or `nil`)
     def suffix
     end
@@ -105,8 +101,11 @@ module DeepCover
     def child_suffix(child)
     end
 
-    def full_suffix
-      "#{parent.child_suffix(self)}#{suffix}"
+    def rewrite_prefix_suffix
+      [
+        "#{prefix}#{parent.child_prefix(self)}",
+        "#{parent.child_suffix(self)}#{suffix}"
+      ]
     end
 
     ### Singleton methods
