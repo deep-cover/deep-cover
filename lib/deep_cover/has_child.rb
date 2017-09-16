@@ -26,6 +26,10 @@ module DeepCover
       answer || yield
     end
 
+    def child_flow_entry_count(child)
+      call_handler('%{name}_flow_entry_count', child) { yield }
+    end
+
     def validate_children_types(nodes)
       mismatches = self.class.check_children_types(nodes)
       unless mismatches.empty?
