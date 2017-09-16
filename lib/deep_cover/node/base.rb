@@ -101,10 +101,26 @@ module DeepCover
     def child_suffix(child)
     end
 
+    def rewrite
+      "#{prefix}%{node}#{suffix}"
+    end
+
+    def rewrite_child(child)
+      super do
+        [child_prefix(child), child_suffix(child)].join('%{node}')
+      end
+    end
+
+    def resolve_rewrite(rule)
+      rule.split('%{node}')
+    end
+
     def rewrite_prefix_suffix
+      parent_prefix, parent_suffix = resolve_rewrite(parent.rewrite_child(self))
+      prefix, suffix = resolve_rewrite(rewrite)
       [
-        "#{prefix}#{parent.child_prefix(self)}",
-        "#{parent.child_suffix(self)}#{suffix}"
+        "#{prefix}#{parent_prefix}",
+        "#{parent_suffix}#{suffix}"
       ]
     end
 

@@ -30,6 +30,10 @@ module DeepCover
       call_handler('%{name}_flow_entry_count', child) { yield }
     end
 
+    def rewrite_child(child)
+      call_handler('rewrite_%{name}', child) { yield }
+    end
+
     def validate_children_types(nodes)
       mismatches = self.class.check_children_types(nodes)
       unless mismatches.empty?
