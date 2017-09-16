@@ -9,7 +9,7 @@ module DeepCover
 
     def initialize(*)
       super
-      self.class.validate_children_types(children)
+      self.validate_children_types(children)
     end
 
     def call_handler name, child
@@ -20,6 +20,13 @@ module DeepCover
         answer = send(method_name, *args)
       end
       answer || yield
+    end
+
+    def validate_children_types(nodes)
+      mismatches = self.class.check_children_types(nodes)
+      unless mismatches.empty?
+        raise TypeError, "Invalid types for #{self.class}(type: #{self.type}): #{mismatches}"
+      end
     end
 
     module ClassMethods
@@ -37,13 +44,6 @@ module DeepCover
         has_child(rest: true, **h)
       end
 
-      def validate_children_types(nodes)
-        mismatches = check_children_types(nodes)
-        unless mismatches.empty?
-          raise TypeError, "Invalid types for #{self}: #{mismatches}"
-        end
-      end
-
       def child_index_to_name(index, nb_children)
         self::CHILDREN.each do |name, i|
           return name if i == index || (i == index - nb_children) ||
@@ -52,11 +52,11 @@ module DeepCover
         raise IndexError, "index #{index} does not correspond to any child of #{self}"
       end
 
-      private
       def check_children_types(nodes)
         types = expected_types(nodes)
         nodes_mismatches(nodes, types)
       end
+      private
 
       def expected_types(nodes)
         types = self::CHILDREN.flat_map do |name, i|
