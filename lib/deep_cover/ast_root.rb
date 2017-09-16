@@ -1,4 +1,3 @@
-require 'backports/2.1.0/enumerable/to_h'
 require_relative 'has_tracker'
 require_relative 'has_child'
 require_relative 'node'
