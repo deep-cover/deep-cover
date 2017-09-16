@@ -37,7 +37,10 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
   match do |lines|
     code, answers = parse(lines, lineno)
     @file_coverage = DeepCover::FileCoverage.new(path: filename, source: code.join("\n"), lineno: lineno)
-    @file_coverage.execute_file
+
+    # Disable some annoying warning by ruby. We are testing edge cases, so warnings are to be expected.
+    with_warnings(nil) { @file_coverage.execute_file }
+
     cov = @file_coverage.branch_cover
     errors = cov.zip(answers, code).each_with_index.reject do |(a, expected, line), i|
       actual = strip_when_unimportant(line, a)

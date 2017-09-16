@@ -29,3 +29,11 @@ if %w(true 1).include?(ENV["WITHOUT_PENDING"])
   RSpec::Core::Formatters::DocumentationFormatter.send(:prepend, FormatterOverrides)
   RSpec::Core::Formatters::ProgressFormatter.send(:prepend, FormatterOverrides)
 end
+
+
+def with_warnings(flag)
+  old_verbose, $VERBOSE = $VERBOSE, flag
+  yield
+ensure
+  $VERBOSE = old_verbose
+end
