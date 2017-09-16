@@ -54,7 +54,7 @@ begin
     fail_test "Running `require 'that_is_missing_huh'` should have raised but didn't"
   end
 
-rescue => e
+rescue Exception => e
   fail_test("Uncaught exception during test", e)
 end
 
