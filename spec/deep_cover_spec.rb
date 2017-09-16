@@ -18,7 +18,7 @@ end
 RSpec.describe DeepCover do
   Dir.glob('./spec/samples/*.rb').each do |fn|
     it "returns the same coverage for '#{File.basename(fn, '.rb')}' as the builtin one" do
-      fn.should match_coverage
+      File.absolute_path(fn).should match_coverage
     end
   end
 end

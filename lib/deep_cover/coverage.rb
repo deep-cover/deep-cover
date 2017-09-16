@@ -1,6 +1,7 @@
 require 'parser'
 require 'parser/current'
 require 'pry'
+require 'pathname'
 
 module DeepCover
   class Coverage
@@ -19,9 +20,9 @@ module DeepCover
       file_coverage(filename).line_coverage
     end
 
-    def file_coverage(filename, &block)
-      path = resolve_path(filename)
-      @file_coverage[path] ||= yield path
+    def file_coverage(path, &block)
+      raise 'path must be an absolute path' unless Pathname.new(path).absolute?
+      @file_coverage[path] ||= FileCoverage.new(path: path)
     end
 
     def resolve_path(filename)
