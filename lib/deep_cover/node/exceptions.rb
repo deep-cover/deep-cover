@@ -27,7 +27,8 @@ module DeepCover
       has_tracker :else
       has_child watched_body: [Node, nil]
       has_extra_children resbodies: Resbody
-      has_child else: [Node, nil], flow_entry_count: -> {watched_body.flow_completion_count if watched_body}
+      has_child else: [Node, nil], flow_entry_count: -> {watched_body.flow_completion_count if watched_body},
+        rewrite: -> { "#{else_tracker_source};%{node}" }
 
       def flow_completion_count
         return super unless watched_body
@@ -41,12 +42,6 @@ module DeepCover
 
       def executable?
         !!self.else
-      end
-
-      def child_prefix(child)
-        return if child.index != ELSE + children.size
-
-        "#{else_tracker_source};"
       end
 
       def resbodies_flow_entry_count(child)
