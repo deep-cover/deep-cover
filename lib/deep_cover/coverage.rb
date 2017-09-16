@@ -13,7 +13,7 @@ module DeepCover
       file_coverage(filename).line_coverage
     end
 
-    def file_coverage(path, &block)
+    def file_coverage(path)
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
       @file_coverage[path] ||= FileCoverage.new(path: path)
     end
