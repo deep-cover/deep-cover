@@ -11,6 +11,12 @@ module DeepCover
       super
     end
 
+    def tracker_sources
+      self.class::TRACKERS.map do |name, _|
+        [:"#{name}_tracker", send(:"#{name}_tracker_source")]
+      end.to_h
+    end
+
     module ClassMethods
       def has_trackers(*names)
         const_set :TRACKERS, names.each_with_index.to_h

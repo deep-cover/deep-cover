@@ -5,7 +5,7 @@ module DeepCover
     class If < Node
       include Branch
       has_tracker :truthy
-      has_child condition: Node, rewrite: -> { "((%{node})) && #{truthy_tracker_source}"}
+      has_child condition: Node, rewrite: '((%{node})) && %{truthy_tracker}'
       has_child true_branch: [Node, nil], flow_entry_count: :truthy_tracker_hits
       has_child false_branch: [Node, nil], flow_entry_count: -> { condition.flow_completion_count - truthy_tracker_hits }
 

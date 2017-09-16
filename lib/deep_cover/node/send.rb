@@ -7,7 +7,7 @@ module DeepCover
       has_extra_children arguments: Node
 
       def rewrite
-      "((%{node})).tap{#{completion_tracker_source}}"
+        '((%{node})).tap{%{completion_tracker}}'
       end
 
       def flow_completion_count

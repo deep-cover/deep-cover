@@ -5,7 +5,7 @@ module DeepCover
       has_child receiver: Node
 
       def rewrite
-        "*[%{node}].tap{#{completion_tracker_source}}"
+        '*[%{node}].tap{%{completion_tracker}}'
       end
 
       def flow_completion_count
@@ -24,7 +24,7 @@ module DeepCover
       has_child receiver: Node
 
       def rewrite
-        "**{%{node}}.tap{#{completion_tracker_source}}"
+        '**{%{node}}.tap{%{completion_tracker}}'
       end
 
       def flow_completion_count

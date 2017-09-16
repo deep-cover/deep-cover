@@ -89,22 +89,23 @@ module DeepCover
 
     # Code to add before and after the node for covering purposes
     def rewrite
-      "%{node}"
+      '%{node}'
     end
 
     def rewrite_child(child)
       super do
-        "%{node}"
+        '%{node}'
       end
     end
 
-    def resolve_rewrite(rule)
-      rule.split('%{node}')
+    def resolve_rewrite(rule, context)
+      sources = context.tracker_sources
+      rule.split('%{node}').map{|s| s % sources }
     end
 
     def rewrite_prefix_suffix
-      parent_prefix, parent_suffix = resolve_rewrite(parent.rewrite_child(self))
-      prefix, suffix = resolve_rewrite(rewrite)
+      parent_prefix, parent_suffix = resolve_rewrite(parent.rewrite_child(self), parent)
+      prefix, suffix = resolve_rewrite(rewrite, self)
       [
         "#{prefix}#{parent_prefix}",
         "#{parent_suffix}#{suffix}"

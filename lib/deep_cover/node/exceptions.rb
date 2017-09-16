@@ -10,7 +10,7 @@ module DeepCover
       has_child body: [Node, nil], flow_entry_count: :exception_match_tracker_hits
 
       def rewrite
-        "%{node};#{exception_match_tracker_source}"
+        '%{node};%{exception_match_tracker}'
       end
 
       def flow_completion_count
@@ -28,7 +28,7 @@ module DeepCover
       has_child watched_body: [Node, nil]
       has_extra_children resbodies: Resbody
       has_child else: [Node, nil], flow_entry_count: -> {watched_body.flow_completion_count if watched_body},
-        rewrite: -> { "#{else_tracker_source};%{node}" }
+        rewrite: '%{else_tracker};%{node}'
 
       def flow_completion_count
         return super unless watched_body

@@ -14,7 +14,7 @@ module DeepCover
     end
 
     def rewrite
-      "((%{node})).tap{|v| #{completion_tracker_source}}"
+      '((%{node})).tap{|v| %{completion_tracker}}'
     end
   end
 
