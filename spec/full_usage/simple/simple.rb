@@ -55,7 +55,7 @@ begin
   end
 
 rescue Exception => e
-  fail_test("Uncaught exception during test", e)
+  fail_test("Uncaught exception during test:", e)
 end
 
 $out.puts("Done")
