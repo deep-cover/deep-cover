@@ -15,7 +15,7 @@ module DeepCover
       end
       @lineno = lineno
       @tracker_count = 0
-      @covered_source = rewrite_source
+      @covered_source = instrument_source
     end
 
     def execute_code
@@ -78,7 +78,7 @@ module DeepCover
       cover.fetch(tracker_id)
     end
 
-    def rewrite_source
+    def instrument_source
       @covered_ast ||= begin
         ast = Parser::CurrentRuby.new.parse(@buffer)
         root = AstRoot.new(ast, self)

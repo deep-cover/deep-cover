@@ -53,7 +53,7 @@ module DeepCover
 
     def format_generated_code(covered_code)
       inserts = []
-      generated_code = covered_code.rewrite_source do |inserted, _node, expr_limit|
+      generated_code = covered_code.instrument_source do |inserted, _node, expr_limit|
         inserts << [expr_limit, inserted.size]
         Term::ANSIColor.yellow(inserted)
       end
