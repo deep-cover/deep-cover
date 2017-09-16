@@ -12,6 +12,13 @@ end
 def dummy_method(*)
 end
 
+def with_warnings(flag)
+  old_verbose, $VERBOSE = $VERBOSE, flag
+  yield
+ensure
+  $VERBOSE = old_verbose
+end
+
 module DeepCover
   module Tools
     CONVERT = Hash.new('  ')
