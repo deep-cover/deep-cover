@@ -9,13 +9,6 @@ module DeepCover
       @file_coverage = {}
     end
 
-    def require(filename)
-      file_cov = file_coverage(filename) { |path| FileCoverage.new(path: path) }
-      file_cov.execute_file
-
-      self
-    end
-
     def line_coverage(filename)
       file_coverage(filename).line_coverage
     end

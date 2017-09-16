@@ -15,10 +15,6 @@ module DeepCover
     def start
     end
 
-    def require(filename)
-      cover.require(filename)
-    end
-
     def line_coverage(filename)
       cover.line_coverage(filename)
     end

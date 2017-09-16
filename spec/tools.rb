@@ -45,8 +45,9 @@ module DeepCover
 
     def our_coverage(fn)
       DeepCover.start
-      with_warnings(nil) { DeepCover.require fn }
-      DeepCover.line_coverage(fn)
+      file_cover = DeepCover::FileCoverage.new(path: fn)
+      file_cover.execute_file
+      file_cover.line_coverage
     end
 
     def format_generated_code(file_coverage)
