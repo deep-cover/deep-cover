@@ -45,14 +45,14 @@ module DeepCover
 
     def our_coverage(fn)
       DeepCover.start
-      file_cover = DeepCover::FileCoverage.new(path: fn)
-      file_cover.execute_file
-      file_cover.line_coverage
+      covered_code = DeepCover::CoveredCode.new(path: fn)
+      covered_code.execute_file
+      covered_code.line_coverage
     end
 
-    def format_generated_code(file_coverage)
+    def format_generated_code(covered_code)
       inserts = []
-      generated_code = file_coverage.rewrite_source do |inserted, _node, expr_limit|
+      generated_code = covered_code.rewrite_source do |inserted, _node, expr_limit|
         inserts << [expr_limit, inserted.size]
         Term::ANSIColor.yellow(inserted)
       end
@@ -74,10 +74,10 @@ module DeepCover
 
     COLOR = {'x' => :red, ' ' => :green, '-' => :faint}
     WHITESPACE_MAP = Hash.new{|_, v| v}.merge!(' ' => '·', "\t" => '→ ')
-    def format_branch_cover(file_coverage, show_line_nbs: false, show_whitespace: false)
-      bc = file_coverage.branch_cover
+    def format_branch_cover(covered_code, show_line_nbs: false, show_whitespace: false)
+      bc = covered_code.branch_cover
 
-      file_coverage.buffer.source_lines.map.with_index do |line, line_index|
+      covered_code.buffer.source_lines.map.with_index do |line, line_index|
         prefix = show_line_nbs ? Term::ANSIColor.faint((line_index+1).to_s.rjust(2) << ' | ') : ''
         next prefix + line if line.strip.start_with?("#")
         prefix << line.chars.map.with_index do |c, c_index|

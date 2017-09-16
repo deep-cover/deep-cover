@@ -6,16 +6,16 @@ require 'pathname'
 module DeepCover
   class Coverage
     def initialize
-      @file_coverage = {}
+      @covered_code = {}
     end
 
     def line_coverage(filename)
-      file_coverage(filename).line_coverage
+      covered_code(filename).line_coverage
     end
 
-    def file_coverage(path)
+    def covered_code(path)
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
-      @file_coverage[path] ||= FileCoverage.new(path: path)
+      @covered_code[path] ||= CoveredCode.new(path: path)
     end
   end
 end

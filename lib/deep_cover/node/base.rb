@@ -4,11 +4,11 @@ module DeepCover
     include HasTracker
     include HasChild
     extend CheckCompletion
-    attr_reader :file_coverage, :index, :parent
+    attr_reader :covered_code, :index, :parent
 
-    def initialize(base_node, file_coverage, parent, index = 0)
-      @file_coverage = file_coverage
-      augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, file_coverage, self, child_index) }
+    def initialize(base_node, covered_code, parent, index = 0)
+      @covered_code = covered_code
+      augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, covered_code, self, child_index) }
       @parent = parent
       @index = index
       super(base_node.type, augmented_children, location: base_node.location)
@@ -127,11 +127,11 @@ module DeepCover
       ### Public API
 
       # Augment creates a covered node from the child_base_node.
-      def augment(child_base_node, file_coverage, parent, child_index = 0)
+      def augment(child_base_node, covered_code, parent, child_index = 0)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
         klass = factory(child_base_node.type)
-        klass.new(child_base_node, file_coverage, parent, child_index)
+        klass.new(child_base_node, covered_code, parent, child_index)
       end
 
     end
@@ -170,7 +170,7 @@ module DeepCover
 
     def line_cover
       return unless ex = loc && loc.expression
-      file_coverage.line_hit(ex.line - 1, flow_entry_count)
+      covered_code.line_hit(ex.line - 1, flow_entry_count)
       children_nodes.each(&:line_cover)
     end
 

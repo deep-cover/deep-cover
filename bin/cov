@@ -50,9 +50,9 @@ show_builtin(fn)
 puts "\nPure Ruby:\n"
 cover = show_our_cov(fn)
 puts "\nGenerated code:\n"
-file_coverage = DeepCover.file_coverage(fn)
+covered_code = DeepCover.covered_code(fn)
 
-puts format_generated_code(file_coverage)
+puts format_generated_code(covered_code)
 puts "\nParsed code:\n"
 
 module ColorAST
@@ -72,11 +72,11 @@ module ColorAST
 end
 DeepCover::Node.send :prepend, ColorAST
 
-puts file_coverage.covered_ast
+puts covered_code.covered_ast
 puts "\nBranch coverage:\n"
 
-puts format_branch_cover(file_coverage, show_whitespace: !!ENV['W'])
+puts format_branch_cover(covered_code, show_whitespace: !!ENV['W'])
 
-a = file_coverage.covered_ast
+a = covered_code.covered_ast
 b = a.children.first
 binding.pry

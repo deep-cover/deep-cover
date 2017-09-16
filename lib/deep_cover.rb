@@ -19,8 +19,8 @@ module DeepCover
       cover.line_coverage(filename)
     end
 
-    def file_coverage(filename)
-      cover.file_coverage(filename)
+    def covered_code(filename)
+      cover.covered_code(filename)
     end
 
     def cover
