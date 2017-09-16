@@ -5,7 +5,7 @@ FULLY_EXECUTED = /^[ -]*$/
 NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
 UNIMPORTANT_CHARACTERS = /[ \t();,]/
 
-def parse(lines, lineno)
+def parse(lines)
   code = []
   answers = []
   lines.chunk{|line| line !~ ANSWER}.each do |is_code, chunk|
@@ -35,7 +35,7 @@ end
 
 RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
   match do |lines|
-    code, answers = parse(lines, lineno)
+    code, answers = parse(lines)
     @file_coverage = DeepCover::FileCoverage.new(path: filename, source: code.join("\n"), lineno: lineno)
 
     # Disable some annoying warning by ruby. We are testing edge cases, so warnings are to be expected.
