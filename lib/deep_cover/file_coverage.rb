@@ -79,8 +79,8 @@ module DeepCover
     def rewrite_source
       @covered_ast ||= begin
         ast = Parser::CurrentRuby.new.parse(@buffer)
-        root = AstRoot.new(self)
-        Node.augment(ast, self, root)
+        root = AstRoot.new(ast, self)
+        root.main
       end
 
       rewriter = ::Parser::Source::Rewriter.new(@buffer)

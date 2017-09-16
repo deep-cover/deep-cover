@@ -6,10 +6,11 @@ module DeepCover
     include HasTracker
 
     has_tracker :root
-    attr_reader :file_coverage
+    attr_reader :file_coverage, :main
 
-    def initialize(file_coverage)
+    def initialize(child_ast, file_coverage)
       @file_coverage = file_coverage
+      @main = Node.augment(child_ast, file_coverage, self)
       super()
     end
 
