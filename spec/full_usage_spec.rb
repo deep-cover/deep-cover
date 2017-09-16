@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe 'DeepCover usage' do
   it 'run `ruby spec/full_usage/simple/simple.rb` successfully' do
     reader, writer = IO.pipe
-    options = {writer.fileno => writer.fileno} #, in: File::NULL, out: File::NULL, err: File::NULL)
+    options = {writer.fileno => writer.fileno, in: File::NULL, out: File::NULL, err: File::NULL}
 
     pid = spawn('ruby', 'spec/full_usage/simple/simple.rb', writer.fileno.to_s, options)
     writer.close
