@@ -6,8 +6,8 @@ module DeepCover
       include Branch
       has_tracker :truthy
       has_child condition: Node
-      has_child true_branch: [Node, nil]
-      has_child false_branch: [Node, nil]
+      has_child true_branch: [Node, nil], flow_entry_count: :truthy_tracker_hits
+      has_child false_branch: [Node, nil], flow_entry_count: -> { condition.flow_completion_count - truthy_tracker_hits }
 
       def branches
         [
@@ -25,17 +25,6 @@ module DeepCover
         return unless child.index == CONDITION
         # The new value is still truthy
         ")) && #{truthy_tracker_source}"
-      end
-
-      def child_flow_entry_count(child)
-        case child.index
-        when CONDITION
-          super
-        when TRUE_BRANCH
-          truthy_tracker_hits
-        when FALSE_BRANCH
-          condition.flow_completion_count - truthy_tracker_hits
-        end
       end
 
       def flow_completion_count
