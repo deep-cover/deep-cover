@@ -19,8 +19,10 @@ module DeepCover
     end
 
     def execute_code
+      return if @executed
       $_cov ||= {}
       $_cov[nb] = @cover = Array.new(@tracker_count, 0)
+      @executed = true
       execute_covered_source
     end
 
@@ -108,9 +110,7 @@ module DeepCover
     def execute_covered_source
       # NOTE: the eval should be in a function alone, where no local variables are declared/used
       # Using Object.send(:binding) to make self be Object as require & load normally do.
-      return if @executed
       runner = CodeRunner.new(@covered_source, Object.send(:binding), @buffer.name || '<raw_code>', @lineno || 1)
-      @executed = true
       runner.execute
     end
 
