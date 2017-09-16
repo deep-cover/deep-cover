@@ -9,7 +9,7 @@ module DeepCover
 
     def initialize(*)
       super
-      self.class.validate_children_types(children) unless self.class::CHILDREN.empty?
+      self.class.validate_children_types(children)
     end
 
     def call_handler name, child
