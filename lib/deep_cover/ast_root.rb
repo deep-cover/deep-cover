@@ -6,7 +6,7 @@ module DeepCover
     include HasTracker
 
     has_tracker :root
-    attr_reader :file_coverage, :nb
+    attr_reader :file_coverage
 
     def initialize(file_coverage)
       @file_coverage = file_coverage
