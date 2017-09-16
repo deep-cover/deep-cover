@@ -43,12 +43,6 @@ module DeepCover
       ::Coverage.result.fetch(fn)
     end
 
-    def branch_coverage(fn)
-      DeepCover.start
-      with_warnings(nil) { DeepCover.require fn }
-      DeepCover.branch_coverage(fn)
-    end
-
     def our_coverage(fn)
       DeepCover.start
       with_warnings(nil) { DeepCover.require fn }
