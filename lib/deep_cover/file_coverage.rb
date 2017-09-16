@@ -61,10 +61,6 @@ module DeepCover
       @nb ||= (@@counter += 1)
     end
 
-    def create_node_nb # Obsolete (and wasterful)
-      (allocate_trackers(3).begin + 1).div(2)
-    end
-
     # Returns a range of tracker ids
     def allocate_trackers(nb_needed)
       prev = @tracker_count

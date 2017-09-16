@@ -10,7 +10,6 @@ module DeepCover
     def initialize(base_node, file_coverage, parent, index = 0)
       @file_coverage = file_coverage
       augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, file_coverage, self, child_index) }
-      @nb = file_coverage.create_node_nb
       @parent = parent
       @index = index
       super(base_node.type, augmented_children, location: base_node.location)
