@@ -18,7 +18,7 @@ module DeepCover
       @covered_source = rewrite_source
     end
 
-    def execute_file
+    def execute_code
       $_cov ||= {}
       $_cov[nb] = @cover = Array.new(@tracker_count, 0)
       execute_covered_source

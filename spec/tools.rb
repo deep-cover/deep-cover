@@ -46,7 +46,7 @@ module DeepCover
     def our_coverage(fn)
       DeepCover.start
       covered_code = DeepCover::CoveredCode.new(path: fn)
-      covered_code.execute_file
+      covered_code.execute_code
       covered_code.line_coverage
     end
 
