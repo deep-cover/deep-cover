@@ -45,13 +45,13 @@ module DeepCover
 
     def branch_coverage(fn)
       DeepCover.start
-      DeepCover.require fn
+      with_warnings(nil) { DeepCover.require fn }
       DeepCover.branch_coverage(fn)
     end
 
     def our_coverage(fn)
       DeepCover.start
-      DeepCover.require fn
+      with_warnings(nil) { DeepCover.require fn }
       DeepCover.line_coverage(fn)
     end
 
