@@ -109,8 +109,24 @@ module DeepCover
       # NOTE: the eval should be in a function alone, where no local variables are declared/used
       # Using Object.send(:binding) to make self be Object as require & load normally do.
       return if @executed
+      runner = CodeRunner.new(@covered_source, Object.send(:binding), @buffer.name || '<raw_code>', @lineno || 1)
       @executed = true
-      eval(@covered_source, Object.send(:binding), @buffer.name || '<raw_code>', @lineno || 1)
+      runner.execute
+    end
+
+    # Little helper class to make the eval isolated
+    class CodeRunner
+      def initialize(source_code, binding=nil, *extra_eval_args)
+        @source_code = source_code
+        # Using Object.send(:binding) to make self be Object as require & load normally do.
+        @binding = binding || Object.send(:binding)
+        @extra_eval_args = extra_eval_args
+      end
+
+      def execute
+        # NOTE: the eval should be in a function alone, where no local variables are declared/used
+        eval(@source_code, @binding, *@extra_eval_args)
+      end
     end
   end
 end
