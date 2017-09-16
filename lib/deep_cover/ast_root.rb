@@ -3,11 +3,6 @@ require_relative 'has_tracker'
 
 module DeepCover
   class AstRoot
-    module FreezingIsPainful
-      def assign_properties
-      end
-    end
-    include FreezingIsPainful
     include HasTracker
 
     has_tracker :root
@@ -15,7 +10,7 @@ module DeepCover
 
     def initialize(file_coverage)
       @file_coverage = file_coverage
-      assign_properties
+      super()
     end
 
     def child_flow_entry_count(_child)

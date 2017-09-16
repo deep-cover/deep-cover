@@ -4,7 +4,7 @@ module DeepCover
       base.extend ClassMethods
     end
 
-    def assign_properties(*)
+    def initialize(*)
       @tracker_offset = file_coverage.allocate_trackers(self.class::TRACKERS.size).begin
       super
     end
