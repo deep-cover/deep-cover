@@ -5,7 +5,7 @@ module DeepCover
   class Node < Parser::AST::Node
     include HasTracker
     include HasChild
-    attr_reader :file_coverage, :index, :nb, :parent
+    attr_reader :file_coverage, :index, :parent
 
     def initialize(base_node, file_coverage, parent, index = 0)
       @file_coverage = file_coverage
