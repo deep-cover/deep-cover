@@ -1,6 +1,9 @@
 module DeepCover
   class Node
-    Ivar = Lvar = Cvar = Gvar = Back_ref = Node
+    class Variable < Node
+      has_child var_name: Symbol
+    end
+    Ivar = Lvar = Cvar = Gvar = Back_ref = Variable
 
     class Lvasgn < Node
       has_child var_name: Symbol
