@@ -17,9 +17,5 @@ module DeepCover
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
       @file_coverage[path] ||= FileCoverage.new(path: path)
     end
-
-    def resolve_path(filename)
-      File.expand_path(filename)
-    end
   end
 end
