@@ -20,15 +20,19 @@ module DeepCover
     end
 
     def add_load_path(path)
-      requirer.load_path << File.absolute_path(path, root)
+      requirer.load_path << from_root(path)
     end
 
     def file_tree(tree_entries)
       DeepCover::Tools.file_tree(root, tree_entries)
     end
 
+    def from_root(path)
+      File.absolute_path(path, root)
+    end
 
     def compare_require(require_path, expected_executed_file)
+      expected_executed_absolute_path = from_root(expected_executed_file) if expected_executed_file.is_a?(String)
       init_loaded_features = requirer.loaded_features.dup
 
       $last_test_tree_file_executed = nil
