@@ -6,4 +6,11 @@ module DeepCover
     has_child signature: Args
     has_child body: [Node, nil]
   end
+
+  class Node::Defs < Node
+    has_child singleton: Node
+    has_child method_name: Symbol
+    has_child signature: Args
+    has_child body: [Node, nil]
+  end
 end
