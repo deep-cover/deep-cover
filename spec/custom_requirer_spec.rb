@@ -134,6 +134,24 @@ module DeepCover
         compare_require('two/./test', 'one/two/test.rb')
       end
 
+      it "Can go to parent of load_path with multiple /../" do
+        file_tree %w(one/test.rb
+                     one/two/test.rb
+                     one/two/three/test.rb)
+        add_load_path 'one/two'
+
+        compare_require('three/../../test', 'one/test.rb')
+      end
+
+      it "finds files with directories in the required path" do
+        file_tree %w(one/test.rb
+                     one/two/test.rb
+                     one/two/three/test.rb)
+        add_load_path 'one'
+
+        compare_require('two/three/test', 'one/two/three/test.rb')
+      end
+
       it "uses the matching file from the the first matching load_path" do
         file_tree %w(one/test.rb
                      one/two/test.rb
