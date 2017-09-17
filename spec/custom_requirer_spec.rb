@@ -65,14 +65,12 @@ module DeepCover
         expected_result = true
       end
 
-      custom_executed_file.should == expected_executed_file
-      custom_executed_file.should == ruby_executed_file
+      custom_result.should eq(ruby_result).and eq(expected_result)
 
-      custom_result.should == expected_result
-      custom_result.should == ruby_result
+      custom_executed_file.should eq(ruby_executed_file).and eq(expected_executed_file)
 
-      requirer.loaded_features.should == init_loaded_features + [expected_executed_absolute_path].compact
-      requirer.loaded_features.should == ruby_loaded_features_after
+      expected_loaded_features = init_loaded_features + [expected_executed_absolute_path].compact
+      requirer.loaded_features.should eq(ruby_loaded_features_after).and eq(expected_loaded_features)
     end
 
     describe "#require" do
