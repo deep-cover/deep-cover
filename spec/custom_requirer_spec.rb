@@ -28,10 +28,7 @@ module DeepCover
     end
 
 
-    # After returning, any traces of having done requires are removed from both ruby and `requirer`
-    # Can receive a block to nest tests on multiple requires.
-    def compare_require(require_path, expected_executed_file, &block)
-      expected_executed_absolute_path = File.absolute_path(expected_executed_file, root) if expected_executed_file.is_a?(String)
+    def compare_require(require_path, expected_executed_file)
       init_loaded_features = requirer.loaded_features.dup
 
       $last_test_tree_file_executed = nil
