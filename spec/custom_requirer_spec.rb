@@ -116,6 +116,24 @@ module DeepCover
         compare_require('../test', :not_found)
       end
 
+      it "a /../ in a path after a name will go to the parent" do
+        file_tree %w(one/test.rb
+                     one/two/test.rb
+                     one/two/three/test.rb)
+        add_load_path 'one'
+
+        compare_require('two/../test', 'one/test.rb')
+      end
+
+      it "a /./ in a path after a name will be ignored " do
+        file_tree %w(one/test.rb
+                     one/two/test.rb
+                     one/two/three/test.rb)
+        add_load_path 'one'
+
+        compare_require('two/./test', 'one/two/test.rb')
+      end
+
       it "uses the matching file from the the first matching load_path" do
         file_tree %w(one/test.rb
                      one/two/test.rb

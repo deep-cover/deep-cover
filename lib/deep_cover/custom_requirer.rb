@@ -12,7 +12,7 @@ module DeepCover
     # An absolute path is returned directly if it exists, otherwise nil
     # is returned without searching anywhere else.
     def resolve_path(path)
-      path = File.absolute_path(path) if path =~ %r(\.\.?/)
+      path = File.absolute_path(path) if path.start_with?('./') || path.start_with?('../')
 
       if Pathname.new(path).absolute?
         return path if File.exists?(path)
