@@ -12,7 +12,7 @@ module DeepCover
       end
     end
 
-    class Gvasgn < Node
+    class VariableAssignment < Node
       has_child var_name: Symbol
       has_child value: [Node, nil]
 
@@ -21,6 +21,7 @@ module DeepCover
         value.flow_completion_count
       end
     end
+    Cvasgn = Gvasgn = Ivasgn = VariableAssignment
 
     class Casgn < Node
       has_child cbase: [Cbase, Const, nil]

@@ -1,11 +1,20 @@
 module DeepCover
   class Node
     class Arg < Node
+      has_child name: Symbol
       def executable?
         false
       end
     end
-    Kwrestarg = Kwarg = Restarg = Arg
+    Kwarg = Arg
+
+    class Restarg < Node
+      has_child name: [Symbol, nil]
+      def executable?
+        false
+      end
+    end
+    Kwrestarg = Restarg
 
     class Optarg < Node
       has_child name: Symbol
