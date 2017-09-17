@@ -90,8 +90,7 @@ module DeepCover
       end
 
       it "a ./path ignores the load_path" do
-        file_tree %w(one/two/
-                     one/two/test.rb
+        file_tree %w(one/two/test.rb
                      one/two/three/test.rb)
 
         add_load_path 'one/two'
@@ -108,8 +107,7 @@ module DeepCover
       end
 
       it "a ../path ignores the load_path" do
-        file_tree %w(one/two/
-                     one/two/test.rb
+        file_tree %w(one/two/test.rb
                      one/two/three/test.rb)
         add_load_path 'one/two/three'
 
@@ -203,9 +201,8 @@ module DeepCover
         compare_require('two/test', false)
       end
 
-      it "doesn't find from path around the load_path" do
+      it "doesn't find from parent or subdir of the load_path" do
         file_tree %w(one/test.rb
-                     one/two/
                      one/two/three/test.rb)
         add_load_path 'one/two'
 
