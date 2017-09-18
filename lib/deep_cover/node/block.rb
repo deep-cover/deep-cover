@@ -7,5 +7,11 @@ module DeepCover
 
       # TODO
     end
+
+    # &foo
+    class Block_pass < Node
+      has_child block: Node
+      # TODO
+    end
   end
 end

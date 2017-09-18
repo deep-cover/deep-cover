@@ -9,10 +9,40 @@ module DeepCover
     class Module < Node
       has_child const: Const
       has_child body: [Node, nil]
+      # TODO
+    end
+
+    class Class < Node
+      has_child const: Const
+      has_child inherit: [Node, nil]
+      has_child body: [Node, nil]
+      # TODO
+    end
+
+    # class << foo
+    class Sclass < Node
+      has_child object: Node
+      has_child body: [Node, nil]
+      # TODO
     end
 
     class Return < Node
       has_extra_children values: Node
+      # TODO
+    end
+
+    class Super < Node
+      has_extra_children arguments: Node
+      # TODO
+    end
+
+    class Yield < Node
+      has_extra_children arguments: Node
+      # TODO
+    end
+
+    class Next < Node
+      has_extra_children arguments: Node
       # TODO
     end
   end

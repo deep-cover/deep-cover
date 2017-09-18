@@ -45,5 +45,13 @@ module DeepCover
       has_child value: Node
       # TODO
     end
+
+    # foo += bar
+    class Op_asgn < Node
+      has_child receiver: Node
+      has_child operator: Symbol
+      has_child value: Node
+      # TODO
+    end
   end
 end

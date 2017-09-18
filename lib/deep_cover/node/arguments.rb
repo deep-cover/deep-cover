@@ -26,8 +26,14 @@ module DeepCover
     end
     Kwoptarg = Optarg
 
+    # foo(&block)
+    class Blockarg < Node
+      has_child name: Symbol
+      # TODO
+    end
+
     class Args < Node
-      has_child arguments: [Arg, Optarg, Restarg, Kwarg, Kwoptarg, Kwrestarg], rest: true
+      has_child arguments: [Arg, Optarg, Restarg, Kwarg, Kwoptarg, Kwrestarg, Blockarg], rest: true
       def executable?
         false
       end

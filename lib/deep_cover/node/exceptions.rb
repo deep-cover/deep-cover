@@ -59,5 +59,10 @@ module DeepCover
       end
     end
 
+    class Ensure < Node
+      has_child body: [Node, nil]
+      has_child ensure: [Node, nil]
+      # TODO
+    end
   end
 end

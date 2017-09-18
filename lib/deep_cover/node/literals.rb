@@ -9,7 +9,7 @@ module DeepCover
 
     # Atoms
     def self.atom(type)
-      Class.new(Node).has_child value: type
+      ::Class.new(Node).has_child value: type
     end
     Sym = atom(::Symbol)
     Int = atom(::Integer)
