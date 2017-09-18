@@ -98,3 +98,20 @@
       "here"
     end
     "here too"
+
+### Modifier
+    "here" rescue "not here"
+#>         xxxxxx xxxxxxxxxx
+
+    [raise, "here"] rescue "here"
+#>          xxxxxx
+
+#### Multiple... <vomits>
+    "here" rescue "not here" rescue "nor here"
+#>         xxxxxx xxxxxxxxxx xxxxxx xxxxxxxxxx
+
+    [raise, "not here"] rescue "here" rescue "nor here"
+#>          xxxxxxxxxx                xxxxxx xxxxxxxxxx
+
+    [raise, "not here"] rescue [raise, "nor here"] rescue "here"
+#>          xxxxxxxxxx                 xxxxxxxxxx

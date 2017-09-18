@@ -7,9 +7,11 @@ module DeepCover
       has_tracker :entered_body
       has_child exception: [Node::Array, nil]
       has_child assignment: [Lvasgn, nil], flow_entry_count: :entered_body_tracker_hits
-      has_child body: [Node, nil], flow_entry_count: :entered_body_tracker_hits
+      has_child body: [Node, nil], flow_entry_count: :entered_body_tracker_hits,
+                                   rewrite: '((%{entered_body_tracker};%{node}))'
 
       def rewrite
+        return if body
         '%{node};%{entered_body_tracker}'
       end
 
