@@ -1,37 +1,25 @@
-### Local
+### Local variables
     foo = 1
     dummy_method foo
 
 #### Raise
-    begin
-      bar = raise
-#>    xxx x
-    rescue
-    end
+    (bar = raise) rescue nil
+#>   xxx x
 
-    begin
-      dummy_method raise, bar
-#>    xxxxxxxxxxxx        xxx
-    rescue
-    end
+    dummy_method raise, bar rescue nil
+#>  xxxxxxxxxxxx      x xxx
 
 
-### Instance
+### Instance variables
     @foo = 1
     dummy_method @foo
 
 #### Raise
-    begin
-      @bar = raise
-#>    xxxx x
-    rescue
-    end
+    (@bar = raise) rescue nil
+#>   xxxx x
 
-    begin
-      dummy_method raise, @bar
-#>    xxxxxxxxxxxx        xxxx
-    rescue
-    end
+    dummy_method raise, @bar rescue nil
+#>  xxxxxxxxxxxx      x xxxx
 
 
 ### Class
@@ -39,17 +27,11 @@
     dummy_method @@foo
 
 #### Raise
-    begin
-      @@bar = raise
-#>    xxxxx x
-    rescue
-    end
+    (@@bar = raise) rescue nil
+#>   xxxxx x
 
-    begin
-      dummy_method raise, @@bar
-#>    xxxxxxxxxxxx        xxxxx
-    rescue
-    end
+    dummy_method raise, @@bar rescue nil
+#>  xxxxxxxxxxxx      x xxxxx
 
 
 ### Global
@@ -57,14 +39,8 @@
     dummy_method $_some_nowhere_global
 
 #### Raise
-    begin
-      $_some_nowhere_global = raise
-#>    xxxxxxxxxxxxxxxxxxxxx x
-    rescue
-    end
+    ($_some_nowhere_global = raise) rescue nil
+#>   xxxxxxxxxxxxxxxxxxxxx x
 
-    begin
-      dummy_method raise, $_some_nowhere_global
-#>    xxxxxxxxxxxx        xxxxxxxxxxxxxxxxxxxxx
-    rescue
-    end
+    dummy_method raise, $_some_nowhere_global rescue nil
+#>  xxxxxxxxxxxx      x xxxxxxxxxxxxxxxxxxxxx
