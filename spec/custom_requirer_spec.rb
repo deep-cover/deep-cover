@@ -18,13 +18,13 @@ module DeepCover
       end
     end
 
-    matcher :actually_require do |expected_executed_file|
+    matcher :actually_require do |expected_executed_file, options={}|
       match do |require_path|
         @result = {}
         @executed_file = {}
         @loaded_features = {}
 
-        set_expectations(expected_executed_file)
+        set_expectations(expected_executed_file, options[:expected_loaded_feature])
 
         run_ruby_require(require_path)
         run_custom_require(require_path)
@@ -46,7 +46,7 @@ module DeepCover
         output
       end
 
-      def set_expectations(expected_executed_file)
+      def set_expectations(expected_executed_file, expected_loaded_feature)
         case expected_executed_file
         when :not_found
           @executed_file[:expected] = nil
@@ -59,7 +59,10 @@ module DeepCover
           @result[:expected] = true
         end
         @loaded_features[:expected] = requirer.loaded_features.dup
-        @loaded_features[:expected] += [from_root(expected_executed_file)] if expected_executed_file.is_a?(String)
+        if expected_executed_file.is_a?(String)
+          expected_loaded_feature ||= expected_executed_file
+          @loaded_features[:expected] += [from_root(expected_loaded_feature)]
+        end
       end
 
       # Must be run before run_custom_require
@@ -101,7 +104,7 @@ module DeepCover
 
     # This cannot be a `let` because we want to be able to change it
     def root
-      @root
+      Pathname.new(@root).realpath.to_s
     end
 
     def add_load_path(path)
@@ -277,6 +280,48 @@ module DeepCover
         add_load_path 'one/two'
 
         'test'.should actually_require(:not_found)
+      end
+
+      it "keeps symlinks when going through load_path" do
+        file_tree %w(one/test.rb)
+        FileUtils.ln_s from_root('one'), from_root('sym_one')
+        add_load_path 'sym_one'
+
+        'test'.should actually_require('one/test.rb', expected_loaded_feature: 'sym_one/test.rb')
+      end
+
+      it "a ./path keeps symlinks after the current work dir" do
+        file_tree %w(pwd:one/
+                         one/test.rb
+                         one/two/test.rb)
+        FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
+
+        './sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/sym_two/test.rb')
+      end
+
+      it "a ../path keeps symlinks after the current work dir" do
+        file_tree %w(pwd:one/deeper/
+                         one/test.rb
+                         one/two/test.rb)
+        FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
+
+        '../sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/sym_two/test.rb')
+      end
+
+      # NOTE: This actually happens at OS level (at least on Linux and Mac)
+      #       But this verifies that the test system won't fail when the current work dir
+      #       contains a symlink.
+      it "a ./path resolves symlinks in the current work dir" do
+        file_tree %w(one/test.rb
+                     one/two/test.rb)
+
+        FileUtils.ln_s from_root('one'), from_root('sym_one')
+
+        @root = File.join(root, 'sym_one')
+        Dir.chdir(@root)
+
+        # expected_loaded_feature will get joined to the @root, which is already on one through a symlink.
+        './two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'two/test.rb')
       end
     end
 
