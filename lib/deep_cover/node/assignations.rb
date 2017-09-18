@@ -33,5 +33,17 @@ module DeepCover
         value.flow_completion_count
       end
     end
+
+    class Mlhs < Node
+      has_extra_children being_set: Node
+      # TODO
+    end
+
+    # a, b = ...
+    class Masgn < Node
+      has_child left: Mlhs
+      has_child value: Node
+      # TODO
+    end
   end
 end
