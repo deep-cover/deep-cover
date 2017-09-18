@@ -100,6 +100,7 @@ module DeepCover
     end
 
     def resolve_rewrite(rule, context)
+      rule ||= '%{node}'
       sources = context.tracker_sources
       rule.split('%{node}').map{|s| s % sources }
     end
