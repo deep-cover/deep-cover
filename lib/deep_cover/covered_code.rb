@@ -3,7 +3,6 @@ module DeepCover
     attr_accessor :covered_source, :buffer, :covered_ast, :executed
     @@counter = 0
 
-    # TODO: Support non path based
     def initialize(path: nil, source: nil, lineno: nil)
       raise "Must provide either path or source" unless path || source
 
