@@ -1,6 +1,6 @@
 module DeepCover
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :covered_ast, :executed
+    attr_accessor :covered_source, :buffer, :executed
     @@counter = 0
 
     def initialize(path: nil, source: nil, lineno: nil)
@@ -77,16 +77,19 @@ module DeepCover
       cover.fetch(tracker_id)
     end
 
-    def instrument_source
+    def covered_ast
       @covered_ast ||= begin
         ast = Parser::CurrentRuby.new.parse(@buffer)
-        return @buffer.source unless ast
+        return nil unless ast
         root = AstRoot.new(ast, self)
         root.main
       end
+    end
 
+    def instrument_source
+      return '' unless covered_ast
       rewriter = ::Parser::Source::Rewriter.new(@buffer)
-      @covered_ast.each_node do |node|
+      covered_ast.each_node do |node|
         prefix, suffix = node.rewrite_prefix_suffix
         unless prefix.empty?
           expression = node.loc.expression
