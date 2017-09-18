@@ -79,4 +79,21 @@ RSpec.describe 'branch cover' do
       end
     end
   end
+
+  it 'tests against at least one of every node types', pending: true do
+    visited = Set.new
+    Dir.glob('./spec/branch_cover/*.rb') do |filename|
+      ast = DeepCover::CoveredCode.new(path: filename).covered_ast
+      next unless ast
+      ast.each_node do |node|
+        visited << node.class
+      end
+    end
+
+    all_node_classes = ObjectSpace.each_object(Class).select { |klass| klass < DeepCover::Node }
+    unvisited_node_classes = all_node_classes - visited.to_a
+    unvisited_node_classes.sort_by!(&:name)
+    fail_msg = "Node classes without branch cover test:\n#{unvisited_node_classes.pretty_inspect}"
+    unvisited_node_classes.should be_empty, fail_msg
+  end
 end
