@@ -3,7 +3,7 @@ module DeepCover
     class Block < Node
       has_child receiver: Node
       has_child args: Args
-      has_child body: Node
+      has_child body: [Node, nil]
 
       # TODO
     end
