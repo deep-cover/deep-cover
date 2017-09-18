@@ -68,11 +68,13 @@
 #>X
     rescue NotImplementedError, TypeError => foo
 #>  xxxxxx                                xxxxxx
+      "not here"
+#>X
     rescue Exception => bar
       "here"
     rescue SyntaxError, TypeError => baz
 #>X
-      "not here"
+      "nor here"
 #>X
     end
 
@@ -80,6 +82,8 @@
     begin
       :dont_raise
     rescue NotImplementedError => foo
+#>X
+      "not here"
 #>X
     end
 
@@ -89,12 +93,12 @@
         raise TypeError
         "not here"
 #>X
-      rescue NotImplementedError
-#>    xxxxxx
+      rescue NotImplementedError => foo
+#>    xxxxxx                     xx xxx
       end
       "not here either"
 #>X
-    rescue TypeError
+    rescue TypeError => baz
       "here"
     end
     "here too"
