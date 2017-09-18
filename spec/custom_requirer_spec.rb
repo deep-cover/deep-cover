@@ -3,7 +3,6 @@ require "spec_helper"
 module DeepCover
   RSpec.describe CustomRequirer do
     let(:requirer) { CustomRequirer.new([], []) }
-    let(:root) { @root }
     before(:each) { $last_test_tree_file_executed = nil }
     around(:each) do |ex|
       begin
@@ -15,7 +14,7 @@ module DeepCover
         ex.run
       ensure
         Dir.chdir(current_pwd)
-        FileUtils.remove_entry @root
+        FileUtils.remove_entry dir
       end
     end
 
@@ -98,6 +97,11 @@ module DeepCover
           "  #{key}:#{indent} #{data_hash[key].inspect}"
         end.join("\n")
       end
+    end
+
+    # This cannot be a `let` because we want to be able to change it
+    def root
+      @root
     end
 
     def add_load_path(path)
