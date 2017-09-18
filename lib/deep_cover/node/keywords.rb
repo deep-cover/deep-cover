@@ -36,6 +36,11 @@ module DeepCover
       # TODO
     end
 
+    # super      (with same arguments as caller)
+    class Zsuper < Node
+      # TODO
+    end
+
     class Yield < Node
       has_extra_children arguments: Node
       # TODO
