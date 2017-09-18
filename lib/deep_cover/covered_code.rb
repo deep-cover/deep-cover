@@ -81,6 +81,7 @@ module DeepCover
     def instrument_source
       @covered_ast ||= begin
         ast = Parser::CurrentRuby.new.parse(@buffer)
+        return @buffer.source unless ast
         root = AstRoot.new(ast, self)
         root.main
       end
