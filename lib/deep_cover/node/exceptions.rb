@@ -4,13 +4,13 @@ require_relative 'collections'
 module DeepCover
   class Node
     class Resbody < Node
-      has_tracker :exception_match
+      has_tracker :entered_body
       has_child exception: [Node::Array, nil]
-      has_child assignment: [Lvasgn, nil], flow_entry_count: :exception_match_tracker_hits
-      has_child body: [Node, nil], flow_entry_count: :exception_match_tracker_hits
+      has_child assignment: [Lvasgn, nil], flow_entry_count: :entered_body_tracker_hits
+      has_child body: [Node, nil], flow_entry_count: :entered_body_tracker_hits
 
       def rewrite
-        '%{node};%{exception_match_tracker}'
+        '%{node};%{entered_body_tracker}'
       end
 
       def flow_completion_count
@@ -19,7 +19,7 @@ module DeepCover
       end
 
       def execution_count
-        exception_match_tracker_hits
+        entered_body_tracker_hits
       end
     end
 
