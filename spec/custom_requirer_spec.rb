@@ -219,11 +219,6 @@ module DeepCover
         'test'.should actually_require('one/two/test.rb')
       end
 
-      # TOMA: Should this be split into multiple test?
-      #       One checking with only one matching
-      #       Then one with multiple matching files to check that it doesn't fallback?
-      #       I always wonder in that situation, it feels like some tests should basically
-      #       only run if another test passed, as otherwise, they overlap.
       it "doesn't execute a file that was already required" do
         file_tree %w(one/test.rb
                      one/two/test.rb
@@ -231,8 +226,8 @@ module DeepCover
         add_load_path 'one'
         add_load_path 'one/two'
         add_load_path 'one/two/three'
+        requirer.loaded_features << from_root('one/test.rb')
 
-        'test'.should actually_require('one/test.rb')
         'test'.should actually_require(false)
       end
 
