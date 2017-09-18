@@ -10,5 +10,10 @@ module DeepCover
       has_child const: Const
       has_child body: [Node, nil]
     end
+
+    class Return < Node
+      has_extra_children values: Node
+      # TODO
+    end
   end
 end
