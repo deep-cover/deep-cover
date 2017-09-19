@@ -17,9 +17,9 @@ module DeepCover
     Kwrestarg = Restarg
 
     class Optarg < Node
+      has_tracker :default
       has_child name: Symbol
-      has_child default: Node
-
+      has_child default: Node, flow_entry_count: :default_tracker_hits, rewrite: '(%{default_tracker};%{node})'
       def executable?
         false
       end
@@ -29,14 +29,15 @@ module DeepCover
     # foo(&block)
     class Blockarg < Node
       has_child name: Symbol
+
+      def executable?
+        false
+      end
       # TODO
     end
 
     class Args < Node
       has_child arguments: [Arg, Optarg, Restarg, Kwarg, Kwoptarg, Kwrestarg, Blockarg], rest: true
-      def executable?
-        false
-      end
     end
   end
 end
