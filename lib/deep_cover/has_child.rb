@@ -16,8 +16,8 @@ module DeepCover
       self.validate_children_types(children)
     end
 
-    def call_handler name, child
-      child_name = self.class.child_index_to_name(child.index, children.size) rescue binding.pry
+    def call_handler name, child, index = child.index
+      child_name = self.class.child_index_to_name(index, children.size) rescue binding.pry
       method_name = name % {name: child_name}
       if respond_to?(method_name)
         args = [child] unless method(method_name).arity == 0
@@ -42,13 +42,20 @@ module DeepCover
     end
 
     module ClassMethods
-      def has_child(flow_entry_count: nil, rewrite: nil, rest: false, **h)
-        name, type = h.first
+      def has_child(flow_entry_count: nil, rewrite: nil, remap: nil, rest: false, **h)
+        name, types = h.first
+        if types.is_a? Hash
+          type_map = types
+          raise "Use either remap or a hash as type but not both" if remap
+          remap = -> (child) { type_map[child.type] }
+          types = type_map.values
+        end
         update_children_const(name, rest: rest)
         define_accessor(name)
-        add_runtime_check(name, type)
+        add_runtime_check(name, types)
         define_handler(:"#{name}_flow_entry_count", flow_entry_count)
         define_handler(:"rewrite_#{name}", rewrite)
+        define_handler(:"remap_#{name}", remap)
         self
       end
 

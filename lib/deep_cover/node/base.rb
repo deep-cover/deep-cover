@@ -8,9 +8,10 @@ module DeepCover
 
     def initialize(base_node, covered_code, parent, index = 0)
       @covered_code = covered_code
-      augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, covered_code, self, child_index) }
       @parent = parent
       @index = index
+      @children = base_node.children # Temporary set for Augment
+      augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, covered_code, self, child_index) }
       super(base_node.type, augmented_children, location: base_node.location)
     end
 
@@ -120,7 +121,7 @@ module DeepCover
       ### These are refined by subclasses
 
       # Returns a subclass or the base Node, according to type
-      def factory(type)
+      def factory(type, index)
         class_name = type.capitalize
         const_defined?(class_name) ? const_get(class_name) : Node
       end
@@ -131,7 +132,9 @@ module DeepCover
       def augment(child_base_node, covered_code, parent, child_index = 0)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
-        klass = factory(child_base_node.type)
+        klass = parent.call_handler('remap_%{name}', parent.children[child_index], child_index) {
+          factory(child_base_node.type, child_index)
+        }
         klass.new(child_base_node, covered_code, parent, child_index)
       end
 
