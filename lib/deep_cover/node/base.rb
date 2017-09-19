@@ -136,7 +136,6 @@ module DeepCover
       end
 
     end
-    has_trackers
 
     ### Public API
 

@@ -4,6 +4,11 @@ module DeepCover
   module HasTracker
     def self.included(base)
       base.extend ClassMethods
+      setup_constants(base)
+    end
+
+    def self.setup_constants(base)
+      base.const_set :TRACKERS, {}
     end
 
     def initialize(*)
@@ -18,22 +23,25 @@ module DeepCover
     end
 
     module ClassMethods
-      def has_trackers(*names)
-        const_set :TRACKERS, names.each_with_index.to_h
-        names.each_with_index do |name, i|
-          class_eval <<-end_eval, __FILE__, __LINE__
-            def #{name}_tracker_source
-              covered_code.tracker_source(@tracker_offset + #{i})
-            end
-            def #{name}_tracker_hits
-              covered_code.tracker_hits(@tracker_offset + #{i})
-            end
-          end_eval
-        end
+      def inherited(base)
+        super
+        HasTracker.setup_constants(base)
       end
 
-      def has_tracker(tracker) # Allow singular form
-        has_trackers(tracker)
+      def has_trackers(*names)
+        names.each { |name| has_trackers(name) }
+      end
+
+      def has_tracker(name)
+        i = self::TRACKERS[name] = self::TRACKERS.size
+        class_eval <<-end_eval, __FILE__, __LINE__
+          def #{name}_tracker_source
+            covered_code.tracker_source(@tracker_offset + #{i})
+          end
+          def #{name}_tracker_hits
+            covered_code.tracker_hits(@tracker_offset + #{i})
+          end
+        end_eval
       end
     end
   end
