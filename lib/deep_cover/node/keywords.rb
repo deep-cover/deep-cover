@@ -32,14 +32,11 @@ module DeepCover
     end
 
     class Super < Node
+      check_completion
       has_extra_children arguments: Node
       # TODO
     end
-
-    # super      (with same arguments as caller)
-    class Zsuper < Node
-      # TODO
-    end
+    Zsuper = Super # Zsuper is super with no parenthesis (same arguments as caller)
 
     class Yield < Node
       has_extra_children arguments: Node
