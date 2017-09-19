@@ -75,11 +75,11 @@ module DeepCover
 
     COLOR = {'x' => :red, ' ' => :green, '-' => :faint}
     WHITESPACE_MAP = Hash.new{|_, v| v}.merge!(' ' => '·', "\t" => '→ ')
-    def format_branch_cover(covered_code, show_line_nbs: false, show_whitespace: false)
+    def format_branch_cover(covered_code, show_line_nbs: false, show_whitespace: false, lineno: 1)
       bc = covered_code.branch_cover
 
       covered_code.buffer.source_lines.map.with_index do |line, line_index|
-        prefix = show_line_nbs ? Term::ANSIColor.faint((line_index+1).to_s.rjust(2) << ' | ') : ''
+        prefix = show_line_nbs ? Term::ANSIColor.faint((line_index+lineno).to_s.rjust(2) << ' | ') : ''
         next prefix + line if line.strip.start_with?("#")
         prefix << line.chars.map.with_index do |c, c_index|
           color = COLOR[bc[line_index][c_index]]
