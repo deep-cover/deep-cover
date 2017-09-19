@@ -61,8 +61,16 @@ module DeepCover
 
     class Ensure < Node
       has_child body: [Node, nil]
-      has_child ensure: [Node, nil]
-      # TODO
+      has_child ensure: [Node, nil], flow_entry_count: -> { body.flow_entry_count }
+
+      def execution_count
+        flow_entry_count
+      end
+
+      def flow_completed_count
+        self.ensure.flow_completed_count if self.ensure
+        execution_count
+      end
     end
   end
 end
