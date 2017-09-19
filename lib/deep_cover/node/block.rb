@@ -3,12 +3,40 @@ require_relative 'keywords'
 
 module DeepCover
   class Node
-    class Block < Node
-      has_child call: [Send, Zsuper, Super]
-      has_child args: Args
-      has_child body: [Node, nil]
+    module WithBlock
+      def flow_completion_count
+        parent.flow_completion_count
+      end
 
-      # TODO
+      def execution_count
+        last = children_nodes.last
+        return last.flow_completion_count if last
+        super
+      end
+    end
+
+    class SendWithBlock < Node
+      include WithBlock
+      has_child receiver: [Node, nil]
+      has_child method: Symbol
+      has_extra_children arguments: Node
+    end
+
+    class SuperWithBlock < Node
+      include WithBlock
+      has_extra_children arguments: Node
+    end
+
+    class Block < Node
+      check_completion
+      has_tracker :body
+      has_child call: {send: SendWithBlock, zsuper: SuperWithBlock, super: SuperWithBlock}
+      has_child args: Args
+      has_child body: [Node, nil], rewrite: '%{body_tracker};%{node}', flow_entry_count: :body_tracker_hits
+
+      def executable?
+        false
+      end
     end
 
     # &foo
