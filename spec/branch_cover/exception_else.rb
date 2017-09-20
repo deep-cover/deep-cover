@@ -70,3 +70,21 @@
     else
       "here"
     end
+
+### Empty parts
+#### With empty begin
+    begin
+
+    else
+      "here"
+    end
+
+    begin
+
+    rescue
+#>X
+      "not here"
+#>X
+    else
+      "here"
+    end

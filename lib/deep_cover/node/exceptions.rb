@@ -29,7 +29,7 @@ module DeepCover
       has_tracker :else
       has_child watched_body: [Node, nil]
       has_extra_children resbodies: Resbody
-      has_child else: [Node, nil], flow_entry_count: -> {watched_body.flow_completion_count if watched_body},
+      has_child else: [Node, nil], flow_entry_count: -> {watched_body ? watched_body.flow_completion_count : flow_entry_count},
         rewrite: '%{else_tracker};%{node}'
 
       def flow_completion_count
