@@ -32,10 +32,16 @@ module DeepCover
     end
 
     class Class < Node
-      has_child const: Const
-      has_child inherit: [Node, nil]
-      has_child body: [Node, nil]
-      # TODO
+      check_completion
+      has_tracker :body_entry
+      has_child const: {const: ModuleName}
+      has_child inherit: [Node, nil]  # TODO
+      has_child body: [Node, nil], rewrite: '%{body_entry_tracker};%{node}',
+        flow_entry_count: :body_entry_tracker_hits
+
+      def execution_count
+        body ? body_entry_tracker_hits : flow_completion_count
+      end
     end
 
     # class << foo

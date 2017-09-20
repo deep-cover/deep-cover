@@ -37,3 +37,43 @@
 #>X
     end.to_s rescue nil
 #>     xxxxx
+
+### Empty class
+    class M
+    end.to_s
+
+#### Explicit global module
+    class ::N
+    end.to_s
+
+#### Scoped module
+    class String::N
+    end.to_s
+
+### Raising
+#### Module/Class clash
+    class Enumerable
+#>  xxxxx
+    end.to_s rescue nil
+#>  xxxxxxxx
+
+#### Invalid path
+    class String::Foo::M
+#>  xxxxx            xxx
+    end.to_s rescue nil
+#>  xxxxxxxx
+
+#### Invalid (longer) path
+    class String::Foo::Bar::M
+#>  xxxxx            xxxxxxxx
+    end.to_s rescue nil
+#>  xxxxxxxx
+
+#### Raise inside block
+    class N
+      42
+      raise
+      44
+#>X
+    end.to_s rescue nil
+#>     xxxxx
