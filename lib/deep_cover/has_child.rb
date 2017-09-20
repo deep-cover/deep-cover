@@ -37,7 +37,7 @@ module DeepCover
     def validate_children_types(nodes)
       mismatches = self.class.check_children_types(nodes)
       unless mismatches.empty?
-        raise TypeError, "Invalid types for #{self.class}(type: #{self.type}): #{mismatches}"
+        raise TypeError, "Invalid children types for #{self.class}(type: #{self.type}): #{mismatches}"
       end
     end
 
