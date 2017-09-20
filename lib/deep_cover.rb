@@ -1,16 +1,16 @@
 require "parser"
 require 'active_support/core_ext/module/delegation'
 
-def require_relative_dir(dir_name)
-  dir = File.dirname(caller.first.partition(/\.rb:\d/).first)
-  Dir["#{dir}/#{dir_name}/*.rb"].sort.each do |file|
-    require file
-  end
-end
-
-require_relative_dir 'deep_cover'
-
 module DeepCover
+  def self.require_relative_dir(dir_name)
+    dir = File.dirname(caller.first.partition(/\.rb:\d/).first)
+    Dir["#{dir}/#{dir_name}/*.rb"].sort.each do |file|
+      require file
+    end
+  end
+
+  require_relative_dir 'deep_cover'
+
   class << self
     def start
       require_relative 'deep_cover/core_ext/require_overrides'
