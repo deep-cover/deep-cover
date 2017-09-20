@@ -3,7 +3,7 @@ module DeepCover
     attr_accessor :covered_source, :buffer, :executed, :binding
     @@counter = 0
 
-    def initialize(path: nil, source: nil, lineno: nil, binding: DeepCover::GLOBAL_BINDING.dup)
+    def initialize(path: nil, source: nil, lineno: nil)
       raise "Must provide either path or source" unless path || source
 
       @buffer = ::Parser::Source::Buffer.new(path)
@@ -15,15 +15,14 @@ module DeepCover
       @lineno = lineno
       @tracker_count = 0
       @covered_source = instrument_source
-      @binding = binding
     end
 
-    def execute_code
+    def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
       return if @executed
       $_cov ||= {}
       $_cov[nb] = @cover = Array.new(@tracker_count, 0)
       @executed = true
-      eval(@covered_source, @binding, @buffer.name || '<raw_code>', @lineno || 1)
+      eval(@covered_source, binding, @buffer.name || '<raw_code>', @lineno || 1)
     end
 
     def cover
