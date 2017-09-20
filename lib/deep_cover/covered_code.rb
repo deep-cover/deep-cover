@@ -1,9 +1,9 @@
 module DeepCover
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :executed
+    attr_accessor :covered_source, :buffer, :executed, :binding
     @@counter = 0
 
-    def initialize(path: nil, source: nil, lineno: nil)
+    def initialize(path: nil, source: nil, lineno: nil, binding: DeepCover::GLOBAL_BINDING.dup)
       raise "Must provide either path or source" unless path || source
 
       @buffer = ::Parser::Source::Buffer.new(path)
@@ -15,6 +15,7 @@ module DeepCover
       @lineno = lineno
       @tracker_count = 0
       @covered_source = instrument_source
+      @binding = binding
     end
 
     def execute_code
@@ -22,7 +23,7 @@ module DeepCover
       $_cov ||= {}
       $_cov[nb] = @cover = Array.new(@tracker_count, 0)
       @executed = true
-      execute_covered_source
+      eval(@covered_source, @binding, @buffer.name || '<raw_code>', @lineno || 1)
     end
 
     def cover
@@ -108,28 +109,6 @@ module DeepCover
     protected
     def must_have_executed
       raise "cover not available, file wasn't executed" unless @executed
-    end
-
-    def execute_covered_source
-      # NOTE: the eval should be in a function alone, where no local variables are declared/used
-      # Using Object.send(:binding) to make self be Object as require & load normally do.
-      runner = CodeRunner.new(@covered_source, Object.send(:binding), @buffer.name || '<raw_code>', @lineno || 1)
-      runner.execute
-    end
-
-    # Little helper class to make the eval isolated
-    class CodeRunner
-      def initialize(source_code, binding=nil, *extra_eval_args)
-        @source_code = source_code
-        # Using Object.send(:binding) to make self be Object as require & load normally do.
-        @binding = binding || Object.send(:binding)
-        @extra_eval_args = extra_eval_args
-      end
-
-      def execute
-        # NOTE: the eval should be in a function alone, where no local variables are declared/used
-        eval(@source_code, @binding, *@extra_eval_args)
-      end
     end
   end
 end

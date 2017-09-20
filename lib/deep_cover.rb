@@ -33,3 +33,4 @@ module DeepCover
     end
   end
 end
+DeepCover::GLOBAL_BINDING = binding
