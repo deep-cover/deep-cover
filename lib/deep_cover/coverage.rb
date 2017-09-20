@@ -4,13 +4,10 @@ require 'pry'
 require 'pathname'
 
 module DeepCover
-  # A collection of CoveredCode that share a binding
+  # A collection of CoveredCode
   class Coverage
-    attr_reader :binding
-
-    def initialize(binding = DeepCover::GLOBAL_BINDING.dup)
+    def initialize
       @covered_code = {}
-      @binding = binding
     end
 
     def line_coverage(filename)
@@ -19,7 +16,7 @@ module DeepCover
 
     def covered_code(path)
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
-      @covered_code[path] ||= CoveredCode.new(path: path, binding: @binding)
+      @covered_code[path] ||= CoveredCode.new(path: path)
     end
   end
 end
