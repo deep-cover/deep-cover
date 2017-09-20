@@ -16,5 +16,35 @@ module DeepCover
         iterable.flow_completion_count
       end
     end
+
+    class Until < Node
+      has_tracker :body
+      has_child condition: Node, rewrite: '((%{node})) || (%{body_tracker};false)'
+      has_child body: [Node, nil], flow_entry_count: :body_tracker_hits
+      check_completion
+
+      def executable?
+        body
+      end
+
+      def execution_count
+        condition.flow_completion_count
+      end
+    end
+
+    class While < Node
+      has_tracker :body
+      has_child condition: Node, rewrite: '((%{node})) && %{body_tracker}'
+      has_child body: [Node, nil], flow_entry_count: :body_tracker_hits
+      check_completion
+
+      def executable?
+        body
+      end
+
+      def execution_count
+        condition.flow_completion_count
+      end
+    end
   end
 end
