@@ -180,3 +180,77 @@
     ensure
       "here again"
     end
+
+### Empty parts
+#### With empty begin
+    begin
+
+    rescue
+#>X
+      "not here"
+#>X
+    else
+      "here"
+    ensure
+      "here too"
+    end
+
+
+#### With empty rescue
+    begin
+      "here"
+    rescue
+#>X
+    else
+      "here"
+    ensure
+      "here too"
+    end
+
+#### With empty rescue
+    begin
+      "here"
+    rescue
+#>X
+      "not here"
+#>X
+    else
+
+    ensure
+      "here too"
+    end
+
+#### With empty ensure
+    begin
+      "here"
+    rescue
+#>X
+      "not here"
+#>X
+    else
+      "here"
+    ensure
+
+    end
+
+#### With everything empty but ensure
+    begin
+
+    rescue
+#>X
+    else
+
+    ensure
+      "here"
+    end
+
+#### With everything empty
+    begin
+
+    rescue
+#>X
+    else
+
+    ensure
+
+    end
