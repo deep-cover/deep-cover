@@ -18,13 +18,5 @@ module DeepCover
     end
 
     And = Or = ShortCircuit
-
-    # foo ||= bar
-    class Or_asgn < Node
-      has_child receiver: Node
-      has_child value: Node
-      # TODO
-    end
-
   end
 end

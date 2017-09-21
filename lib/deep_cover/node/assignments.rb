@@ -62,5 +62,24 @@ module DeepCover
         flow_completion_count
       end
     end
+
+    # foo ||= bar, foo &&= base
+    class BooleanAssignment < Node
+      check_completion
+      has_tracker :long_branch
+      has_child receiver: {
+        lvasgn: VariableOperatorAssign, ivasgn: VariableOperatorAssign,
+        cvasgn: VariableOperatorAssign, gvasgn: VariableOperatorAssign,
+        casgn: Casgn, # TODO
+        send: SendOperatorAssign,
+      }
+      has_child value: Node, rewrite: '(%{long_branch_tracker};%{node})', flow_entry_count: :long_branch_tracker_hits
+
+      def execution_count
+        flow_completion_count
+      end
+    end
+
+    Or_asgn = And_asgn = BooleanAssignment
   end
 end
