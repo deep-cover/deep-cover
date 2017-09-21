@@ -33,7 +33,7 @@ module DeepCover
         rewrite: '%{else_tracker};%{node}'
 
       def flow_completion_count
-        return super unless watched_body
+        return flow_entry_count unless watched_body
         resbodies.map(&:flow_completion_count).inject(0, :+) + (self.else || watched_body).flow_completion_count
       end
 
@@ -67,8 +67,9 @@ module DeepCover
         flow_entry_count
       end
 
-      def flow_completed_count
-        self.ensure.flow_completed_count if self.ensure
+      def flow_completion_count
+        return body.flow_completion_count if body
+        return self.ensure.flow_completion_count if self.ensure
         execution_count
       end
     end
