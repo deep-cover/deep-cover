@@ -36,9 +36,15 @@ end
 RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
   match do |lines|
     code, answers = parse(lines)
+    code << "    'flow_completion check. (Must be red if previous raised, green otherwise)'"
     @covered_code = DeepCover::CoveredCode.new(path: filename, source: code.join("\n"), lineno: lineno)
 
-    DeepCover::Tools.execute_sample(@covered_code)
+    reached_end = DeepCover::Tools.execute_sample(@covered_code)
+    if reached_end
+      answers[code.size - 1] = FULLY_EXECUTED
+    else
+      answers[code.size - 1] = NOT_EXECUTED
+    end
 
     cov = @covered_code.branch_cover
     errors = cov.zip(answers, code).each_with_index.reject do |(a, expected, line), i|
