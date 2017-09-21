@@ -52,34 +52,28 @@
 
 #### With unrescued raise in begin
     begin
-      begin
-        raise
-        "not here"
+      raise
+      "not here"
 #>X
-      rescue TypeError
-#>    xxxxxx
-        "not here"
+    rescue TypeError
+#>  xxxxxx
+      "not here"
 #>X
-      ensure
-        "here too"
-      end
-    rescue
+    ensure
+      "here too"
     end
 
 #### With raise in begin and rescue
     begin
-      begin
-        raise
-        "not here"
+      raise
+      "not here"
 #>X
-      rescue
-        raise
-        "not here"
-#>X
-      ensure
-        "here too"
-      end
     rescue
+      raise
+      "not here"
+#>X
+    ensure
+      "here too"
     end
 
 #### With raise in ensure
@@ -132,40 +126,34 @@
 
 #### With unrescued raise in begin
     begin
-      begin
-        raise
-        "not here"
+      raise
+      "not here"
 #>X
-      rescue TypeError
-#>    xxxxxx
-        "nor here"
+    rescue TypeError
+#>  xxxxxx
+      "nor here"
 #>X
-      else
+    else
 #>X
-        "nor here"
+      "nor here"
 #>X
-      ensure
-        "here too"
-      end
-    rescue
+    ensure
+      "here too"
     end
 
 #### With raise in else
     begin
-      begin
-        "here"
-      rescue
-#>X
-        "not here"
-#>X
-      else
-        raise
-        "nor here"
-#>X
-      ensure
-        "here too"
-      end
+      "here"
     rescue
+#>X
+      "not here"
+#>X
+    else
+      raise
+      "nor here"
+#>X
+    ensure
+      "here too"
     end
 
 #### Without raise

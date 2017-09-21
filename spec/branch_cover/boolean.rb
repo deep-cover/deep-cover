@@ -12,9 +12,7 @@
 #>                    x
     dummy_method(1 && 2)
 
-    begin
-      dummy_method(1 && raise)
-#>    xxxxxxxxxxxxx          x
-    rescue
-    end
+
+    dummy_method(1 && raise)
+#>  xxxxxxxxxxxxx          x
 

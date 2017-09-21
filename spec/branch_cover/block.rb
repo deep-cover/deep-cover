@@ -27,13 +27,10 @@
 
 ### Block yielded to and raises
 
-    begin
-      1.times do |i|
-        raise
-        42
+    1.times do |i|
+      raise
+      42
 #>X
-      end
-      .to_s
-#>X
-    rescue
     end
+    .to_s
+#>X

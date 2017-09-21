@@ -126,6 +126,14 @@ module DeepCover
       Dir.chdir(set_pwd || '.')
     end
 
+    def execute_sample(covered_code)
+      # Disable some annoying warning by ruby. We are testing edge cases, so warnings are to be expected.
+      begin
+        with_warnings(nil) { covered_code.execute_code }
+      rescue RuntimeError => e
+        raise unless e.message.empty?
+      end
+    end
 
     class AnnotatedExamplesParser
       SECTION = /^### (.*)$/

@@ -25,15 +25,12 @@
     end
 
 #### With raise in iterable
-    begin
-      for i in ["here", raise, "not here"]
-#>    xxx x xx                 xxxxxxxxxx
-        "not_here"
+    for i in ["here", raise, "not here"]
+#>  xxx x xx                 xxxxxxxxxx
+      "not_here"
 #>X
-      end
-#>X
-    rescue
     end
+#>X
 
 #### Never entering
     for i in []
@@ -69,15 +66,12 @@
     end
 
 #### With raise in condition
-    begin
-      while ("here"; raise; "not here")
-#>    xxxxx                 xxxxxxxxxx
-        "not_here"
+    while ("here"; raise; "not here")
+#>  xxxxx                 xxxxxxxxxx
+      "not_here"
 #>X
-      end
-#>X
-    rescue
     end
+#>X
 
 #### Never entering
     while false
@@ -150,15 +144,12 @@
 #>                        xxxxxxxxxx
 
 #### With raise in condition
-    begin
-      until ("here"; raise; "not here")
-#>    xxxxx                 xxxxxxxxxx
-        "not_here"
+    until ("here"; raise; "not here")
+#>  xxxxx                 xxxxxxxxxx
+      "not_here"
 #>X
-      end
-#>X
-    rescue
     end
+#>X
 
 #### Never entering
     "not here" until true

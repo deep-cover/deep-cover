@@ -2,28 +2,19 @@
 #### With raise
 
     begin
-      begin
-        raise
-      else
+      raise
+    else
 #>X
-        "not here"
+      "not here"
 #>X
-      end
-    rescue
-    end
+    end rescue nil
 
     begin
-      "hi"
-    end
-    begin
-      begin
-        "here"
-      else
-        raise
-        "not here"
+      "here"
+    else
+      raise
+      "not here"
 #>X
-      end
-    rescue
     end
 
 #### Without raise

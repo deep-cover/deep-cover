@@ -7,22 +7,13 @@
 #>  xx
 
 #### With raises
-    begin
-      42 unless raise
-#>    xx
-    rescue
-    end
+    (42 unless raise) rescue nil
+#>   xx
 
-    begin
-      42 if raise
-#>    xx
-    rescue
-    end
+    (42 if raise) rescue nil
+#>   xx
 
-    begin
-      raise if true
-    rescue
-    end
+    (raise if true) rescue nil
 
 ### Full form
     if false
@@ -80,23 +71,18 @@
 
 ### Empty branches
 #### Raises
-    begin
-      dummy_method(if raise
-#>    xxxxxxxxxxxxx--
-     else
-#>   ----
-     end)
-#>   ---x
-   rescue
-   end
+    dummy_method(if raise
+#>  xxxxxxxxxxxxx--
+    else
+#>  ----
+    end) rescue nil
+#>  ---x
 
-   begin
-     dummy_method(unless raise
-#>   xxxxxxxxxxxxx------
-     end)
-#>   ---x
-    rescue
-    end
+
+   dummy_method(unless raise
+#> xxxxxxxxxxxxx------
+   end)
+#> ---x
 
 #### With elsif
     if false
