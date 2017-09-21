@@ -59,9 +59,9 @@ covered_code = DeepCover.covered_code(fn)
 puts format_generated_code(covered_code)
 puts "\nParsed code:\n"
 begin
-  covered_code.execute_code
+  execute_sample(covered_code)
 rescue Exception => e
-  puts "Can't `exececute_code`:#{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
+  puts "Can't `execute_sample`:#{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
 end
 
 module ColorAST

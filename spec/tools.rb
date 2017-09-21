@@ -41,13 +41,13 @@ module DeepCover
     def builtin_coverage(fn)
       fn = File.expand_path(fn)
       ::Coverage.start
-      require fn
+      execute_sample ->{ require fn }
       ::Coverage.result.fetch(fn)
     end
 
     def our_coverage(fn)
       covered_code = DeepCover::CoveredCode.new(path: fn)
-      covered_code.execute_code
+      execute_sample(covered_code)
       covered_code.line_coverage
     end
 
@@ -126,12 +126,21 @@ module DeepCover
       Dir.chdir(set_pwd || '.')
     end
 
-    def execute_sample(covered_code)
+    # Returns true if the code would have continued, false if the rescue was triggered.
+    def execute_sample(to_execute)
       # Disable some annoying warning by ruby. We are testing edge cases, so warnings are to be expected.
       begin
-        with_warnings(nil) { covered_code.execute_code }
+        with_warnings(nil) do
+          if to_execute.is_a?(CoveredCode)
+            to_execute.execute_code
+          else
+            to_execute.call
+          end
+        end
+        true
       rescue RuntimeError => e
         raise unless e.message.empty?
+        false
       end
     end
 
