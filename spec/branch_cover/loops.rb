@@ -70,7 +70,7 @@
 
 #### With raise in condition
     begin
-      while ["here", raise, "not here"]
+      while ("here"; raise; "not here")
 #>    xxxxx                 xxxxxxxxxx
         "not_here"
 #>X
@@ -151,7 +151,7 @@
 
 #### With raise in condition
     begin
-      until ["here", raise, "not here"]
+      until ("here"; raise; "not here")
 #>    xxxxx                 xxxxxxxxxx
         "not_here"
 #>X
