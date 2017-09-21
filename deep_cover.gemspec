@@ -6,8 +6,8 @@ require "deep_cover/version"
 Gem::Specification.new do |spec|
   spec.name          = "deep_cover"
   spec.version       = DeepCover::VERSION
-  spec.authors       = ["Marc-Andre Lafortune"]
-  spec.email         = ["github@marc-andre.ca"]
+  spec.authors       = ["Marc-André Lafortune", "Maxime Lapointe"]
+  spec.email         = ["github@marc-andre.ca", "hunter_spawn@hotmail.com"]
 
   spec.summary       = %q{Write a short summary, because Rubygems requires one.}
   spec.description   = %q{Write a longer description or delete this line.}
