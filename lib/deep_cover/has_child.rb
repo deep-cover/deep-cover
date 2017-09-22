@@ -13,7 +13,7 @@ module DeepCover
 
     def initialize(*)
       super
-      self.validate_children_types(children)
+      self.validate_children_types(children) rescue binding.pry
     end
 
     def call_handler name, child, index = child.index

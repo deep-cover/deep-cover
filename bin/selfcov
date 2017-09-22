@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+require "bundler/setup"
+require "pry"
+require_relative "../spec/self_coverage_tools"
+extend DeepCover::Tools
+
+covered_path = ARGV[0]
+if covered_path
+  $LOAD_PATH.unshift(covered_path)
+end
+require "deep_cover"
+
+if covered_path.nil?
+  covered_path = dump_covered_code('./lib', '../covered_deep_cover')
+  puts "Covered code generation done. Output in", covered_path
+  exec 'bin/selfcov', covered_path
+else
+  coverage = load_covered_sources(covered_path)
+  require 'rspec'
+  error = RSpec::Core::Runner::run(Dir.glob('./spec/*_spec.rb'))
+  missing = coverage.map do |covered_code|
+    missed = covered_code.line_coverage.each_with_index.map do |line_cov, line_index|
+      line_index + 1 if line_cov == 0
+    end.compact
+    [covered_code.buffer.name, missed] unless missed.empty?
+  end.compact.to_h
+  puts "Lines not covered:"
+  missing.each do |path, lines|
+    puts "#{File.basename(path)}: #{lines.join(', ')}"
+  end
+  binding.pry
+end
