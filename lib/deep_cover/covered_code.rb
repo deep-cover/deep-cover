@@ -1,6 +1,6 @@
 module DeepCover
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :executed, :binding, :tracker_global
+    attr_accessor :covered_source, :buffer, :binding, :tracker_global
     @@counter = 0
 
     def initialize(path: nil, source: nil, lineno: nil, tracker_global: '$_cov')
@@ -19,16 +19,14 @@ module DeepCover
     end
 
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
-      return if @executed
-      global = eval("#{tracker_global} ||= {}")
-      @cover = global[nb] ||= Array.new(@tracker_count, 0) # The reason for the || is for the case of self coverage, where these are prepared in advance
-      @executed = true
+      return if has_executed?
+      global[nb] = Array.new(@tracker_count, 0)
       eval(@covered_source, binding, @buffer.name || '<raw_code>', @lineno || 1)
     end
 
     def cover
       must_have_executed
-      @cover
+      @cover ||= global[nb]
     end
 
     def line_coverage
@@ -110,9 +108,17 @@ module DeepCover
       rewriter.process
     end
 
+    def has_executed?
+      global[nb] != nil
+    end
+
     protected
+    def global
+      eval("#{tracker_global} ||= {}")
+    end
+
     def must_have_executed
-      raise "cover not available, file wasn't executed" unless @executed
+      raise "cover not available, file wasn't executed" unless has_executed?
     end
   end
 end
