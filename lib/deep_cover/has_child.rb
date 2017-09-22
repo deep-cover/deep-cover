@@ -43,7 +43,9 @@ module DeepCover
 
     module ClassMethods
       def has_child(flow_entry_count: nil, rewrite: nil, remap: nil, rest: false, **h)
+        raise "Only one custom named argument" if h.size > 1
         name, types = h.first
+        raise "Need a name (symbol)" unless name.is_a?(Symbol)
         if types.is_a? Hash
           type_map = types
           raise "Use either remap or a hash as type but not both" if remap
