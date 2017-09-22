@@ -74,6 +74,10 @@ module DeepCover
       "#{tracker_global}[#{nb}][#{tracker_id}]+=1"
     end
 
+    def trackers_setup_source
+      "(#{tracker_global}||={})[#{nb}]||=Array.new(#{@tracker_count},0)"
+    end
+
     def tracker_hits(tracker_id)
       cover.fetch(tracker_id)
     end
