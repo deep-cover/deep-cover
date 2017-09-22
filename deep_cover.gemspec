@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "deep_cover/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "deep_cover"
+  spec.name          = "deep-cover"
   spec.version       = DeepCover::VERSION
   spec.authors       = ["Marc-André Lafortune", "Maxime Lapointe"]
   spec.email         = ["github@marc-andre.ca", "hunter_spawn@hotmail.com"]
