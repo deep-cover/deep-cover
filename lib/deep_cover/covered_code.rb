@@ -1,6 +1,6 @@
 module DeepCover
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :binding, :tracker_global
+    attr_accessor :covered_source, :buffer, :tracker_global
     @@counter = 0
 
     def initialize(path: nil, source: nil, lineno: nil, tracker_global: '$_cov')
