@@ -28,10 +28,6 @@ module DeepCover
         HasTracker.setup_constants(base)
       end
 
-      def has_trackers(*names)
-        names.each { |name| has_trackers(name) }
-      end
-
       def has_tracker(name)
         i = self::TRACKERS[name] = self::TRACKERS.size
         class_eval <<-end_eval, __FILE__, __LINE__
