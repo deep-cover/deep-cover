@@ -118,7 +118,7 @@ module DeepCover
     end
 
     def must_have_executed
-      raise "cover not available, file wasn't executed" unless has_executed?
+      raise "cover for #{buffer.name} not available, file wasn't executed" unless has_executed?
     end
   end
 end
