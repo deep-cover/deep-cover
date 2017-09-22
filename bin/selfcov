@@ -19,9 +19,13 @@ else
   require 'rspec'
   error = RSpec::Core::Runner::run(Dir.glob('./spec/*_spec.rb'))
   missing = coverage.map do |covered_code|
-    missed = covered_code.line_coverage.each_with_index.map do |line_cov, line_index|
-      line_index + 1 if line_cov == 0
-    end.compact
+    if covered_code.has_executed?
+      missed = covered_code.line_coverage.each_with_index.map do |line_cov, line_index|
+        line_index + 1 if line_cov == 0
+      end.compact
+    else
+      missed = ['all']
+    end
     [covered_code.buffer.name, missed] unless missed.empty?
   end.compact.to_h
   puts "Lines not covered:"
