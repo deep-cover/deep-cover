@@ -16,9 +16,7 @@ module DeepCover
       coverage = Coverage.new(tracker_global: '$_sc')
       source_path = File.join(File.expand_path(source_path), '')
       dest_path = File.join(File.expand_path(dest_path), '')
-      sources = $".select{|path| File.extname(path) == '.rb'}
-      .select{|path| path.start_with? source_path}
-      sources.each do |path|
+      Dir.glob("#{source_path}**/*.rb").each do |path|
         covered_code = coverage.covered_code(path)
         new_path = Pathname(path.gsub(source_path, dest_path))
         new_path.dirname.mkpath
