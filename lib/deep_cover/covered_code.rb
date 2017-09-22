@@ -1,9 +1,9 @@
 module DeepCover
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :executed, :binding
+    attr_accessor :covered_source, :buffer, :executed, :binding, :tracker_global
     @@counter = 0
 
-    def initialize(path: nil, source: nil, lineno: nil)
+    def initialize(path: nil, source: nil, lineno: nil, tracker_global: '$_cov')
       raise "Must provide either path or source" unless path || source
 
       @buffer = ::Parser::Source::Buffer.new(path)
@@ -14,13 +14,14 @@ module DeepCover
       end
       @lineno = lineno
       @tracker_count = 0
+      @tracker_global = tracker_global
       @covered_source = instrument_source
     end
 
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
       return if @executed
-      $_cov ||= {}
-      $_cov[nb] = @cover = Array.new(@tracker_count, 0)
+      global = eval("#{tracker_global} ||= {}")
+      @cover = global[nb] ||= Array.new(@tracker_count, 0) # The reason for the || is for the case of self coverage, where these are prepared in advance
       @executed = true
       eval(@covered_source, binding, @buffer.name || '<raw_code>', @lineno || 1)
     end
@@ -70,7 +71,7 @@ module DeepCover
     end
 
     def tracker_source(tracker_id)
-      "$_cov[#{nb}][#{tracker_id}]+=1"
+      "#{tracker_global}[#{nb}][#{tracker_id}]+=1"
     end
 
     def tracker_hits(tracker_id)
