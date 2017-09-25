@@ -132,7 +132,7 @@ module DeepCover
       def augment(child_base_node, covered_code, parent, child_index = 0)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
-        klass = parent.call_handler('remap_%{name}', parent.children[child_index], child_index) {
+        klass = parent.call_handler('remap_%{name}', child_base_node, child_index) {
           factory(child_base_node.type, child_index)
         }
         klass.new(child_base_node, covered_code, parent, child_index)
