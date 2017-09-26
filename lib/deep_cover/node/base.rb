@@ -167,13 +167,13 @@ module DeepCover
     end
 
     # Must apply the result to the received array directly
-    def line_cover(hits_results)
+    def apply_line_hits(hits_results)
       return unless ex = base_node.loc && base_node.loc.expression
 
       lineno = ex.line - 1
       hits_results[lineno] = [hits_results[lineno] || 0, flow_entry_count].max
 
-      children_nodes.each{|c| c.line_cover(hits_results) }
+      children_nodes.each{|c| c.apply_line_hits(hits_results) }
     end
 
     def fancy_type

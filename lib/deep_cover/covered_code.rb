@@ -32,7 +32,7 @@ module DeepCover
     def line_coverage
       must_have_executed
       line_hits = Array.new(covered_source.lines.size)
-      covered_ast.line_cover(line_hits)
+      covered_ast.apply_line_hits(line_hits)
       line_hits
     end
 
