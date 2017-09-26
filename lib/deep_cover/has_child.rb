@@ -16,6 +16,7 @@ module DeepCover
       self.validate_children_types(children) rescue binding.pry
     end
 
+    # The block given is used as default value if no matching method is found
     def call_handler name, child, index = child.index
       child_name = self.class.child_index_to_name(index, children.size) rescue binding.pry
       method_name = name % {name: child_name}
