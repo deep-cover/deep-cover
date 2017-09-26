@@ -10,9 +10,9 @@ module DeepCover
       @covered_code = covered_code
       @parent = parent
       @index = index
-      @children = base_node.children # Temporary set for Augment
-      augmented_children = base_node.children.map.with_index { |child, child_index| self.class.augment(child, covered_code, self, child_index) }
-      super(base_node.type, augmented_children, location: base_node.location)
+      @children = self.class.augment_children(base_node.children, covered_code, self)
+
+      super(base_node.type, @children, location: base_node.location)
     end
 
     ### High level API for coverage purposes

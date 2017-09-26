@@ -86,14 +86,18 @@ module DeepCover
       end
 
       # Augment creates a covered node from the child_base_node.
-      def augment(child_base_node, covered_code, parent, child_index = 0)
+      def augment_children(child_base_nodes, covered_code, parent)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
-        return child_base_node unless child_base_node.is_a? Parser::AST::Node
-        child_name = self.child_index_to_name(child_index, parent.children.size)
-        klass = parent.call_handler('remap_%{name}', child_base_node, child_name) {
-          factory(child_base_node.type, child_index)
-        }
-        klass.new(child_base_node, covered_code, parent, child_index)
+        child_base_nodes.map.with_index do |child, child_index|
+          next child unless child.is_a? Parser::AST::Node
+          child_name = child_index_to_name(child_index, child_base_nodes.size) rescue binding.pry
+
+          klass = parent.call_handler('remap_%{name}', child, child_name) {
+            factory(child.type, child_index)
+          }
+
+          klass.new(child, covered_code, parent, child_index)
+        end
       end
 
       private
