@@ -86,7 +86,9 @@ module DeepCover
       end
 
       # Augment creates a covered node from the child_base_node.
-      def augment_children(child_base_nodes, covered_code, parent)
+      # Caution: parent is not fully constructed since it is also being augmented.
+      #          don't call `children` or methods of Parser::AST::Node
+      def augment_children(child_base_nodes, parent)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         child_base_nodes.map.with_index do |child, child_index|
           next child unless child.is_a? Parser::AST::Node
@@ -96,7 +98,7 @@ module DeepCover
             factory(child.type, child_index)
           }
 
-          klass.new(child, covered_code, parent, child_index)
+          klass.new(child, parent.covered_code, parent, child_index)
         end
       end
 
