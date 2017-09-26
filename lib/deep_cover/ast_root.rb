@@ -13,7 +13,7 @@ module DeepCover
 
     def initialize(child_ast, covered_code)
       @covered_code = covered_code
-      @main_node = Node.augment(child_ast, covered_code, self)
+      @main_node = self.class.augment(child_ast, covered_code, self)
       super()
     end
 

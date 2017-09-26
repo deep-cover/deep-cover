@@ -78,6 +78,23 @@ module DeepCover
         types = expected_types(nodes)
         nodes_mismatches(nodes, types)
       end
+
+      # Returns a subclass or the base Node, according to type
+      def factory(type, index)
+        class_name = type.capitalize
+        Node.const_defined?(class_name) ? Node.const_get(class_name) : Node
+      end
+
+      # Augment creates a covered node from the child_base_node.
+      def augment(child_base_node, covered_code, parent, child_index = 0)
+        # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
+        return child_base_node unless child_base_node.is_a? Parser::AST::Node
+        klass = parent.call_handler('remap_%{name}', child_base_node, child_index) {
+          factory(child_base_node.type, child_index)
+        }
+        klass.new(child_base_node, covered_code, parent, child_index)
+      end
+
       private
 
       def expected_types(nodes)
