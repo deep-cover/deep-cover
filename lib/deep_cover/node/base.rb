@@ -1,10 +1,10 @@
 module DeepCover
   # Base class to handle covered nodes.
-  class Node < Parser::AST::Node
+  class Node
     include HasTracker
     include HasChild
     extend CheckCompletion
-    attr_reader :covered_code, :index, :parent
+    attr_reader :covered_code, :index, :parent, :children, :base_node
 
     def initialize(base_node, covered_code, parent, index = 0)
       @base_node = base_node
@@ -12,8 +12,7 @@ module DeepCover
       @parent = parent
       @index = index
       @children = augment_children(base_node.children)
-
-      super(base_node.type, @children, location: base_node.location)
+      super()
     end
 
     ### High level API for coverage purposes
@@ -21,13 +20,13 @@ module DeepCover
     # Returns an array of character numbers (in the original buffer) that
     # pertain exclusively to this node (and thus not to any children).
     def proper_range
-      return [] unless location
+      return [] unless base_node.location
       full_range - children_nodes.flat_map(&:full_range)
     end
 
     def full_range
-      return [] unless location
-      location.to_hash.values.map(&:to_a).inject(:+)
+      return [] unless base_node.location
+      base_node.location.to_hash.values.map(&:to_a).inject(:+)
     end
 
     def [](v)
@@ -148,7 +147,7 @@ module DeepCover
     end
 
     def line_cover
-      return unless ex = loc && loc.expression
+      return unless ex = base_node.loc && base_node.loc.expression
       covered_code.line_hit(ex.line - 1, flow_entry_count)
       children_nodes.each(&:line_cover)
     end
