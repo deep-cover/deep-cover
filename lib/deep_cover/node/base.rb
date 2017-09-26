@@ -129,6 +129,23 @@ module DeepCover
       parent.children[0...@index].reverse.detect { |sibling| sibling.is_a?(Node) }
     end
 
+    # Adapted from https://github.com/whitequark/ast/blob/master/lib/ast/node.rb
+    def to_s(indent=0)
+      [
+        "  " * indent,
+        '(',
+        fancy_type,
+        *children.map do |child, idx|
+          if child.is_a?(Node)
+            "\n#{child.to_s(indent + 1)}"
+          else
+            " #{child.inspect}"
+          end
+        end,
+        ')'
+      ].join
+    end
+
     ### Internal API
 
     def each_node(order = :postorder, &block)
@@ -154,7 +171,7 @@ module DeepCover
 
     def fancy_type
       class_name = self.class.to_s.rpartition('::').last
-      t = super
+      t = base_node.type.to_s
       t.casecmp(class_name) == 0 ? t : "#{t}[#{class_name}]"
     end
 
