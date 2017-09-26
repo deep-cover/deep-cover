@@ -17,8 +17,8 @@ module DeepCover
     end
 
     # The block given is used as default value if no matching method is found
-    def call_handler name, child, index = child.index
-      child_name = self.class.child_index_to_name(index, children.size) rescue binding.pry
+    def call_handler name, child, child_name = nil
+      child_name ||= self.class.child_index_to_name(child.index, children.size) rescue binding.pry
       method_name = name % {name: child_name}
       if respond_to?(method_name)
         args = [child] unless method(method_name).arity == 0
@@ -89,7 +89,8 @@ module DeepCover
       def augment(child_base_node, covered_code, parent, child_index = 0)
         # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
         return child_base_node unless child_base_node.is_a? Parser::AST::Node
-        klass = parent.call_handler('remap_%{name}', child_base_node, child_index) {
+        child_name = self.child_index_to_name(child_index, parent.children.size)
+        klass = parent.call_handler('remap_%{name}', child_base_node, child_name) {
           factory(child_base_node.type, child_index)
         }
         klass.new(child_base_node, covered_code, parent, child_index)
