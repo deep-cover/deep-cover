@@ -7,6 +7,7 @@ module DeepCover
     attr_reader :covered_code, :index, :parent
 
     def initialize(base_node, covered_code, parent, index = 0)
+      @base_node = base_node
       @covered_code = covered_code
       @parent = parent
       @index = index
