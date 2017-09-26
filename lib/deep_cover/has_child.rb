@@ -42,6 +42,24 @@ module DeepCover
       end
     end
 
+    # Augment creates a covered node from the child_base_node.
+    # Caution: receiver is not fully constructed since it is also being augmented.
+    #          don't call `children` or methods of Parser::AST::Node
+    def augment_children(child_base_nodes)
+      # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
+      child_base_nodes.map.with_index do |child, child_index|
+        next child unless child.is_a? Parser::AST::Node
+        child_name = self.class.child_index_to_name(child_index, child_base_nodes.size) rescue binding.pry
+
+        klass = call_handler('remap_%{name}', child, child_name) {
+          self.class.factory(child.type, child_index)
+        }
+
+        klass.new(child, covered_code, self, child_index)
+      end
+    end
+    private :augment_children
+
     module ClassMethods
       def has_child(flow_entry_count: nil, rewrite: nil, remap: nil, rest: false, **h)
         raise "Only one custom named argument" if h.size > 1
@@ -83,23 +101,6 @@ module DeepCover
       def factory(type, index)
         class_name = type.capitalize
         Node.const_defined?(class_name) ? Node.const_get(class_name) : Node
-      end
-
-      # Augment creates a covered node from the child_base_node.
-      # Caution: parent is not fully constructed since it is also being augmented.
-      #          don't call `children` or methods of Parser::AST::Node
-      def augment_children(child_base_nodes, parent)
-        # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
-        child_base_nodes.map.with_index do |child, child_index|
-          next child unless child.is_a? Parser::AST::Node
-          child_name = child_index_to_name(child_index, child_base_nodes.size) rescue binding.pry
-
-          klass = parent.call_handler('remap_%{name}', child, child_name) {
-            factory(child.type, child_index)
-          }
-
-          klass.new(child, parent.covered_code, parent, child_index)
-        end
       end
 
       private

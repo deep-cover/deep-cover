@@ -10,7 +10,7 @@ module DeepCover
       @covered_code = covered_code
       @parent = parent
       @index = index
-      @children = self.class.augment_children(base_node.children, self)
+      @children = augment_children(base_node.children)
 
       super(base_node.type, @children, location: base_node.location)
     end
