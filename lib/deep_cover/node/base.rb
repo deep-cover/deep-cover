@@ -6,7 +6,7 @@ module DeepCover
     extend CheckCompletion
     attr_reader :covered_code, :index, :parent, :children, :base_node
 
-    def initialize(base_node, covered_code, parent, index = 0)
+    def initialize(base_node, covered_code: raise, parent: raise, index: 0)
       @base_node = base_node
       @covered_code = covered_code
       @parent = parent

@@ -55,7 +55,7 @@ module DeepCover
           self.class.factory(child.type, child_index)
         }
 
-        klass.new(child, covered_code, self, child_index)
+        klass.new(child, covered_code: covered_code, parent: self, index: child_index)
       end
     end
     private :augment_children
