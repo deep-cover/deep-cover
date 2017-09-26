@@ -31,15 +31,9 @@ module DeepCover
 
     def line_coverage
       must_have_executed
-      @line_hits = Array.new(covered_source.lines.size)
-      covered_ast.line_cover
-      @line_hits
-    end
-
-    def line_hit(line, flow_entry_count = 1)
-      must_have_executed
-      @line_hits[line] ||= 0
-      @line_hits[line] = [@line_hits[line], flow_entry_count].max
+      line_hits = Array.new(covered_source.lines.size)
+      covered_ast.line_cover(line_hits)
+      line_hits
     end
 
     def branch_cover

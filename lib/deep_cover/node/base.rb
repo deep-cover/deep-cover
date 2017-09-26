@@ -166,10 +166,14 @@ module DeepCover
       each_node(order) { |node| yield node if node.is_a? Branch }
     end
 
-    def line_cover
+    # Must apply the result to the received array directly
+    def line_cover(hits_results)
       return unless ex = base_node.loc && base_node.loc.expression
-      covered_code.line_hit(ex.line - 1, flow_entry_count)
-      children_nodes.each(&:line_cover)
+
+      lineno = ex.line - 1
+      hits_results[lineno] = [hits_results[lineno] || 0, flow_entry_count].max
+
+      children_nodes.each{|c| c.line_cover(hits_results) }
     end
 
     def fancy_type
