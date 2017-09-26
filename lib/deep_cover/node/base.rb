@@ -4,11 +4,10 @@ module DeepCover
     include HasTracker
     include HasChild
     extend CheckCompletion
-    attr_reader :covered_code, :index, :parent, :children, :base_node
+    attr_reader :index, :parent, :children, :base_node
 
-    def initialize(base_node, covered_code: raise, parent: raise, index: 0)
+    def initialize(base_node, parent: raise, index: 0)
       @base_node = base_node
-      @covered_code = covered_code
       @parent = parent
       @index = index
       @children = augment_children(base_node.children)
@@ -147,6 +146,10 @@ module DeepCover
     end
 
     ### Internal API
+
+    def covered_code
+      parent.covered_code
+    end
 
     def each_node(order = :postorder, &block)
       return to_enum :each_node, order unless block_given?
