@@ -16,5 +16,9 @@ module DeepCover
       @children = self.class.augment_children([child_ast], covered_code, self)
       super()
     end
+
+    def type
+      :ast_root
+    end
   end
 end
