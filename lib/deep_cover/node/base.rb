@@ -19,13 +19,13 @@ module DeepCover
     # Returns an array of character numbers (in the original buffer) that
     # pertain exclusively to this node (and thus not to any children).
     def proper_range
-      return [] unless base_node.location
+      return [] unless location
       full_range - children_nodes.flat_map(&:full_range)
     end
 
     def full_range
-      return [] unless base_node.location
-      base_node.location.to_hash.values.map(&:to_a).inject(:+)
+      return [] unless location
+      location.to_hash.values.map(&:to_a).inject(:+)
     end
 
     def [](v)
@@ -151,6 +151,13 @@ module DeepCover
       self.class.name.to_sym
     end
 
+    def location
+      base_node.location
+    end
+    def loc
+      location
+    end
+
     def each_node(order = :postorder, &block)
       return to_enum :each_node, order unless block_given?
       yield self unless order == :postorder
@@ -168,7 +175,7 @@ module DeepCover
 
     # Must apply the result to the received array directly
     def apply_line_hits(hits_results)
-      return unless ex = base_node.loc && base_node.loc.expression
+      return unless ex = loc && loc.expression
 
       lineno = ex.line - 1
       hits_results[lineno] = [hits_results[lineno] || 0, flow_entry_count].max

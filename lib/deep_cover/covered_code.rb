@@ -89,12 +89,12 @@ module DeepCover
       covered_ast.each_node do |node|
         prefix, suffix = node.rewrite_prefix_suffix
         unless prefix.empty?
-          expression = node.base_node.loc.expression
+          expression = node.loc.expression
           prefix = yield prefix, node, expression.begin, :prefix if block_given?
           rewriter.insert_before_multi expression, prefix rescue binding.pry
         end
         unless suffix.empty?
-          expression = node.base_node.loc.expression
+          expression = node.loc.expression
           suffix = yield suffix, node, expression.end, :suffix if block_given?
           rewriter.insert_after_multi  expression, suffix
         end
