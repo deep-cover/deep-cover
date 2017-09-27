@@ -10,7 +10,7 @@ module DeepCover
       @base_node = base_node
       @parent = parent
       @index = index
-      @children = augment_children(base_node.children)
+      @children = augment_children
       super()
     end
 

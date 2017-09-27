@@ -45,7 +45,7 @@ module DeepCover
     # Augment creates a covered node from the child_base_node.
     # Caution: receiver is not fully constructed since it is also being augmented.
     #          don't call `children`
-    def augment_children(child_base_nodes)
+    def augment_children(child_base_nodes = base_node.children)
       # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
       child_base_nodes.map.with_index do |child, child_index|
         next child unless child.is_a? Parser::AST::Node
