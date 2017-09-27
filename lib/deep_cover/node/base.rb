@@ -94,10 +94,6 @@ module DeepCover
       '%{node}'
     end
 
-    def rewrite_child(child)
-      super || '%{node}'
-    end
-
     def resolve_rewrite(rule, context)
       rule ||= '%{node}'
       sources = context.tracker_sources
