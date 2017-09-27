@@ -1,0 +1,90 @@
+#!/usr/bin/env ruby
+require "bundler/setup"
+require "pry"
+require 'deep_cover'
+require 'yaml'
+require_relative "../spec/self_coverage_tools"
+
+module DeepCover
+  class GemCoverer < Struct.new(:gem_path)
+    include Tools
+
+    def dest_path
+      @dest_path ||= begin
+        p = File.expand_path('~/test_deep_cover')
+        p = Dir.mktmpdir("deep_cover_test") unless Dir.exist?(p)
+        p
+      end
+    end
+
+    def copy
+      @copy ||= `cp -r #{gem_path}/* #{dest_path} && cp #{gem_path}/.* #{dest_path}`
+    end
+
+    def patch_ruby_file(ruby_file)
+      content = File.read(ruby_file)
+      File.write(ruby_file, "require 'deep_cover/tools/auto_run'; " + content)
+    end
+
+    def patch_main_ruby_files
+      main = File.join(dest_path, 'lib/*.rb')
+      Dir.glob(main).each do |main|
+        puts "Patching #{main}"
+        patch_ruby_file(main)
+      end
+    end
+
+    def patch_gemfile
+      gemfile = File.expand_path(File.join(dest_path, 'Gemfile'))
+      gemfile = File.expand_path(File.join(dest_path, '..', 'Gemfile')) unless File.exist?(gemfile)
+      content = File.read(gemfile)
+      unless content =~ /gem 'deep-cover'/
+        puts "Patching Gemfile"
+        File.write(gemfile, [
+          "# This file was modified by DeepCover",
+          content,
+          "gem 'deep-cover', path: '#{File.expand_path(__dir__ + '/../')}'",
+          '',
+        ].join("\n"))
+      end
+      Bundler.with_clean_env do
+        `cd #{dest_path} && bundle`
+      end
+    end
+
+    def patch_rubocop
+      path = File.expand_path(File.join(dest_path, '.rubocop.yml'))
+      return unless File.exists?(path)
+      puts "Patching .rubocop.yml"
+      config = YAML.load(File.read(path).gsub(/(?<!\w)lib(?!\w)/, 'lib_original'))
+      ((config['AllCops'] ||= {})['Exclude'] ||= []) << 'lib/**/*'
+      File.write(path, "# This file was modified by DeepCover\n" + YAML.dump(config))
+    end
+
+    def patch
+      patch_gemfile
+      patch_rubocop
+      patch_main_ruby_files
+    end
+
+    def cover
+      `mv #{dest_path}/lib #{dest_path}/lib_original`
+      @covered_path = dump_covered_code(File.join(dest_path, 'lib_original'), File.join(dest_path, 'lib'))
+    end
+
+    def process
+      Bundler.with_clean_env do
+        exec "cd #{dest_path} && rake"
+      end
+    end
+
+    def run
+      copy
+      cover
+      patch
+      process
+    end
+  end
+
+  GemCoverer.new(ARGV[0] || "~/inky-rb").run
+end
