@@ -9,6 +9,22 @@ module DeepCover
     def tracker_sizes
       @covered_code.values.map(&:tracker_info).to_h
     end
+
+    def report
+      missing = map do |covered_code|
+        if covered_code.has_executed?
+          missed = covered_code.line_coverage.each_with_index.map do |line_cov, line_index|
+            line_index + 1 if line_cov == 0
+          end.compact
+        else
+          missed = ['all']
+        end
+        [covered_code.buffer.name, missed] unless missed.empty?
+      end.compact.to_h
+      missing.map do |path, lines|
+        "#{File.basename(path)}: #{lines.join(', ')}"
+      end.join("\n")
+    end
   end
 
   module Tools
