@@ -7,7 +7,7 @@ module DeepCover
 
     # $1
     class Nth_ref < Node
-      has_child index: Integer
+      has_child n: Integer
       # TODO
     end
   end
