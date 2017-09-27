@@ -48,12 +48,12 @@ module DeepCover
     def augment_children(child_base_nodes = base_node.children)
       # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
       child_base_nodes.map.with_index do |child, child_index|
-        next child unless child.is_a? Parser::AST::Node
         child_name = self.class.child_index_to_name(child_index, child_base_nodes.size) rescue binding.pry
 
         klass = call_handler('remap_%{name}', child, child_name)
-        klass ||= self.class.factory(child.type, child_index)
+        next child if !klass && !child.is_a?(Parser::AST::Node)
 
+        klass ||= self.class.factory(child.type, child_index)
         klass.new(child, parent: self, index: child_index)
       end
     end
