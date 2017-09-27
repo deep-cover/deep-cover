@@ -11,6 +11,7 @@ require 'pry'
 $LOAD_PATH.unshift('../covered_deep_cover') if ENV["CC"]
 require "deep_cover"
 require_relative "tools"
+require_relative "extensions"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

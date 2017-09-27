@@ -42,22 +42,8 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
 end
 
 RSpec.describe 'branch cover' do
-  Dir.glob('./spec/branch_cover/*.rb').each do |fn|
-    describe File.basename(fn, '.rb') do
-      example_groups = DeepCover::Tools::AnnotatedExamplesParser.process(File.read(fn).lines)
-      example_groups.each do |section, examples|
-        context(section || '(General)') do
-          examples.each do |title, (lines, lineno)|
-            msg = case [section, title].join
-            when /\(pending/i then :pending
-            when /\(Ruby 2\.(\d)/i
-              :skip if RUBY_VERSION < "2.#{$1}.0"
-            end
-            send(msg || :it, title) { lines.should have_correct_branch_coverage(fn, lineno) }
-          end
-        end
-      end
-    end
+  each_code_examples('./spec/branch_cover/*.rb') do |fn, lines, lineno|
+    lines.should have_correct_branch_coverage(fn, lineno)
   end
 
   it 'tests against at least one of every node types', pending: true do
