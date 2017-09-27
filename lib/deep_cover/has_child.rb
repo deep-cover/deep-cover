@@ -65,15 +65,20 @@ module DeepCover
         name, types = h.first
         raise "Need a name (symbol)" unless name.is_a?(Symbol)
         if types.is_a? Hash
-          type_map = types
           raise "Use either remap or a hash as type but not both" if remap
+          remap = types
+          types = []
+        end
+        if remap.is_a? Hash
+          type_map = remap
           remap = -> (child) do
             klass = type_map[child.class]
             klass ||= type_map[child.type] if child.respond_to? :type
             klass
           end
-          types = type_map.values
+          types.concat(type_map.values).uniq!
         end
+
         update_children_const(name, rest: rest)
         define_accessor(name)
         add_runtime_check(name, types)
