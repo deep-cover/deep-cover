@@ -1,5 +1,4 @@
 require "parser"
-require 'active_support/core_ext/module/delegation'
 
 module DeepCover
   def self.require_relative_dir(dir_name)
