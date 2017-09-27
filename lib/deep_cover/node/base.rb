@@ -146,6 +146,11 @@ module DeepCover
       parent.covered_code
     end
 
+    def type
+      return base_node.type if base_node
+      self.class.name.to_sym
+    end
+
     def each_node(order = :postorder, &block)
       return to_enum :each_node, order unless block_given?
       yield self unless order == :postorder
