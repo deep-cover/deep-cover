@@ -50,7 +50,7 @@ module DeepCover
     end
 
     class NeverEvaluated < Node
-      has_extra_children whatever: [nil, Symbol], remap: {Parser::AST::Node => NeverEvaluated}
+      has_extra_children whatever: [:any], remap: {Parser::AST::Node => NeverEvaluated}
 
       def executable?
         false
