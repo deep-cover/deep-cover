@@ -38,6 +38,22 @@ module DeepCover
       self
     end
 
+    def report
+      missing = map do |covered_code|
+        if covered_code.has_executed?
+          missed = covered_code.line_coverage.each_with_index.map do |line_cov, line_index|
+            line_index + 1 if line_cov == 0
+          end.compact
+        else
+          missed = ['all']
+        end
+        [covered_code.buffer.name, missed] unless missed.empty?
+      end.compact.to_h
+      missing.map do |path, lines|
+        "#{File.basename(path)}: #{lines.join(', ')}"
+      end.join("\n")
+    end
+
     def self.load(dest_path, basename = 'coverage.deep_cover')
       full_path = File.join(File.expand_path(dest_path), basename)
       Marshal.load(File.read(full_path)).tap do |version: raise, coverage: raise|
