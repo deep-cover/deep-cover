@@ -71,20 +71,8 @@ module DeepCover
       end
 
       def location
-        @location ||= Source.new(self)
+        Parser::Source::Map.new(parent.location.else)
       end
-
-      class Source < Parser::Source::Map
-        attr_reader :else
-
-        def initialize(case_else)
-          @else = case_else.parent.location.else
-
-          expression = case_else.base_node.location.expression if case_else.base_node
-          super(expression)
-        end
-      end
-
     end
 
     class Case < Node
