@@ -15,7 +15,7 @@ if covered_path.nil?
   puts "Covered code generation done. Output in", covered_path
   exec 'bin/selfcov', covered_path
 else
-  coverage = load_covered_sources(covered_path)
+  coverage = DeepCover::Coverage.load(covered_path)
   require 'rspec'
   error = RSpec::Core::Runner::run(Dir.glob('./spec/*_spec.rb'))
   puts "Lines not covered:", coverage.report

@@ -40,22 +40,8 @@ module DeepCover
         new_path.dirname.mkpath
         new_path.write(covered_code.covered_source)
       end
-      File.write("#{dest_path}coverage.deep_cover", Marshal.dump({
-        version: DeepCover::VERSION,
-        coverage: coverage,
-      }))
+      coverage.save(dest_path)
       dest_path
-    end
-
-    def parse_covered_sources(version: raise, coverage: raise)
-      puts "Warning: dump version mismatch: #{deep_cover}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
-      coverage
-    end
-
-    def load_covered_sources(source_path)
-      path = File.join(File.expand_path(source_path), 'coverage.deep_cover')
-      puts "Loading", path
-      parse_covered_sources Marshal.load(File.read(path))
     end
   end
 end
