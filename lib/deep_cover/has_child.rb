@@ -67,7 +67,10 @@ module DeepCover
         if types.is_a? Hash
           type_map = types
           raise "Use either remap or a hash as type but not both" if remap
-          remap = -> (child) { type_map[child.type] }
+          remap = -> (child) do
+            type = child.type if child
+            type_map[type]
+          end
           types = type_map.values
         end
         update_children_const(name, rest: rest)
