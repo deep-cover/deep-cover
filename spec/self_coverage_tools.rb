@@ -1,3 +1,5 @@
+require 'with_progress'
+
 module DeepCover
   class CoveredCode
     def tracker_info
@@ -32,7 +34,7 @@ module DeepCover
       coverage = Coverage.new(tracker_global: '$_sc')
       source_path = File.join(File.expand_path(source_path), '')
       dest_path = File.join(File.expand_path(dest_path), '')
-      Dir.glob("#{source_path}**/*.rb").each do |path|
+      Dir.glob("#{source_path}**/*.rb").each.with_progress(title: 'Rewriting') do |path|
         covered_code = coverage.covered_code(path)
         new_path = Pathname(path.gsub(source_path, dest_path))
         new_path.dirname.mkpath
