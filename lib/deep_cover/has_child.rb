@@ -68,8 +68,9 @@ module DeepCover
           type_map = types
           raise "Use either remap or a hash as type but not both" if remap
           remap = -> (child) do
-            type = child.type if child
-            type_map[type]
+            klass = type_map[child.class]
+            klass ||= type_map[child.type] if child.respond_to? :type
+            klass
           end
           types = type_map.values
         end
