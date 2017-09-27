@@ -8,14 +8,6 @@ require_relative "../spec/tools"
 require 'term/ansicolor'
 extend DeepCover::Tools
 
-def show_builtin(fn)
-  puts format(fn, builtin_coverage(fn))
-end
-
-def show_our_cov(fn)
-  puts format(fn, our_coverage(fn))
-end
-
 example = ARGV[0] || 'simple_if'
 fn = "./spec/samples/#{example}.rb"
 fn = "./spec/branch_cover/#{example}.rb" unless File.exist?(fn)
@@ -46,14 +38,13 @@ tmp = Tempfile.new(['example', '.rb'])
 fn = tmp.path
 File.write(fn, lines.join)
 
-puts "Builtin:\n"
-show_builtin(fn)
-puts "\nPure Ruby:\n"
+puts "Builtin and DeepCover:\n"
 begin
-  cover = show_our_cov(fn)
+  puts format(fn, builtin_coverage(fn), our_coverage(fn))
 rescue Exception => e
-  puts "Can't `show_our_cov`:#{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
+  puts "Can't run coverage: #{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
 end
+
 puts "\nGenerated code:\n"
 covered_code = DeepCover.covered_code(fn)
 
