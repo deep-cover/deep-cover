@@ -5,7 +5,7 @@ FULLY_EXECUTED = /^[ -]*$/
 NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
 UNIMPORTANT_CHARACTERS = /[ \t();,]/
 
-def parse(lines)
+def parse_code_with_cov_comments(lines)
   code = []
   answers = []
   lines.chunk{|line| line !~ ANSWER}.each do |is_code, chunk|
@@ -35,7 +35,7 @@ end
 
 RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
   match do |lines|
-    code, answers = parse(lines)
+    code, answers = parse_code_with_cov_comments(lines)
     code << "    'flow_completion check. (Must be red if previous raised, green otherwise)'"
     @covered_code = DeepCover::CoveredCode.new(path: filename, source: code.join("\n"), lineno: lineno)
 
