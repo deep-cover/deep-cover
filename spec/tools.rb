@@ -30,8 +30,7 @@ module DeepCover
     extend self
 
     def format(fn, *results)
-      code =  File.read(fn)
-      lines = code.lines
+      code = File.read(fn)
       results.map!{|counts| counts.map{|c| CONVERT[c]}}
       [*results, code.lines].transpose.map do |parts|
         *line_results, line = parts
