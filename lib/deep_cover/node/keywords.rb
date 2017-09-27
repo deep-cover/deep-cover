@@ -1,3 +1,6 @@
+require_relative 'variables'
+require_relative 'literals'
+
 module DeepCover
   class Node
     class Kwbegin < Node
@@ -38,5 +41,13 @@ module DeepCover
         0
       end
     end
+
+    class Alias < Node
+      check_completion
+      has_child alias: [Sym, Dsym, Gvar, Back_ref]
+      has_child original: [Sym, Dsym, Gvar, Back_ref]
+      # TODO: test
+    end
+
   end
 end
