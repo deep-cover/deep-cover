@@ -49,5 +49,17 @@ module DeepCover
       # TODO: test
     end
 
+    class NeverEvaluated < Node
+      has_extra_children whatever: [nil, Symbol], remap: {Parser::AST::Node => NeverEvaluated}
+
+      def executable?
+        false
+      end
+    end
+
+    class Defined < Node
+      has_child expression: {Parser::AST::Node => NeverEvaluated}
+      # TODO: test
+    end
   end
 end
