@@ -24,15 +24,15 @@ module DeepCover
         args = [child] unless method(method_name).arity == 0
         answer = send(method_name, *args)
       end
-      answer || yield
+      answer
     end
 
     def child_flow_entry_count(child)
-      call_handler('%{name}_flow_entry_count', child) { yield }
+      call_handler('%{name}_flow_entry_count', child)
     end
 
     def rewrite_child(child)
-      call_handler('rewrite_%{name}', child) { yield }
+      call_handler('rewrite_%{name}', child)
     end
 
     def validate_children_types(nodes)
@@ -51,9 +51,8 @@ module DeepCover
         next child unless child.is_a? Parser::AST::Node
         child_name = self.class.child_index_to_name(child_index, child_base_nodes.size) rescue binding.pry
 
-        klass = call_handler('remap_%{name}', child, child_name) {
-          self.class.factory(child.type, child_index)
-        }
+        klass = call_handler('remap_%{name}', child, child_name)
+        klass ||= self.class.factory(child.type, child_index)
 
         klass.new(child, parent: self, index: child_index)
       end

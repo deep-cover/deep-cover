@@ -78,13 +78,14 @@ module DeepCover
     # This is the responsability of the Node, not of the child.
     # Must be refined if the parent node may have an impact on control flow (raising, branching, ...)
     def child_flow_entry_count(child)
-      super do
-        prev = child.previous_sibling
-        if prev
-          prev.flow_completion_count
-        else
-          flow_entry_count
-        end
+      handler_value = super
+      return handler_value if handler_value
+
+      prev = child.previous_sibling
+      if prev
+        prev.flow_completion_count
+      else
+        flow_entry_count
       end
     end
 
@@ -94,9 +95,7 @@ module DeepCover
     end
 
     def rewrite_child(child)
-      super do
-        '%{node}'
-      end
+      super || '%{node}'
     end
 
     def resolve_rewrite(rule, context)
