@@ -1,3 +1,5 @@
+require_relative 'assignments'
+
 module DeepCover
   class Node
     class Arg < Node
@@ -37,7 +39,7 @@ module DeepCover
     end
 
     class Args < Node
-      has_child arguments: [Arg, Optarg, Restarg, Kwarg, Kwoptarg, Kwrestarg, Blockarg], rest: true
+      has_child arguments: [Arg, Optarg, Restarg, Kwarg, Kwoptarg, Kwrestarg, Blockarg, Mlhs], rest: true
       def executable?
         false
       end
