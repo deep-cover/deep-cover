@@ -33,9 +33,16 @@ module DeepCover
       code =  File.read(fn)
       lines = code.lines
       results.map!{|counts| counts.map{|c| CONVERT[c]}}
-      [*results, code.lines]
-        .transpose
-        .map(&:join)
+      [*results, code.lines].transpose.map do |parts|
+        *line_results, line = parts
+        next parts.join if line_results.size <= 1
+
+        if line_results.all?{|res| res == line_results[0]}
+          Term::ANSIColor.green(line_results.join) + line.to_s
+        else
+          Term::ANSIColor.red(line_results.join) + line.to_s
+        end
+      end
     end
 
     def builtin_coverage(fn)
