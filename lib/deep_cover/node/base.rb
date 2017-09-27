@@ -154,9 +154,6 @@ module DeepCover
     def location
       base_node.location
     end
-    def loc
-      location
-    end
 
     def each_node(order = :postorder, &block)
       return to_enum :each_node, order unless block_given?
@@ -175,7 +172,7 @@ module DeepCover
 
     # Must apply the result to the received array directly
     def apply_line_hits(hits_results)
-      return unless ex = loc && loc.expression
+      return unless ex = location && location.expression
 
       lineno = ex.line - 1
       hits_results[lineno] = [hits_results[lineno] || 0, flow_entry_count].max
