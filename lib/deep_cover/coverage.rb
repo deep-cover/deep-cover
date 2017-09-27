@@ -2,6 +2,7 @@ require 'parser'
 require 'parser/current'
 require 'pry'
 require 'pathname'
+require_relative 'covered_code'
 
 module DeepCover
   # A collection of CoveredCode
