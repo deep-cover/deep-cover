@@ -61,5 +61,11 @@ module DeepCover
       has_child expression: {Parser::AST::Node => NeverEvaluated}
       # TODO: test
     end
+
+    class Undef < Node
+      check_completion
+      has_extra_children arguments: [Sym, Dsym]
+      # TODO: test
+    end
   end
 end
