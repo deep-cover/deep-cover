@@ -28,8 +28,22 @@ module DeepCover
       end
 
       def execution_count
+        # TODO: while this distringuishes correctly 0 vs >0, the number return is often too high
         condition.flow_completion_count
       end
+    end
+
+    class Until_post < Node
+      has_tracker :body
+      has_child condition: Node, rewrite: '((%{node})) || (%{body_tracker};false)'
+      has_child body: Kwbegin, flow_entry_count: -> { body_tracker_hits + parent.flow_entry_count }
+      check_completion
+
+      def execution_count
+        # TODO: while this distringuishes correctly 0 vs >0, the number return is often too high
+        body.flow_completion_count
+      end
+      # TODO: test
     end
 
     class While < Node
@@ -43,8 +57,22 @@ module DeepCover
       end
 
       def execution_count
+        # TODO: while this distringuishes correctly 0 vs >0, the number return is often too high
         condition.flow_completion_count
       end
+    end
+
+    class While_post < Node
+      has_tracker :body
+      has_child condition: Node, rewrite: '((%{node})) && %{body_tracker}'
+      has_child body: Kwbegin, flow_entry_count: -> { body_tracker_hits + parent.flow_entry_count }
+      check_completion
+
+      def execution_count
+        # TODO: while this distringuishes correctly 0 vs >0, the number return is often too high
+        body.flow_completion_count
+      end
+      # TODO: test
     end
   end
 end
