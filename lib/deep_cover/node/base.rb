@@ -140,6 +140,7 @@ module DeepCover
       ].join
     end
 
+    alias_method :inspect, :to_s
     ### Internal API
 
     def covered_code
