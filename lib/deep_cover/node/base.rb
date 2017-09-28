@@ -183,7 +183,7 @@ module DeepCover
 
     def fancy_type
       class_name = self.class.to_s.rpartition('::').last
-      t = base_node.type.to_s
+      t = type.to_s
       t.casecmp(class_name) == 0 ? t : "#{t}[#{class_name}]"
     end
 
