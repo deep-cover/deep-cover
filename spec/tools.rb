@@ -33,10 +33,10 @@ module DeepCover
 
     extend self
 
-    def format(fn, *results)
-      code = File.read(fn)
+    def format(*results, filename: nil, source: nil)
+      source ||= File.read(filename)
       results.map!{|counts| counts.map{|c| CONVERT[c]}}
-      [*results, code.lines].transpose.map do |parts|
+      [*results, source.lines].transpose.map do |parts|
         *line_results, line = parts
         next parts.join if line_results.size <= 1
 

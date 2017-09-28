@@ -11,7 +11,7 @@ RSpec::Matchers.define :match_coverage do
     end
   end
   failure_message do |fn|
-    DeepCover::Tools.format(fn, @builtin, @our).join
+    DeepCover::Tools.format(@builtin, @our, filename: fn).join
   end
 end
 
