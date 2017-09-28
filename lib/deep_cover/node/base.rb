@@ -69,7 +69,7 @@ module DeepCover
     # This is the responsability of the child Node, never of the parent.
     # Must be refined if the child node may have an impact on control flow (raising, branching, ...)
     def flow_completion_count
-      last = children_nodes.last
+      last = children_nodes_in_flow_order.last
       return last.flow_completion_count if last
       flow_entry_count
     end
@@ -114,13 +114,20 @@ module DeepCover
     def children_nodes
       children.select{|c| c.is_a? Node }
     end
+    alias_method :children_nodes_in_flow_order, :children_nodes
 
     def next_sibling
-      parent.children[(@index+1)..-1].detect { |sibling| sibling.is_a?(Node) }
+      parent.children_nodes_in_flow_order.each_cons(2) do |child, next_child|
+        return next_child if child.equal? self
+      end
+      nil
     end
 
     def previous_sibling
-      parent.children[0...@index].reverse.detect { |sibling| sibling.is_a?(Node) }
+      parent.children_nodes_in_flow_order.each_cons(2) do |previous_child, child|
+        return previous_child if child.equal? self
+      end
+      nil
     end
 
     # Adapted from https://github.com/whitequark/ast/blob/master/lib/ast/node.rb
