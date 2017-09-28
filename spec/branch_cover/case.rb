@@ -99,6 +99,10 @@
 #>X
       "not here"
 #>X
+    else
+#>X
+      "not here"
+#>X
     end
 
 #### Without entering when
