@@ -6,19 +6,21 @@ require 'yaml'
 require_relative "../spec/self_coverage_tools"
 
 module DeepCover
-  class GemCoverer < Struct.new(:gem_path)
+  class GemCoverer
     include Tools
+    attr_reader :dest_path
 
-    def dest_path
-      @dest_path ||= begin
-        p = File.expand_path('~/test_deep_cover')
-        p = Dir.mktmpdir("deep_cover_test") unless Dir.exist?(p)
-        p
-      end
+    def initialize(root_path, gem_relative_path = '')
+      @root_path = root_path
+      @gem_relative_path = gem_relative_path
+      @dest_root = File.expand_path('~/test_deep_cover')
+      @dest_root = Dir.mktmpdir("deep_cover_test") unless Dir.exist?(@dest_root)
+      `rm -rf #{@dest_root}/* #{@dest_root}/.*`
+      @dest_path = File.expand_path(File.join(@dest_root, @gem_relative_path))
     end
 
     def copy
-      @copy ||= `cp -r #{gem_path}/* #{dest_path} && cp #{gem_path}/.* #{dest_path}`
+      @copy ||= `cp -r #{@root_path}/* #{@dest_root} && cp #{@root_path}/.* #{@dest_root}`
     end
 
     def patch_ruby_file(ruby_file)
@@ -86,5 +88,5 @@ module DeepCover
     end
   end
 
-  GemCoverer.new(ARGV[0] || "~/inky-rb").run
+  GemCoverer.new(ARGV[0] || "~/inky-rb", ARGV[1] || '').run
 end

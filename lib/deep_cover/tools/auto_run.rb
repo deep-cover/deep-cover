@@ -23,7 +23,7 @@ module DeepCover
       load
       at_exit { report }
     end
-    binding.pry
+
     run!
   end
 end
