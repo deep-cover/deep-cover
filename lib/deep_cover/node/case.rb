@@ -7,10 +7,8 @@ module DeepCover
       has_child condition: Node, rewrite: "((%{entry_tracker};%{node}))",
         flow_entry_count: :entry_tracker_hits
 
-      def augment_children
-        # Augment the @base_node again, but there won't be a remap this time.
-        # This way, WhenCondition is inserted between the When and the condition.
-        super([@base_node])
+      def initialize(base_node, **kwargs)
+        super(nil, base_children: [base_node], **kwargs)
       end
 
       def flow_entry_count
@@ -19,6 +17,10 @@ module DeepCover
 
       def flow_completion_count
         condition.flow_completion_count
+      end
+
+      def location
+        condition.location
       end
     end
 
@@ -55,14 +57,8 @@ module DeepCover
       has_child body: [Node, nil], rewrite: "((%{entry_tracker};%{node}))",
                 flow_entry_count: :entry_tracker_hits
 
-      def augment_children
-        if @base_node
-          # Augment the @base_node again, but there won't be a remap this time.
-          # This way, CaseElse is inserted between the When and the condition.
-          super([@base_node])
-        else
-          []
-        end
+      def initialize(base_node, **kwargs)
+        super(nil, base_children: [base_node], **kwargs)
       end
 
       def flow_entry_count
