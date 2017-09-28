@@ -11,7 +11,7 @@ class RSpec::Core::ExampleGroup
                     when /\(Ruby 2\.(\d)/i
                       :skip if RUBY_VERSION < "2.#{$1}.0"
                     end
-              send(msg || :it, title) { self.instance_exec(fn, lines, lineno, &block) }
+              send(msg || :it, title || '(General)') { self.instance_exec(fn, lines, lineno, &block) }
             end
           end
         end
