@@ -34,3 +34,16 @@
     foo = {}; def foo.bar; true; end
     (foo.bar &&= 42) rescue nil
 #>           xxx
+
+### Multiple
+
+    a, b, c = 1
+    foo = {}; foo[:a], bar = 1
+
+#### raising on the value side
+    (a, b, c = 1, raise, 2) rescue nil
+#>   xxxxxxxxx           x
+
+#### raising when assigning
+    foo = {}; (foo[:a], foo.bar, c = 1, 2, 3; :nope) rescue nil
+#>                               x            xxxxx

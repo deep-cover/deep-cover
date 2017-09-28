@@ -29,11 +29,61 @@ module DeepCover
       # TODO
     end
 
+    module AlternateStrategy
+      # Instead of deducing completion completion from entry,
+      # We go the other way, deducing entry from completion.
+      def flow_completion_count
+        s = next_sibling
+        s ? s.flow_entry_count : parent.flow_completion_count
+      end
+
+      def flow_entry_count
+        flow_completion_count
+      end
+    end
+
+    class MasgnSetter < Node
+      include AlternateStrategy
+      has_tracker :entry
+      has_child receiver: Node,
+                rewrite: '(%{node}).tap{%{entry_tracker}}',
+                flow_entry_count: :entry_tracker_hits
+      has_child method_name: Symbol
+      has_child arg: [Node, nil] # When method is :[]=
+
+      alias_method :flow_entry_count, :entry_tracker_hits
+    end
+
+    class MasgnVariableAssignment < Node
+      include AlternateStrategy
+      has_child var_name: Symbol
+    end
+
+    class MasgnLeftSide < Node
+      has_extra_children receivers: {
+        cvasgn: MasgnVariableAssignment, gvasgn: MasgnVariableAssignment,
+        ivasgn: MasgnVariableAssignment, lvasgn: MasgnVariableAssignment,
+        send: MasgnSetter,
+      }
+      def flow_completion_count
+        parent.flow_completion_count
+      end
+    end
+
     # a, b = ...
     class Masgn < Node
-      has_child left: Mlhs
+      check_completion
+
+      has_child left: {mlhs: MasgnLeftSide}
       has_child value: Node
-      # TODO
+
+      def execution_count
+        value.flow_completion_count
+      end
+
+      def children_nodes_in_flow_order
+        [value, left]
+      end
     end
 
     class VariableOperatorAssign < Node
