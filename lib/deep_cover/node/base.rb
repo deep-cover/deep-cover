@@ -149,7 +149,7 @@ module DeepCover
 
     def type
       return base_node.type if base_node
-      self.class.name.to_sym
+      self.class.name.split('::').last.to_sym
     end
 
     def location
