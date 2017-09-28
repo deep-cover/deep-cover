@@ -1,7 +1,7 @@
 require "spec_helper"
 require "tempfile"
 
-RSpec::Matchers.define :match_coverage do |fn, lines, lineno|
+RSpec::Matchers.define :match_builtin_coverage do |fn, lines, lineno|
   match do
     Tempfile.open(["#{File.basename(fn)}_#{lineno}_", '.rb']) do |tmp|
       new_lines_added = lineno - 1
@@ -26,6 +26,6 @@ end
 
 RSpec.describe 'line coverage' do
   each_code_examples('./spec/branch_cover/*.rb') do |fn, lines, lineno|
-    should match_coverage(fn, lines, lineno)
+    should match_builtin_coverage(fn, lines, lineno)
   end
 end
