@@ -176,6 +176,7 @@ module DeepCover
       end
 
       def define_accessor(name)
+        warn "child name '#{name}' conflicts with existing method for #{self}" if method_defined? name
         class_eval <<-end_eval, __FILE__, __LINE__
           def #{name}
             children[#{name.upcase}]
