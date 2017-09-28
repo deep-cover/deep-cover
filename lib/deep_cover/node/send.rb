@@ -5,7 +5,7 @@ module DeepCover
     class Send < Node
       check_completion
       has_child receiver: [Node, nil]
-      has_child method: Symbol
+      has_child method_name: Symbol
       has_extra_children arguments: Node
     end
 
