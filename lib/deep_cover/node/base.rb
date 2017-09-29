@@ -178,16 +178,6 @@ module DeepCover
       each_node(order) { |node| yield node if node.is_a? Branch }
     end
 
-    # Must apply the result to the received array directly
-    def apply_line_hits(hits_results)
-      return unless ex = location && location.expression
-
-      lineno = ex.line - 1
-      hits_results[lineno] = [hits_results[lineno] || 0, flow_entry_count].max
-
-      children_nodes.each{|c| c.apply_line_hits(hits_results) }
-    end
-
     def fancy_type
       class_name = self.class.to_s.rpartition('::').last
       t = type.to_s

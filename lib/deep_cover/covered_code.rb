@@ -31,10 +31,7 @@ module DeepCover
 
     def line_coverage
       must_have_executed
-      line_hits = Array.new(covered_source.lines.size)
-      return line_hits unless covered_ast
-      covered_ast.apply_line_hits(line_hits)
-      line_hits
+      LineCoverageInterpreter.new(self).generate_results
     end
 
     def branch_cover
