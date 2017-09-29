@@ -6,7 +6,7 @@ module DeepCover
     end
 
     def generate_results
-      @line_hits = Array.new(@covered_code.buffer.source_lines.size - 1)
+      @line_hits = Array.new(@covered_code.nb_lines)
       return @line_hits unless @covered_code.covered_ast
       apply_line_hits(@covered_code.covered_ast)
       @line_hits

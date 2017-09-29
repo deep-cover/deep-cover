@@ -18,6 +18,13 @@ module DeepCover
       @covered_source = instrument_source
     end
 
+    def nb_lines
+      @nb_lines ||= begin
+        lines = buffer.source_lines
+        lines.size - (lines.last.empty? ? 1 : 0)
+      end
+    end
+
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
       return if has_executed?
       global[nb] = Array.new(@tracker_count, 0)
