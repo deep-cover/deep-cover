@@ -5,12 +5,11 @@ FULLY_EXECUTED = /^[ -]*$/
 NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
 UNIMPORTANT_CHARACTERS = /[ \t();,]/
 
-def parse_code_with_cov_comments(lines)
-  code = []
+def parse_cov_comments_answers(lines)
   answers = []
-  lines.chunk{|line| line !~ ANSWER}.each do |is_code, chunk|
+  line_index = 0
+  lines.chunk{|line| line !~ ANSWER}.each_with_index do |(is_code, chunk)|
     chunk.map!(&:chomp)
-    code.concat(chunk)
     unless is_code
       raise "Hey" unless chunk.size == 1
       answer = chunk.first
@@ -19,12 +18,12 @@ def parse_code_with_cov_comments(lines)
       else
         answer = "  #{answer[2..-1]}"
       end
-      answers[code.size - 2] = answer
+      answers[line_index - 1] = answer
     end
+    line_index += chunk.size
   end
-  answers[code.size] ||= nil
+  answers[lines.size] ||= nil
   answers.map!{|a| a || FULLY_EXECUTED }
-  [code, answers]
 end
 
 def strip_when_unimportant(code, data)
@@ -35,19 +34,19 @@ end
 
 RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
   match do |lines|
-    code, answers = parse_code_with_cov_comments(lines)
-    code << "    'flow_completion check. (Must be red if previous raised, green otherwise)'"
-    @covered_code = DeepCover::CoveredCode.new(path: filename, source: code.join("\n"), lineno: lineno)
+    answers = parse_cov_comments_answers(lines)
+    lines << "    'flow_completion check. (Must be red if previous raised, green otherwise)'"
+    @covered_code = DeepCover::CoveredCode.new(path: filename, source: lines.join, lineno: lineno)
 
     reached_end = DeepCover::Tools.execute_sample(@covered_code)
     if reached_end
-      answers[code.size - 1] = FULLY_EXECUTED
+      answers[lines.size - 1] = FULLY_EXECUTED
     else
-      answers[code.size - 1] = NOT_EXECUTED
+      answers[lines.size - 1] = NOT_EXECUTED
     end
 
     cov = @covered_code.branch_cover
-    errors = cov.zip(answers, code).each_with_index.reject do |(a, expected, line), i|
+    errors = cov.zip(answers, lines).each_with_index.reject do |(a, expected, line), i|
       actual = strip_when_unimportant(line, a)
       actual = ' ' * actual.size if line.strip.start_with?('#>')
       if expected.is_a?(Regexp)
