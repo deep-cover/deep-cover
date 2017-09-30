@@ -43,7 +43,7 @@ module DeepCover
         if line_results.all?{|res| res == line_results[0]}
           Term::ANSIColor.green(line_results.join) + line.to_s
         else
-          Term::ANSIColor.red(line_results.join) + line.to_s
+          Term::ANSIColor.yellow(line_results.join) + line.to_s
         end
       end
     end
