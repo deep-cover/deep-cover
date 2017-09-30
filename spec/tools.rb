@@ -95,6 +95,27 @@ module DeepCover
       end
     end
 
+    def parse_cov_comments_answers(lines)
+      answers = []
+      line_index = 0
+      lines.chunk{|line| line !~ ANSWER}.each_with_index do |(is_code, chunk)|
+        chunk.map!(&:chomp)
+        unless is_code
+          raise "Hey" unless chunk.size == 1
+          answer = chunk.first
+          if answer.start_with?('#>X')
+            answer = NOT_EXECUTED
+          else
+            answer = "  #{answer[2..-1]}"
+          end
+          answers[line_index - 1] = answer
+        end
+        line_index += chunk.size
+      end
+      answers[lines.size] ||= nil
+      answers.map!{|a| a || FULLY_EXECUTED }
+    end
+
     # Creates a tree of directories and files for testing.
     # This is meant to be used within `Dir.mktmpdir`
     # The tree_content is an array of paths.
