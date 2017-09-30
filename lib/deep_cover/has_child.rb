@@ -61,9 +61,9 @@ module DeepCover
 
     module ClassMethods
       def has_child(flow_entry_count: nil, rewrite: nil, remap: nil, rest: false, **h)
-        raise "Only one custom named argument" if h.size > 1
+        raise "Needs exactly one custom named argument, got #{h.size}" if h.size != 1
         name, types = h.first
-        raise "Need a name (symbol)" unless name.is_a?(Symbol)
+        raise TypeError, "Expect a Symbol for name, got a #{name.class} (#{name.inspect})" unless name.is_a?(Symbol)
         if types.is_a? Hash
           raise "Use either remap or a hash as type but not both" if remap
           remap = types
@@ -160,13 +160,13 @@ module DeepCover
         children_map.each do |key, value|
           if value.is_a? Range
             children_map[key] = children_map[key].begin..(children_map[key].end - 1)
-            already_has_rest = true
+            already_has_rest = key
           elsif value < 0
             children_map[key] -= 1
           end
         end
         children_map[name] = if rest
-          raise "Can't have two rest childrens" if already_has_rest
+          raise "Class #{self} can't have extra children '#{name}' because it already has '#{name}' (#{children_map.inspect})" if already_has_rest
           children_map.size..-1
         elsif already_has_rest
           -1
