@@ -123,7 +123,7 @@ module DeepCover
     # * Finish an entry with a / for the last part to also be a directory.
     # * Start an entry with "pwd:" and the current working directory will be set there.
     # * if a file ends with .rb, it will contain code to set $last_test_tree_file_executed to the entry (without pwd:)
-    def self.file_tree(root, tree_contents)
+    def file_tree(root, tree_contents)
       set_pwd = nil
       tree_contents.each do |tree_entry|
         if tree_entry.start_with?('pwd:')
