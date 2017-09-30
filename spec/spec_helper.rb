@@ -1,3 +1,11 @@
+if $SPEC_HELPER_TRIED
+  puts "spec_helper.rb couldn't run properly and was executed again. Hopefully you got an exception from that."
+  puts "Exiting since you are already in trouble!"
+  exit!(1)
+end
+$SPEC_HELPER_TRIED = true
+
+
 require "bundler/setup"
 require 'pry'
 $LOAD_PATH.unshift('../covered_deep_cover') if ENV["CC"]
