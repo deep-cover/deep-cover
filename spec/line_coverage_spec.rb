@@ -1,7 +1,8 @@
 require "spec_helper"
 require "tempfile"
 
-RSpec::Matchers.define :match_builtin_coverage do |fn, lines, lineno|
+RSpec::Matchers.define :be_stricter_than_builtin_coverage do |fn, lines, lineno|
+
   match do
     Tempfile.open(["#{File.basename(fn)}_#{lineno}_", '.rb']) do |tmp|
       new_lines_added = lineno - 1
@@ -13,7 +14,18 @@ RSpec::Matchers.define :match_builtin_coverage do |fn, lines, lineno|
     end
 
     @our.zip(@builtin).all? do |us, ruby|
-      us == ruby || (us || 0) > 0 && (ruby || 0) > 0
+      ruby_exec = ruby && ruby > 0 || false
+      us_exec = us && us > 0 || false
+
+      # bad:
+      # ruby_exec && !us_exec
+      # !ruby_exec && us_exec
+      bad = ruby_exec != us_exec
+
+      good = us == ruby || ruby_exec && us_exec || ruby.nil? && us == 0
+
+      binding.pry if good == bad # They should be equivalent... Otherwise there is mistake
+      good
     end
   end
   failure_message do
@@ -24,6 +36,6 @@ end
 
 RSpec.describe 'line coverage' do
   each_code_examples('./spec/branch_cover/*.rb') do |fn, lines, lineno|
-    should match_builtin_coverage(fn, lines, lineno)
+    should be_stricter_than_builtin_coverage(fn, lines, lineno)
   end
 end
