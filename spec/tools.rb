@@ -23,6 +23,10 @@ end
 
 module DeepCover
   module Tools
+    ANSWER = /^#>/
+    FULLY_EXECUTED = /^[ -]*$/
+    NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
+
     CONVERT = Hash.new('  ')
     CONVERT[0] = 'x '
     CONVERT[nil] = '- '

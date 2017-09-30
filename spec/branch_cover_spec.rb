@@ -1,8 +1,5 @@
 require "spec_helper"
 
-ANSWER = /^#>/
-FULLY_EXECUTED = /^[ -]*$/
-NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
 UNIMPORTANT_CHARACTERS = /[ \t();,]/
 
 def strip_when_unimportant(code, data)
@@ -19,9 +16,9 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
 
     reached_end = DeepCover::Tools.execute_sample(@covered_code)
     if reached_end
-      answers[lines.size - 1] = FULLY_EXECUTED
+      answers[lines.size - 1] = DeepCover::Tools::FULLY_EXECUTED
     else
-      answers[lines.size - 1] = NOT_EXECUTED
+      answers[lines.size - 1] = DeepCover::Tools::NOT_EXECUTED
     end
 
     cov = @covered_code.branch_cover
