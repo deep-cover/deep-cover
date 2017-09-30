@@ -13,7 +13,7 @@ all_good = true
 example = ARGV[0] || 'simple_if'
 fn = "./spec/samples/#{example}.rb"
 fn = "./spec/branch_cover/#{example}.rb" unless File.exist?(fn)
-source = File.exist?(fn) ? File.read(fn) : ARGV[0]
+source = File.exist?(fn) ? File.read(fn) : ARGV[0].gsub(';;', "\n")
 groups = DeepCover::Tools::AnnotatedExamplesParser.process(source)
 if groups.size == 1 && groups.first.last.size == 1
   lines, _lineno = groups.values.first.values.first
