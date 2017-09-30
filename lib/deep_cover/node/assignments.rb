@@ -59,11 +59,22 @@ module DeepCover
       has_child var_name: Symbol
     end
 
+    MASGN_BASE_MAP = {
+      cvasgn: MasgnVariableAssignment, gvasgn: MasgnVariableAssignment,
+      ivasgn: MasgnVariableAssignment, lvasgn: MasgnVariableAssignment,
+      send: MasgnSetter,
+    }
+    class MasgnSplat < Node
+      include AlternateStrategy
+      has_child rest_arg: MASGN_BASE_MAP
+    end
+
     class MasgnLeftSide < Node
+      include AlternateStrategy
       has_extra_children receivers: {
-        cvasgn: MasgnVariableAssignment, gvasgn: MasgnVariableAssignment,
-        ivasgn: MasgnVariableAssignment, lvasgn: MasgnVariableAssignment,
-        send: MasgnSetter,
+        splat: MasgnSplat,
+        mlhs: MasgnLeftSide,
+        **MASGN_BASE_MAP,
       }
       def flow_completion_count
         parent.flow_completion_count
