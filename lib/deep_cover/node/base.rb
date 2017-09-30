@@ -19,13 +19,11 @@ module DeepCover
     # Returns an array of character numbers (in the original buffer) that
     # pertain exclusively to this node (and thus not to any children).
     def proper_range
-      return [] unless location
       full_range - children_nodes.flat_map(&:full_range)
     end
 
     def full_range
-      return [] unless location
-      location.to_hash.values.map(&:to_a).inject(:+)
+      loc_hash.values.map(&:to_a).inject(:+)
     end
 
     def [](v)
@@ -159,8 +157,8 @@ module DeepCover
       self.class.name.split('::').last.to_sym
     end
 
-    def location
-      base_node.location
+    def loc_hash
+      base_node.location.to_hash
     end
 
     def each_node(order = :postorder, &block)

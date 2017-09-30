@@ -19,8 +19,8 @@ module DeepCover
         condition.flow_completion_count
       end
 
-      def location
-        condition.location
+      def loc_hash
+        condition.loc_hash
       end
     end
 
@@ -66,8 +66,8 @@ module DeepCover
         parent.flow_completion_count - parent.children[1...index].map(&:body_completion_count).inject(0, :+)
       end
 
-      def location
-        Parser::Source::Map.new(parent.location.else)
+      def loc_hash
+        {else: parent.loc_hash[:else]}
       end
     end
 

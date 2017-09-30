@@ -13,7 +13,7 @@ module DeepCover
     end
 
     def apply_line_hits(node)
-      return unless ex = node.location && node.location.expression
+      return unless ex = node.loc_hash[:expression]
 
       lineno = ex.line - 1
       @line_hits[lineno] = [@line_hits[lineno] || 0, node.flow_entry_count].max
