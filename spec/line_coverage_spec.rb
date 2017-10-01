@@ -1,7 +1,7 @@
 require "spec_helper"
 require "tempfile"
 
-RSpec::Matchers.define :be_not_higher_than_builtin_coverage do |fn, lines, lineno|
+RSpec::Matchers.define :not_be_higher_than_builtin_coverage do |fn, lines, lineno|
 
   match do
     Tempfile.open(["#{File.basename(fn)}_#{lineno}_", '.rb']) do |tmp|
@@ -36,6 +36,6 @@ end
 
 RSpec.describe 'line coverage' do
   each_code_examples('./spec/branch_cover/*.rb') do |fn, lines, lineno|
-    should be_not_higher_than_builtin_coverage(fn, lines, lineno)
+    should not_be_higher_than_builtin_coverage(fn, lines, lineno)
   end
 end
