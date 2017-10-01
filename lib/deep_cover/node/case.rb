@@ -82,6 +82,14 @@ module DeepCover
         return evaluate.flow_completion_count if evaluate
         flow_entry_count
       end
+
+      def executed_loc_keys
+        if evaluate
+          :begin
+        else
+          :end
+        end
+      end
     end
   end
 end

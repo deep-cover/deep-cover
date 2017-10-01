@@ -7,6 +7,10 @@ module DeepCover
       has_child receiver: [Node, nil]
       has_child method_name: Symbol
       has_extra_children arguments: Node
+
+      def executed_loc_keys
+        :selector
+      end
     end
 
     class Match_with_lvasgn < Node

@@ -158,7 +158,21 @@ module DeepCover
     end
 
     def loc_hash
-      base_node.location.to_hash
+      @loc_hash ||= base_node.location.to_hash
+    end
+
+    def executed_loc_keys
+      if loc_hash[:begin] || loc_hash[:keyword]
+        [:begin, :end, :keyword]
+      else
+        :expression
+      end
+    end
+
+    def executed_locs
+      executed_loc_keys = [*self.executed_loc_keys]
+      loc_hash = self.loc_hash
+      executed_loc_keys.map{|key| loc_hash[key]}.compact
     end
 
     def each_node(order = :postorder, &block)
