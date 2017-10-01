@@ -36,9 +36,9 @@ module DeepCover
       @cover ||= global[nb]
     end
 
-    def line_coverage
+    def line_coverage(options={})
       must_have_executed
-      LineCoverageInterpreter.new(self).generate_results
+      LineCoverageInterpreter.new(self, options).generate_results
     end
 
     # Will return nil for non-executable lines and truthy for lines that are

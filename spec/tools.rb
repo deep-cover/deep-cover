@@ -55,10 +55,10 @@ module DeepCover
       ::Coverage.result.fetch(fn)
     end
 
-    def our_coverage(fn)
+    def our_coverage(fn, options={})
       covered_code = DeepCover::CoveredCode.new(path: fn)
       execute_sample(covered_code)
-      covered_code.line_coverage
+      covered_code.line_coverage(options)
     end
 
     def format_generated_code(covered_code)
