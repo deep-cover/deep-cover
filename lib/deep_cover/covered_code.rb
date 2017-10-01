@@ -46,7 +46,10 @@ module DeepCover
       return @builtin_executable_lines.dup if @builtin_executable_lines
       path = @buffer.name || "<covered_code_#{object_id}>"
       ::Coverage.start
-      RubyVM::InstructionSequence.compile(@buffer.source, path)
+      # Not compiling for use by the user, so we don't want ruby warnings
+      DeepCover::Misc.with_warnings(nil) do
+        RubyVM::InstructionSequence.compile(@buffer.source, path)
+      end
       @builtin_executable_lines = ::Coverage.result.fetch(path)
       @builtin_executable_lines.dup
     end
