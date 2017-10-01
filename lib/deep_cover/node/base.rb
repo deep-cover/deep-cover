@@ -170,9 +170,7 @@ module DeepCover
     end
 
     def executed_locs
-      executed_loc_keys = [*self.executed_loc_keys]
-      loc_hash = self.loc_hash
-      executed_loc_keys.map{|key| loc_hash[key]}.compact
+      loc_hash.values_at(*executed_loc_keys).compact
     end
 
     def each_node(order = :postorder, &block)
