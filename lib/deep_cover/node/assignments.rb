@@ -38,7 +38,11 @@ module DeepCover
       end
 
       def flow_entry_count
-        flow_completion_count
+        if (first_child = children_nodes.first)
+          first_child.flow_entry_count
+        else
+          flow_completion_count
+        end
       end
     end
 

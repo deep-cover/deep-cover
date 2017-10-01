@@ -49,3 +49,6 @@
 #### raising when assigning
     foo = {}; (foo[:a], foo.bar, c = 1, 2, 3; :nope) rescue nil
 #>                               x            xxxxx
+    ((a, (b, *c.foo), d) = 1) rescue nil
+#>                    x
+
