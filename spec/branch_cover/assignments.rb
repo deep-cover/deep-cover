@@ -39,6 +39,8 @@
 
     a, b, c = 1
     foo = {}; foo[:a], bar = 1
+    o = Object.new; def o.foo=(x); end; a, o.foo, c = 1
+    a, (b, c, (d, *e)) = 1
 
 #### raising on the value side
     (a, b, c = 1, raise, 2) rescue nil
