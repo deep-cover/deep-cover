@@ -7,5 +7,13 @@ module DeepCover
       end
     end
 
+    # Call with nil to remove $VERBOSE while in the block
+    # copied from: https://apidock.com/rails/v4.2.7/Kernel/with_warnings
+    def self.with_warnings(flag)
+      old_verbose, $VERBOSE = $VERBOSE, flag
+      yield
+    ensure
+      $VERBOSE = old_verbose
+    end
   end
 end

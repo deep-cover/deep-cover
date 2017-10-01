@@ -14,13 +14,6 @@ end
 def dummy_method(*)
 end
 
-def with_warnings(flag)
-  old_verbose, $VERBOSE = $VERBOSE, flag
-  yield
-ensure
-  $VERBOSE = old_verbose
-end
-
 module DeepCover
   module Tools
     ANSWER = /^#>/
@@ -161,7 +154,7 @@ module DeepCover
     def execute_sample(to_execute)
       # Disable some annoying warning by ruby. We are testing edge cases, so warnings are to be expected.
       begin
-        with_warnings(nil) do
+        DeepCover::Misc.with_warnings(nil) do
           if to_execute.is_a?(CoveredCode)
             to_execute.execute_code
           else
