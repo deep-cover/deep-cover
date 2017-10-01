@@ -29,12 +29,16 @@ module DeepCover
       # TODO
     end
 
-    module AlternateStrategy
-      # Instead of deducing completion completion from entry,
-      # We go the other way, deducing entry from completion.
+    module BackwardsStrategy
+      # Instead of assuming our parent tracks our entry and we are responsible
+      # for tracking our completion, we go the other way and assume our parent
+      # tracks our completion and we are responsible for our entry.
       def flow_completion_count
-        s = next_sibling
-        s ? s.flow_entry_count : parent.flow_completion_count
+        if (s = next_sibling)
+          s.flow_entry_count
+        else
+          parent.flow_completion_count
+        end
       end
 
       def flow_entry_count
@@ -47,7 +51,7 @@ module DeepCover
     end
 
     class MasgnSetter < Node
-      include AlternateStrategy
+      include BackwardsStrategy
       has_tracker :entry
       has_child receiver: Node,
                 rewrite: '(%{node}).tap{%{entry_tracker}}',
@@ -59,7 +63,7 @@ module DeepCover
     end
 
     class MasgnVariableAssignment < Node
-      include AlternateStrategy
+      include BackwardsStrategy
       has_child var_name: Symbol
     end
 
@@ -69,12 +73,12 @@ module DeepCover
       send: MasgnSetter,
     }
     class MasgnSplat < Node
-      include AlternateStrategy
+      include BackwardsStrategy
       has_child rest_arg: MASGN_BASE_MAP
     end
 
     class MasgnLeftSide < Node
-      include AlternateStrategy
+      include BackwardsStrategy
       has_extra_children receivers: {
         splat: MasgnSplat,
         mlhs: MasgnLeftSide,
