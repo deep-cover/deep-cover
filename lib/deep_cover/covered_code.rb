@@ -36,7 +36,7 @@ module DeepCover
       @cover ||= global[nb]
     end
 
-    def line_coverage(options={})
+    def line_coverage(**options)
       must_have_executed
       LineCoverageInterpreter.new(self, options).generate_results
     end

@@ -18,7 +18,7 @@ module DeepCover
       end
     end
 
-    matcher :actually_require do |expected_executed_file, options={}|
+    matcher :actually_require do |expected_executed_file, **options|
       match do |require_path|
         @result = {}
         @executed_file = {}

@@ -1,7 +1,7 @@
 
 module DeepCover
   class LineCoverageInterpreter
-    def initialize(covered_code, options={})
+    def initialize(covered_code, **options)
       @covered_code = covered_code
       @options = options
     end
