@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.15"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "pry"
+  #spec.add_development_dependency "pry" # This fails on ruby 2.0 because it already a runtime dependency
   spec.add_development_dependency "term-ansicolor"
   spec.add_development_dependency "highline"
   spec.add_development_dependency 'activesupport', "~> 4.0"
