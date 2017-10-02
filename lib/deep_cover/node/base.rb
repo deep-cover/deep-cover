@@ -102,8 +102,8 @@ module DeepCover
       parent_prefix, parent_suffix = resolve_rewrite(parent.rewrite_child(self), parent)
       prefix, suffix = resolve_rewrite(rewrite, self)
       [
-        "#{prefix}#{parent_prefix}",
-        "#{parent_suffix}#{suffix}"
+        "#{parent_prefix}#{prefix}",
+        "#{suffix}#{parent_suffix}"
       ]
     end
 
