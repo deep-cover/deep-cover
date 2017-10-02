@@ -44,7 +44,7 @@ module DeepCover
     def builtin_coverage(source, fn, lineno)
       fn = File.absolute_path(File.expand_path(fn))
       ::Coverage.start
-      execute_sample ->{ RubyVM::InstructionSequence.compile(source, fn, fn, lineno).eval}
+      execute_sample ->{ DeepCover::Misc.compile(source, fn, fn, lineno).eval}
       ::Coverage.result.fetch(fn)[(lineno-1)..-1]
     end
 

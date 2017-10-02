@@ -48,7 +48,7 @@ module DeepCover
       ::Coverage.start
       # Not compiling for use by the user, so we don't want ruby warnings
       DeepCover::Misc.with_warnings(nil) do
-        RubyVM::InstructionSequence.compile(@buffer.source, path)
+        DeepCover::Misc.compile(@buffer.source, path)
       end
       @builtin_executable_lines = ::Coverage.result.fetch(path)
       @builtin_executable_lines.dup
