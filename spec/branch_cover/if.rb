@@ -93,3 +93,10 @@
     else
 #>  ----
     end
+
+### Ternary operator form
+#### Simple
+    x = false ? 1 : 2; assert(x == 2)
+#>              x
+    x = true ? 1 : 2; assert(x == 1)
+#>                 x
