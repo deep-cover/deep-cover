@@ -41,15 +41,15 @@ module DeepCover
       end
     end
 
-    def builtin_coverage(fn)
-      fn = File.expand_path(fn)
+    def builtin_coverage(source, fn, lineno)
+      fn = File.absolute_path(File.expand_path(fn))
       ::Coverage.start
-      execute_sample ->{ require fn }
-      ::Coverage.result.fetch(fn)
+      execute_sample ->{ RubyVM::InstructionSequence.compile(source, fn, fn, lineno).eval}
+      ::Coverage.result.fetch(fn)[(lineno-1)..-1]
     end
 
-    def our_coverage(fn, **options)
-      covered_code = DeepCover::CoveredCode.new(path: fn)
+    def our_coverage(source, fn, lineno, **options)
+      covered_code = DeepCover::CoveredCode.new(source:source, path: fn, lineno: lineno)
       execute_sample(covered_code)
       covered_code.line_coverage(options)
     end

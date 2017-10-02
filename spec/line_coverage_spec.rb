@@ -3,14 +3,9 @@ require "tempfile"
 
 RSpec::Matchers.define :not_be_higher_than_builtin_coverage do |fn, lines, lineno|
   match do
-    Tempfile.open(["#{File.basename(fn)}_#{lineno}_", '.rb']) do |tmp|
-      new_lines_added = lineno - 1
-      tmp.write("\n" * new_lines_added + lines.join)
-      tmp.close
-
-      @builtin = DeepCover::Tools.builtin_coverage(tmp.path)[new_lines_added..-1]
-      @our = DeepCover::Tools.our_coverage(tmp.path, not_higher_than_builtin: true)[new_lines_added..-1]
-    end
+    source = lines.join
+    @builtin = DeepCover::Tools.builtin_coverage(source, fn, lineno)
+    @our = DeepCover::Tools.our_coverage(source, fn, lineno, not_higher_than_builtin: true)
 
     @our.zip(@builtin).all? do |us, ruby|
       ruby_exec = ruby && ruby > 0 || false

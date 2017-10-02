@@ -13,10 +13,17 @@ all_good = true
 example = ARGV[0] || 'simple_if'
 fn = "./spec/samples/#{example}.rb"
 fn = "./spec/branch_cover/#{example}.rb" unless File.exist?(fn)
-source = File.exist?(fn) ? File.read(fn) : ARGV[0].gsub(';;', "\n")
+if File.exist?(fn)
+  fn = File.absolute_path(fn)
+  source = File.read(fn)
+else
+  fn = "<passed_from_command_line>"
+  source = ARGV[0].gsub(';;', "\n")
+end
+
 groups = DeepCover::Tools::AnnotatedExamplesParser.process(source)
 if groups.size == 1 && groups.first.last.size == 1
-  lines, _lineno = groups.values.first.values.first
+  lines, lineno = groups.values.first.values.first
 else
   menu = []
   item = -1
@@ -32,28 +39,24 @@ else
     puts menu
     answer = HighLine.new.ask(Term::ANSIColor.blue("Which?  "), Integer) { |q| q.in = 0...examples.size }
   end
-  lines, _lineno = examples[answer]
+  lines, lineno = examples[answer]
 end
 
-require 'tempfile'
-tmp = Tempfile.new(['example', '.rb'])
-fn = tmp.path
-File.write(fn, lines.join)
-
+source = lines.join
 puts "Builtin and DeepCover line coverages:\n"
 begin
-  builtin_line_coverage = builtin_coverage(fn)
-  our_line_coverage = our_coverage(fn)
-  puts format(builtin_line_coverage, our_line_coverage, source: lines.join)
+  builtin_line_coverage = builtin_coverage(source, fn, lineno)
+  our_line_coverage = our_coverage(source, fn, lineno)
+  puts format(builtin_line_coverage, our_line_coverage, source: source)
 rescue Exception => e
   puts "Can't run coverage: #{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
   all_good = false
 end
 
 puts "\nGenerated code:\n"
-covered_code = DeepCover.covered_code(fn)
-
+covered_code = DeepCover::CoveredCode.new(source:source, path: fn, lineno: lineno)
 puts format_generated_code(covered_code)
+
 puts "\nParsed code:\n"
 begin
   execute_sample(covered_code)
