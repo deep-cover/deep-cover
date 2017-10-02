@@ -30,7 +30,7 @@
 #>  xxxxxxxx
 
 #### Raise inside block
-    module C
+    module M
       42
       raise
       44
@@ -39,7 +39,7 @@
 #>     xxxxx
 
 ### Empty class
-    class M
+    class C
     end.to_s
 
 #### Explicit global module
