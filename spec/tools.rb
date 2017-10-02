@@ -14,6 +14,11 @@ end
 def dummy_method(*)
 end
 
+def assert(check)
+  raise "assert failed" if check == false
+  raise "bad assert, expected true/false, got #{check.inspect}" unless check == true
+end
+
 module DeepCover
   module Tools
     ANSWER = /^#>/
