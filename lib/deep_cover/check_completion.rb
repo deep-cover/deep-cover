@@ -12,7 +12,7 @@ module DeepCover
       end
 
       def execution_count
-        last = children_nodes.last
+        last = children_nodes_in_flow_order.last
         return last.flow_completion_count if last
         super
       end
