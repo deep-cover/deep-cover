@@ -26,12 +26,16 @@ module DeepCover
 
     extend self
 
-    def format(*results, filename: nil, source: nil, lineno: 1)
+    def format(*results, filename: nil, source: nil, lineno: 1, bad_linenos: [])
       source ||= File.read(filename)
       results.map!{|counts| counts.map{|c| CONVERT[c]}}
       [*results, source.lines].transpose.each_with_index.map do |parts, i|
         *line_results, line = parts
-        line_s = "#{lineno + i}| "
+        if bad_linenos.include?(lineno + i)
+          line_s = Term::ANSIColor.red("#{lineno + i}| ")
+        else
+          line_s = Term::ANSIColor.white("#{lineno + i}| ")
+        end
         next line_s + parts.join if line_results.size <= 1
 
         if line_results.all?{|res| res == line_results[0]}
