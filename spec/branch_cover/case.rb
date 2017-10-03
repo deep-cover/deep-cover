@@ -183,8 +183,10 @@
 ### With failed ===
     obj = Object.new
     obj.define_singleton_method(:===) do |other|
+#>                                    -- -------
       raise
     end
+#>  ---
 
     case 1
     when obj, 1

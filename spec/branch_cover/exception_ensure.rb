@@ -203,6 +203,7 @@
       "not here"
 #>X
     else
+#>  ----
 
     ensure
       "here too"
@@ -227,6 +228,7 @@
     rescue
 #>X
     else
+#>  ----
 
     ensure
       "here"
@@ -238,6 +240,7 @@
     rescue
 #>X
     else
+#>  ----
 
     ensure
 
