@@ -67,5 +67,19 @@ module DeepCover
       has_extra_children arguments: [Sym, Dsym]
       # TODO: test
     end
+
+    class Return < Node
+      def flow_completion_count
+        0
+      end
+
+      def execution_count
+        if (last = children_nodes_in_flow_order.last)
+          last.flow_completion_count
+        else
+          super
+        end
+      end
+    end
   end
 end
