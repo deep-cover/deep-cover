@@ -70,7 +70,7 @@ module DeepCover
     end
 
     def cover
-      `mv #{dest_path}/lib #{dest_path}/lib_original`
+      `cp -R #{dest_path}/lib #{dest_path}/lib_original`
       @covered_path = dump_covered_code(File.join(dest_path, 'lib_original'), File.join(dest_path, 'lib'))
     end
 
