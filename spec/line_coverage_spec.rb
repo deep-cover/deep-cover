@@ -11,20 +11,12 @@ RSpec::Matchers.define :not_be_higher_than_builtin_coverage do |fn, lines, linen
       ruby_exec = ruby && ruby > 0 || false
       us_exec = us && us > 0 || false
 
-      # bad:
-      # ruby_exec && !us_exec
-      # !ruby_exec && us_exec
-      bad = ruby_exec != us_exec
-
-      good = us == ruby || ruby_exec && us_exec || ruby.nil? && us == 0
-
-      binding.pry if good == bad # They should be equivalent... Otherwise there is mistake
-      good
+      us == ruby || ruby_exec && us_exec || us == 0
     end
   end
   failure_message do
     result = DeepCover::Tools.format(@builtin, @our, source: lines.join).join
-    "Builtin & DeepCover's line coverage should match\n#{result}"
+    "Builtin & DeepCover's line coverage should match or DeepCover should be stricter\n#{result}"
   end
 end
 
