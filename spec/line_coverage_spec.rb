@@ -15,7 +15,7 @@ RSpec::Matchers.define :not_be_higher_than_builtin_coverage do |fn, lines, linen
     end
   end
   failure_message do
-    result = DeepCover::Tools.format(@builtin, @our, source: lines.join).join
+    result = DeepCover::Tools.format(@builtin, @our, source: lines.join, lineno: lineno).join
     "Builtin & DeepCover's line coverage should match or DeepCover should be stricter\n#{result}"
   end
 end

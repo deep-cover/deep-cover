@@ -47,7 +47,7 @@ puts "Builtin and DeepCover line coverages:\n"
 begin
   builtin_line_coverage = builtin_coverage(source, fn, lineno)
   our_line_coverage = our_coverage(source, fn, lineno)
-  puts format(builtin_line_coverage, our_line_coverage, source: source)
+  puts format(builtin_line_coverage, our_line_coverage, source: source, lineno: lineno)
 rescue Exception => e
   puts "Can't run coverage: #{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
   all_good = false
