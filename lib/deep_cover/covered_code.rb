@@ -14,6 +14,7 @@ module DeepCover
       end
       @lineno = lineno
       @tracker_count = 0
+      @local_count = 0
       @tracker_global = tracker_global
       @covered_source = instrument_source
     end
@@ -69,6 +70,15 @@ module DeepCover
 
     def nb
       @nb ||= (@@counter += 1)
+    end
+
+    def allocate_local
+      @local_count += 1
+      @local_count - 1
+    end
+
+    def local_source(local_id)
+      "_temp#{local_id}"
     end
 
     # Returns a range of tracker ids
