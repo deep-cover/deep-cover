@@ -28,7 +28,7 @@ module DeepCover
     def apply_line_hits(node, line_hits)
       node.executed_locs.each do |loc|
         lineno = loc.line - 1
-        line_hits[lineno] = [line_hits[lineno] || 0, node.flow_entry_count].max
+        line_hits[lineno] = [line_hits[lineno] || 0, node.execution_count].max
       end
       node.children_nodes.each{|c| apply_line_hits(c, line_hits) }
     end
