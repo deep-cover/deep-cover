@@ -24,7 +24,8 @@ module DeepCover
       has_tracker :body_entry
       has_child const: {const: ModuleName}
       has_child body: [Node, nil], rewrite: '%{body_entry_tracker};%{node}',
-        flow_entry_count: :body_entry_tracker_hits
+        flow_entry_count: :body_entry_tracker_hits, **RESET_LOCAL_VAR
+
 
       def execution_count
         body ? body_entry_tracker_hits : flow_completion_count
@@ -37,7 +38,7 @@ module DeepCover
       has_child const: {const: ModuleName}
       has_child inherit: [Node, nil]  # TODO
       has_child body: [Node, nil], rewrite: '%{body_entry_tracker};%{node}',
-        flow_entry_count: :body_entry_tracker_hits
+        flow_entry_count: :body_entry_tracker_hits, **RESET_LOCAL_VAR
 
       def execution_count
         body ? body_entry_tracker_hits : flow_completion_count
@@ -47,7 +48,7 @@ module DeepCover
     # class << foo
     class Sclass < Node
       has_child object: Node
-      has_child body: [Node, nil]
+      has_child body: [Node, nil], **RESET_LOCAL_VAR
       # TODO
     end
   end

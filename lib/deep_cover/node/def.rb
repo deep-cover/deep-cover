@@ -7,7 +7,7 @@ module DeepCover
     has_child method_name: Symbol
     has_child signature: Args
     has_child body: [Node, nil], rewrite: '%{method_call_tracker};%{node};',
-      flow_entry_count: :method_call_tracker_hits
+      flow_entry_count: :method_call_tracker_hits, **RESET_LOCAL_VAR
     def children_nodes_in_flow_order
       []
     end
@@ -20,7 +20,7 @@ module DeepCover
     has_child method_name: Symbol
     has_child signature: Args
     has_child body: [Node, nil], rewrite: '%{method_call_tracker};%{node};',
-      flow_entry_count: :method_call_tracker_hits
+      flow_entry_count: :method_call_tracker_hits, **RESET_LOCAL_VAR
     def children_nodes_in_flow_order
       [singleton]
     end
