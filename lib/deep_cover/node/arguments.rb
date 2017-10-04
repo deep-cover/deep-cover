@@ -39,7 +39,8 @@ module DeepCover
     end
 
     class Args < Node
-      has_child arguments: [Arg, Optarg, Restarg, Kwarg, Kwoptarg, Kwrestarg, Blockarg, Mlhs], rest: true
+      has_extra_children arguments: [Arg, Optarg, Restarg, Kwarg, Kwoptarg, Kwrestarg, Blockarg, Mlhs]
+
       def executable?
         false
       end
