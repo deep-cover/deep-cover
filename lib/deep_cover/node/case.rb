@@ -4,7 +4,14 @@ module DeepCover
   class Node
     class WhenCondition < Node
       has_tracker :entry
-      has_child condition: Node, rewrite: "((%{entry_tracker};%{node}))",
+      # Using && instead of ; solves a weird bug in jruby.
+      # The following will only print 'test' once
+      #    class EqEqEq; def ===(other); puts 'test'; end; end
+      #    eqeqeq = EqEqEq.new
+      #    case 1; when eqeqeq; end
+      #    case 1; when (3;eqeqeq); end
+      # See https://github.com/jruby/jruby/issues/4804
+      has_child condition: Node, rewrite: "(((%{entry_tracker}) && %{node}))",
         flow_entry_count: :entry_tracker_hits
 
       def initialize(base_node, **kwargs)

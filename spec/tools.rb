@@ -54,8 +54,10 @@ module DeepCover
     def builtin_coverage(source, fn, lineno)
       fn = File.absolute_path(File.expand_path(fn))
       ::Coverage.start
-      execute_sample ->{ DeepCover::Misc.compile(source, fn, fn, lineno).eval}
-      ::Coverage.result.fetch(fn)[(lineno-1)..-1]
+      DeepCover::Misc.with_warnings(nil) do
+        execute_sample ->{ DeepCover::Misc.run_with_line_coverage(source, fn, lineno)}
+      end
+      Misc.unshift_coverage(::Coverage.result.fetch(fn), lineno)
     end
 
     def our_coverage(source, fn, lineno, **options)

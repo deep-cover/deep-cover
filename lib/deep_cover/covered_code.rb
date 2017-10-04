@@ -45,12 +45,10 @@ module DeepCover
     def builtin_executable_lines
       return @builtin_executable_lines.dup if @builtin_executable_lines
       path = @buffer.name || "<covered_code_#{object_id}>"
-      ::Coverage.start
       # Not compiling for use by the user, so we don't want ruby warnings
       DeepCover::Misc.with_warnings(nil) do
-        DeepCover::Misc.compile(@buffer.source, path)
+        @builtin_executable_lines = DeepCover::Misc.blank_builtin_line_coverage(@buffer.source, path)
       end
-      @builtin_executable_lines = ::Coverage.result.fetch(path)
       @builtin_executable_lines.dup
     end
 

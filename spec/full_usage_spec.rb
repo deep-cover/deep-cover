@@ -3,9 +3,9 @@ require "spec_helper"
 RSpec.describe 'DeepCover usage' do
   it 'run `ruby spec/full_usage/simple/simple.rb` successfully' do
     reader, writer = IO.pipe
-    options = {writer.fileno => writer.fileno, in: File::NULL, out: File::NULL, err: File::NULL}
+    options = {4 => writer.fileno, in: File::NULL, out: File::NULL, err: File::NULL}
 
-    pid = spawn('ruby', 'spec/full_usage/simple/simple.rb', writer.fileno.to_s, options)
+    pid = spawn('ruby', 'spec/full_usage/simple/simple.rb', '4', options)
     writer.close
     problems = reader.read
     Process.wait(pid)
