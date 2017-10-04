@@ -2,6 +2,7 @@ require_relative 'node'
 
 module DeepCover
   class AstRoot
+    include Node::Mixin
     include HasTracker
     include HasChild
 

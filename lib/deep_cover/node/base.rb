@@ -1,6 +1,7 @@
 module DeepCover
   # Base class to handle covered nodes.
   class Node
+    include Mixin
     include HasTracker
     include HasChild
     include HasLocal
