@@ -36,17 +36,6 @@ module DeepCover
     end
 
     if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-      # Returns a blank coverage data without executing the source at all
-      # Useful to know which line is considered not-executable by builtin
-      def blank_builtin_line_coverage(source, fn=nil, lineno=1)
-        source = shift_source(source, lineno)
-        source_stream = java.io.ByteArrayInputStream.new(source.to_java_bytes)
-        ::Coverage.start
-        Object.to_java.getRuntime.parseFile(fn, source_stream, nil)
-        result = ::Coverage.result.fetch(fn)
-        unshift_coverage result, lineno
-      end
-
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
       def run_with_line_coverage(source, fn=nil, lineno=1)
@@ -63,17 +52,7 @@ module DeepCover
       # 5: [nil,nil,nil,nil,1,2,nil,1]
       # Using 1 and 5 or more do not seem to show this issue.
       # The workaround is to create the fake lines manually and always use the default lineno
-
-      # Returns a blank coverage data without executing the source at all
-      # Useful to know which line is considered not-executable by builtin
-      def blank_builtin_line_coverage(source, fn=nil, lineno=1)
-        source = shift_source(source, lineno)
-        ::Coverage.start
-        RubyVM::InstructionSequence.compile(source, fn)
-        result = ::Coverage.result.fetch(fn)
-        unshift_coverage result, lineno
-      end
-
+      
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
       def run_with_line_coverage(source, fn=nil, lineno=1)
