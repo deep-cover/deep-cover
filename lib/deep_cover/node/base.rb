@@ -4,8 +4,14 @@ module DeepCover
     include Mixin
     include HasTracker
     include HasChild
+    include HasChildHandler
+    include CanAugmentChildren
     include HasLocal
     extend CheckCompletion
+
+    has_child_handler('%{name}_flow_entry_count')
+    has_child_handler('rewrite_%{name}')
+
     attr_reader :index, :parent, :children, :base_node
 
     def initialize(base_node, parent: raise, index: 0, base_children: base_node.children)
