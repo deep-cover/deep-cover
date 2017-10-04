@@ -23,10 +23,6 @@ module DeepCover
       string.to_s.gsub(/([a-z\d]*)[_?!]?/){ $1.capitalize }
     end
 
-    # Want to execute with coverage results. Ideally using the correct filename.
-
-    # Want to only get the blank coverage data without needing to execute anything
-
     def shift_source(source, lineno)
       "\n" * (lineno - 1) + source
     end
