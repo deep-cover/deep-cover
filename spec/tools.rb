@@ -105,7 +105,7 @@ module DeepCover
     def parse_cov_comments_answers(lines)
       answers = []
       line_index = 0
-      lines.chunk{|line| line !~ ANSWER}.each_with_index do |(is_code, chunk)|
+      lines.chunk{|line| line !~ ANSWER}.each do |is_code, chunk|
         chunk.map!(&:chomp)
         unless is_code
           raise "Hey" unless chunk.size == 1
