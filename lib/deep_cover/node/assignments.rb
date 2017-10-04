@@ -116,7 +116,7 @@ module DeepCover
     end
 
     # foo += bar
-    class Op_asgn < Node
+    class OpAsgn < Node
       check_completion
       has_tracker :reader
       has_child receiver: {
@@ -149,6 +149,6 @@ module DeepCover
       end
     end
 
-    Or_asgn = And_asgn = BooleanAssignment
+    OrAsgn = AndAsgn = BooleanAssignment
   end
 end

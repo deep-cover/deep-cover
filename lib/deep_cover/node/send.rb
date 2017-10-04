@@ -13,7 +13,7 @@ module DeepCover
       end
     end
 
-    class Match_with_lvasgn < Node
+    class MatchWithLvasgn < Node
       check_completion
       has_child receiver: Regexp
       has_child compare_to: Node

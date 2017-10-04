@@ -3,10 +3,10 @@ module DeepCover
     class Variable < Node
       has_child var_name: Symbol
     end
-    Ivar = Lvar = Cvar = Gvar = Back_ref = Variable
+    Ivar = Lvar = Cvar = Gvar = BackRef = Variable
 
     # $1
-    class Nth_ref < Node
+    class NthRef < Node
       has_child n: Integer
       # TODO
     end

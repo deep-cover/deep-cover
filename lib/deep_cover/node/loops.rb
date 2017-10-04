@@ -33,7 +33,7 @@ module DeepCover
       end
     end
 
-    class Until_post < Node
+    class UntilPost < Node
       has_tracker :body
       has_child condition: Node, rewrite: '((%{node})) || (%{body_tracker};false)'
       has_child body: Kwbegin, flow_entry_count: -> { body_tracker_hits + parent.flow_entry_count }
@@ -62,7 +62,7 @@ module DeepCover
       end
     end
 
-    class While_post < Node
+    class WhilePost < Node
       has_tracker :body
       has_child condition: Node, rewrite: '((%{node})) && %{body_tracker}'
       has_child body: Kwbegin, flow_entry_count: -> { body_tracker_hits + parent.flow_entry_count }

@@ -18,6 +18,10 @@ module DeepCover
       $VERBOSE = old_verbose
     end
 
+    # Poor man's camelize. 'an_example' => 'AnExample'
+    def camelize(string)
+      string.to_s.gsub(/([a-z\d]*)[_?!]?/){ $1.capitalize }
+    end
 
     # Want to execute with coverage results. Ideally using the correct filename.
 

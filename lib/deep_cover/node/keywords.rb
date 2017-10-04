@@ -44,8 +44,8 @@ module DeepCover
 
     class Alias < Node
       check_completion
-      has_child alias: [Sym, Dsym, Gvar, Back_ref]
-      has_child original: [Sym, Dsym, Gvar, Back_ref]
+      has_child alias: [Sym, Dsym, Gvar, BackRef]
+      has_child original: [Sym, Dsym, Gvar, BackRef]
       # TODO: test
     end
 

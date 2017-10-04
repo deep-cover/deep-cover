@@ -40,7 +40,7 @@ module DeepCover
     end
 
     # &foo
-    class Block_pass < Node
+    class BlockPass < Node
       has_child block: Node
       # TODO
     end
