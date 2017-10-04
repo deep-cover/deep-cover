@@ -1,6 +1,8 @@
 module DeepCover
   module Misc
-    def self.require_relative_dir(dir_name)
+    extend self
+
+    def require_relative_dir(dir_name)
       dir = File.dirname(caller.first.partition(/\.rb:\d/).first)
       Dir["#{dir}/#{dir_name}/*.rb"].sort.each do |file|
         require file
@@ -9,7 +11,7 @@ module DeepCover
 
     # Call with nil to remove $VERBOSE while in the block
     # copied from: https://apidock.com/rails/v4.2.7/Kernel/with_warnings
-    def self.with_warnings(flag)
+    def with_warnings(flag)
       old_verbose, $VERBOSE = $VERBOSE, flag
       yield
     ensure
@@ -21,18 +23,18 @@ module DeepCover
 
     # Want to only get the blank coverage data without needing to execute anything
 
-    def self.shift_source(source, lineno)
+    def shift_source(source, lineno)
       "\n" * (lineno - 1) + source
     end
 
-    def self.unshift_coverage(coverage, lineno)
+    def unshift_coverage(coverage, lineno)
       coverage[(lineno-1)..-1]
     end
 
     if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
       # Returns a blank coverage data without executing the source at all
       # Useful to know which line is considered not-executable by builtin
-      def self.blank_builtin_line_coverage(source, fn=nil, lineno=1)
+      def blank_builtin_line_coverage(source, fn=nil, lineno=1)
         source = shift_source(source, lineno)
         source_stream = java.io.ByteArrayInputStream.new(source.to_java_bytes)
         ::Coverage.start
@@ -43,7 +45,7 @@ module DeepCover
 
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
-      def self.run_with_line_coverage(source, fn=nil, lineno=1)
+      def run_with_line_coverage(source, fn=nil, lineno=1)
         source = shift_source(source, lineno)
         Object.to_java.getRuntime.executeScript(source, fn)
       end
@@ -60,7 +62,7 @@ module DeepCover
 
       # Returns a blank coverage data without executing the source at all
       # Useful to know which line is considered not-executable by builtin
-      def self.blank_builtin_line_coverage(source, fn=nil, lineno=1)
+      def blank_builtin_line_coverage(source, fn=nil, lineno=1)
         source = shift_source(source, lineno)
         ::Coverage.start
         RubyVM::InstructionSequence.compile(source, fn)
@@ -70,7 +72,7 @@ module DeepCover
 
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
-      def self.run_with_line_coverage(source, fn=nil, lineno=1)
+      def run_with_line_coverage(source, fn=nil, lineno=1)
         source = shift_source(source, lineno)
         RubyVM::InstructionSequence.compile(source, fn).eval
       end
