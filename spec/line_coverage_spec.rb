@@ -6,13 +6,14 @@ RSpec::Matchers.define :not_be_higher_than_builtin_coverage do |fn, lines, linen
     source = lines.join
     @builtin = DeepCover::Tools.builtin_coverage(source, fn, lineno)
     @our = DeepCover::Tools.our_coverage(source, fn, lineno, not_higher_than_builtin: true)
-
-    @our.zip(@builtin).all? do |us, ruby|
+    errors = @our.zip(@builtin).each_with_index.reject do |(us, ruby), _i|
       ruby_exec = ruby && ruby > 0 || false
       us_exec = us && us > 0 || false
 
       us == ruby || ruby_exec && us_exec || us == 0
     end
+    @errors = errors.map{|_, i| i + lineno}
+    @errors.empty?
   end
   failure_message do
     result = DeepCover::Tools.format(@builtin, @our, source: lines.join, lineno: lineno, bad_linenos: @errors).join
