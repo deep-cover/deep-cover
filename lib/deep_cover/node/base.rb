@@ -4,7 +4,6 @@ module DeepCover
     include Mixin
     include HasTracker
     include HasChild
-    include HasLocal
     extend CheckCompletion
     attr_reader :index, :parent, :children, :base_node
 
@@ -97,7 +96,7 @@ module DeepCover
     def resolve_rewrite(rule, context)
       rule ||= '%{node}'
       sources = context.tracker_sources
-      rule.split('%{node}').map{|s| s % {local: local_source, **sources} }
+      rule.split('%{node}').map{|s| s % {local: covered_code.local_var, **sources} }
     end
 
     def rewrite_prefix_suffix
