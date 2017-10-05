@@ -12,12 +12,11 @@ module DeepCover
       check_node_overlap
 
       buffer = @covered_code.buffer
-      bc = buffer.source_lines.map{|line| ' ' * line.size}
+      bc = buffer.source_lines.map{|line| '-' * line.size}
       @covered_code.covered_ast.each_node do |node|
-        unless node.was_executed?
-          bad = node.proper_range
-          bad.each do |pos|
-            bc[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = node.executable? ? 'x' : '-'
+        if node.executable?
+          node.proper_range.each do |pos|
+            bc[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = node.was_executed? ? ' ' : 'x'
           end
         end
       end
