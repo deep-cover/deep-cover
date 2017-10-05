@@ -25,11 +25,7 @@ module DeepCover
     # Returns an array of character numbers (in the original buffer) that
     # pertain exclusively to this node (and thus not to any children).
     def proper_range
-      full_range - children_nodes.flat_map(&:full_range)
-    end
-
-    def full_range
-      loc_hash.values.map(&:to_a).inject(:+)
+      executed_locs.map(&:to_a).inject([], :+).uniq rescue binding.pry
     end
 
     def [](v)
@@ -94,7 +90,7 @@ module DeepCover
       if loc_hash[:begin] || loc_hash[:keyword]
         [:begin, :end, :keyword]
       else
-        :expression
+        loc_hash.keys# - [:expression]
       end
     end
 
