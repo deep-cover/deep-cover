@@ -1,6 +1,8 @@
 class RSpec::Core::ExampleGroup
-  def self.each_code_examples(glob, &block)
-    Dir.glob(glob).each do |fn|
+  def self.each_code_examples(glob, max_files: nil, &block)
+    Dir.glob(glob).sort.each_with_index do |fn, i|
+      break if max_files && i >= max_files
+
       describe File.basename(fn, '.rb') do
         example_groups = DeepCover::Tools::AnnotatedExamplesParser.process(File.read(fn).lines)
         example_groups.each do |section, examples|
