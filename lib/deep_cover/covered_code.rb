@@ -104,7 +104,7 @@ module DeepCover
       @covered_ast ||= begin
         ast = Parser::CurrentRuby.new.parse(@buffer)
         return nil unless ast
-        root = AstRoot.new(ast, self)
+        root = Node::Root.new(ast, self)
         root.main
       end
     end
