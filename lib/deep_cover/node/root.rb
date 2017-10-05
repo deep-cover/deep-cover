@@ -1,7 +1,5 @@
-require_relative 'node'
-
 module DeepCover
-  class AstRoot < Node
+  class Node::Root < Node
     has_tracker :root
     has_child main: Node, flow_entry_count: :root_tracker_hits, rewrite: -> {
       "#{covered_code.trackers_setup_source};%{root_tracker};%{node}"
