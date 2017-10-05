@@ -1,13 +1,5 @@
 require "spec_helper"
 
-UNIMPORTANT_CHARACTERS = /[ \t();,]/
-
-def strip_when_unimportant(code, data)
-  data.chars.reject.with_index do |char, i|
-    code[i] =~ UNIMPORTANT_CHARACTERS
-  end.join
-end
-
 RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
   match do |lines|
     answers = DeepCover::Tools::parse_cov_comments_answers(lines)
@@ -23,12 +15,12 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
 
     cov = @covered_code.branch_cover
     errors = cov.zip(answers, lines).each_with_index.reject do |(a, expected, line), i|
-      actual = strip_when_unimportant(line, a)
+      actual = DeepCover::Tools.strip_when_unimportant(line, a)
       actual = ' ' * actual.size if line.strip.start_with?('#>')
       if expected.is_a?(Regexp)
         actual =~ expected
       else
-        expected = strip_when_unimportant(line, expected).ljust(actual.size, ' ')
+        expected = DeepCover::Tools.strip_when_unimportant(line, expected).ljust(actual.size, ' ')
         actual == expected
       end
     end

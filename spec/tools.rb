@@ -25,6 +25,8 @@ module DeepCover
     FULLY_EXECUTED = /^(-* [ -]*|)$/
     NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
 
+    UNIMPORTANT_CHARACTERS = /[ \t();,]/
+
     CONVERT = Hash.new('  ')
     CONVERT[0] = 'x '
     CONVERT[nil] = '- '
@@ -123,6 +125,12 @@ module DeepCover
       end
       answers[lines.size] ||= nil
       answers.map!{|a| a || FULLY_EXECUTED }
+    end
+
+    def strip_when_unimportant(code, data)
+      data.chars.reject.with_index do |char, i|
+        code[i] =~ UNIMPORTANT_CHARACTERS
+      end.join
     end
 
     # Creates a tree of directories and files for testing.
