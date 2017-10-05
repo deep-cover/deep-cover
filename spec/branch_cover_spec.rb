@@ -25,6 +25,7 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
       end
     end
     @errors = errors.map{|_, i| i + lineno}
+    #binding.pry unless @errors.empty?
     @errors.empty?
   end
   failure_message do |fn|
@@ -34,7 +35,7 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
 end
 
 RSpec.describe 'branch cover' do
-  each_code_examples('./spec/branch_cover/*.rb', max_files: 0) do |fn, lines, lineno|
+  each_code_examples('./spec/branch_cover/*.rb', max_files: 1) do |fn, lines, lineno|
     lines.should have_correct_branch_coverage(fn, lineno)
   end
 

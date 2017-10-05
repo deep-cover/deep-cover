@@ -4,12 +4,19 @@ module DeepCover
   class Node
     # Singletons
     class SingletonLiteral < Node
+      def executed_loc_keys
+        :expression
+      end
     end
     True = False = Nil = SingletonLiteral
 
     # Atoms
     def self.atom(type)
-      ::Class.new(Node).has_child value: type
+      ::Class.new(Node) do
+        def executed_loc_keys
+          :expression
+        end
+      end.has_child value: type
     end
     Sym = atom(::Symbol)
     Int = atom(::Integer)

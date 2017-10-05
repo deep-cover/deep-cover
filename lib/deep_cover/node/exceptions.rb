@@ -46,6 +46,10 @@ module DeepCover
         !!self.else
       end
 
+      def executed_loc_keys
+        :else
+      end
+
       def resbodies_flow_entry_count(child)
         return 0 unless watched_body
         prev = child.previous_sibling
