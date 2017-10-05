@@ -1,5 +1,5 @@
 class Module
-  public :prepend # Is public in Ruby 2.1+. Still waiting for include... https://bugs.ruby-lang.org/issues/12697
+  public :prepend, :include # Are public in Ruby 2.1+.
 end
 
 module DeepCover
