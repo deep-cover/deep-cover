@@ -56,17 +56,7 @@ module DeepCover
 
     def branch_cover
       must_have_executed
-      bc = buffer.source_lines.map{|line| ' ' * line.size}
-      @covered_ast.each_node do |node|
-        unless node.was_executed?
-          bad = node.proper_range
-          bad.each do |pos|
-            bc[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = node.executable? ? 'x' : '-'
-          end
-        end
-      end
-      bc.zip(buffer.source_lines){|cov, line| cov[line.size..-1] = ''} # remove extraneous character for end lines, in any
-      bc
+      BranchCoverageInterpreter.new(self).generate_results
     end
 
     def nb
