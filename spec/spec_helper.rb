@@ -36,6 +36,6 @@ if %w(true 1).include?(ENV["WITHOUT_PENDING"])
     end
   end
 
-  RSpec::Core::Formatters::DocumentationFormatter.send(:prepend, FormatterOverrides)
-  RSpec::Core::Formatters::ProgressFormatter.send(:prepend, FormatterOverrides)
+  RSpec::Core::Formatters::DocumentationFormatter.prepend FormatterOverrides
+  RSpec::Core::Formatters::ProgressFormatter.prepend FormatterOverrides
 end

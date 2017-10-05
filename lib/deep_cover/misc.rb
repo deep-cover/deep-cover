@@ -1,3 +1,7 @@
+class Module
+  public :prepend # Is public in Ruby 2.1+. Still waiting for include... https://bugs.ruby-lang.org/issues/12697
+end
+
 module DeepCover
   module Misc
     extend self
@@ -48,7 +52,7 @@ module DeepCover
       # 5: [nil,nil,nil,nil,1,2,nil,1]
       # Using 1 and 5 or more do not seem to show this issue.
       # The workaround is to create the fake lines manually and always use the default lineno
-      
+
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
       def run_with_line_coverage(source, fn=nil, lineno=1)

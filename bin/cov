@@ -80,7 +80,7 @@ module ColorAST
     Term::ANSIColor.send(color, super)
   end
 end
-DeepCover::Node.send :prepend, ColorAST
+DeepCover::Node.prepend ColorAST
 
 puts covered_code.covered_ast
 puts "\nBranch coverage:\n"
