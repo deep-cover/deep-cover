@@ -32,7 +32,11 @@ module DeepCover
       has_tracker :body
       has_child call: {send: SendWithBlock, zsuper: SuperWithBlock, super: SuperWithBlock}
       has_child args: Args
-      has_child body: [Node, nil], rewrite: '%{body_tracker};%{node}', flow_entry_count: :body_tracker_hits
+      has_child body: [Node, nil],
+                rewrite: '%{body_tracker};%{node}',
+                flow_entry_count: :body_tracker_hits,
+                local_var_level: -> { local_var_level + 1 },
+                local_var_id: 0
 
       def executable?
         false

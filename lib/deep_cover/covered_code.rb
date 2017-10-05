@@ -1,9 +1,9 @@
 module DeepCover
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :tracker_global
+    attr_accessor :covered_source, :buffer, :tracker_global, :local_var_template
     @@counter = 0
 
-    def initialize(path: nil, source: nil, lineno: nil, tracker_global: '$_cov')
+    def initialize(path: nil, source: nil, lineno: nil, tracker_global: '$_cov', local_var_template: '_temp%{level}%{id}')
       raise "Must provide either path or source" unless path || source
 
       @buffer = ::Parser::Source::Buffer.new(path)
@@ -14,8 +14,8 @@ module DeepCover
       end
       @lineno = lineno
       @tracker_count = 0
-      @local_count = 0
       @tracker_global = tracker_global
+      @local_var_template = local_var_template
       @covered_source = instrument_source
     end
 
@@ -72,13 +72,16 @@ module DeepCover
       @nb ||= (@@counter += 1)
     end
 
-    def allocate_local
-      @local_count += 1
-      @local_count - 1
-    end
-
-    def local_source(local_id)
-      "_temp#{local_id}"
+    def local_var_source(level: raise, id: raise)
+      lev = case level
+        when 0
+          nil
+        when 1..25
+          [*'A'..'Z'][level]
+        else
+          "#{level}x"
+        end
+      local_var_template % {id: id.nonzero?, level: lev}
     end
 
     # Returns a range of tracker ids
