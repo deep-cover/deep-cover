@@ -45,7 +45,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno|
 end
 
 RSpec.describe 'line coverage' do
-  each_code_examples('./spec/branch_cover/*.rb', max_files: 1) do |fn, lines, lineno|
+  each_code_examples('./spec/branch_cover/*.rb', max_files: 2) do |fn, lines, lineno|
     should have_correct_line_coverage(fn, lines, lineno)
   end
 end

@@ -6,6 +6,10 @@ module DeepCover
       has_child var_name: Symbol
       has_child value: [Node, nil]
 
+      def executed_loc_keys
+        [:name, :operator]
+      end
+
       def execution_count
         return super unless value
         value.flow_completion_count
@@ -72,6 +76,30 @@ module DeepCover
         has_child receiver: {self: SelfReceiver, Parser::AST::Node => DynamicReceiverWrap}
         has_child method_name: Symbol
         has_child arg: [Node, nil] # When method is :[]=
+
+        def loc_hash
+          base = super
+          if method_name == :[]=
+            selector = base[:selector]
+            {
+                expression: base[:expression],
+                selector_begin: selector.resize(1),
+                # The = is implicit, so only backtrack the end by one
+                selector_end: Parser::Source::Range.new(selector.source_buffer, selector.end_pos - 1, selector.end_pos),
+            }
+          else
+            {
+                dot: base[:dot],
+                expression: base[:expression],
+                selector_begin: base[:selector],
+                selector_end: nil#,
+            }
+          end
+        end
+
+        def executed_loc_keys
+          [:dot, :selector_begin, :selector_end]
+        end
       end
 
       class ConstantScopeWrapper < Node
@@ -112,6 +140,10 @@ module DeepCover
       class Splat < Node
         include BackwardsStrategy
         has_child rest_arg: BASE_MAP
+
+        def executed_loc_keys
+          :operator
+        end
       end
 
       class LeftSide < Node
@@ -124,6 +156,10 @@ module DeepCover
         def flow_completion_count
           parent.flow_completion_count
         end
+
+        def executed_loc_keys
+          [:begin, :end]
+        end
       end
 
       check_completion
@@ -133,6 +169,10 @@ module DeepCover
 
       def execution_count
         value.flow_completion_count
+      end
+
+      def executed_loc_keys
+        :operator
       end
 
       def children_nodes_in_flow_order
@@ -156,6 +196,10 @@ module DeepCover
       has_child receiver: [Node, nil]
       has_child method_name: Symbol
       has_extra_children arguments: Node
+
+      def executed_loc_keys
+        [:dot, :selector]
+      end
     end
 
     # foo += bar
@@ -173,6 +217,10 @@ module DeepCover
       def execution_count
         flow_completion_count
       end
+
+      def executed_loc_keys
+        :operator
+      end
     end
 
     # foo ||= bar, foo &&= base
@@ -189,6 +237,10 @@ module DeepCover
 
       def execution_count
         flow_completion_count
+      end
+
+      def executed_loc_keys
+        :operator
       end
     end
 
