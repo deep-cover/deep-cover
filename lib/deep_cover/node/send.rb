@@ -9,7 +9,7 @@ module DeepCover
       has_extra_children arguments: Node
 
       def executed_loc_keys
-        :selector
+        [:dot, :selector]
       end
     end
 
