@@ -87,11 +87,7 @@ module DeepCover
     end
 
     def executed_loc_keys
-      if loc_hash[:begin] || loc_hash[:keyword]
-        [:begin, :end, :keyword]
-      else
-        loc_hash.keys# - [:expression]
-      end
+      loc_hash.keys - [:expression]
     end
 
     def executed_locs

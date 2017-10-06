@@ -11,6 +11,10 @@ module DeepCover
     def children_nodes_in_flow_order
       []
     end
+
+    def executed_loc_keys
+      [:keyword, :end]
+    end
   end
 
   class Node::Defs < Node
@@ -23,6 +27,10 @@ module DeepCover
       flow_entry_count: :method_call_tracker_hits
     def children_nodes_in_flow_order
       [singleton]
+    end
+
+    def executed_loc_keys
+      [:keyword, :end]
     end
   end
 end
