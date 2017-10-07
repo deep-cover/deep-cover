@@ -60,8 +60,6 @@ module DeepCover
                   flow_entry_count: :entry_tracker_hits
         has_child method_name: Symbol
         has_child arg: [Node, nil] # When method is :[]=
-
-        alias_method :flow_entry_count, :entry_tracker_hits
       end
 
       class ConstantCbase < Node
