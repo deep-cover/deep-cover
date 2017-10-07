@@ -76,8 +76,13 @@ module DeepCover
 
     def process
       Bundler.with_clean_env do
-        exec "cd #{dest_path} && rake"
+        system("cd #{dest_path} && rake", out: $stdout, err: :out)
       end
+    end
+
+    def report
+      coverage = Coverage.load @covered_path
+      puts coverage.report
     end
 
     def run
@@ -85,6 +90,7 @@ module DeepCover
       cover
       patch
       process
+      report
     end
   end
 
