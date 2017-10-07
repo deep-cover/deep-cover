@@ -17,7 +17,7 @@ module DeepCover
         flow_entry_count: :entry_tracker_hits
 
       def initialize(base_node, **kwargs)
-        super(nil, base_children: [base_node], **kwargs)
+        super(base_node, base_children: [base_node], **kwargs)
       end
 
       def flow_entry_count
@@ -67,7 +67,7 @@ module DeepCover
                 flow_entry_count: :entry_tracker_hits
 
       def initialize(base_node, **kwargs)
-        super(nil, base_children: [base_node], **kwargs)
+        super(base_node, base_children: [base_node], **kwargs)
       end
 
       def flow_entry_count
