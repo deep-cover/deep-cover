@@ -115,7 +115,7 @@ module DeepCover
         private
 
         def expected_types(nodes)
-          types = self::CHILDREN.flat_map do |name, i|
+          self::CHILDREN.flat_map do |name, i|
             type = self::CHILDREN_TYPES[name]
             Array.new(nodes.values_at(i).size, type)
           end
