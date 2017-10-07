@@ -73,8 +73,8 @@ module DeepCover
           if remap.is_a? Hash
             type_map = remap
             remap = -> (child) do
-              klass = type_map[child.class]
-              klass ||= type_map[child.type] if child.respond_to? :type
+              klass = type_map[child.type] if child.respond_to? :type
+              klass ||= type_map[child.class]
               klass
             end
             types.concat(type_map.values).uniq!
