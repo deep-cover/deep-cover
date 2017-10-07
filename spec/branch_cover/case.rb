@@ -190,3 +190,26 @@
       "not here"
 #>X
     end
+
+### With splat (pending)
+    arr = [String, Symbol]
+    case :hello
+    when *arr
+      "here"
+    else
+      "not here"
+#>X
+    end
+
+#### With raising === (pending)
+    obj = Object.new
+    obj.define_singleton_method(:===) {|other| raise }
+    arr = [obj]
+    case 1
+    when *arr
+      "not here"
+#>X
+    else
+      "nor here"
+#>X
+    end
