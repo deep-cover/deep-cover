@@ -50,82 +50,82 @@ module DeepCover
       end
     end
 
-    class MasgnSetter < Node
-      include BackwardsStrategy
-      has_tracker :entry
-      has_child receiver: Node,
-                rewrite: '(%{node}).tap{%{entry_tracker}}',
-                flow_entry_count: :entry_tracker_hits
-      has_child method_name: Symbol
-      has_child arg: [Node, nil] # When method is :[]=
-
-      alias_method :flow_entry_count, :entry_tracker_hits
-    end
-
-    class MasgnConstantCbase < Node
-      include BackwardsStrategy
-    end
-
-    class MasgnConstantScopeWrapper < Node
-      has_tracker :entry
-      has_child actual_node: Node
-
-      def initialize(base_node, **kwargs)
-        super(base_node, base_children: [base_node], **kwargs)
-      end
-
-      def rewrite
-        '(%{entry_tracker};%{node})'
-      end
-
-      def flow_entry_count
-        entry_tracker_hits
-      end
-    end
-
-    class MasgnConstantAssignment < Node
-      include BackwardsStrategy
-      has_child scope: [nil], remap: {cbase: MasgnConstantCbase, Parser::AST::Node => MasgnConstantScopeWrapper}
-      has_child constant_name: Symbol
-
-      def execution_count
-        scope ? scope.flow_completion_count : super
-      end
-    end
-
-    class MasgnVariableAssignment < Node
-      include BackwardsStrategy
-      has_child var_name: Symbol
-    end
-
-    MASGN_BASE_MAP = {
-      cvasgn: MasgnVariableAssignment, gvasgn: MasgnVariableAssignment,
-      ivasgn: MasgnVariableAssignment, lvasgn: MasgnVariableAssignment,
-      casgn: MasgnConstantAssignment,
-      send: MasgnSetter,
-    }
-    class MasgnSplat < Node
-      include BackwardsStrategy
-      has_child rest_arg: MASGN_BASE_MAP
-    end
-
-    class MasgnLeftSide < Node
-      include BackwardsStrategy
-      has_extra_children receivers: {
-        splat: MasgnSplat,
-        mlhs: MasgnLeftSide,
-        **MASGN_BASE_MAP,
-      }
-      def flow_completion_count
-        parent.flow_completion_count
-      end
-    end
-
     # a, b = ...
     class Masgn < Node
+      class Setter < Node
+        include BackwardsStrategy
+        has_tracker :entry
+        has_child receiver: Node,
+                  rewrite: '(%{node}).tap{%{entry_tracker}}',
+                  flow_entry_count: :entry_tracker_hits
+        has_child method_name: Symbol
+        has_child arg: [Node, nil] # When method is :[]=
+
+        alias_method :flow_entry_count, :entry_tracker_hits
+      end
+
+      class ConstantCbase < Node
+        include BackwardsStrategy
+      end
+
+      class ConstantScopeWrapper < Node
+        has_tracker :entry
+        has_child actual_node: Node
+
+        def initialize(base_node, **kwargs)
+          super(base_node, base_children: [base_node], **kwargs)
+        end
+
+        def rewrite
+          '(%{entry_tracker};%{node})'
+        end
+
+        def flow_entry_count
+          entry_tracker_hits
+        end
+      end
+
+      class ConstantAssignment < Node
+        include BackwardsStrategy
+        has_child scope: [nil], remap: {cbase: ConstantCbase, Parser::AST::Node => ConstantScopeWrapper}
+        has_child constant_name: Symbol
+
+        def execution_count
+          scope ? scope.flow_completion_count : super
+        end
+      end
+
+      class VariableAssignment < Node
+        include BackwardsStrategy
+        has_child var_name: Symbol
+      end
+
+      BASE_MAP = {
+        cvasgn: VariableAssignment, gvasgn: VariableAssignment,
+        ivasgn: VariableAssignment, lvasgn: VariableAssignment,
+        casgn: ConstantAssignment,
+        send: Setter,
+      }
+      class Splat < Node
+        include BackwardsStrategy
+        has_child rest_arg: BASE_MAP
+      end
+
+      class LeftSide < Node
+        include BackwardsStrategy
+        has_extra_children receivers: {
+          splat: Splat,
+          mlhs: LeftSide,
+          **BASE_MAP,
+        }
+        def flow_completion_count
+          parent.flow_completion_count
+        end
+      end
+
       check_completion
 
-      has_child left: {mlhs: MasgnLeftSide}
+      has_child left: {mlhs: LeftSide}
       has_child value: Node
 
       def execution_count
