@@ -41,5 +41,10 @@ module DeepCover
       has_evaluated_segments
       has_child option: Regopt
     end
+
+    class Xstr < Node
+      check_completion
+      has_evaluated_segments
+    end
   end
 end

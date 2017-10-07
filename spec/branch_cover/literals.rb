@@ -84,3 +84,10 @@
     {nil? => 1, :b => 2}
     {a: raise, :b => 2} rescue nil
 #>             xx xx x
+
+### Xstr
+    `echo 'abc'`.to_s
+    (`echoqweqwe`.to_s) rescue nil
+#>               xxxxx
+    (`echoqweqwe #{raise}`) rescue nil
+#>   x                   x
