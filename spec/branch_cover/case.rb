@@ -194,7 +194,8 @@
 ### With splat (pending)
     arr = [String, Symbol]
     case :hello
-    when *arr
+    when Float, *arr, Integer
+#>                    xxxxxxx
       "here"
     else
       "not here"
@@ -206,7 +207,8 @@
     obj.define_singleton_method(:===) {|other| raise }
     arr = [obj]
     case 1
-    when *arr
+    when Float, *arr, Integer
+#>                    xxxxxxx
       "not here"
 #>X
     else
