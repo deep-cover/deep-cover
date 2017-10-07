@@ -56,7 +56,7 @@ module DeepCover
         include BackwardsStrategy
         has_tracker :entry
         has_child receiver: Node,
-                  rewrite: '(%{node}).tap{%{entry_tracker}}',
+                  rewrite: '(%{local} = (%{node});%{entry_tracker}; %{local}=%{local})',
                   flow_entry_count: :entry_tracker_hits
         has_child method_name: Symbol
         has_child arg: [Node, nil] # When method is :[]=
