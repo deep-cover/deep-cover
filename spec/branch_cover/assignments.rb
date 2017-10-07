@@ -41,14 +41,19 @@
     foo = {}; foo[:a], bar = 1
     o = Object.new; def o.foo=(x); end; a, o.foo, c = 1
     a, (b, c, (d, *e)) = 1
+    MULTIPLE, String::MULTIPLE_SCOPED, ::MULTIPLE_GLOBAL = 1
 
 #### raising on the value side
     (a, b, c = 1, raise, 2) rescue nil
 #>   xxxxxxxxx           x
+    (MULTIPLE_R, String::MULTIPLE_SCOPED_R = 1, raise, 2) rescue nil
+#>   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx           x
 
 #### raising when assigning
     foo = {}; (foo[:a], foo.bar, c = 1, 2, 3; :nope) rescue nil
 #>                               x            xxxxx
     ((a, (b, *c.foo), d) = 1) rescue nil
 #>                    x
+    (MULTIPLE_RA, String::Nope::MULTIPLE_SCOPED_RA, MULTIPLE_RA2 = 1, 2) rescue nil
+#>                            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 

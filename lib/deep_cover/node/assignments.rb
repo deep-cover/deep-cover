@@ -62,6 +62,37 @@ module DeepCover
       alias_method :flow_entry_count, :entry_tracker_hits
     end
 
+    class MasgnConstantCbase < Node
+      include BackwardsStrategy
+    end
+
+    class MasgnConstantScopeWrapper < Node
+      has_tracker :entry
+      has_child actual_node: Node
+
+      def initialize(base_node, **kwargs)
+        super(base_node, base_children: [base_node], **kwargs)
+      end
+
+      def rewrite
+        '(%{entry_tracker};%{node})'
+      end
+
+      def flow_entry_count
+        entry_tracker_hits
+      end
+    end
+
+    class MasgnConstantAssignment < Node
+      include BackwardsStrategy
+      has_child scope: [nil], remap: {cbase: MasgnConstantCbase, Parser::AST::Node => MasgnConstantScopeWrapper}
+      has_child constant_name: Symbol
+
+      def execution_count
+        scope ? scope.flow_completion_count : super
+      end
+    end
+
     class MasgnVariableAssignment < Node
       include BackwardsStrategy
       has_child var_name: Symbol
@@ -70,6 +101,7 @@ module DeepCover
     MASGN_BASE_MAP = {
       cvasgn: MasgnVariableAssignment, gvasgn: MasgnVariableAssignment,
       ivasgn: MasgnVariableAssignment, lvasgn: MasgnVariableAssignment,
+      casgn: MasgnConstantAssignment,
       send: MasgnSetter,
     }
     class MasgnSplat < Node
