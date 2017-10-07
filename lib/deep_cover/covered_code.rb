@@ -2,6 +2,7 @@ module DeepCover
   class CoveredCode
     attr_accessor :covered_source, :buffer, :tracker_global, :local_var
     @@counter = 0
+    @@globals = Hash.new{|h, global| h[global] = eval("#{global} ||= {}") }
 
     def initialize(path: nil, source: nil, lineno: nil, tracker_global: '$_cov', local_var: '_temp')
       raise "Must provide either path or source" unless path || source
@@ -34,7 +35,7 @@ module DeepCover
 
     def cover
       must_have_executed
-      @cover ||= global[nb]
+      global[nb]
     end
 
     def line_coverage(**options)
@@ -125,7 +126,7 @@ module DeepCover
 
     protected
     def global
-      eval("#{tracker_global} ||= {}")
+      @@globals[tracker_global]
     end
 
     def must_have_executed
