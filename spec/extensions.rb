@@ -10,6 +10,8 @@ class RSpec::Core::ExampleGroup
                     when /\(pending/i then :pending
                     when /\(Ruby 2\.(\d)/i
                       :skip if RUBY_VERSION < "2.#{$1}.0"
+                    when /\(!Jruby/i
+                      :skip if RUBY_PLATFORM == 'java'
                     end
               send(msg || :it, title || '(General)') { self.instance_exec(fn, lines, lineno, &block) }
             end

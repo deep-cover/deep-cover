@@ -87,7 +87,9 @@
 
 ### Xstr
     `echo 'abc'`.to_s
-    (`echoqweqwe`.to_s) rescue nil
-#>               xxxxx
     (`echoqweqwe #{raise}`) rescue nil
 #>   x                   x
+
+#### raising (!JRuby)
+    (`echoqweqwe`.to_s) rescue nil
+#>               xxxxx
