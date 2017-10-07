@@ -52,18 +52,26 @@ module DeepCover
 
     # a, b = ...
     class Masgn < Node
-      class Setter < Node
+      class BackwardsNode < Node
         include BackwardsStrategy
+      end
+      ConstantCbase = SelfReceiver = BackwardsNode
+
+      class DynamicReceiverWrap < Node
+        include Wrapper
         has_tracker :entry
-        has_child receiver: Node,
-                  rewrite: '(%{local} = (%{node});%{entry_tracker}; %{local}=%{local})',
-                  flow_entry_count: :entry_tracker_hits
-        has_child method_name: Symbol
-        has_child arg: [Node, nil] # When method is :[]=
+        has_child actual_receiver: Node
+        def rewrite
+          '(%{local} = (%{node});%{entry_tracker}; %{local}=%{local})'
+        end
+        alias_method :flow_entry_count, :entry_tracker_hits
       end
 
-      class ConstantCbase < Node
+      class Setter < Node
         include BackwardsStrategy
+        has_child receiver: {self: SelfReceiver, Parser::AST::Node => DynamicReceiverWrap}
+        has_child method_name: Symbol
+        has_child arg: [Node, nil] # When method is :[]=
       end
 
       class ConstantScopeWrapper < Node

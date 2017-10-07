@@ -57,3 +57,24 @@
     (MULTIPLE_RA, String::Nope::MULTIPLE_SCOPED_RA, MULTIPLE_RA2 = 1, 2) rescue nil
 #>                            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+#### self setters
+
+    o = Object.new; class << o; def foo=(x); end; private; def bar=(x); end; end
+    o.instance_eval do
+      a, o.foo, c = 1
+      a, self.foo, self.bar, c = 1
+      (a, $o.foo, self.nope, self.bar, c = 1) rescue nil
+#>                xxxxxxxxxxxxxxxxxxxxxx
+    end
+#>  ---
+
+#### self setters approximation. answers are overly conservative.
+
+    o = Object.new; class << o; def foo=(x); end; end
+    o.instance_eval do
+      (a, self.foo, raise.bar, c = 1) rescue nil
+#>     xxxxxxxxxxxxxxxxxxxxxxxxx
+      (a, self.foo, self.nope, c = 1) rescue nil
+#>     xxxxxxxxxxxxxxxxxxxxxxxxx
+    end
+#>  ---
