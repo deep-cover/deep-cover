@@ -67,12 +67,9 @@ module DeepCover
       end
 
       class ConstantScopeWrapper < Node
+        include Wrapper
         has_tracker :entry
         has_child actual_node: Node
-
-        def initialize(base_node, **kwargs)
-          super(base_node, base_children: [base_node], **kwargs)
-        end
 
         def rewrite
           '(%{entry_tracker};%{node})'

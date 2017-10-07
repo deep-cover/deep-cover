@@ -3,6 +3,7 @@ require_relative 'branch'
 module DeepCover
   class Node
     class WhenCondition < Node
+      include Wrapper
       has_tracker :entry
       # Using && instead of ; solves a weird bug in jruby 9.1.7.0 and 9.1.9.0 (probably before too).
       # The following will only print 'test' once
@@ -15,10 +16,6 @@ module DeepCover
       # for compatibility.
       has_child condition: Node, rewrite: "(((%{entry_tracker}) && %{node}))",
         flow_entry_count: :entry_tracker_hits
-
-      def initialize(base_node, **kwargs)
-        super(base_node, base_children: [base_node], **kwargs)
-      end
 
       def flow_entry_count
         entry_tracker_hits
@@ -62,13 +59,10 @@ module DeepCover
     end
 
     class CaseElse < Node
+      include Wrapper
       has_tracker :entry
       has_child body: [Node, nil], rewrite: "((%{entry_tracker};%{node}))",
                 flow_entry_count: :entry_tracker_hits
-
-      def initialize(base_node, **kwargs)
-        super(base_node, base_children: [base_node], **kwargs)
-      end
 
       def flow_entry_count
         return entry_tracker_hits if body
