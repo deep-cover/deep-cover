@@ -58,6 +58,7 @@
 ### Regexp
     /regexp/
     /re#{'g'}exp/i
+    /regexp/mi
     %r[regexp]
 #### Raising
     dummy_method /re#{raise}g#{'e'}p#{:x}/i rescue nil

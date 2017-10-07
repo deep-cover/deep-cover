@@ -17,7 +17,9 @@ module DeepCover
     Float = atom(::Float)
     Complex = atom(::Complex)
     Rational = atom(::Rational)
-    Regopt = atom([::Symbol, nil])
+    class Regopt < Node
+      has_extra_children options: [::Symbol]
+    end
 
     # Di-atomic
     class Range < Node
