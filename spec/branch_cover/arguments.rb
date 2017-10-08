@@ -20,3 +20,8 @@
 #>          -- xx  -- xx  --
     def foo(a: 42, b: 44, c: raise); end; foo(c: 1, d: 666) rescue nil
 #>          -- xx  -- xx  -- xxxxx
+
+### Block arguments
+
+    def foo(&block); end
+#>          ------

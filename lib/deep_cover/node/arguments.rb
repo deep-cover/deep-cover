@@ -35,7 +35,6 @@ module DeepCover
       def executable?
         false
       end
-      # TODO
     end
 
     class Args < Node
