@@ -144,6 +144,14 @@ module DeepCover
       has_child var_name: Symbol
     end
 
+    class ConstantOperatorAssign < Node
+      has_child scope: [Node, nil]
+      has_child const_name: Symbol
+      def execution_count
+        flow_completion_count
+      end
+    end
+
     class SendOperatorAssign < Node
       has_child receiver: [Node, nil]
       has_child method_name: Symbol
@@ -174,7 +182,7 @@ module DeepCover
       has_child receiver: {
         lvasgn: VariableOperatorAssign, ivasgn: VariableOperatorAssign,
         cvasgn: VariableOperatorAssign, gvasgn: VariableOperatorAssign,
-        casgn: Casgn, # TODO
+        casgn: ConstantOperatorAssign,
         send: SendOperatorAssign,
       }
       has_child value: Node, rewrite: '(%{long_branch_tracker};%{node})', flow_entry_count: :long_branch_tracker_hits

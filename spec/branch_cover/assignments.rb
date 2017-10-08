@@ -23,6 +23,18 @@
     (foo.bar ||= 42) rescue nil
 #>           xxx
 
+#### Constant
+
+    OR_EQUAL ||= 42
+    OR_EQUAL ||= 42
+#>               xx
+    ::OR_EQUAL2 ||= 42
+    String::OR_EQUAL3 ||= 42
+    (String::OR_EQUAL4 ||= raise; 42) rescue nil
+#>                     xxx        xx
+    (Nope::OR_EQUAL5 ||= 42) rescue nil
+#>       xxxxxxxxxxxxxxxxxx
+
 ### &&=
 
     foo = true
@@ -34,6 +46,23 @@
     foo = {}; def foo.bar; true; end
     (foo.bar &&= 42) rescue nil
 #>           xxx
+
+#### Constant
+
+    (AND_EQUAL &&= 42) rescue nil
+#>             xxxxxx
+    AND_EQUAL = true; AND_EQUAL &&= 42
+    ::AND_EQUAL2 = true; ::AND_EQUAL2 &&= 42
+    (String::AND_EQUAL3 &&= 42) rescue nil
+#>                      xxxxxx
+    String::AND_EQUAL3 = true; String::AND_EQUAL3 &&= 42
+    String::AND_EQUAL4 = false; String::AND_EQUAL4 &&= 42
+#>                                                     xx
+    String::AND_EQUAL5 = true; (String::AND_EQUAL5 &&= raise; 42) rescue nil
+#>                                                 xxx        xx
+    (Nope::AND_EQUAL6 &&= 42) rescue nil
+#>       xxxxxxxxxxxxxxxxxxx
+
 
 ### Multiple
 
