@@ -111,7 +111,6 @@ module DeepCover
       end
 
       def save_coverage(coverage)
-        # TODO: don't persist covered_code's @cover
         dir_path.join(BASENAME).binwrite(Marshal.dump({
           version: DeepCover::VERSION,
           coverage: coverage,
@@ -119,7 +118,6 @@ module DeepCover
       end
 
       def load_coverage
-        # TODO: don't load covered_code's @cover
         Marshal.load(dir_path.join(BASENAME).binread).tap do |version: raise, coverage: raise|
           raise "dump version mismatch: #{deep_cover}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
           return coverage
