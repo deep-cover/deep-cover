@@ -28,6 +28,10 @@ module DeepCover
       def loc_hash
         condition.loc_hash
       end
+
+      def executed_loc_keys
+        []
+      end
     end
 
     class When < Node
@@ -72,6 +76,10 @@ module DeepCover
       def loc_hash
         {else: parent.loc_hash[:else]}
       end
+
+      def executed_loc_keys
+        :else
+      end
     end
 
     class Case < Node
@@ -87,11 +95,7 @@ module DeepCover
       end
 
       def executed_loc_keys
-        if evaluate
-          :begin
-        else
-          :end
-        end
+        [:begin, :end, :keyword]
       end
     end
   end
