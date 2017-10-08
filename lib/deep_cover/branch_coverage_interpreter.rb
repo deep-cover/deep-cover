@@ -13,7 +13,7 @@ module DeepCover
 
       buffer = @covered_code.buffer
       bc = buffer.source_lines.map{|line| '-' * line.size}
-      @covered_code.covered_ast.each_node do |node|
+      @covered_code.each_node do |node|
         if node.executable?
           node.proper_range.each do |pos|
             bc[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = node.was_executed? ? ' ' : 'x'
@@ -27,7 +27,7 @@ module DeepCover
     # For now, when an overlap is found, just open a binding.pry to make fixing it easier.
     def check_node_overlap
       node_to_positions = {}
-      @covered_code.covered_ast.each_node do |node|
+      @covered_code.each_node do |node|
         node.proper_range.each do |position|
           if node_to_positions[position]
             already = node_to_positions[position]

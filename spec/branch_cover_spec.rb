@@ -55,4 +55,10 @@ RSpec.describe 'branch cover' do
     fail_msg = "Node classes without branch cover test:\n#{unvisited_node_classes.pretty_inspect}"
     unvisited_node_classes.should be_empty, fail_msg
   end
+
+  it 'handles an empty file' do
+    covered_code = DeepCover::CoveredCode.new(source: '')
+    covered_code.execute_code
+    expect { covered_code.branch_cover }.not_to raise_error
+  end
 end

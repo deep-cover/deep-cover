@@ -8,7 +8,7 @@ module DeepCover
 
     def generate_results
       line_hits = Array.new(@covered_code.nb_lines)
-      @covered_code.covered_ast.each_node do |node|
+      @covered_code.each_node do |node|
         if node.executable?
           node.executed_locs.each do |loc|
             lineno = loc.line - 1

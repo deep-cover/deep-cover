@@ -23,7 +23,11 @@ module DeepCover
     def nb_lines
       @nb_lines ||= begin
         lines = buffer.source_lines
-        lines.size - (lines.last.empty? ? 1 : 0)
+        if lines.size == 0
+          0
+        else
+          lines.size - (lines.last.empty? ? 1 : 0)
+        end
       end
     end
 
@@ -89,6 +93,11 @@ module DeepCover
         root = Node::Root.new(ast, self)
         root.main
       end
+    end
+
+    def each_node(*args, &block)
+      return unless covered_ast
+      covered_ast.each_node(*args, &block)
     end
 
     def instrument_source

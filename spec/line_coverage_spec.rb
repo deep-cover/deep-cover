@@ -48,4 +48,10 @@ RSpec.describe 'line coverage' do
   each_code_examples('./spec/branch_cover/*.rb', max_files: 5) do |fn, lines, lineno|
     should have_correct_line_coverage(fn, lines, lineno)
   end
+
+  it 'handles an empty file' do
+    covered_code = DeepCover::CoveredCode.new(source: '')
+    covered_code.execute_code
+    expect { covered_code.line_coverage }.not_to raise_error
+  end
 end
