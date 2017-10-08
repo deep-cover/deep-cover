@@ -13,7 +13,7 @@ module DeepCover
     end
 
     def executed_loc_keys
-      [:keyword, :end]
+      [:keyword, :name, :end]
     end
   end
 
@@ -30,7 +30,7 @@ module DeepCover
     end
 
     def executed_loc_keys
-      [:keyword, :end]
+      [:keyword, :name, :operator, :end]
     end
   end
 end

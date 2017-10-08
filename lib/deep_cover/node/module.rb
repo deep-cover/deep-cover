@@ -29,6 +29,10 @@ module DeepCover
       def execution_count
         body ? body_entry_tracker_hits : flow_completion_count
       end
+
+      def executed_loc_keys
+        [:keyword, :end]
+      end
     end
 
     class Class < Node
@@ -41,6 +45,10 @@ module DeepCover
 
       def execution_count
         body ? body_entry_tracker_hits : flow_completion_count
+      end
+
+      def executed_loc_keys
+        [:keyword, :end]
       end
     end
 
