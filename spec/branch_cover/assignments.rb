@@ -32,6 +32,9 @@
     String::OR_EQUAL3 ||= 42
     (String::OR_EQUAL4 ||= raise; 42) rescue nil
 #>                     xxx        xx
+
+#### Constant in raising scope (!JRuby)
+
     (Nope::OR_EQUAL5 ||= 42) rescue nil
 #>       xxxxxxxxxxxxxxxxxx
 
@@ -56,13 +59,15 @@
     (String::AND_EQUAL3 &&= 42) rescue nil
 #>                      xxxxxx
     String::AND_EQUAL3 = true; String::AND_EQUAL3 &&= 42
-    String::AND_EQUAL4 = false; String::AND_EQUAL4 &&= 42
-#>                                                     xx
     String::AND_EQUAL5 = true; (String::AND_EQUAL5 &&= raise; 42) rescue nil
 #>                                                 xxx        xx
     (Nope::AND_EQUAL6 &&= 42) rescue nil
 #>       xxxxxxxxxxxxxxxxxxx
 
+#### Constant (!JRuby)
+
+    String::AND_EQUAL4 = false; String::AND_EQUAL4 &&= 42
+#>                                                     xx
 
 ### Multiple
 
