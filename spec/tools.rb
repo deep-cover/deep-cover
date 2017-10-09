@@ -33,23 +33,33 @@ module DeepCover
 
     extend self
 
-    def format(*results, filename: nil, source: nil, lineno: 1, bad_linenos: [])
+    def format(*results, filename: nil, source: nil)
       source ||= File.read(filename)
       results.map!{|counts| counts.map{|c| CONVERT[c]}}
-      [*results, source.lines].transpose.each_with_index.map do |parts, i|
+      [*results, source.lines].transpose.map do |parts|
         *line_results, line = parts
-        if bad_linenos.include?(lineno + i)
-          line_s = Term::ANSIColor.red("#{lineno + i}| ")
-        else
-          line_s = Term::ANSIColor.white("#{lineno + i}| ")
-        end
-        next line_s + parts.join if line_results.size <= 1
+        next parts.join if line_results.size <= 1
 
         if line_results.all?{|res| res == line_results[0]}
-          line_s + Term::ANSIColor.green(line_results.join) + line.to_s
+          Term::ANSIColor.green(line_results.join) + line.to_s
         else
-          line_s + Term::ANSIColor.yellow(line_results.join) + line.to_s
+          Term::ANSIColor.yellow(line_results.join) + line.to_s
         end
+      end
+    end
+
+    def number_lines(lines, lineno: 1, bad_linenos: [])
+      max_lineno = lineno + lines.size - 1
+      nb_lineno_digits = max_lineno.to_s.size
+      lines.map.with_index do |line, i|
+        cur_lineno = lineno + i
+        cur_lineno_s = cur_lineno.to_s.rjust(nb_lineno_digits)
+        if bad_linenos.include?(cur_lineno)
+          prefix = Term::ANSIColor.red("#{cur_lineno_s} | ")
+        else
+          prefix = Term::ANSIColor.white("#{cur_lineno_s} | ")
+        end
+        "#{prefix}#{line}"
       end
     end
 
@@ -92,13 +102,12 @@ module DeepCover
 
     COLOR = {'x' => :red, ' ' => :green, '-' => :faint}
     WHITESPACE_MAP = Hash.new{|_, v| v}.merge!(' ' => '·', "\t" => '→ ')
-    def format_branch_cover(covered_code, show_line_nbs: false, show_whitespace: false, lineno: 1)
+    def format_branch_cover(covered_code, show_whitespace: false)
       bc = covered_code.branch_cover
 
       covered_code.buffer.source_lines.map.with_index do |line, line_index|
-        prefix = show_line_nbs ? Term::ANSIColor.faint((line_index+lineno).to_s.rjust(2) << ' | ') : ''
-        next prefix + line if line.strip.start_with?("#")
-        prefix << line.chars.map.with_index do |c, c_index|
+        next line if line.strip.start_with?("#")
+        line.chars.map.with_index do |c, c_index|
           color = COLOR[bc[line_index][c_index]]
           c = WHITESPACE_MAP[c] if show_whitespace
           Term::ANSIColor.send(color, c)
