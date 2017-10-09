@@ -52,12 +52,6 @@ module DeepCover
           nodes_mismatches(nodes, types)
         end
 
-        # Returns a subclass or the base Node, according to type
-        def factory(type, index)
-          class_name = Misc.camelize(type)
-          Node.const_defined?(class_name) ? Node.const_get(class_name) : Node
-        end
-
         private
 
         def expected_types(nodes)

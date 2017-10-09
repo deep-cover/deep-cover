@@ -32,8 +32,9 @@ module DeepCover
                 end                                                  #     end
               end                                                    #   end
 
-              def #{child_method_name}(child, name = nil)            #   def rewrite_child(child, child_name = nil)
-                call_child_handler(#{template.inspect}, child, name) #     call_child_handler('rewrite_%{child}', child, child_name)
+              def #{child_method_name}(child, name = nil)            #   def rewrite_child(child, name = nil)
+                call_child_handler(#{template.inspect}, child,       #     call_child_handler('rewrite_%{child}', child,
+                  name) || super                                     #       name) || super
               end                                                    #   end
             end                                                      # end
             include #{const_name}                                    # include RewriteHandler

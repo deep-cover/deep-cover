@@ -7,7 +7,10 @@ module DeepCover
 
       # Code to add before and after the node for covering purposes
       def rewrite
-        '%{node}'
+      end
+
+      # Default child rewriting rule
+      def rewrite_child(child, name=nil)
       end
 
       def resolve_rewrite(rule, context)

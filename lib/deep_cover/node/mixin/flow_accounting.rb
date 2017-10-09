@@ -3,7 +3,6 @@ module DeepCover
     module FlowAccounting
       def self.included(base)
         base.has_child_handler('%{name}_flow_entry_count')
-        base.include FlowEntryDefault
       end
 
       # Returns true iff it is executable and if was successfully executed
@@ -48,20 +47,15 @@ module DeepCover
         flow_entry_count
       end
 
-      module FlowEntryDefault
-        # Returns the number of time the control flow entered this child_node.
-        # This is the responsability of the Node, not of the child.
-        # Must be refined if the parent node may have an impact on control flow (raising, branching, ...)
-        def child_flow_entry_count(child)
-          handler_value = super
-          return handler_value if handler_value
-
-          prev = child.previous_sibling
-          if prev
-            prev.flow_completion_count
-          else
-            flow_entry_count
-          end
+      # Returns the number of time the control flow entered this child_node.
+      # This is the responsability of the Node, not of the child.
+      # Must be refined if the parent node may have an impact on control flow (raising, branching, ...)
+      def child_flow_entry_count(child, _name = nil)
+        prev = child.previous_sibling
+        if prev
+          prev.flow_completion_count
+        else
+          flow_entry_count
         end
       end
     end

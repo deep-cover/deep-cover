@@ -14,14 +14,20 @@ module DeepCover
         child_base_nodes.map.with_index do |child, child_index|
           child_name = self.class.child_index_to_name(child_index, child_base_nodes.size) rescue binding.pry
 
-          klass = remap_child(child, child_name)
-          next child if !klass && !child.is_a?(Parser::AST::Node)
-
-          klass ||= self.class.factory(child.type, child_index)
-          klass.new(child, parent: self, index: child_index)
+          if (klass = remap_child(child, child_name))
+            klass.new(child, parent: self, index: child_index)
+          else
+            child
+          end
         end
       end
       private :augment_children
+
+      def remap_child(child, name=nil)
+        return unless child.is_a?(Parser::AST::Node)
+        class_name = Misc.camelize(child.type)
+        Node.const_defined?(class_name) ? Node.const_get(class_name) : Node
+      end
 
       module ClassMethods
 
