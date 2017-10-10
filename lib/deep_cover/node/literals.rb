@@ -20,12 +20,19 @@ module DeepCover
     end
     Sym = atom(::Symbol)
     Int = atom(::Integer)
-    Str = atom(::String)
     Float = atom(::Float)
     Complex = atom(::Complex)
     Rational = atom(::Rational)
     class Regopt < Node
       has_extra_children options: [::Symbol]
+    end
+
+    class Str < Node
+      has_child value: ::String
+
+      def executed_loc_keys
+        [:expression, :heredoc_body, :heredoc_end]
+      end
     end
 
     # Di-atomic
