@@ -8,10 +8,10 @@
 
 #### With raises
     (42 unless raise) rescue nil
-#>   xx
+#>   xx xxxxxx
 
     (42 if raise) rescue nil
-#>   xx
+#>   xx xx
 
     (raise if true) rescue nil
 
@@ -20,19 +20,23 @@
       42
 #>X
     end
+#>  ---
 
     if true
       42
     end
+#>  ---
 
     unless false
       42
     end
+#>  ---
 
     unless true
       42
 #>X
     end
+#>  ---
 
 #### With else
 
@@ -40,9 +44,11 @@
 #>             xxxxx
       42
     else
+#>X
       43
 #>X
     end
+#>  ---
 
     if false && true
 #>              xxxx
@@ -51,6 +57,7 @@
     else
       43
     end
+#>  ---
 
 #### With elsif
     if false
@@ -68,19 +75,20 @@
     else
 #>X
     end
+#>  ---
 
 ### Empty branches
 #### Raises
     dummy_method(if raise
-#>  xxxxxxxxxxxxx--
+#>  xxxxxxxxxxxxxxx
     else
-#>  ----
+#>X
     end) rescue nil
 #>  ---x
 
 
    dummy_method(unless raise
-#> xxxxxxxxxxxxx------
+#> xxxxxxxxxxxxxxxxxxx
    end)
 #> ---x
 
@@ -89,14 +97,14 @@
     elsif false
     elsif true
     elsif :whatever
-#>  ----- xxxxxxxxx
+#>X
     else
-#>  ----
+#>X
     end
-
+#>  ---
 ### Ternary operator form
 #### Simple
     x = false ? 1 : 2; assert(x == 2)
 #>              x
     x = true ? 1 : 2; assert(x == 1)
-#>                 x
+#>               x x

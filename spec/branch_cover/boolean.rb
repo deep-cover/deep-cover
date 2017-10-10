@@ -3,9 +3,11 @@
 #>          x
       "hello"
     else
+#>X
       "never"
 #>X
     end
+#>  ---
     "after"
 
     dummy_method(1 || 2)

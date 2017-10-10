@@ -36,7 +36,7 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
 end
 
 RSpec.describe 'branch cover' do
-  each_code_examples('./spec/branch_cover/*.rb', max_files: 9) do |fn, lines, lineno|
+  each_code_examples('./spec/branch_cover/*.rb', max_files: 13) do |fn, lines, lineno|
     lines.should have_correct_branch_coverage(fn, lineno)
   end
 
