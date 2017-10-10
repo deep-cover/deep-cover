@@ -25,13 +25,10 @@ module DeepCover
       has_child const: {const: ModuleName}
       has_child body: [Node, nil], rewrite: '%{body_entry_tracker};%{node}',
         flow_entry_count: :body_entry_tracker_hits
+      executed_loc_keys :keyword, :end
 
       def execution_count
         body ? body_entry_tracker_hits : flow_completion_count
-      end
-
-      def executed_loc_keys
-        [:keyword, :end]
       end
     end
 
@@ -42,13 +39,10 @@ module DeepCover
       has_child inherit: [Node, nil]  # TODO
       has_child body: [Node, nil], rewrite: '%{body_entry_tracker};%{node}',
         flow_entry_count: :body_entry_tracker_hits
+      executed_loc_keys :keyword, :end
 
       def execution_count
         body ? body_entry_tracker_hits : flow_completion_count
-      end
-
-      def executed_loc_keys
-        [:keyword, :end]
       end
     end
 

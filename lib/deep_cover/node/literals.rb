@@ -4,19 +4,16 @@ module DeepCover
   class Node
     # Singletons
     class SingletonLiteral < Node
-      def executed_loc_keys
-        :expression
-      end
+      executed_loc_keys :expression
     end
     True = False = Nil = SingletonLiteral
 
     # Atoms
     def self.atom(type)
       ::Class.new(Node) do
-        def executed_loc_keys
-          :expression
-        end
-      end.has_child value: type
+        has_child value: type
+        executed_loc_keys :expression
+      end
     end
     Sym = atom(::Symbol)
     Int = atom(::Integer)
@@ -25,18 +22,12 @@ module DeepCover
     Rational = atom(::Rational)
     class Regopt < Node
       has_extra_children options: [::Symbol]
-
-      def executed_loc_keys
-        :expression
-      end
+      executed_loc_keys :expression
     end
 
     class Str < Node
       has_child value: ::String
-
-      def executed_loc_keys
-        [:expression, :heredoc_body, :heredoc_end]
-      end
+      executed_loc_keys :expression, :heredoc_body, :heredoc_end
     end
 
     # Di-atomic

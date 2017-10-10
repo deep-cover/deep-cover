@@ -31,6 +31,7 @@ module DeepCover
       has_child true_branch: [Node, nil], flow_entry_count: :truthy_tracker_hits
       has_child else_branch: [Node, nil], flow_entry_count: -> { condition.flow_completion_count - truthy_tracker_hits },
                 remap: Else
+      executed_loc_keys :keyword, :question
 
       def self.new(base_node, **kwargs)
         locs = base_node.location.to_hash
@@ -51,10 +52,6 @@ module DeepCover
       def execution_count
         condition.flow_completion_count
       end
-
-      def executed_loc_keys
-        [:keyword, :question]
-      end
     end
 
     class Unless < Node
@@ -64,6 +61,7 @@ module DeepCover
       has_child false_branch: [Node, nil], flow_entry_count: -> { condition.flow_completion_count - truthy_tracker_hits }
       has_child else_branch: [Node, nil], flow_entry_count: :truthy_tracker_hits,
                 remap: Else
+      executed_loc_keys :keyword
 
       def initialize(base_node, base_children: base_node.children, **kwargs)
         super(base_node, base_children: base_children.values_at(0, 2, 1), **kwargs)
@@ -78,10 +76,6 @@ module DeepCover
 
       def execution_count
         condition.flow_completion_count
-      end
-
-      def executed_loc_keys
-        :keyword
       end
     end
   end

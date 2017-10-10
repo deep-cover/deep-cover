@@ -16,6 +16,7 @@ module DeepCover
       # for compatibility.
       has_child condition: Node, rewrite: "(((%{entry_tracker}) && %{node}))",
         flow_entry_count: :entry_tracker_hits
+      executed_loc_keys []
 
       def flow_entry_count
         entry_tracker_hits
@@ -27,10 +28,6 @@ module DeepCover
 
       def loc_hash
         condition.loc_hash
-      end
-
-      def executed_loc_keys
-        []
       end
     end
 
@@ -67,6 +64,7 @@ module DeepCover
       has_tracker :entry
       has_child body: [Node, nil], rewrite: "((%{entry_tracker};%{node}))",
                 flow_entry_count: :entry_tracker_hits
+      executed_loc_keys :else
 
       def flow_entry_count
         return entry_tracker_hits if body
@@ -76,10 +74,6 @@ module DeepCover
       def loc_hash
         {else: parent.loc_hash[:else]}
       end
-
-      def executed_loc_keys
-        :else
-      end
     end
 
     class Case < Node
@@ -88,14 +82,11 @@ module DeepCover
       has_child evaluate: [Node, nil]
       has_extra_children whens: When
       has_child else: { NilClass => CaseElse, Parser::AST::Node => CaseElse }
+      executed_loc_keys :begin, :end, :keyword
 
       def execution_count
         return evaluate.flow_completion_count if evaluate
         flow_entry_count
-      end
-
-      def executed_loc_keys
-        [:begin, :end, :keyword]
       end
     end
   end

@@ -8,12 +8,10 @@ module DeepCover
     has_child signature: Args
     has_child body: [Node, nil], rewrite: '%{method_call_tracker};%{node};',
       flow_entry_count: :method_call_tracker_hits
+    executed_loc_keys :keyword, :name, :end
+
     def children_nodes_in_flow_order
       []
-    end
-
-    def executed_loc_keys
-      [:keyword, :name, :end]
     end
   end
 
@@ -25,12 +23,10 @@ module DeepCover
     has_child signature: Args
     has_child body: [Node, nil], rewrite: '%{method_call_tracker};%{node};',
       flow_entry_count: :method_call_tracker_hits
+    executed_loc_keys :keyword, :name, :operator, :end
+
     def children_nodes_in_flow_order
       [singleton]
-    end
-
-    def executed_loc_keys
-      [:keyword, :name, :operator, :end]
     end
   end
 end

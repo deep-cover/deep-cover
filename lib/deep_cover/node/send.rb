@@ -7,6 +7,7 @@ module DeepCover
       has_child receiver: [Node, nil]
       has_child method_name: Symbol
       has_extra_children arguments: Node
+      executed_loc_keys :dot, :selector_begin, :selector_end, :operator
 
       def loc_hash
         base = super
@@ -21,10 +22,6 @@ module DeepCover
         end
 
         hash
-      end
-
-      def executed_loc_keys
-        [:dot, :selector_begin, :selector_end, :operator]
       end
     end
 

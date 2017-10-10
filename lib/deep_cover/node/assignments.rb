@@ -5,10 +5,7 @@ module DeepCover
     class VariableAssignment < Node
       has_child var_name: Symbol
       has_child value: [Node, nil]
-
-      def executed_loc_keys
-        [:name, :operator]
-      end
+      executed_loc_keys :name, :operator
 
       def execution_count
         return super unless value
@@ -61,9 +58,7 @@ module DeepCover
       end
 
       class SelfReceiver < BackwardsNode
-        def executed_loc_keys
-          :expression
-        end
+        executed_loc_keys :expression
       end
 
       class ConstantCbase < BackwardsNode
@@ -84,6 +79,7 @@ module DeepCover
         has_child receiver: {self: SelfReceiver, Parser::AST::Node => DynamicReceiverWrap}
         has_child method_name: Symbol
         has_child arg: [Node, nil] # When method is :[]=
+        executed_loc_keys :dot, :selector_begin, :selector_end
 
         def loc_hash
           base = super
@@ -103,10 +99,6 @@ module DeepCover
                 selector_end: nil#,
             }
           end
-        end
-
-        def executed_loc_keys
-          [:dot, :selector_begin, :selector_end]
         end
       end
 
@@ -148,10 +140,7 @@ module DeepCover
       class Splat < Node
         include BackwardsStrategy
         has_child rest_arg: BASE_MAP
-
-        def executed_loc_keys
-          :operator
-        end
+        executed_loc_keys :operator
       end
 
       class LeftSide < Node
@@ -161,12 +150,10 @@ module DeepCover
           mlhs: LeftSide,
           **BASE_MAP,
         }
+        executed_loc_keys :begin, :end
+
         def flow_completion_count
           parent.flow_completion_count
-        end
-
-        def executed_loc_keys
-          [:begin, :end]
         end
       end
 
@@ -175,12 +162,10 @@ module DeepCover
       has_child left: {mlhs: LeftSide}
       has_child value: Node
 
+      executed_loc_keys :operator
+
       def execution_count
         value.flow_completion_count
-      end
-
-      def executed_loc_keys
-        :operator
       end
 
       def children_nodes_in_flow_order
@@ -204,10 +189,7 @@ module DeepCover
       has_child receiver: [Node, nil]
       has_child method_name: Symbol
       has_extra_children arguments: Node
-
-      def executed_loc_keys
-        [:dot, :selector]
-      end
+      executed_loc_keys :dot, :selector
     end
 
     # foo += bar
@@ -222,12 +204,10 @@ module DeepCover
       }
       has_child operator: Symbol
       has_child value: Node, rewrite: '(%{reader_tracker};%{node})', flow_entry_count: :reader_tracker_hits
+      executed_loc_keys :operator
+
       def execution_count
         flow_completion_count
-      end
-
-      def executed_loc_keys
-        :operator
       end
     end
 
@@ -242,13 +222,10 @@ module DeepCover
         send: SendOperatorAssign,
       }
       has_child value: Node, rewrite: '(%{long_branch_tracker};%{node})', flow_entry_count: :long_branch_tracker_hits
+      executed_loc_keys :operator
 
       def execution_count
         flow_completion_count
-      end
-
-      def executed_loc_keys
-        :operator
       end
     end
 
