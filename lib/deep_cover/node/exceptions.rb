@@ -12,7 +12,7 @@ module DeepCover
 
       def rewrite
         return if body
-        '%{node};%{entered_body_tracker}'
+        '%{node};%{entered_body_tracker};nil'
       end
 
       def flow_completion_count

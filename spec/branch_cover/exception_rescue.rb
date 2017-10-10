@@ -6,12 +6,13 @@
     rescue
     end
 
-    begin
+    a = begin
       raise
       "foo"
 #>X
     rescue
     end
+    assert a.nil?
 
 #### Without raise
 
