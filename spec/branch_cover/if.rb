@@ -40,8 +40,7 @@
 
 #### With else
 
-    if true || false
-#>             xxxxx
+    if true
       42
     else
 #>X
@@ -50,8 +49,24 @@
     end
 #>  ---
 
-    if false && true
-#>              xxxx
+    if false
+      42
+#>X
+    else
+      43
+    end
+#>  ---
+
+    unless false
+      42
+    else
+#>X
+      43
+#>X
+    end
+#>  ---
+
+    unless true
       42
 #>X
     else
