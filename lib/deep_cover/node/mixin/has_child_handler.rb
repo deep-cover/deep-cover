@@ -42,17 +42,17 @@ module DeepCover
           end_eval
         end
 
-        def define_child_handler(template, name, method)
+        def define_child_handler(template, name, action)
           method_name = template % {name: name}
-          case method
+          case action
           when nil
             # Nothing to do
           when Symbol
-            alias_method method_name, method
+            alias_method method_name, action
           when Proc
-            define_method(method_name, &method)
+            define_method(method_name, &action)
           else
-            define_method(method_name) {|*| method }
+            define_method(method_name) {|*| action }
           end
         end
         private :define_child_handler
