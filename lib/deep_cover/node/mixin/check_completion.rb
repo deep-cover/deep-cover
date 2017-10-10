@@ -8,6 +8,7 @@ module DeepCover
         include ExecutedAfterChildren
         alias_method :flow_completion_count, :completion_tracker_hits
         pre, post = outer.split('%{node}')
+        # The local=local is to avoid Ruby warning about "Possible use of value in void context"
         define_method(:rewrite) { "#{pre}(%{local}=#{inner};%{completion_tracker};%{local}=%{local})#{post}" }
       end
     end
