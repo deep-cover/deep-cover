@@ -59,7 +59,15 @@ module DeepCover
       class BackwardsNode < Node
         include BackwardsStrategy
       end
-      ConstantCbase = SelfReceiver = BackwardsNode
+
+      class SelfReceiver < BackwardsNode
+        def executed_loc_keys
+          :expression
+        end
+      end
+
+      class ConstantCbase < BackwardsNode
+      end
 
       class DynamicReceiverWrap < Node
         include Wrapper

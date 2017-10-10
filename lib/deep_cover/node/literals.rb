@@ -25,6 +25,10 @@ module DeepCover
     Rational = atom(::Rational)
     class Regopt < Node
       has_extra_children options: [::Symbol]
+
+      def executed_loc_keys
+        :expression
+      end
     end
 
     class Str < Node
