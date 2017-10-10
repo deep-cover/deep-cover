@@ -16,7 +16,7 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
     cov = @covered_code.branch_cover
     errors = cov.zip(answers, lines).each_with_index.reject do |(a, expected, line), i|
       actual = DeepCover::Tools.strip_when_unimportant(line, a)
-      actual = ' ' * actual.size if line.strip.start_with?('#>') || line.strip.start_with?('# ')
+      actual = ' ' * actual.size if line.start_with?('#')
       if expected.is_a?(Regexp)
         actual =~ expected
       else
