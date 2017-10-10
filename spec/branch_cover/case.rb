@@ -180,6 +180,13 @@
 #>X
     end
 
+### With empty when body
+    a = case 1
+        when 1
+
+        end
+    assert a.nil?
+
 ### With failed ===
     obj = Object.new
     obj.define_singleton_method(:===) {|other| raise }

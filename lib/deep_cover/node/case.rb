@@ -42,7 +42,7 @@ module DeepCover
         flow_entry_count: :body_entry_tracker_hits
 
       def rewrite
-        "%{node};%{body_entry_tracker}" unless body
+        "%{node};%{body_entry_tracker};nil" unless body
       end
 
       def flow_entry_count
