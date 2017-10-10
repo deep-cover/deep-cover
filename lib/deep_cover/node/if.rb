@@ -3,11 +3,8 @@ require_relative 'branch'
 module DeepCover
   class Node
     class Else < Node
+      include Wrapper
       has_child body: [Node, nil]
-
-      def initialize(base_node, **kwargs)
-        super(nil, base_children: [base_node], **kwargs)
-      end
 
       def loc_hash
         {else: parent.loc_hash[:else], colon: parent.loc_hash[:colon]}
