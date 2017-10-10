@@ -59,10 +59,10 @@ module DeepCover
 
     class Unless < Node
       include Branch
-      has_tracker :falsy
-      has_child condition: Node, rewrite: '((%{node}) || %{falsy_tracker})'
-      has_child false_branch: [Node, nil], flow_entry_count: :falsy_tracker_hits
-      has_child else_branch: [Node, nil], flow_entry_count: -> { condition.flow_completion_count - falsy_tracker_hits },
+      has_tracker :truthy
+      has_child condition: Node, rewrite: '((%{node}) && %{truthy_tracker})'
+      has_child false_branch: [Node, nil], flow_entry_count: -> { condition.flow_completion_count - truthy_tracker_hits }
+      has_child else_branch: [Node, nil], flow_entry_count: :truthy_tracker_hits,
                 remap: Else
 
       def initialize(base_node, base_children: base_node.children, **kwargs)

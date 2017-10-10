@@ -1,10 +1,10 @@
 ### One-liner
-    42 if false
-#>  xx
-    42 if true
-    42 unless false
-    42 unless true
-#>  xx
+    a = 42 if false; assert a == nil
+#>  xxxxxx
+    b = 42 if true; assert b == 42
+    c = 42 unless false; assert c == 42
+    d = 42 unless true; assert d == nil
+#>  xxxxxx
 
 #### With raises
     (42 unless raise) rescue nil
