@@ -23,7 +23,7 @@
     (foo.bar ||= 42) rescue nil
 #>           xxx
 
-#### Constant
+#### Constant (!Jruby)
 
     OR_EQUAL ||= 42
     OR_EQUAL ||= 42
@@ -53,7 +53,7 @@
     (foo.bar &&= 42) rescue nil
 #>           xxx
 
-#### Constant
+#### Constant (!Jruby)
 
     (AND_EQUAL &&= 42) rescue nil
 #>             xxxxxx
