@@ -9,7 +9,11 @@ module DeepCover
         child_name ||= self.class.child_index_to_name(child.index, children.size) rescue binding.pry
         method_name = template % {name: child_name}
         if respond_to?(method_name)
-          args = [child] unless method(method_name).arity == 0
+          args = [child, child_name]
+          arity = method(method_name).arity
+          if arity >= 0
+            args = args[0...arity]
+          end
           answer = send(method_name, *args)
         end
         answer
@@ -48,7 +52,14 @@ module DeepCover
           when nil
             # Nothing to do
           when Symbol
-            alias_method method_name, action
+            define_method(method_name) do |*args|
+              arity = method(action).arity
+              if arity < 0
+                send(action, *args)
+              else
+                send(action, *args[0...arity])
+              end
+            end
           when Proc
             define_method(method_name, &action)
           else
