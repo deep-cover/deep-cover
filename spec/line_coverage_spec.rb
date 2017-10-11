@@ -19,7 +19,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
     "Line coverage does not match on lines #{@errors.join(', ')}\n#{result}"
   end
 
-  def expected_result?(cov, line, comment_answer, strict:)
+  def expected_result?(cov, line, comment_answer, strict: raise)
     return cov == 0 if comment_answer == DeepCover::Tools::NOT_EXECUTED
     return true if line.strip =~ /^#[ >]/
 
