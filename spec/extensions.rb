@@ -1,5 +1,5 @@
 class RSpec::Core::ExampleGroup
-  def self.each_code_examples(glob, max_files: nil, &block)
+  def self.each_code_examples(glob, max_files: nil, name: 'unnamed', &block)
     Dir.glob(glob).sort.each_with_index do |fn, i|
       break if max_files && i >= max_files
 
@@ -10,6 +10,7 @@ class RSpec::Core::ExampleGroup
             examples.each do |title, (lines, lineno)|
               msg = case [section, title].join
                     when /\(pending/i then :pending
+                    when /\(#{name}_pending/i then :pending
                     when /\(Ruby 2\.(\d)/i
                       :skip if RUBY_VERSION < "2.#{$1}.0"
                     when /\(!Jruby/i
