@@ -20,6 +20,12 @@ def assert(check)
 end
 
 module DeepCover
+  class Node
+    def self.[](source)
+      CoveredCode.new(source: source).execute_code.covered_ast
+    end
+  end
+
   module Tools
     ANSWER = /^#>/
     FULLY_EXECUTED = /^(-* [ -]*|)$/

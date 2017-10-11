@@ -35,6 +35,7 @@ module DeepCover
       return if has_executed?
       global[nb] = Array.new(@tracker_count, 0)
       eval(@covered_source, binding, @buffer.name || '<raw_code>', @lineno || 1)
+      self
     end
 
     def cover
