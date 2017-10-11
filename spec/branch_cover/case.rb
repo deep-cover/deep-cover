@@ -198,27 +198,31 @@
 #>X
     end
 
-### With splat (pending)
+### With splat
     arr = [String, Symbol]
     case :hello
+    # Interesting behavior when using splat in when, every condition gets evaluated
+    # before any of them are compared to the target. So Integer is still evaluated.
     when Float, *arr, Integer
-#>                    xxxxxxx
       "here"
     else
+#>X
       "not here"
 #>X
     end
 
-#### With raising === (pending)
+#### With raising ===
     obj = Object.new
     obj.define_singleton_method(:===) {|other| raise }
     arr = [obj]
     case 1
+    # Interesting behavior when using splat in when, every condition gets evaluated
+    # before any of them are compared to the target. So Integer is still evaluated.
     when Float, *arr, Integer
-#>                    xxxxxxx
       "not here"
 #>X
     else
+#>X
       "nor here"
 #>X
     end

@@ -31,10 +31,20 @@ module DeepCover
       end
     end
 
+    class WhenSplatCondition < Node
+      has_tracker :entry
+      check_completion inner: '(%{entry_tracker};[%{node}])', outer: '*%{node}'
+      has_child receiver: Node
+
+      def flow_entry_count
+        entry_tracker_hits
+      end
+    end
+
     class When < Node
       # include Branch
       has_tracker :body_entry
-      has_extra_children matches: { Parser::AST::Node => WhenCondition }
+      has_extra_children matches: { splat: WhenSplatCondition, Parser::AST::Node => WhenCondition }
       has_child body: [Node, nil], rewrite: "%{body_entry_tracker};%{node}",
         flow_entry_count: :body_entry_tracker_hits
 
