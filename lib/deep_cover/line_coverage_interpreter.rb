@@ -12,6 +12,10 @@ module DeepCover
         if node.executable?
           node.executed_locs.each do |loc|
             lineno = loc.line - 1
+            if @options[:allow_partial] == false
+              line_hits[lineno] = 0 if node.execution_count == 0
+              next if line_hits[lineno] == 0
+            end
             line_hits[lineno] = [line_hits[lineno] || 0, node.execution_count].max
           end
         end

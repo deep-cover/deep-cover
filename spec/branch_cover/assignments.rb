@@ -28,8 +28,11 @@
     OR_EQUAL ||= 42
     OR_EQUAL ||= 42
 #>               xx
+    Object.send(:remove_const, 'OR_EQUAL')
     ::OR_EQUAL2 ||= 42
+    Object.send(:remove_const, 'OR_EQUAL2')
     String::OR_EQUAL3 ||= 42
+    String.send(:remove_const, 'OR_EQUAL3')
     (String::OR_EQUAL4 ||= raise; 42) rescue nil
 #>                     xxx        xx
 
