@@ -28,7 +28,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno|
       line = DeepCover::Tools.strip_when_unimportant(line, line)
       comment_answer = comment_answer + " " * [line.size - comment_answer.size, 0].max
       comment_answer.chars.zip(line.chars).each do |a, l|
-        return true if a == ' ' && l =~ /\S/
+        return cov && cov > 0 if a == ' ' && l =~ /\S/
       end
 
       return cov == 0 if comment_answer.include?('x')
