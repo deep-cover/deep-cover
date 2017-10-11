@@ -21,7 +21,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
 
   def expected_result?(cov, line, comment_answer, strict:)
     return cov == 0 if comment_answer == DeepCover::Tools::NOT_EXECUTED
-    return true if line.strip.start_with?("#")
+    return true if line.strip =~ /^#[ >]/
 
     if comment_answer.is_a?(String)
       comment_answer = DeepCover::Tools.strip_when_unimportant(line, comment_answer)

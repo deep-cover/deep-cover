@@ -100,7 +100,7 @@ module DeepCover
       bc = covered_code.branch_cover
 
       covered_code.buffer.source_lines.map.with_index do |line, line_index|
-        next line if line.strip.start_with?("#")
+        next line if line.strip =~ /^#[ >]/
         line.chars.map.with_index do |c, c_index|
           color = COLOR[bc[line_index][c_index]]
           c = WHITESPACE_MAP[c] if show_whitespace
