@@ -38,13 +38,7 @@ module DeepCover
       results.map!{|counts| counts.map{|c| CONVERT[c]}}
       [*results, source.lines].transpose.map do |parts|
         *line_results, line = parts
-        next parts.join if line_results.size <= 1
-
-        if line_results.all?{|res| res == line_results[0]}
-          Term::ANSIColor.green(line_results.join) + line.to_s
-        else
-          Term::ANSIColor.yellow(line_results.join) + line.to_s
-        end
+        Term::ANSIColor.white(line_results.join) + line.to_s
       end
     end
 
