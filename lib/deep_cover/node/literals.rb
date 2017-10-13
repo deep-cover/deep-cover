@@ -49,6 +49,13 @@ module DeepCover
       has_extra_children constituents: [Str, Begin, Ivar, Cvar, Gvar, Dstr]
     end
     class DynamicLiteral < Node
+      def executed_loc_keys
+        if loc_hash[:heredoc_end]
+          [:expression, :heredoc_end]
+        else
+          [:begin, :end]
+        end
+      end
     end
     Dsym = Dstr = DynamicLiteral
     DynamicLiteral.has_evaluated_segments

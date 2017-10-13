@@ -35,14 +35,22 @@
     %q{w#{0}rld}
     %Q{w#{0}rld}
 #### Heredocs
-    insane = [<<-ONE, 1, <<-TWO, 2, <<-THREE, 3]
+    insane = [<<-ONE, 1, <<-TWO, 2, <<-THREE, 3, <<-FOUR] rescue nil
+#>                                            x  xxxxxxx
       the first thing
     ONE
       the second thing
+      on two lines
     TWO
       and the third thing
+      but it #{raise}!
+#>                   x
     THREE
-    "ok"
+      fouth for safety
+#>X
+    FOUR
+#>X
+
 #### Raising
     dummy_method "oo#{raise}ps#{:never}" rescue nil
 #>  xxxxxxxxxxxx            xxxxxxxxxxx
