@@ -34,22 +34,6 @@
     %{world}
     %q{w#{0}rld}
     %Q{w#{0}rld}
-#### Heredocs
-    insane = [<<-ONE, 1, <<-TWO, 2, <<-THREE, 3, <<-FOUR] rescue nil
-#>                                            x  xxxxxxx
-      the first thing
-    ONE
-      the second thing
-      on two lines
-    TWO
-      and the third thing
-      but it #{raise}!
-#>                   x
-    THREE
-      fouth for safety
-#>X
-    FOUR
-#>X
 
 #### Raising
     dummy_method "oo#{raise}ps#{:never}" rescue nil
@@ -62,6 +46,30 @@
 #>X
     #{:never}" rescue nil
 #>  xxxxxxxxx
+
+### Heredocs
+#### Raising
+    insane = [<<-ONE, 1, <<-TWO, 2, <<-THREE, 3, <<-FOUR] rescue nil
+#>                                            x  xxxxxxx
+      the first thing
+      with many lines
+    ONE
+      the second thing with one line
+    TWO
+      and the third thing
+      that raises #{raise}!
+#>                        x
+    THREE
+      fouth for safety
+#>X
+    FOUR
+#>X
+
+#### Empty
+    [<<-ONE, 1, <<-TWO, 2]
+    ONE
+
+    TWO
 
 ### Regexp
     /regexp/

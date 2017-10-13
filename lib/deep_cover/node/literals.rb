@@ -29,11 +29,15 @@ module DeepCover
       has_child value: ::String
 
       def executed_loc_keys
-        exp = loc_hash[:expression]
+        keys = [:expression, :heredoc_body, :heredoc_end]
 
-        if exp.source =~ /\S/
-          [:expression, :heredoc_body, :heredoc_end]
-        end
+        exp = loc_hash[:expression]
+        keys.delete(:expression) if exp && exp.source !~ /\S/
+
+        hd_body = loc_hash[:heredoc_body]
+        keys.delete(:heredoc_body) if hd_body && hd_body.source !~ /\S/
+
+        keys
       end
     end
 
