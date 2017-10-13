@@ -27,7 +27,14 @@ module DeepCover
 
     class Str < Node
       has_child value: ::String
-      executed_loc_keys :expression, :heredoc_body, :heredoc_end
+
+      def executed_loc_keys
+        exp = loc_hash[:expression]
+
+        if exp.source =~ /\S/
+          [:expression, :heredoc_body, :heredoc_end]
+        end
+      end
     end
 
     # Di-atomic

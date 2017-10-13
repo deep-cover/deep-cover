@@ -43,7 +43,7 @@
       and the third thing
     THREE
     "ok"
-#### Raising (line_strict_pending)
+#### Raising
     dummy_method "oo#{raise}ps#{:never}" rescue nil
 #>  xxxxxxxxxxxx            xxxxxxxxxxx
     dummy_method """
