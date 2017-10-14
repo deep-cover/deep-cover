@@ -11,8 +11,12 @@ module DeepCover
     include Enumerable
 
     def initialize(**options)
-      @covered_code = {}
+      @covered_codes = {}
       @options = options
+    end
+
+    def covered_codes
+      @covered_codes.dup
     end
 
     def line_coverage(filename)
@@ -21,12 +25,12 @@ module DeepCover
 
     def covered_code(path)
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
-      @covered_code[path] ||= CoveredCode.new(path: path, **@options)
+      @covered_codes[path] ||= CoveredCode.new(path: path, **@options)
     end
 
     def each
       return to_enum unless block_given?
-      @covered_code.each{|_path, covered_code| yield covered_code}
+      @covered_codes.each{|_path, covered_code| yield covered_code}
       self
     end
 
