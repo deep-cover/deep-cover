@@ -47,17 +47,6 @@ module DeepCover
       LineCoverageInterpreter.new(self, options).generate_results
     end
 
-    # Will return nil for non-executable lines and truthy for lines that are
-    def builtin_executable_lines
-      return @builtin_executable_lines.dup if @builtin_executable_lines
-      path = @buffer.name || "<covered_code_#{object_id}>"
-      # Not compiling for use by the user, so we don't want ruby warnings
-      DeepCover::Misc.with_warnings(nil) do
-        @builtin_executable_lines = DeepCover::Misc.blank_builtin_line_coverage(@buffer.source, path)
-      end
-      @builtin_executable_lines.dup
-    end
-
     def branch_cover
       must_have_executed
       BranchCoverageInterpreter.new(self).generate_results
