@@ -1,5 +1,7 @@
 # These are the monkeypatches to replace the default #load in order
 # to instrument the code before it gets run.
+# For now, this is not used, and may never be. The tracking and reporting for things can might be
+# loaded multiple times can be complex and is beyond the current scope of the project.
 
 class << Kernel
   alias_method :load_without_coverage, :load
