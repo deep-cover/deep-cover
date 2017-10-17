@@ -10,9 +10,16 @@ module DeepCover
     include Tools
     attr_reader :dest_path
 
-    def initialize(root_path, gem_relative_path = '')
-      @root_path = root_path
-      @gem_relative_path = gem_relative_path
+    def initialize(gem_path)
+      @root_path = File.expand_path(gem_path)
+      if File.exist?(File.join(@root_path, 'Gemfile'))
+        @gem_relative_path = '' # Typical case
+      else
+        # E.g. rails/activesupport
+        @gem_relative_path = File.basename(@root_path)
+        @root_path = File.dirname(@root_path)
+        raise "Can't find Gemfile" unless File.exist?(File.join(@root_path, 'Gemfile'))
+      end
       @dest_root = File.expand_path('~/test_deep_cover')
       @dest_root = Dir.mktmpdir("deep_cover_test") unless Dir.exist?(@dest_root)
       `rm -rf #{@dest_root}/* #{@dest_root}/.*`
@@ -94,5 +101,5 @@ module DeepCover
     end
   end
 
-  GemCoverer.new(ARGV[0] || "~/inky-rb", ARGV[1] || '').run
+  GemCoverer.new(ARGV[0] || "~/inky-rb").run
 end
