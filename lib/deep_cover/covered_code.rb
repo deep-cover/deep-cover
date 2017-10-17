@@ -56,6 +56,11 @@ module DeepCover
       LineCoverageInterpreter.new(self, options).generate_results
     end
 
+    def to_istanbul(**options)
+      must_have_executed
+      Reporter::Istanbul.new(self, **options).convert
+    end
+
     def branch_cover
       must_have_executed
       BranchCoverageInterpreter.new(self).generate_results

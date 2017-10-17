@@ -30,7 +30,29 @@ module DeepCover
       self
     end
 
-    def report
+    def to_istanbul(**options)
+      map do |covered_code|
+        next {} unless covered_code.has_executed?
+        covered_code.to_istanbul(**options)
+      end.inject(:merge)
+    end
+
+    def output_istanbul(dir: '.', name: ".nyc_output", **options)
+      path = Pathname.new(dir).expand_path.join(name)
+      path.mkpath
+      path.each_child(&:delete)
+      path.join('deep_cover.json').write(to_istanbul(**options).to_json)
+      path
+    end
+
+    def report_istanbul(reporter: :text, **options)
+      dir = output_istanbul(**options).dirname
+      `cd #{dir} && nyc report --reporter=#{reporter}`
+    end
+
+    def report(**options)
+      return report_istanbul(**options) if Reporter::Istanbul.available?
+
       missing = map do |covered_code|
         if covered_code.has_executed?
           missed = covered_code.line_coverage.each_with_index.map do |line_cov, line_index|

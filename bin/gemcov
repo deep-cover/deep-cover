@@ -89,7 +89,7 @@ module DeepCover
 
     def report
       coverage = Coverage.load @covered_path
-      puts coverage.report
+      puts coverage.report(dir: @covered_path)
     end
 
     def run
