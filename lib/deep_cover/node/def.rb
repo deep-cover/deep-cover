@@ -7,6 +7,7 @@ module DeepCover
     has_child method_name: Symbol
     has_child signature: Args
     has_child body: [Node, nil], rewrite: '%{method_call_tracker};%{node};',
+      is_statement: true,
       flow_entry_count: :method_call_tracker_hits
     executed_loc_keys :keyword, :name, :end
 
@@ -22,6 +23,7 @@ module DeepCover
     has_child method_name: Symbol
     has_child signature: Args
     has_child body: [Node, nil], rewrite: '%{method_call_tracker};%{node};',
+      is_statement: true,
       flow_entry_count: :method_call_tracker_hits
     executed_loc_keys :keyword, :name, :operator, :end
 

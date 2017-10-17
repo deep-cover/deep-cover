@@ -7,8 +7,14 @@ module DeepCover
       has_tracker :entered_body
       has_child exception: [Node::Array, nil]
       has_child assignment: [Lvasgn, nil], flow_entry_count: :entered_body_tracker_hits
-      has_child body: [Node, nil], flow_entry_count: :entered_body_tracker_hits,
-                                   rewrite: '((%{entered_body_tracker};%{node}))'
+      has_child body: [Node, nil],
+                flow_entry_count: :entered_body_tracker_hits,
+                is_statement: true,
+                rewrite: '((%{entered_body_tracker};%{node}))'
+
+      def is_statement
+        false
+      end
 
       def rewrite
         return if body
@@ -27,11 +33,18 @@ module DeepCover
 
     class Rescue < Node
       has_tracker :else
-      has_child watched_body: [Node, nil]
+      has_child watched_body: [Node, nil],
+                is_statement: true
       has_extra_children resbodies: Resbody
-      has_child else: [Node, nil], flow_entry_count: -> {watched_body ? watched_body.flow_completion_count : flow_entry_count},
-        rewrite: '%{else_tracker};%{node}'
+      has_child else: [Node, nil],
+                flow_entry_count: -> {watched_body ? watched_body.flow_completion_count : flow_entry_count},
+                is_statement: true,
+                rewrite: '%{else_tracker};%{node}'
       executed_loc_keys :else
+
+      def is_statement
+        false
+      end
 
       def flow_completion_count
         return flow_entry_count unless watched_body
@@ -61,8 +74,11 @@ module DeepCover
     end
 
     class Ensure < Node
-      has_child body: [Node, nil]
-      has_child ensure: [Node, nil], flow_entry_count: -> { body.flow_entry_count }
+      has_child body: [Node, nil],
+                is_statement: true
+      has_child ensure: [Node, nil],
+                is_statement: true,
+                flow_entry_count: -> { body.flow_entry_count }
 
       def execution_count
         flow_entry_count

@@ -4,7 +4,12 @@ module DeepCover
   class Node
     class Else < Node
       include Wrapper
-      has_child body: [Node, nil]
+      has_child body: [Node, nil],
+                is_statement: true
+
+      def is_statement
+        false
+      end
 
       def loc_hash
         {else: parent.loc_hash[:else], colon: parent.loc_hash[:colon]}
@@ -28,9 +33,14 @@ module DeepCover
       include Branch
       has_tracker :truthy
       has_child condition: Node, rewrite: '((%{node}) && %{truthy_tracker})'
-      has_child true_branch: [Node, nil], flow_entry_count: :truthy_tracker_hits, remap: :remap_branch
-      has_child false_branch: [Node, nil], flow_entry_count: -> { condition.flow_completion_count - truthy_tracker_hits },
-                remap: :remap_branch
+      has_child true_branch: [Node, nil],
+                flow_entry_count: :truthy_tracker_hits,
+                remap: :remap_branch,
+                is_statement: true
+      has_child false_branch: [Node, nil],
+                flow_entry_count: -> { condition.flow_completion_count - truthy_tracker_hits },
+                remap: :remap_branch,
+                is_statement: true
       executed_loc_keys :keyword, :question
 
       def remap_branch(child, child_name)

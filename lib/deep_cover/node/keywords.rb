@@ -4,7 +4,12 @@ require_relative 'literals'
 module DeepCover
   class Node
     class Kwbegin < Node
-      has_extra_children instructions: Node
+      has_extra_children instructions: Node,
+                         is_statement: true
+
+      def is_statement
+        false
+      end
     end
 
     class Return < Node

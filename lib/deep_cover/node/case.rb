@@ -46,6 +46,7 @@ module DeepCover
       has_tracker :body_entry
       has_extra_children matches: { splat: WhenSplatCondition, Parser::AST::Node => WhenCondition }
       has_child body: [Node, nil], rewrite: "%{body_entry_tracker};%{node}",
+        is_statement: true,
         flow_entry_count: :body_entry_tracker_hits
 
       def rewrite
@@ -73,6 +74,7 @@ module DeepCover
       include Wrapper
       has_tracker :entry
       has_child body: [Node, nil], rewrite: "((%{entry_tracker};%{node}))",
+                is_statement: true,
                 flow_entry_count: :entry_tracker_hits
       executed_loc_keys :else
 

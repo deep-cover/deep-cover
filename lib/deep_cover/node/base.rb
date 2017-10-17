@@ -9,6 +9,7 @@ module DeepCover
     include Rewriting
     extend CheckCompletion
     include FlowAccounting
+    include IsStatement
 
     attr_reader :index, :parent, :children, :base_node
 

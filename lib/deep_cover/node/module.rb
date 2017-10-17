@@ -24,6 +24,7 @@ module DeepCover
       has_tracker :body_entry
       has_child const: {const: ModuleName}
       has_child body: [Node, nil], rewrite: '%{body_entry_tracker};%{node}',
+        is_statement: true,
         flow_entry_count: :body_entry_tracker_hits
       executed_loc_keys :keyword, :end
 
@@ -38,6 +39,7 @@ module DeepCover
       has_child const: {const: ModuleName}
       has_child inherit: [Node, nil]  # TODO
       has_child body: [Node, nil], rewrite: '%{body_entry_tracker};%{node}',
+        is_statement: true,
         flow_entry_count: :body_entry_tracker_hits
       executed_loc_keys :keyword, :end
 
@@ -49,7 +51,8 @@ module DeepCover
     # class << foo
     class Sclass < Node
       has_child object: Node
-      has_child body: [Node, nil]
+      has_child body: [Node, nil],
+                is_statement: true
       # TODO
     end
   end
