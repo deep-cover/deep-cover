@@ -32,14 +32,12 @@ module DeepCover
     end
 
     class Rescue < Node
-      has_tracker :else
       has_child watched_body: [Node, nil],
                 is_statement: true
       has_extra_children resbodies: Resbody
       has_child else: [Node, nil],
-                flow_entry_count: -> {watched_body ? watched_body.flow_completion_count : flow_entry_count},
-                is_statement: true,
-                rewrite: '%{else_tracker};%{node}'
+                flow_entry_count: :execution_count,
+                is_statement: true
       executed_loc_keys :else
 
       def is_statement
@@ -52,12 +50,7 @@ module DeepCover
       end
 
       def execution_count
-        return 0 unless self.else
-        else_tracker_hits
-      end
-
-      def executable?
-        !!self.else
+        watched_body ? watched_body.flow_completion_count : flow_entry_count
       end
 
       def resbodies_flow_entry_count(child)
