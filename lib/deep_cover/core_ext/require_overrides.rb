@@ -5,7 +5,7 @@ class << Kernel
   alias_method :require_without_coverage, :require
   def require(path)
     result = DeepCover.custom_requirer.require(path)
-    if [:not_found, :cover_failed].include?(result)
+    if [:not_found, :cover_failed, :not_supported].include?(result)
       require_without_coverage(path)
     else
       result

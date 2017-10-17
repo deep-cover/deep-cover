@@ -9,7 +9,7 @@ class << Kernel
     return load_without_coverage(path, wrap) if wrap
 
     result = DeepCover.custom_requirer.load(path)
-    if [:not_found, :cover_failed].include?(result)
+    if [:not_found, :cover_failed, :not_supported].include?(result)
       load_without_coverage(path)
     else
       result

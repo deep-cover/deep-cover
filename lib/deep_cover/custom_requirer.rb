@@ -1,3 +1,5 @@
+# TODO: must handle circular requires
+
 module DeepCover
   class CustomRequirer
     attr_reader :load_path, :loaded_features
@@ -34,13 +36,14 @@ module DeepCover
     #     Caller should delegate to the default #require.
     # Returns :cover_failed if DeepCover couldn't apply instrumentation the file found.
     #     Caller should delegate to the default #require.
+    # Returns :not_supported for files that are not supported (such as ike .so files)
+    #     Caller should delegate to the default #require.
     # Exceptions raised by the required code bubble up as normal.
     #     It is *NOT* recommended to simply delegate to the default #require, since it
     #     might not be safe to run part of the code again.
     def require(path)
       ext = File.extname(path)
-      return false if ext == '.so'
-
+      return :not_supported if ext == '.so'
       path = path + '.rb' if ext != '.rb'
       return false if @loaded_features.include?(path)
 

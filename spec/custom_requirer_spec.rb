@@ -29,8 +29,15 @@ module DeepCover
         run_ruby_require(require_path)
         run_custom_require(require_path)
 
+        if expected_executed_file == :not_supported && @result[:ruby] == :not_found
+          # Ruby should fail to load because we don't use a valid .so file, which
+          # will give :not_found. WE replace this to skip_this, which is removed from comparisons
+          @result[:ruby] = :skip_this
+        end
+
         %w(result executed_file loaded_features).all? do |value_name|
           values = instance_variable_get("@#{value_name}").values
+          values.delete(:skip_this)
           values.all?{|v| v == values[0] }
         end
       end
@@ -51,6 +58,9 @@ module DeepCover
         when :not_found
           @executed_file[:expected] = nil
           @result[:expected] = :not_found
+        when :not_supported
+          @executed_file[:expected] = nil
+          @result[:expected] = :not_supported
         when false
           @executed_file[:expected] = nil
           @result[:expected] = false
@@ -317,6 +327,13 @@ module DeepCover
 
         # expected_loaded_feature will get joined to the @root, which is already on one through a symlink.
         './two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'two/test.rb')
+      end
+
+      it "it indicates that .so files are not supported" do
+        file_tree %w(one/two/test.so)
+
+        add_load_path 'one'
+        'two/test.so'.should actually_require(:not_supported)
       end
     end
 
