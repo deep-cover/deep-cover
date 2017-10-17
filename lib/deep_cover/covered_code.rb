@@ -20,6 +20,14 @@ module DeepCover
       @covered_source = instrument_source
     end
 
+    def path
+      @buffer.name || "(source: '#{@buffer.source[0..20]}...')"
+    end
+
+    def name
+      @buffer.name ? File.basename(@buffer.name) : "(source)"
+    end
+
     def nb_lines
       @nb_lines ||= begin
         lines = buffer.source_lines
