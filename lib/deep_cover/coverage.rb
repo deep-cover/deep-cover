@@ -19,6 +19,10 @@ module DeepCover
       @covered_codes.dup
     end
 
+    def reset
+      @covered_codes = {}
+    end
+
     def line_coverage(filename)
       covered_code(filename).line_coverage
     end
