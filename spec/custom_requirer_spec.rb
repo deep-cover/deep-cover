@@ -275,7 +275,7 @@ module DeepCover
                      one/two/three/test.rb)
         add_load_path 'one/two'
 
-        'test'.should actually_require(:not_found)
+        'test.rb'.should actually_require(:not_found)
       end
 
       it "ignores a not .rb file when path is without .rb" do
@@ -285,6 +285,30 @@ module DeepCover
         add_load_path 'one/two'
 
         'test'.should actually_require(:not_found)
+      end
+
+      it "accepts an absolute .rb file with absolute path without .rb" do
+        file_tree %w(one/two/test.rb)
+
+        File.join(root, 'one/two/test').should actually_require('one/two/test.rb')
+      end
+
+      it "accepts an absolute .rb file with absolute path with .rb" do
+        file_tree %w(one/two/test.rb)
+
+        File.join(root, 'one/two/test.rb').should actually_require('one/two/test.rb')
+      end
+
+      it "ignores an absolute not .rb file with absolute path without .rb" do
+        file_tree %w(one/two/test)
+
+        File.join(root, 'one/two/test').should actually_require(:not_found)
+      end
+
+      it "ignores an absolute not .rb file with absolute path with .rb" do
+        file_tree %w(one/two/test)
+
+        File.join(root, 'one/two/test.rb').should actually_require(:not_found)
       end
 
       it "keeps symlinks when going through load_path" do
