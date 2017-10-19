@@ -11,7 +11,7 @@ module DeepCover
 
       # Default child rewriting rule
       def is_child_statement(child, name=nil)
-        false
+        :if_incompatible
       end
     end
   end

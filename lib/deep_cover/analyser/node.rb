@@ -1,19 +1,16 @@
 module DeepCover
-  class Analyser::Node
-    def initialize(covered_code, allow_uncovered: [], **)
-      @covered_code = covered_code
+  class Analyser::Node < Analyser
+    def initialize(source, allow_uncovered: [], **options)
+      super
       @allow_filters = Array(allow_uncovered).map{|kind| method(:"is_#{kind}?")}
     end
 
-    # Returns a map of Node => runs
-    def results
-      @covered_code.each_node.map do |node|
-        runs = node.execution_count
-        if runs == 0 && @allow_filters.any?{ |f| f[node] }
-          runs = nil
-        end
-        [node, runs]
-      end.to_h
+    def node_runs(node)
+      runs = super
+      if runs == 0 && @allow_filters.any?{ |f| f[node] }
+        runs = nil
+      end
+      runs
     end
 
     # private

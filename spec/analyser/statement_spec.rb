@@ -4,7 +4,7 @@ require 'backports/2.4.0/hash/transform_values'
 module DeepCover
   RSpec.describe Analyser::Statement do
     let(:analyser) {
-      Analyser::Statement.new(covered_code: node.covered_code)
+      Analyser::Statement.new(node)
     }
     let(:results) { analyser.results }
     let(:by_execution) do

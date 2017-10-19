@@ -58,16 +58,20 @@ module DeepCover
       end
       include Converters
 
+      def node_analyser
+        @node_analyser ||= Analyser::Node.new(covered_code, **options)
+      end
+
       def node_runs
-        @node_runs ||= Analyser::Node.new(covered_code, **options).results
+        @node_runs ||= node_analyser.results
       end
 
       def functions
-        @functions ||= Analyser::Function.new(node_runs: node_runs, **options).results
+        @functions ||= Analyser::Function.new(node_analyser, **options).results
       end
 
       def statements
-        @statements ||= Analyser::Statement.new(node_runs: node_runs, **options).results
+        @statements ||= Analyser::Statement.new(node_analyser, **options).results
       end
 
       def branches

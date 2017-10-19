@@ -1,16 +1,12 @@
+require_relative 'subset'
+
 module DeepCover
-  class Analyser::Statement
-    attr_reader :node_runs
-
-    def initialize(node_runs: nil, covered_code: (raise unless node_runs), **options)
-      @node_runs = node_runs || Analyser::Node.new(covered_code, **options).results
-      @ast = @node_runs.first.first.covered_code.covered_ast
-    end
-
+  class Analyser::Statement < Analyser
+    include Analyser::Subset
     # Returns a map of Range => runs
     def results
-      each_statement(@ast).flat_map do |node, sub_statements|
-        shatter(node, sub_statements).map{|r| [r, @node_runs[node]]}
+      each_node.flat_map do |node, sub_statements|
+        shatter(node, sub_statements).map{|r| [r, node_runs(node)]}
       end.to_h
     end
 
@@ -30,33 +26,14 @@ module DeepCover
       proper
     end
 
-    # Produce a simplified AST such that the nodes are either statements,
-    # or sub-statements with execution incompatible with their enclosing {sub-}statement.
-    STATEMENTS = Set[Node::Def, Node::Defs, Node::Module, Node::Class, Node::Sclass]
-    STATEMENT_GROUPINGS = Set[Node::Begin, Node::Kwbegin, Node::Root]
-    # Returns an array of children
-    def each_statement(node, parent_statement_node = node.parent, &block)
-      return to_enum(:each_statement, node, parent_statement_node) unless block_given?
-      keep = if node.loc_hash[:expression].nil?
+    def in_subset?(node, parent)
+      is_statement = node.is_statement
+      if node.loc_hash[:expression].nil?
         false
-      elsif node.is_statement
-        true
+      elsif is_statement != :if_incompatible
+        is_statement
       else
-        !compatible_runs?(@node_runs[parent_statement_node], @node_runs[node])
-      end
-
-      process_subs = ->(parent) do
-        node.children_nodes.flat_map do |c|
-          each_statement(c, parent, &block)
-        end
-      end
-
-      if keep
-        s = process_subs[node]
-        yield node, s
-        [node]
-      else
-        process_subs[parent_statement_node]
+        !compatible_runs?(node_runs(parent), node_runs(node))
       end
     end
 

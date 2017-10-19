@@ -9,7 +9,7 @@ module DeepCover
       foo(100)
       RUBY
     let(:analyser) {
-      Analyser::Node.new(node.covered_code, allow_uncovered: allow_uncovered)
+      Analyser::Node.new(node, allow_uncovered: allow_uncovered)
     }
     let(:results) { analyser.results }
     let(:not_executed) { results.select{|_node, runs| runs == 0}.keys }
