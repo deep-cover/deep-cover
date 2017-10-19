@@ -34,6 +34,7 @@
     %{world}
     %q{w#{0}rld}
     %Q{w#{0}rld}
+    "hello#$1"
 
 #### Raising
     dummy_method "oo#{raise}ps#{:never}" rescue nil

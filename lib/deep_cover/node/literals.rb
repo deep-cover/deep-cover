@@ -50,7 +50,7 @@ module DeepCover
 
     # Dynamic
     def self.has_evaluated_segments
-      has_extra_children constituents: [Str, Begin, Ivar, Cvar, Gvar, Dstr]
+      has_extra_children constituents: [Str, Begin, Ivar, Cvar, Gvar, Dstr, NthRef]
     end
     class DynamicLiteral < Node
       def executed_loc_keys
