@@ -23,7 +23,7 @@ module DeepCover
     end
 
     def custom_requirer
-      @custom_requirer = CustomRequirer.new
+      @custom_requirer ||= CustomRequirer.new
     end
   end
 end
