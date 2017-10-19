@@ -23,6 +23,17 @@
     (foo.bar ||= 42) rescue nil
 #>           xxx
 
+### []=
+    foo = []
+    foo[1] = 2
+    foo[1] ||= 2
+#>             x
+    foo[2] ||= 3
+    foo[2] &&= 4
+    foo[3] &&= 2
+#>             x
+
+
 #### Constant (!Jruby)
 
     OR_EQUAL ||= 42
