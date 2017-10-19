@@ -26,6 +26,24 @@ module DeepCover
     end
   end
 
+  class CoveredCode
+    # For now, when an overlap is found, just open a binding.pry to make fixing it easier.
+    def check_node_overlap!
+      node_to_positions = {}
+      each_node do |node|
+        node.proper_range.each do |position|
+          if node_to_positions[position]
+            already = node_to_positions[position]
+            puts "There is a proper_range overlap between #{node} and #{already}"
+            puts "Overlapping: #{already.proper_range & node.proper_range}"
+            binding.pry
+          end
+          node_to_positions[position] = node
+        end
+      end
+    end
+  end
+
   module Tools
     ANSWER = /^#>/
     FULLY_EXECUTED = /^(-* [ -]*|)$/

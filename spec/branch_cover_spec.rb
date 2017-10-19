@@ -12,7 +12,7 @@ RSpec::Matchers.define :have_correct_branch_coverage do |filename, lineno|
     else
       answers[lines.size - 1] = DeepCover::Tools::NOT_EXECUTED
     end
-
+    @covered_code.check_node_overlap!
     cov = @covered_code.branch_cover
     errors = cov.zip(answers, lines).each_with_index.reject do |(a, expected, line), i|
       actual = DeepCover::Tools.strip_when_unimportant(line, a)
