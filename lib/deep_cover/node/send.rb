@@ -3,15 +3,16 @@ require_relative 'literals'
 module DeepCover
   class Node
     class MethodName < Node
-      include Wrapper
       has_child name: Symbol
 
       def initialize(name, parent: raise, **kwargs)
-        super(parent, parent: parent, base_children: [name], **kwargs)
+        super(parent, **kwargs, parent: parent, base_children: [name])
       end
 
       def loc_hash
-        {expression: parent.loc_hash[:expression]}
+        # Expression is used in the rewriting
+        # if selector_end is present, then this won't be needed
+        {expression: parent.loc_hash[:selector_begin]}
       end
 
       def executable?
@@ -22,8 +23,8 @@ module DeepCover
     class Send < Node
       check_completion
       has_child receiver: [Node, nil]
-      has_child method_name_wrapper: {Symbol => MethodName}
-      has_extra_children arguments: Node, rewrite: :add_parentheses
+      has_child method_name_wrapper: {Symbol => MethodName}, rewrite: :add_opening_parentheses
+      has_extra_children arguments: Node, rewrite: :add_closing_parentheses
       executed_loc_keys :dot, :selector_begin, :selector_end, :operator
 
       def method_name
@@ -43,6 +44,32 @@ module DeepCover
         end
 
         hash
+      end
+
+      # Only need to add them to deal with ambiguous cases where a method is hidden by a local. Ex:
+      #   raise TypeError, 'hello'  #=> Works
+      #   raise (TypeError), 'hello'  #=> Simplification of what DeepCover generates, still works
+      #   raise = 1; raise TypeError, 'hello'  #=> works
+      #   raise = 1; raise (TypeError), 'hello'  #=> syntax error.
+      #   raise = 1; raise((TypeError), 'hello'0  #=> works
+      def add_parentheses?
+        return if arguments.empty?
+        # No ambiguity if there is a receiver
+        return if receiver
+        # Already has parentheses
+        return if self.loc_hash[:begin]
+        true
+      end
+
+      def add_opening_parentheses
+        return unless add_parentheses?
+        "%{node}("
+      end
+
+      def add_closing_parentheses(child)
+        return unless add_parentheses?
+        return unless child.index == children.size - 1
+        "%{node})"
       end
     end
 

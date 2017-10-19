@@ -27,3 +27,17 @@
 ### Multiple assignment
     foo = []
     foo[1], foo[2] = 1,2
+
+### .foo=
+    a = {}
+    def a.foo=(v); end
+    a.foo = 1
+
+### With overwriting local variable
+    raise = 1
+    raise 'hello' rescue nil
+    raise TypeError rescue nil
+    raise TypeError rescue nil
+    raise TypeError, 'hello' rescue nil
+    raise(TypeError, 'hello') rescue nil
+    raise (TypeError, 'hello') rescue nil
