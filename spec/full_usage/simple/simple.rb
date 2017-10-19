@@ -38,11 +38,15 @@ begin
   test_require('beside_simple')
   test_require('./relative_beside_simple')
   test_require('subdir/deeper')
+  autoload :ToAutoload, 'from_autoload'
+  _foo = ::ToAutoload
 
-  expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb)
+  expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb from_autoload.rb)
   if $executed_files != expected_executed_files
     fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files}\nGot:      #{$executed_files}"
   end
+
+
 
   begin
     require 'that_is_missing_huh'

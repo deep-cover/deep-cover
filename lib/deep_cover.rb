@@ -7,7 +7,15 @@ module DeepCover
 
   class << self
     def start
+      return if @started
+      if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+        # No issues with autoload in jruby, so no need to override it!
+      else
+        require_relative 'deep_cover/core_ext/autoload_overrides'
+        autoload_tracker.initialize_autoloaded_paths
+      end
       require_relative 'deep_cover/core_ext/require_overrides'
+      @started = true
     end
 
     def line_coverage(filename)
@@ -24,6 +32,10 @@ module DeepCover
 
     def custom_requirer
       @custom_requirer ||= CustomRequirer.new
+    end
+
+    def autoload_tracker
+      @autoload_tracker ||= AutoloadTracker.new
     end
   end
 end
