@@ -90,11 +90,13 @@ module DeepCover
     end
 
     def covered_ast
-      @covered_ast ||= begin
+      root.main
+    end
+
+    def root
+      @root ||= begin
         ast = Parser::CurrentRuby.new.parse(@buffer)
-        return nil unless ast
-        root = Node::Root.new(ast, self)
-        root.main
+        Node::Root.new(ast, self)
       end
     end
 

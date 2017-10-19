@@ -1,7 +1,7 @@
 module DeepCover
   class Node::Root < Node
     has_tracker :root
-    has_child main: Node,
+    has_child main: [Node, nil],
               flow_entry_count: :root_tracker_hits,
               is_statement: true,
               rewrite: -> {
