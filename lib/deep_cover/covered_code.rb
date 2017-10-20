@@ -53,7 +53,7 @@ module DeepCover
 
     def line_coverage(**options)
       must_have_executed
-      LineCoverageInterpreter.new(self, options).generate_results
+      Analyser::PerLine.new(self, **options).results
     end
 
     def to_istanbul(**options)

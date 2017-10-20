@@ -1,14 +1,9 @@
-
 module DeepCover
-  class LineCoverageInterpreter
-    def initialize(covered_code, **options)
-      @covered_code = covered_code
-      @options = options
-    end
-
-    def generate_results
-      line_hits = Array.new(@covered_code.nb_lines)
-      @covered_code.each_node do |node|
+  class Analyser::PerLine < Analyser
+    # Returns an array of runs, one per line.
+    def results
+      line_hits = Array.new(covered_code.nb_lines)
+      covered_code.each_node do |node|
         if node.executable?
           node.executed_locs.each do |loc|
             lineno = loc.line - 1
