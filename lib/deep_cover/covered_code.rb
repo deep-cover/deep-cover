@@ -61,9 +61,9 @@ module DeepCover
       Reporter::Istanbul.new(self, **options).convert
     end
 
-    def branch_cover
+    def branch_cover(**options)
       must_have_executed
-      BranchCoverageInterpreter.new(self).generate_results
+      Analyser::PerChar.new(self, **options).results
     end
 
     def nb
