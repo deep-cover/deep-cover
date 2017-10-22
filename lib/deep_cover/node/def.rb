@@ -6,7 +6,9 @@ module DeepCover
     has_tracker :method_call
     has_child method_name: Symbol
     has_child signature: Args
-    has_child body: [Node, nil], rewrite: '%{method_call_tracker};%{node};',
+    has_child body: Node,
+      rewrite: '%{method_call_tracker};nil;%{node};',
+      can_be_empty: -> { base_node.loc.end.begin },
       is_statement: true,
       flow_entry_count: :method_call_tracker_hits
     executed_loc_keys :keyword, :name, :end
@@ -22,7 +24,9 @@ module DeepCover
     has_child singleton: Node, rewrite: '(%{node})'
     has_child method_name: Symbol
     has_child signature: Args
-    has_child body: [Node, nil], rewrite: '%{method_call_tracker};%{node};',
+    has_child body: Node,
+      rewrite: '%{method_call_tracker};nil;%{node};',
+      can_be_empty: -> { base_node.loc.end.begin },
       is_statement: true,
       flow_entry_count: :method_call_tracker_hits
     executed_loc_keys :keyword, :name, :operator, :end

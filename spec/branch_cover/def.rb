@@ -14,6 +14,12 @@
     module Frozen; freeze; def foo; end; 42; end rescue nil
 #>                                       xx
 
+#### Empty body
+    def empty_method; end
+    assert_equal nil, empty_method
+    assert_equal DeepCover::Node::EmptyBody, current_ast[0].body.class
+    assert_equal 1, current_ast[0].body.execution_count
+
 ### Singleton def
 #### Simple
     o = {}; def o.some_method; 42; end
@@ -46,3 +52,7 @@
     module Frozen; freeze; end;
     (def Frozen.foo; end; 42) rescue nil
 #>                        xx
+
+#### Empty body
+    def self.no_body; end
+    assert_equal nil, no_body
