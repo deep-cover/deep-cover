@@ -52,6 +52,10 @@ module DeepCover
           nodes_mismatches(nodes, types)
         end
 
+        def min_children
+          self::CHILDREN.values.grep(Integer).size
+        end
+
         private
 
         def expected_types(nodes)
