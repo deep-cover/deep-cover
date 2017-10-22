@@ -3,6 +3,7 @@ module DeepCover
     module ExecutionLocation
       def self.included(base)
         base.extend ClassMethods
+        base.has_child_handler('%{name}_executed_loc_keys')
       end
 
       module ClassMethods
@@ -20,8 +21,17 @@ module DeepCover
         loc_hash.keys - [:expression]
       end
 
+      def child_executed_loc_keys(_child, _child_name)
+        nil
+      end
+
       def executed_locs
-        loc_hash.values_at(*executed_loc_keys).compact
+        if (keys = parent.child_executed_loc_keys(self))
+          inherited = parent.loc_hash.values_at(*keys)
+        end
+        [  *loc_hash.values_at(*executed_loc_keys),
+           *inherited
+        ].compact
       end
 
       def loc_hash
