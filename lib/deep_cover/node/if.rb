@@ -12,7 +12,7 @@ module DeepCover
       end
 
       def loc_hash
-        {else: parent.loc_hash[:else], colon: parent.loc_hash[:colon]}
+        {else: parent.loc_hash[:else], colon: parent.loc_hash[:colon], expression: body && body.loc_hash[:expression] }
       end
 
       def executed_loc_keys
