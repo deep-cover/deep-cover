@@ -31,7 +31,7 @@ module DeepCover
       def executed_loc_keys
         keys = [:expression, :heredoc_body, :heredoc_end]
 
-        exp = loc_hash[:expression]
+        exp = expression
         keys.delete(:expression) if exp && exp.source !~ /\S/
 
         hd_body = loc_hash[:heredoc_body]

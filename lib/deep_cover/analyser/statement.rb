@@ -15,8 +15,8 @@ module DeepCover
     # returns a list of [proper_range, node], where
     # the nodes may be repeating, the proper_ranges are non-intersecting but non ordered.
     def shatter(node, sub_statements)
-      subs = sub_statements.map{|n| n.loc_hash[:expression]}.compact
-      range = node.loc_hash[:expression]
+      subs = sub_statements.map{|n| n.expression}.compact
+      range = node.expression
       subs.reject!{|r| r.disjoint?(range) } # This is the case iff using heredocs
       proper = range.split(*subs)
       proper.map!{|r| r.lstrip(/(\s*#.*\n)+/) }  # Strip comment blocks
@@ -28,7 +28,7 @@ module DeepCover
 
     def in_subset?(node, parent)
       is_statement = node.is_statement
-      if node.loc_hash[:expression].nil?
+      if node.expression.nil?
         false
       elsif is_statement != :if_incompatible
         is_statement

@@ -87,6 +87,10 @@ module DeepCover
       @loc_hash ||= base_node.location.to_hash
     end
 
+    def expression
+      loc_hash[:expression]
+    end
+
     # Macro to define the executed_loc_keys
     def self.executed_loc_keys(*loc_keys)
       # #flatten allows passing an empty array to be explicit

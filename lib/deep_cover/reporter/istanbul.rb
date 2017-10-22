@@ -31,7 +31,7 @@ module DeepCover
 
         def convert_block(node)
           decl = node.loc_hash[:begin]
-          if (args = node.args.loc_hash[:expression])
+          if (args = node.args.expression)
             decl = decl.join(args) rescue binding.pry
           end
           _convert_function(node, '(block)', decl)
@@ -47,10 +47,10 @@ module DeepCover
 
         private
         def _convert_function(node, name, decl)
-          loc = node.body ? node.body.loc_hash[:expression] : decl.end
+          loc = node.body ? node.body.expression : decl.end
           {
             name: name,
-            line: node.loc_hash[:expression].line,
+            line: node.expression.line,
             decl: convert_range(decl),
             loc:  convert_range(loc),
           }
