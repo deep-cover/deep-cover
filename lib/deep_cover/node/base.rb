@@ -11,6 +11,7 @@ module DeepCover
     include FlowAccounting
     include IsStatement
     include ExecutionLocation
+    include ChildCanBeEmpty
 
     attr_reader :index, :parent, :children, :base_node
 
