@@ -14,6 +14,10 @@ end
 def dummy_method(*)
 end
 
+def current_ast
+  DeepCover::Tools.current_ast
+end
+
 def assert(check)
   raise "assert failed" if check == false
   raise "bad assert, expected true/false, got #{check.inspect}" unless check == true
@@ -22,7 +26,7 @@ end
 module DeepCover
   class Node
     def self.[](source)
-      CoveredCode.new(source: source).execute_code.covered_ast
+      Tools.current_ast = CoveredCode.new(source: source).execute_code.covered_ast
     end
   end
 
@@ -56,6 +60,7 @@ module DeepCover
     CONVERT[nil] = '- '
 
     extend self
+    attr_accessor :current_ast
 
     def format(*results, filename: nil, source: nil)
       source ||= File.read(filename)
@@ -203,6 +208,7 @@ module DeepCover
       begin
         DeepCover::Misc.with_warnings(nil) do
           if to_execute.is_a?(CoveredCode)
+            self.current_ast = to_execute.covered_ast
             to_execute.execute_code
           else
             to_execute.call
