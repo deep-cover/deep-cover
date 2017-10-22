@@ -29,6 +29,13 @@ module DeepCover
           dummy_method
         end
         RUBY
+      let(:branch_node)   { Node[<<-RUBY] }
+        if false
+          :foo
+        else
+          :bar
+        end
+        RUBY
       let(:def_node_no_args)    { Node['def foo;end'] }
       let(:block_node)          { Node['1.times { |arg = 42| dummy_method }'] }
       let(:lambda_node)         { Node['->(arg = 42) { dummy_method }'] }
@@ -82,6 +89,20 @@ module DeepCover
       it 'converts trivial block nodes' do
         convert_block(block_node_no_args)[:decl].should == {
           start: {line: 1, column: 8}, end: {line: 1, column: 8},
+        }
+      end
+
+      # Subject to change; istanbul seems to output the same location for loc & locations...
+      it 'converts branches' do
+        loc = {start: {line: 1, column:  8}, end: {line: 5, column: 10}}
+        convert_branch(branch_node).should == {
+          line: 1,
+          type: :if,
+          loc: loc,
+          locations: [
+            loc,
+            loc,
+          ],
         }
       end
     end
