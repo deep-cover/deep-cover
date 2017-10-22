@@ -7,23 +7,14 @@ module DeepCover
       has_tracker :entered_body
       has_child exception: [Node::Array, nil]
       has_child assignment: [Lvasgn, nil], flow_entry_count: :entered_body_tracker_hits
-      has_child body: [Node, nil],
+      has_child body: Node,
+                can_be_empty: -> { base_node.loc.expression.succ },
                 flow_entry_count: :entered_body_tracker_hits,
                 is_statement: true,
-                rewrite: '((%{entered_body_tracker};%{node}))'
+                rewrite: '((%{entered_body_tracker};nil;%{node}))'
 
       def is_statement
         false
-      end
-
-      def rewrite
-        return if body
-        '%{node};%{entered_body_tracker};nil'
-      end
-
-      def flow_completion_count
-        return body.flow_completion_count if body
-        execution_count
       end
 
       def execution_count
@@ -32,10 +23,12 @@ module DeepCover
     end
 
     class Rescue < Node
-      has_child watched_body: [Node, nil],
+      has_child watched_body: Node,
+                can_be_empty: -> { base_node.loc.expression.begin },
                 is_statement: true
       has_extra_children resbodies: Resbody
-      has_child else: [Node, nil],
+      has_child else: Node,
+                can_be_empty: -> { base_node.loc.expression.succ },
                 flow_entry_count: :execution_count,
                 is_statement: true
       executed_loc_keys :else
@@ -45,16 +38,14 @@ module DeepCover
       end
 
       def flow_completion_count
-        return flow_entry_count unless watched_body
-        resbodies.map(&:flow_completion_count).inject(0, :+) + (self.else || watched_body).flow_completion_count
+        resbodies.map(&:flow_completion_count).inject(0, :+) + self.else.flow_completion_count
       end
 
       def execution_count
-        watched_body ? watched_body.flow_completion_count : flow_entry_count
+        watched_body.flow_completion_count
       end
 
       def resbodies_flow_entry_count(child)
-        return 0 unless watched_body
         prev = child.previous_sibling
 
         if prev.equal? watched_body
@@ -67,20 +58,16 @@ module DeepCover
     end
 
     class Ensure < Node
-      has_child body: [Node, nil],
+      has_child body: Node,
+                can_be_empty: -> { base_node.loc.expression.begin },
                 is_statement: true
-      has_child ensure: [Node, nil],
+      has_child ensure: Node,
+                can_be_empty: -> { base_node.loc.expression.succ },
                 is_statement: true,
                 flow_entry_count: -> { body.flow_entry_count }
 
-      def execution_count
-        flow_entry_count
-      end
-
       def flow_completion_count
-        return body.flow_completion_count if body
-        return self.ensure.flow_completion_count if self.ensure
-        execution_count
+        body.flow_completion_count
       end
     end
   end
