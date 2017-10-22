@@ -10,6 +10,7 @@ module DeepCover
     extend CheckCompletion
     include FlowAccounting
     include IsStatement
+    include ExecutionLocation
 
     attr_reader :index, :parent, :children, :base_node
 
@@ -22,12 +23,6 @@ module DeepCover
     end
 
     ### High level API for coverage purposes
-
-    # Returns an array of character numbers (in the original buffer) that
-    # pertain exclusively to this node (and thus not to any children).
-    def proper_range
-      executed_locs.map(&:to_a).inject([], :+).uniq rescue binding.pry
-    end
 
     def [](v)
       children[v]
@@ -81,35 +76,6 @@ module DeepCover
     def type
       return base_node.type if base_node
       self.class.name.split('::').last.to_sym
-    end
-
-    def loc_hash
-      @loc_hash ||= base_node.location.to_hash
-    end
-
-    def expression
-      loc_hash[:expression]
-    end
-
-    def source
-      expression.source if expression
-    end
-
-    # Macro to define the executed_loc_keys
-    def self.executed_loc_keys(*loc_keys)
-      # #flatten allows passing an empty array to be explicit
-      loc_keys = loc_keys.flatten
-      define_method :executed_loc_keys do
-        loc_keys
-      end
-    end
-
-    def executed_loc_keys
-      loc_hash.keys - [:expression]
-    end
-
-    def executed_locs
-      loc_hash.values_at(*executed_loc_keys).compact
     end
 
     def each_node(order = :postorder, &block)
