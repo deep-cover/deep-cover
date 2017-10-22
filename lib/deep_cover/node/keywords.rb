@@ -63,7 +63,7 @@ module DeepCover
     end
 
     class Defined < Node
-      has_child expression: {Parser::AST::Node => NeverEvaluated}
+      has_child code: {Parser::AST::Node => NeverEvaluated}
       # TODO: test
     end
 
