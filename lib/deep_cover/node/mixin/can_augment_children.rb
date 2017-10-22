@@ -10,7 +10,10 @@ module DeepCover
       # Caution: receiver is not fully constructed since it is also being augmented.
       #          don't call `children`
       def augment_children(child_base_nodes)
-        # Skip children that aren't node themselves (e.g. the `method` child of a :def node)
+        missing = self.class.min_children - child_base_nodes.size
+        if missing > 0
+          child_base_nodes = [*child_base_nodes, *Array.new(missing)]
+        end
         child_base_nodes.map.with_index do |child, child_index|
           child_name = self.class.child_index_to_name(child_index, child_base_nodes.size) rescue binding.pry
 
