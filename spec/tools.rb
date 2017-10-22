@@ -23,6 +23,10 @@ def assert(check)
   raise "bad assert, expected true/false, got #{check.inspect}" unless check == true
 end
 
+def assert_equal(expected, actual)
+  raise "assert failed: expected #{expected.inspect}, actual: #{actual.inspect}" if expected != actual
+end
+
 module DeepCover
   class Node
     def self.[](source)
