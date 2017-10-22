@@ -91,6 +91,10 @@ module DeepCover
       loc_hash[:expression]
     end
 
+    def source
+      expression.source if expression
+    end
+
     # Macro to define the executed_loc_keys
     def self.executed_loc_keys(*loc_keys)
       # #flatten allows passing an empty array to be explicit
