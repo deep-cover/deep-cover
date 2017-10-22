@@ -57,7 +57,7 @@ module DeepCover
         return 0 unless watched_body
         prev = child.previous_sibling
 
-        if prev.index == WATCHED_BODY
+        if prev.equal? watched_body
           prev.flow_entry_count - prev.flow_completion_count
         else # RESBODIES
           # TODO is this okay?
