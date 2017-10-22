@@ -3,7 +3,9 @@ class RSpec::Core::ExampleGroup
     Dir.glob(glob).sort.each_with_index do |fn, i|
       break if max_files && i >= max_files
 
-      describe File.basename(fn, '.rb') do
+      index = 0
+      spec = File.basename(fn, '.rb')
+      describe spec do
         example_groups = DeepCover::Tools::AnnotatedExamplesParser.process(File.read(fn).lines)
         example_groups.each do |section, examples|
           context(section || '(General)') do
@@ -16,7 +18,8 @@ class RSpec::Core::ExampleGroup
                     when /\(!Jruby/i
                       :skip if RUBY_PLATFORM == 'java'
                     end
-              send(msg || :it, title || '(General)') { self.instance_exec(fn, lines, lineno, &block) }
+              send(msg || :it, "#{title || '(General)'} [#{spec} #{index}]") { self.instance_exec(fn, lines, lineno, &block) }
+              index += 1
             end
           end
         end
