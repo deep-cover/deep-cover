@@ -18,6 +18,7 @@ module DeepCover
           RUBY
         it { should =~ /"statementMap":/ }
         it { should =~ /"s":/ }
+        it { should include '"b":{"1":[0,1]}' }
       end
     end
 

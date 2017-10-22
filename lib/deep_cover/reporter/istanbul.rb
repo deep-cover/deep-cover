@@ -86,13 +86,17 @@ module DeepCover
       end
 
       def branches
-        {}
+        @branches ||= Analyser::Branch.new(node_analyser, **options).results
       end
+
       def branch_map
-        []
+        branches.map do |node, branches_runs|
+          convert_branch(node, branches_runs.keys)
+        end
       end
+
       def branch_runs
-        []
+        branches.values.map(&:values)
       end
 
       def statement_map
