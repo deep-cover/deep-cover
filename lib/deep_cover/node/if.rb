@@ -44,7 +44,7 @@ module DeepCover
       executed_loc_keys :keyword, :question
 
       def remap_branch(child, child_name)
-        is_unless = loc_hash[:keyword] && loc_hash[:keyword].source == 'unless'
+        is_unless = style == :unless
         Else if child_name == :true_branch && is_unless || child_name == :false_branch && !is_unless
       end
 
@@ -57,6 +57,12 @@ module DeepCover
 
       def execution_count
         condition.flow_completion_count
+      end
+
+      # returns on of %i[ternary if unless elsif]
+      def style
+        keyword = loc_hash[:keyword]
+        keyword ? keyword.source.to_sym : :ternary
       end
     end
   end
