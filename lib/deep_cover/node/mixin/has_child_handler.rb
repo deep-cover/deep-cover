@@ -29,7 +29,7 @@ module DeepCover
             module #{const_name}                                     # module RewriteHandler
               module ClassMethods                                    #   module ClassMethods
                 def has_child(#{action}: nil, **h)                   #     def has_child(rewrite: nil, **h)
-                  name, types = h.first                              #       name, types = h.first
+                  name, _types = h.first                             #       name, _types = h.first
                   define_child_handler(#{template.inspect},          #       define_child_handler('rewrite_%{child}',
                     name, #{action})                                 #         name, rewrite)
                   super(**h)                                         #       super(**h)
