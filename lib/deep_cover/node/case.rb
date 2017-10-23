@@ -46,7 +46,7 @@ module DeepCover
       has_extra_children matches: { splat: WhenSplatCondition, Parser::AST::Node => WhenCondition }
       has_child body: Node,
         can_be_empty: -> { base_node.loc.expression.succ },
-        rewrite: ";%{body_entry_tracker};nil;%{node}",
+        rewrite: ";%{body_entry_tracker};%{local}=nil;%{node}",
         is_statement: true,
         flow_entry_count: :body_entry_tracker_hits
 
@@ -70,7 +70,7 @@ module DeepCover
       has_extra_children whens: When
       has_child else: Node,
                 can_be_empty: -> { base_node.loc.end.begin },
-                rewrite: -> { "#{'else;' unless has_else?}((%{else_entry_tracker};nil;%{node}))" },
+                rewrite: -> { "#{'else;' unless has_else?}((%{else_entry_tracker};%{local}=nil;%{node}))" },
                 executed_loc_keys: [:else],
                 is_statement: true,
                 flow_entry_count: :else_entry_tracker_hits

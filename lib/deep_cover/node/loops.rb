@@ -7,7 +7,7 @@ module DeepCover
       has_child body: Node,
         can_be_empty: -> { base_node.loc.end.begin },
         flow_entry_count: :body_tracker_hits,
-        rewrite: '((%{body_tracker};nil;%{node}))'
+        rewrite: '((%{body_tracker};%{local}=nil;%{node}))'
       check_completion
 
       def execution_count
