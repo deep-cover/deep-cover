@@ -32,8 +32,9 @@ module DeepCover
       has_tracker :body
       has_child call: {send: SendWithBlock, zsuper: SuperWithBlock, super: SuperWithBlock}
       has_child args: Args
-      has_child body: [Node, nil],
-                rewrite: '%{body_tracker};%{node}',
+      has_child body: Node,
+                can_be_empty: -> { base_node.loc.begin.end },
+                rewrite: '%{body_tracker};nil;%{node}',
                 flow_entry_count: :body_tracker_hits,
                 is_statement: true
 

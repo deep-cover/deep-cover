@@ -41,3 +41,6 @@
 #>  ---x
       to_s
 #>X
+
+### Empty Block
+  1.times{}
