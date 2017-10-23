@@ -38,6 +38,10 @@ module DeepCover
                 flow_entry_count: :body_tracker_hits,
                 is_statement: true
       executed_loc_keys # none
+
+      def children_nodes_in_flow_order
+        [call, args] # Similarly to a def, the body is actually not part of the flow of this node...
+      end
     end
 
     # &foo
