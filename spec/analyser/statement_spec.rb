@@ -10,7 +10,7 @@ module DeepCover
     let(:by_execution) do
       results
         .sort_by{|range, _runs| range.begin_pos }
-        .group_by{|_range, runs| runs != 0 }
+        .group_by{|_range, runs| runs && runs != 0 }
         .transform_values{|ranges_run_pairs| ranges_run_pairs.map(&:first)}
     end
     let(:lines_by_execution) { by_execution.transform_values{|ranges| ranges.map(&:line)} }
