@@ -14,5 +14,8 @@ module DeepCover
       {expression: @position}
     end
 
+    def is_statement
+      false
+    end
   end
 end
