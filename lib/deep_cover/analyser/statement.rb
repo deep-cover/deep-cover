@@ -12,6 +12,7 @@ module DeepCover
 
     private
 
+    IGNORE_KEYWORDS = %w[do begin end].to_set
     # returns a list of [proper_range, node], where
     # the nodes may be repeating, the proper_ranges are non-intersecting but non ordered.
     def shatter(node, sub_statements)
@@ -22,7 +23,7 @@ module DeepCover
       proper.map!{|r| r.lstrip(/(\s*#.*\n)+/) }  # Strip comment blocks
       proper.map!{|r| r.strip(/[^a-zA-Z0-9'"\[\]{}_:$]*/) } # Ignore whitespace & punctuation
       proper.reject!(&:empty?)
-      proper.reject!{|r| r.source == 'end' || r.source == '}'}
+      proper.reject!{|r| IGNORE_KEYWORDS.include?(r.source) }
       proper
     end
 

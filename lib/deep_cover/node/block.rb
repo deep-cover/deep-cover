@@ -37,10 +37,7 @@ module DeepCover
                 rewrite: '%{body_tracker};%{local}=nil;%{node}',
                 flow_entry_count: :body_tracker_hits,
                 is_statement: true
-
-      def executable?
-        false
-      end
+      executed_loc_keys # none
     end
 
     # &foo

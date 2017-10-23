@@ -89,5 +89,22 @@ module DeepCover
         RUBY
       it { should == {true => [1, 2, 4]} }
     end
+
+    context 'With blocks' do
+      let(:node){ Node[<<-RUBY] }
+        def foo
+          1.times do
+            2.times do
+              42
+            end
+          end
+        end
+        0.times do
+          42
+        end
+        foo
+        RUBY
+      it { should == {true => [1, 2, 3, 4, 8, 11], false => [9]} }
+    end
   end
 end
