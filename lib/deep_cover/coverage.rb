@@ -49,7 +49,7 @@ module DeepCover
       path = Pathname.new(dir).expand_path.join(name)
       path.mkpath
       path.each_child(&:delete)
-      path.join('deep_cover.json').write(to_istanbul(**options).to_json)
+      path.join('deep_cover.json').write(JSON.pretty_generate(to_istanbul(**options)))
       path
     end
 
