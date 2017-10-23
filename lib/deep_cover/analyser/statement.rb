@@ -5,27 +5,12 @@ module DeepCover
     include Analyser::Subset
     # Returns a map of Range => runs
     def results
-      each_node.flat_map do |node, sub_statements|
-        shatter(node, sub_statements).map{|r| [r, node_runs(node)]}
+      each_node.map do |node, _sub_statements|
+        [node.expression, node_runs(node)]
       end.to_h
     end
 
     private
-
-    IGNORE_KEYWORDS = %w[do begin end].to_set
-    # returns a list of [proper_range, node], where
-    # the nodes may be repeating, the proper_ranges are non-intersecting but non ordered.
-    def shatter(node, sub_statements)
-      subs = sub_statements.map{|n| n.expression}.compact
-      range = node.expression
-      subs.reject!{|r| r.disjoint?(range) } # This is the case iff using heredocs
-      proper = range.split(*subs)
-      proper.map!{|r| r.lstrip(/(\s*#.*\n)+/) }  # Strip comment blocks
-      proper.map!{|r| r.strip(/[^a-zA-Z0-9'"\[\]{}_:$]*/) } # Ignore whitespace & punctuation
-      proper.reject!(&:empty?)
-      proper.reject!{|r| IGNORE_KEYWORDS.include?(r.source) }
-      proper
-    end
 
     def in_subset?(node, parent)
       is_statement = node.is_statement
