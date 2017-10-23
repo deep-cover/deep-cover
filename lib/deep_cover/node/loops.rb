@@ -18,12 +18,10 @@ module DeepCover
     class Until < Node
       has_tracker :body
       has_child condition: Node, rewrite: '((%{node})) || (%{body_tracker};false)'
-      has_child body: [Node, nil], flow_entry_count: :body_tracker_hits
+      has_child body: Node,
+                can_be_empty: -> { base_node.loc.end.begin },
+                flow_entry_count: :body_tracker_hits
       check_completion
-
-      def executable?
-        body
-      end
 
       def execution_count
         # TODO: while this distringuishes correctly 0 vs >0, the number return is often too high
@@ -47,12 +45,10 @@ module DeepCover
     class While < Node
       has_tracker :body
       has_child condition: Node, rewrite: '((%{node})) && %{body_tracker}'
-      has_child body: [Node, nil], flow_entry_count: :body_tracker_hits
+      has_child body: Node,
+                can_be_empty: -> { base_node.loc.end.begin },
+                flow_entry_count: :body_tracker_hits
       check_completion
-
-      def executable?
-        body
-      end
 
       def execution_count
         # TODO: while this distringuishes correctly 0 vs >0, the number return is often too high

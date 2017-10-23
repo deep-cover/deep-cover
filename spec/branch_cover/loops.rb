@@ -51,6 +51,10 @@
       i += 1
     end
 
+#### Empty body
+    while false
+    end
+
 #### With break
     while true
       "here"
@@ -107,6 +111,10 @@
     until i >= 5
       "here"
       i += 1
+    end
+
+#### Empty
+    until true
     end
 
 #### With break
