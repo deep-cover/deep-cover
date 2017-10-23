@@ -45,13 +45,11 @@ module DeepCover
       # include Branch
       has_tracker :body_entry
       has_extra_children matches: { splat: WhenSplatCondition, Parser::AST::Node => WhenCondition }
-      has_child body: [Node, nil], rewrite: "%{body_entry_tracker};%{node}",
+      has_child body: Node,
+        can_be_empty: -> { base_node.loc.expression.succ },
+        rewrite: ";%{body_entry_tracker};nil;%{node}",
         is_statement: true,
         flow_entry_count: :body_entry_tracker_hits
-
-      def rewrite
-        "%{node};%{body_entry_tracker};nil" unless body
-      end
 
       def flow_entry_count
         matches.first.flow_entry_count
@@ -62,11 +60,7 @@ module DeepCover
       end
 
       def flow_completion_count
-        body_completion_count + next_sibling.flow_entry_count
-      end
-
-      def body_completion_count
-        body ? body.flow_completion_count : body_entry_tracker_hits
+        body.flow_completion_count + next_sibling.flow_entry_count
       end
     end
 
@@ -80,7 +74,7 @@ module DeepCover
 
       def flow_entry_count
         return entry_tracker_hits if body
-        parent.flow_completion_count - parent.children[1...index].map(&:body_completion_count).inject(0, :+)
+        parent.flow_completion_count - parent.children[1...index].map(&:body).map(&:flow_completion_count).inject(0, :+)
       end
 
       def loc_hash
