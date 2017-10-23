@@ -44,7 +44,6 @@ RSpec.describe 'branch cover' do
     visited = Set.new
     Dir.glob('./spec/branch_cover/*.rb') do |filename|
       ast = DeepCover::CoveredCode.new(path: filename).covered_ast
-      next unless ast
       ast.each_node do |node|
         visited << node.class
       end

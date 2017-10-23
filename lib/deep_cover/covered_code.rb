@@ -101,12 +101,10 @@ module DeepCover
     end
 
     def each_node(*args, &block)
-      return unless covered_ast
       covered_ast.each_node(*args, &block)
     end
 
     def instrument_source
-      return '' unless covered_ast
       rewriter = ::Parser::Source::Rewriter.new(@buffer)
       covered_ast.each_node do |node|
         prefix, suffix = node.rewrite_prefix_suffix
