@@ -3,6 +3,10 @@
       "here"
     end
 
+#### With empty body
+    for i in [1,2,3]
+    end
+
 #### With multiple assignments
     for i, j in [[1,2], [3,4]]
       "here"
