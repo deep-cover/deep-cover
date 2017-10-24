@@ -89,11 +89,6 @@ module DeepCover
       self
     end
 
-    def each_branch(order = :postorder, &block)
-      return to_enum :each_branch, order unless block_given?
-      each_node(order) { |node| yield node if node.is_a? Branch }
-    end
-
     def fancy_type
       class_name = self.class.to_s.gsub(/^DeepCover::/,'').gsub(/^Node::/, '')
       t = type.to_s
