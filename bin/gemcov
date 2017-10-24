@@ -33,7 +33,7 @@ module DeepCover
     def patch_ruby_file(ruby_file)
       content = File.read(ruby_file)
       # Insert our code after leading comments:
-      content.sub!(/^((#.*\n+)*)/, '\1require "deep_cover/tools/auto_run";')
+      content.sub!(/^((#.*\n+)*)/, '\1require "deep_cover/auto_run";')
       File.write(ruby_file, content)
     end
 

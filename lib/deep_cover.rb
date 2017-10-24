@@ -3,7 +3,7 @@ require_relative "deep_cover/misc"
 module DeepCover
 
   Misc.require_relative_dir 'deep_cover/parser_ext'
-  Misc.require_relative_dir 'deep_cover'
+  Misc.require_relative_dir 'deep_cover', except: %w[auto_run]
 
   class << self
     def start

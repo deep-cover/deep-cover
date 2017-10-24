@@ -6,10 +6,10 @@ module DeepCover
   module Misc
     extend self
 
-    def require_relative_dir(dir_name)
+    def require_relative_dir(dir_name, except: [])
       dir = File.dirname(caller.first.partition(/\.rb:\d/).first)
       Dir["#{dir}/#{dir_name}/*.rb"].sort.each do |file|
-        require file
+        require file unless except.include? File.basename(file, '.rb')
       end
     end
 
