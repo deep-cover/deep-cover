@@ -47,11 +47,11 @@ module DeepCover
 
         def convert_branch(node, branches = node.branches)
           # Currently, nyc seems to outputs the same location over and over...
-          loc = convert_range(node.loc_hash[:expression])
+          loc = convert_range(node.expression)
           {
             loc: loc,
             type: node.type,
-            line: node.loc_hash[:expression].line,
+            line: node.expression.line,
             locations: branches.map{|n| loc}
           }
         end
