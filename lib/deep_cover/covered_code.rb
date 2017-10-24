@@ -61,7 +61,7 @@ module DeepCover
       Reporter::Istanbul.new(self, **options).convert
     end
 
-    def branch_cover(**options)
+    def char_cover(**options)
       must_have_executed
       Analyser::PerChar.new(self, **options).results
     end

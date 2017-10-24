@@ -129,8 +129,8 @@ module DeepCover
 
     COLOR = {'x' => :red, ' ' => :green, '-' => :faint}
     WHITESPACE_MAP = Hash.new{|_, v| v}.merge!(' ' => '·', "\t" => '→ ')
-    def format_branch_cover(covered_code, show_whitespace: false)
-      bc = covered_code.branch_cover
+    def format_char_cover(covered_code, show_whitespace: false)
+      bc = covered_code.char_cover
 
       covered_code.buffer.source_lines.map.with_index do |line, line_index|
         next line if line.strip =~ /^#[ >]/
