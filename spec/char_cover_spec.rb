@@ -1,6 +1,15 @@
 require "spec_helper"
 
 RSpec::Matchers.define :have_correct_char_coverage do |filename, lineno|
+  def autofix(filename, answer, line, lineno)
+    line.chomp.each_char.with_index do |c, i|
+      answer[i] = ' ' if answer[i] == '-' && c =~ DeepCover::Tools::UNIMPORTANT_CHARACTERS
+    end
+    lines = File.read(filename).lines
+    lines[lineno] = "#>  #{answer[4..-1].rstrip}\n"
+    File.write(filename, lines.join)
+  end
+
   match do |lines|
     answers = DeepCover::Tools::parse_cov_comments_answers(lines)
     lines << "    'flow_completion check. (Must be red if previous raised, green otherwise)'"
@@ -21,7 +30,9 @@ RSpec::Matchers.define :have_correct_char_coverage do |filename, lineno|
         actual =~ expected
       else
         expected = DeepCover::Tools.strip_when_unimportant(line, expected).ljust(actual.size, ' ')
-        actual == expected
+        ok = actual == expected
+        autofix(filename, a, line, i + lineno)  if ENV['FIX'] && !ok
+        ok
       end
     end
     @errors = errors.map{|_, i| i + lineno}
