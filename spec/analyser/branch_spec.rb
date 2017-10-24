@@ -7,8 +7,9 @@ module DeepCover
       node.expression.line rescue binding.pry
     end
 
+    let(:options) { {} }
     let(:analyser) {
-      Analyser::Branch.new(node)
+      Analyser::Branch.new(node, **options)
     }
     let(:results) { analyser.results }
     let(:line_runs) { results.map do |node, branches_runs|
@@ -28,6 +29,11 @@ module DeepCover
         end
       RUBY
       it { should == {1 => {2 => false, 4 => true}} }
+
+      context 'when ignoring trivial ifs' do
+        let(:options) { {ignore_uncovered: :trivial_if} }
+        it { should == {1 => {2 => true, 4 => true}} }
+      end
     end
   end
 end

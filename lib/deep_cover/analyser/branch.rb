@@ -11,5 +11,10 @@ module DeepCover
         [node, branches_runs]
       end.to_h
     end
+
+    def is_trivial_if?(node)
+      parent = node.parent
+      parent.is_a?(Node::If) && parent.condition.is_a?(Node::SingletonLiteral)
+    end
   end
 end
