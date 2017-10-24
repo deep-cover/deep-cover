@@ -34,4 +34,5 @@ end
 
 RSpec.describe 'DeepCover usage' do
   it { 'simple/simple.rb'.should run_successfully.and_output('Done') }
+  it { 'with_configure/test.rb'.should run_successfully.and_output('[1, 0, 2, 0, nil, 2, nil, nil]') }
 end
