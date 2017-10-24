@@ -75,7 +75,7 @@ module DeepCover
                 is_statement: true,
                 flow_entry_count: :else_entry_tracker_hits
 
-      executed_loc_keys :begin, :end, :keyword
+      executed_loc_keys :begin, :keyword
 
       def branches
         whens.map(&:body) << self.else

@@ -26,7 +26,7 @@
       "not here"
 #>X
     end
-#>X
+#>  ---
 
 #### With raise in when condition
     case 1
@@ -126,7 +126,7 @@
       "not here"
 #>X
     end
-#>X
+#>  ---
 
 #### With raise in when condition
     case 1
