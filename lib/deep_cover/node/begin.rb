@@ -9,8 +9,16 @@ module DeepCover
       end
 
       def executed_loc_keys
-        # For now, we want the end of #{...} to match its begin
-        [:begin, (:end unless loc_hash[:end] && loc_hash[:end].source == 'end' )]
+        # Begin is a generic grouping used in different contexts.
+        case loc_hash[:begin] && loc_hash[:begin].source
+        when nil, '(', 'begin'
+          []
+        when 'else', '#{'
+          %i[begin end]
+        else
+          warn "Unknown context for Begin node"
+          []
+        end
       end
     end
   end
