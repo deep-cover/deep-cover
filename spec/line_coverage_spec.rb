@@ -22,26 +22,23 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
   def expected_result?(cov, line, comment_answer, strict: raise)
     return cov == 0 if comment_answer == DeepCover::Tools::NOT_EXECUTED
     return true if line.strip =~ /^#[ >]/
+    return cov == nil || cov > 0 if comment_answer == DeepCover::Tools::FULLY_EXECUTED
 
-    if comment_answer.is_a?(String)
-      comment_answer = DeepCover::Tools.strip_when_unimportant(line, comment_answer)
-      line = DeepCover::Tools.strip_when_unimportant(line, line)
-      comment_answer = comment_answer + " " * [line.size - comment_answer.size, 0].max
-      if strict
-        comment_answer.chars.zip(line.chars).each do |a, l|
-          return cov == 0 if a == 'x' && l =~ /\S/
-        end
-      end
-
+    comment_answer = DeepCover::Tools.strip_when_unimportant(line, comment_answer)
+    line = DeepCover::Tools.strip_when_unimportant(line, line)
+    comment_answer = comment_answer + " " * [line.size - comment_answer.size, 0].max
+    if strict
       comment_answer.chars.zip(line.chars).each do |a, l|
-        return cov && cov > 0 if a == ' ' && l =~ /\S/
+        return cov == 0 if a == 'x' && l =~ /\S/
       end
-
-      return cov == 0 if comment_answer.include?('x')
-      return cov.nil? if comment_answer.include?('-')
-    else
-      line = DeepCover::Tools.strip_when_unimportant(line, line)
     end
+
+    comment_answer.chars.zip(line.chars).each do |a, l|
+      return cov && cov > 0 if a == ' ' && l =~ /\S/
+    end
+
+    return cov == 0 if comment_answer.include?('x')
+    return cov.nil? if comment_answer.include?('-')
 
     if line =~ /\S/
       cov && cov > 0
