@@ -21,17 +21,22 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  ### Runtime dependencies
   spec.add_runtime_dependency 'parser'
   spec.add_runtime_dependency 'backports', '>= 3.10.1'
-  spec.add_runtime_dependency 'pry'
   spec.add_runtime_dependency 'binding_of_caller'
 
+  # CLI
+  spec.add_runtime_dependency "term-ansicolor"
+  spec.add_runtime_dependency "highline"
+  spec.add_runtime_dependency 'with_progress'
+
+  # While in 0.x
+  spec.add_runtime_dependency 'pry'
+
+  ### Dev dependencies
   spec.add_development_dependency "bundler", "~> 1.15"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  #spec.add_development_dependency "pry" # This fails on ruby 2.0 because it already a runtime dependency
-  spec.add_development_dependency "term-ansicolor"
-  spec.add_development_dependency "highline"
   spec.add_development_dependency 'activesupport', "~> 4.0"
-  spec.add_development_dependency 'with_progress'
 end
