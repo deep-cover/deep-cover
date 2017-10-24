@@ -4,9 +4,9 @@ RSpec::Matchers.define :run_successfully do
   match do |path|
     reader, writer = IO.pipe
     error_r, error_w = IO.pipe
-    options = {4 => writer.fileno, in: File::NULL, out: writer, err: error_w}
+    options = {in: File::NULL, out: writer, err: error_w}
 
-    pid = spawn('ruby', "spec/full_usage/#{path}", '4', options)
+    pid = spawn('ruby', "spec/full_usage/#{path}", options)
     writer.close
     error_w.close
     @output = reader.read.chomp

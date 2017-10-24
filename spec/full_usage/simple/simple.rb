@@ -1,8 +1,3 @@
-# Our noise-free output to the test caller (or to STDOUT)
-# Should only contain problems
-fileno = ARGV[0] || 1 # Default to STDOUT
-$out = IO.new(fileno.to_i)
-
 begin
   # __FILE__ can be a relative path. Since we change the current dir for the test,
   # need to track the absolute path instead.
@@ -16,9 +11,8 @@ begin
   $LOAD_PATH << absolute_dir
 
   def fail_test(msg, exception=nil)
-    $out.puts(msg)
-    $out.puts("#{exception.class}: #{exception}\n#{exception.backtrace.join("\n")}") if exception
-    $out.close
+    puts(msg)
+    puts("#{exception.class}: #{exception}\n#{exception.backtrace.join("\n")}") if exception
     exit(1)
   end
 
@@ -62,5 +56,4 @@ rescue Exception => e
   fail_test("Uncaught exception during test:", e)
 end
 
-$out.puts("Done")
-$out.close
+puts("Done")
