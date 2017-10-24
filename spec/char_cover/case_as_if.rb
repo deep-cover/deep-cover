@@ -54,7 +54,7 @@
       "not here"
 #>X
     when 1 == -1, 1 == 1, 1 == 1000
-#>                        x xx xxxx
+#>              -       - x xx xxxx
       "here"
     when 1 == -2, 1 == 2
 #>X
@@ -68,7 +68,7 @@
       "not here"
 #>X
     when 1 == -1, raise, 1 == 20
-#>                       x xx xx
+#>              -      - x xx xx
       "not here"
 #>X
     when 1 == -2, 1 == 2

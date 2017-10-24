@@ -51,7 +51,7 @@
 ### Heredocs
 #### Raising
     insane = [<<-ONE, 1, <<-TWO, 2, <<-THREE, 3, <<-FOUR] rescue nil
-#>                                            x  xxxxxxx
+#>                  -  -       -  -         - x- xxxxxxx
       the first thing
       with many lines
     ONE
@@ -87,26 +87,26 @@
     [1, *nil?, 3]
     [1, *[2], 3]
     [1, raise, *nil?, 3] rescue nil
-#>             xxxxx  x
+#>    -      - xxxxx- x
     [1, *raise, 3] rescue nil
-#>      x       x
+#>    - x     - x
 ### Hash
     {:a => 1, :b => 2}
     {a: 1, b: 2}
     {a: 1, **{b: 2}}
     {a: raise, **{b: 2}} rescue nil
-#>             xxxxx xx
+#>           - xxxxx xx
     {a: 1, **{b: raise}} rescue nil
-#>         xx
+#>       - xx
     {nil? => 1, :b => 2}
     {a: raise, :b => 2} rescue nil
-#>             xx xx x
+#>           - xx xx x
 
 ### Xstr
     `echo 'abc'`.to_s
     (`echoqweqwe #{raise}`) rescue nil
-#>   x                   x
+#>  -x                   x-
 
 #### raising (!JRuby)
     (`echoqweqwe`.to_s) rescue nil
-#>               xxxxx
+#>  -            xxxxx-

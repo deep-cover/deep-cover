@@ -1,17 +1,17 @@
 ### One-liner
     a = 42 if false; assert a == nil
-#>  xxxxxx
+#>  x x xx         -
     b = 42 if true; assert b == 42
     c = 42 unless false; assert c == 42
     d = 42 unless true; assert d == nil
-#>  xxxxxx
+#>  x x xx            -
 
 #### With raises
     (42 unless raise) rescue nil
-#>   xx xxxxxx
+#>  -xx xxxxxx      -
 
     (42 if raise) rescue nil
-#>   xx xx
+#>  -xx xx      -
 
     (raise if true) rescue nil
 
@@ -95,17 +95,17 @@
 ### Empty branches
 #### Raises
     dummy_method(if raise
-#>  xxxxxxxxxxxxxxx
+#>  xxxxxxxxxxxx-xx
     else
 #>X
     end) rescue nil
-#>  ---x
+#>  ----
 
 
    dummy_method(unless raise
-#> xxxxxxxxxxxxxxxxxxx
+#>  xxxxxxxxxxx-xxxxxx
    end)
-#> ---x
+#>  ---
 
 #### With elsif
     if false
@@ -120,6 +120,6 @@
 ### Ternary operator form
 #### Simple
     x = false ? 1 : 2; assert(x == 2)
-#>              x
+#>              x    -       -      -
     x = true ? 1 : 2; assert(x == 1)
-#>               x x
+#>               x x-       -      -

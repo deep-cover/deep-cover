@@ -30,7 +30,7 @@
 
 #### With raise in iterable
     for i in ["here", raise, "not here"]
-#>  xxx x xx                 xxxxxxxxxx
+#>  xxx x xx        -      - xxxxxxxxxx
       "not_here"
 #>X
     end
@@ -75,7 +75,7 @@
 
 #### With raise in condition
     while ("here"; raise; "not here")
-#>  xxxxx                 xxxxxxxxxx
+#>  xxxxx -      -      - xxxxxxxxxx-
       "not_here"
 #>X
     end
@@ -94,12 +94,12 @@
 
 #### With break
     ("here"; break "here"; "not here") while true
-#>                         xxxxxxxxxx
+#>  -      -             - xxxxxxxxxx-
 
 #### With next
     i = 0
     (i += 1; next "here"; "not here") while i < 5
-#>                        xxxxxxxxxx
+#>  -      -            - xxxxxxxxxx-
 
 #### Never entering
     "not here" while false
@@ -148,16 +148,16 @@
 
 #### With break
     ("here"; break "here"; "not here") until false
-#>                         xxxxxxxxxx
+#>  -      -             - xxxxxxxxxx-
 
 #### With next
     i = 0
     (i += 1; next "here"; "not here") until i >= 5
-#>                        xxxxxxxxxx
+#>  -      -            - xxxxxxxxxx-
 
 #### With raise in condition
     until ("here"; raise; "not here")
-#>  xxxxx                 xxxxxxxxxx
+#>  xxxxx -      -      - xxxxxxxxxx-
       "not_here"
 #>X
     end

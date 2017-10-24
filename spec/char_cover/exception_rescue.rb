@@ -29,7 +29,7 @@
       "foo"
 #>X
     rescue NotImplementedError, TypeError
-#>  xxxxxx
+#>  xxxxxx                    -
     rescue Exception
       "here"
     rescue SyntaxError, TypeError
@@ -68,7 +68,7 @@
       "foo"
 #>X
     rescue NotImplementedError, TypeError => foo
-#>  xxxxxx                                xxxxxx
+#>  xxxxxx                    -           xx xxx
       "not here"
 #>X
     rescue Exception => bar
@@ -109,14 +109,14 @@
 #>         xxxxxx xxxxxxxxxx
 
     [raise, "here"] rescue "here"
-#>          xxxxxx
+#>        - xxxxxx
 
 #### Multiple... <vomits>
     "here" rescue "not here" rescue "nor here"
 #>         xxxxxx xxxxxxxxxx xxxxxx xxxxxxxxxx
 
     [raise, "not here"] rescue "here" rescue "nor here"
-#>          xxxxxxxxxx                xxxxxx xxxxxxxxxx
+#>        - xxxxxxxxxx                xxxxxx xxxxxxxxxx
 
     [raise, "not here"] rescue [raise, "nor here"] rescue "here"
-#>          xxxxxxxxxx                 xxxxxxxxxx
+#>        - xxxxxxxxxx               - xxxxxxxxxx

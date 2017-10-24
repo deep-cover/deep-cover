@@ -1,4 +1,4 @@
-### Block yielded to
+### Block never yielded to
 
     0.times do |i|
       42

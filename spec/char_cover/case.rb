@@ -20,7 +20,7 @@
 
 #### With raise in case evaluated
     case [1, raise, "not here"]
-#>  xxxx            xxxxxxxxxx
+#>  xxxx   -      - xxxxxxxxxx
     when 0
 #>X
       "not here"
@@ -64,7 +64,7 @@
       "not here"
 #>X
     when -1, 1, 1000
-#>              xxxx
+#>         -  - xxxx
       "here"
     when -2, 2, 2000
 #>X
@@ -78,7 +78,7 @@
       "not here"
 #>X
     when -1, raise, 1000
-#>                  xxxx
+#>         -      - xxxx
       "not here"
 #>X
     when -2, 2, 2000
@@ -116,7 +116,7 @@
 
 #### With raise in case evaluated
     case [1, raise, "not here"]
-#>  xxxx            xxxxxxxxxx
+#>  xxxx   -      - xxxxxxxxxx
     when 0
 #>X
       "not here"
@@ -193,7 +193,7 @@
 
     case 1
     when obj, 1
-#>            x
+#>          - x
       "not here"
 #>X
     end

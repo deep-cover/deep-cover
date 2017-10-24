@@ -11,10 +11,10 @@
     "after"
 
     dummy_method(1 || 2)
-#>                    x
+#>              -     x-
     dummy_method(1 && 2)
 
 
     dummy_method(1 && raise)
-#>  xxxxxxxxxxxxx          x
+#>  xxxxxxxxxxxx-          -
 

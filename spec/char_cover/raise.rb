@@ -11,4 +11,4 @@
     end
 
     foo(foo, foo(:raise, foo(foo)), foo) rescue nil
-#>  xxx                             xxx
+#>  xxx-   -    -      -    -   --- xxx-

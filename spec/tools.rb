@@ -57,7 +57,7 @@ module DeepCover
     FULLY_EXECUTED = /^[ -]*$/
     NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
 
-    UNIMPORTANT_CHARACTERS = /[ \t();,]/
+    UNIMPORTANT_CHARACTERS = /\s/
 
     CONVERT = Hash.new('  ')
     CONVERT[0] = 'x '

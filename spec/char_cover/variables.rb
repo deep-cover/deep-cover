@@ -4,10 +4,10 @@
 
 #### Raise
     (bar = raise) rescue nil
-#>   xxx x
+#>  -xxx x      -
 
     dummy_method raise, bar rescue nil
-#>  xxxxxxxxxxxx      x xxx
+#>  xxxxxxxxxxxx      - xxx
 
 
 ### Instance variables
@@ -16,10 +16,10 @@
 
 #### Raise
     (@bar = raise) rescue nil
-#>   xxxx x
+#>  -xxxx x      -
 
     dummy_method raise, @bar rescue nil
-#>  xxxxxxxxxxxx      x xxxx
+#>  xxxxxxxxxxxx      - xxxx
 
 
 ### Class
@@ -28,10 +28,10 @@
 
 #### Raise
     (@@bar = raise) rescue nil
-#>   xxxxx x
+#>  -xxxxx x      -
 
     dummy_method raise, @@bar rescue nil
-#>  xxxxxxxxxxxx      x xxxxx
+#>  xxxxxxxxxxxx      - xxxxx
 
 
 ### Global
@@ -40,7 +40,7 @@
 
 #### Raise
     ($_some_nowhere_global = raise) rescue nil
-#>   xxxxxxxxxxxxxxxxxxxxx x
+#>  -xxxxxxxxxxxxxxxxxxxxx x      -
 
     dummy_method raise, $_some_nowhere_global rescue nil
-#>  xxxxxxxxxxxx      x xxxxxxxxxxxxxxxxxxxxx
+#>  xxxxxxxxxxxx      - xxxxxxxxxxxxxxxxxxxxx

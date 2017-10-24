@@ -151,7 +151,7 @@ module DeepCover
           mlhs: LeftSide,
           **BASE_MAP,
         }
-        executed_loc_keys :begin, :end
+        executed_loc_keys # none
 
         def flow_completion_count
           parent.flow_completion_count

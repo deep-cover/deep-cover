@@ -3,13 +3,13 @@
     foo = 1
     foo += 2
     (foo += :oops) rescue nil
-#>       xx
+#>  -    xx      -
     (@@foo += 0) rescue nil
-#>         xxxx
+#>  -      xxxx-
     (foo.bar += 42) rescue nil
-#>           xxxxx
+#>  -        xxxxx-
     (42.to_s += 'x') rescue nil
-#>           xx
+#>  -        xx    -
 
 ### ||=
 
@@ -18,10 +18,10 @@
     foo ||= true
 #>          xxxx
     (foo.bar ||= 42) rescue nil
-#>           xxxxxx
+#>  -        xxxxxx-
     foo = {}; def foo.bar; false; end
     (foo.bar ||= 42) rescue nil
-#>           xxx
+#>  -        xxx   -
 
 ### []=
     foo = []
@@ -45,12 +45,12 @@
     String::OR_EQUAL3 ||= 42
     String.send(:remove_const, 'OR_EQUAL3')
     (String::OR_EQUAL4 ||= raise; 42) rescue nil
-#>                     xxx        xx
+#>  -                  xxx      - xx-
 
 #### Constant in raising scope (!JRuby)
 
     (Nope::OR_EQUAL5 ||= 42) rescue nil
-#>       xxxxxxxxxxxxxxxxxx
+#>  -    xxxxxxxxxxxxxxxxxx-
 
 ### &&=
 
@@ -59,29 +59,29 @@
     foo &&= false
 #>          xxxxx
     (foo.bar &&= 42) rescue nil
-#>           xxxxxx
+#>  -        xxxxxx-
     foo = {}; def foo.bar; true; end
     (foo.bar &&= 42) rescue nil
-#>           xxx
+#>  -        xxx   -
 
 #### Constant (!Jruby)
 
     (AND_EQUAL &&= 42) rescue nil
-#>             xxxxxx
+#>  -          xxxxxx-
     AND_EQUAL = true; AND_EQUAL &&= 42
     ::AND_EQUAL2 = true; ::AND_EQUAL2 &&= 42
     (String::AND_EQUAL3 &&= 42) rescue nil
-#>                      xxxxxx
+#>  -                   xxxxxx-
     String::AND_EQUAL3 = true; String::AND_EQUAL3 &&= 42
     String::AND_EQUAL5 = true; (String::AND_EQUAL5 &&= raise; 42) rescue nil
-#>                                                 xxx        xx
+#>                           - -                   xxx      - xx-
     (Nope::AND_EQUAL6 &&= 42) rescue nil
-#>       xxxxxxxxxxxxxxxxxxx
+#>  -    xxxxxxxxxxxxxxxxxxx-
 
 #### Constant (!JRuby)
 
     String::AND_EQUAL4 = false; String::AND_EQUAL4 &&= 42
-#>                                                     xx
+#>                            -                        xx
 
 ### Multiple
 
@@ -93,17 +93,17 @@
 
 #### raising on the value side
     (a, b, c = 1, raise, 2) rescue nil
-#>   xxxxxxxxx           x
+#>  -x- x- xxx  -      - x-
     (MULTIPLE_R, String::MULTIPLE_SCOPED_R = 1, raise, 2) rescue nil
-#>   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx           x
+#>  -xxxxxxxxxx- xxxxxxxxxxxxxxxxxxxxxxxxxxx  -      - x-
 
 #### raising when assigning
     foo = {}; (foo[:a], foo.bar, c = 1, 2, 3; :nope) rescue nil
-#>                               x            xxxxx
+#>          - -       -        - x    -  -  - xxxxx-
     ((a, (b, *c.foo), d) = 1) rescue nil
-#>                    x
+#>  -- - - -       -- x-    -
     (MULTIPLE_RA, String::Nope::MULTIPLE_SCOPED_RA, MULTIPLE_RA2 = 1, 2) rescue nil
-#>                            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#>  -           -             xxxxxxxxxxxxxxxxxxxx- xxxxxxxxxxxx    -  -
 
 #### self setters
 
@@ -112,7 +112,7 @@
       a, o.foo, c = 1
       a, self.foo, self.bar, c = 1
       (a, $o.foo, self.nope, self.bar, c = 1) rescue nil
-#>                xxxxxxxxxxxxxxxxxxxxxx
+#>    - -       - xxxxxxxxx- xxxxxxxx- x    -
     end
 #>  ---
 
@@ -121,8 +121,8 @@
     o = Object.new; class << o; def foo=(x); end; end
     o.instance_eval do
       (a, self.foo, raise.bar, c = 1) rescue nil
-#>     xxxxxxxxxxxxxxxxxxxxxxxxx
+#>    -x- xxxxxxxx- xxxxxxxxx- x    -
       (a, self.foo, self.nope, c = 1) rescue nil
-#>     xxxxxxxxxxxxxxxxxxxxxxxxx
+#>    -x- xxxxxxxx- xxxxxxxxx- x    -
     end
 #>  ---
