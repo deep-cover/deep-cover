@@ -9,6 +9,8 @@
 #>X
     end rescue nil
 
+#### With raise in else
+
     begin
       "here"
     else
