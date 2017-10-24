@@ -6,5 +6,6 @@ module DeepCover
   Misc.require_relative_dir 'deep_cover', except: %w[auto_run builtin_takeover]
 
   extend Base
+  extend Config::Setter
 end
 DeepCover::GLOBAL_BINDING = binding

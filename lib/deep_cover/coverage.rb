@@ -25,8 +25,8 @@ module DeepCover
       @covered_codes = {}
     end
 
-    def line_coverage(filename)
-      covered_code(filename).line_coverage
+    def line_coverage(filename, **options)
+      covered_code(filename).line_coverage(**options)
     end
 
     def covered_code(path)

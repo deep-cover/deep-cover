@@ -12,12 +12,23 @@ module DeepCover
       @started = true
     end
 
+    def stop
+      # TODO
+    end
+
     def line_coverage(filename)
-      coverage.line_coverage(filename)
+      coverage.line_coverage(handle_relative_filename(filename), **@config)
     end
 
     def covered_code(filename)
-      coverage.covered_code(filename)
+      coverage.covered_code(handle_relative_filename(filename))
+    end
+
+    def cover
+      start
+      yield
+    ensure
+      stop
     end
 
     def coverage
@@ -30,6 +41,15 @@ module DeepCover
 
     def autoload_tracker
       @autoload_tracker ||= AutoloadTracker.new
+    end
+
+    def handle_relative_filename(filename)
+      unless Pathname.new(filename).absolute?
+        relative_to = File.dirname(caller[1].partition(/\.rb:\d/).first)
+        filename = File.absolute_path(filename, relative_to)
+      end
+      filename += '.rb' unless filename =~ /\.rb$/
+      filename
     end
   end
 end
