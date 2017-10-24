@@ -1,11 +1,11 @@
-require 'parser'
-require 'parser/current'
-require 'pry'
-require 'pathname'
-require_relative 'covered_code'
-require 'securerandom'
-
 module DeepCover
+  require 'parser'
+  require 'parser/current'
+  require 'pry'
+  require 'pathname'
+  require_relative 'covered_code'
+  require 'securerandom'
+
   # A collection of CoveredCode
   class Coverage
     include Enumerable
