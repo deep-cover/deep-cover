@@ -1,6 +1,8 @@
 module DeepCover
   require 'parser'
-  require 'parser/current'
+  Misc.with_warnings(nil) do
+    require 'parser/current'
+  end
   require 'pry'
   require 'pathname'
   require_relative 'covered_code'
