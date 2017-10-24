@@ -1,8 +1,8 @@
 module DeepCover
   module Analyser::IgnoreUncovered
-    def initialize(source, allow_uncovered: [], **options)
+    def initialize(source, ignore_uncovered: [], **options)
       super
-      @allow_filters = Array(allow_uncovered)
+      @allow_filters = Array(ignore_uncovered)
         .map{|kind| :"is_#{kind}?"}
         .select{|name| respond_to?(name) }
         .map{|name| method(name)}   # So was tempted to write `.map(&method(:method))`!
