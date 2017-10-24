@@ -55,19 +55,19 @@
     class Enumerable
 #>  xxxxx
     end.to_s rescue nil
-#>  xxxxxxxx
+#>  ---xxxxx
 
 #### Invalid path
     class String::Foo::M
 #>  xxxxx            xxx
     end.to_s rescue nil
-#>  xxxxxxxx
+#>  ---xxxxx
 
 #### Invalid (longer) path
     class String::Foo::Bar::M
 #>  xxxxx            xxxxxxxx
     end.to_s rescue nil
-#>  xxxxxxxx
+#>  ---xxxxx
 
 #### Raise inside block
     class N
@@ -76,4 +76,4 @@
       44
 #>X
     end.to_s rescue nil
-#>     xxxxx
+#>  ---xxxxx

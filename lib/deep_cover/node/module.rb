@@ -28,7 +28,7 @@ module DeepCover
         rewrite: '%{body_entry_tracker};%{local}=nil;%{node}',
         is_statement: true,
         flow_entry_count: :body_entry_tracker_hits
-      executed_loc_keys :keyword, :end
+      executed_loc_keys :keyword
 
       def execution_count
         body_entry_tracker_hits
@@ -45,7 +45,7 @@ module DeepCover
         rewrite: '%{body_entry_tracker};%{node}',
         is_statement: true,
         flow_entry_count: :body_entry_tracker_hits
-      executed_loc_keys :keyword, :end
+      executed_loc_keys :keyword
 
       def execution_count
         body_entry_tracker_hits
