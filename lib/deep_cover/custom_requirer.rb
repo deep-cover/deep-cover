@@ -82,7 +82,7 @@ module DeepCover
 
     protected
     def cover_and_execute(path)
-      covered_code = DeepCover.cover.covered_code(path)
+      covered_code = DeepCover.coverage.covered_code(path)
       return :cover_failed unless covered_code
       DeepCover.autoload_tracker.wrap_require(path) do
         covered_code.execute_code

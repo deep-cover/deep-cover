@@ -13,15 +13,15 @@ module DeepCover
     end
 
     def line_coverage(filename)
-      cover.line_coverage(filename)
+      coverage.line_coverage(filename)
     end
 
     def covered_code(filename)
-      cover.covered_code(filename)
+      coverage.covered_code(filename)
     end
 
-    def cover
-      @cover ||= Coverage.new
+    def coverage
+      @coverage ||= Coverage.new
     end
 
     def custom_requirer
