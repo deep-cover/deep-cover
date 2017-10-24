@@ -85,7 +85,7 @@ end
 DeepCover::Node.prepend ColorAST
 
 puts covered_code.covered_ast
-puts "\nBranch coverage:\n"
+puts "\nChar coverage:\n"
 
 puts format_char_cover(covered_code, show_whitespace: !!ENV['W'])
 
