@@ -102,10 +102,10 @@
 #>  ----
 
 
-   dummy_method(unless raise
-#>  xxxxxxxxxxx-xxxxxx
-   end)
-#>  ---
+    dummy_method(unless raise
+#>  xxxxxxxxxxxx-xxxxxx
+    end)
+#>  ----
 
 #### With elsif
     if false

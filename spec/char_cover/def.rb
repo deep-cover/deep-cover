@@ -71,12 +71,12 @@
 
 #### with raising singleton
     def does_not_exist.some_method; end rescue nil
-#>  xxx               xxxxxxxxxxxx- xxx
+#>  xxx               xxxxxxxxxxxx- ---
 
 #### Raising
     module Frozen; freeze; end;
     (def Frozen.foo; end; 42) rescue nil
-#>  -              -    - xx-
+#>  -              - ---- xx-
 
 #### Empty body
     def self.no_body; end

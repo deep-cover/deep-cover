@@ -11,7 +11,7 @@ module DeepCover
       can_be_empty: -> { base_node.loc.end.begin },
       is_statement: true,
       flow_entry_count: :method_call_tracker_hits
-    executed_loc_keys :keyword, :name, :end
+    executed_loc_keys :keyword, :name
 
     def children_nodes_in_flow_order
       []
@@ -29,7 +29,7 @@ module DeepCover
       can_be_empty: -> { base_node.loc.end.begin },
       is_statement: true,
       flow_entry_count: :method_call_tracker_hits
-    executed_loc_keys :keyword, :name, :operator, :end
+    executed_loc_keys :keyword, :name, :operator
 
     def children_nodes_in_flow_order
       [singleton]
