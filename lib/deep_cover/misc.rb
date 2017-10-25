@@ -6,13 +6,6 @@ module DeepCover
   module Misc
     extend self
 
-    def require_relative_dir(dir_name, except: [])
-      dir = File.dirname(caller.first.partition(/\.rb:\d/).first)
-      Dir["#{dir}/#{dir_name}/*.rb"].sort.each do |file|
-        require file unless except.include? File.basename(file, '.rb')
-      end
-    end
-
     # Call with nil to remove $VERBOSE while in the block
     # copied from: https://apidock.com/rails/v4.2.7/Kernel/with_warnings
     def with_warnings(flag)

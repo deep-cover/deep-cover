@@ -1,3 +1,6 @@
-require_relative 'node'
-DeepCover::Reporter = Module.new
-DeepCover::Misc.require_relative_dir 'reporter'
+module DeepCover
+  module Reporter
+  end
+  require_relative 'node'
+  require_relative_dir 'reporter'
+end

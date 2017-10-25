@@ -16,7 +16,7 @@ module DeepCover
   class Analyser
   end
 
-  Misc.require_relative_dir 'analyser'
+  require_relative_dir 'analyser'
 
   Analyser.include Analyser::IgnoreUncovered, Analyser::Base
   Node.include Analyser::CoveredCodeSource::NodeExtension
