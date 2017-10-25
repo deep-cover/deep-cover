@@ -6,15 +6,6 @@ module DeepCover
   module Misc
     extend self
 
-    # Call with nil to remove $VERBOSE while in the block
-    # copied from: https://apidock.com/rails/v4.2.7/Kernel/with_warnings
-    def with_warnings(flag)
-      old_verbose, $VERBOSE = $VERBOSE, flag
-      yield
-    ensure
-      $VERBOSE = old_verbose
-    end
-
     # Poor man's camelize. 'an_example' => 'AnExample'
     def camelize(string)
       string.to_s.gsub(/([a-z\d]*)[_?!]?/){ $1.capitalize }

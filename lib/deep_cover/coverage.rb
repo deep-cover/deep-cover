@@ -1,6 +1,6 @@
 module DeepCover
   require 'parser'
-  Misc.with_warnings(nil) do
+  silence_warnings do
     require 'parser/current'
   end
   require 'pry'

@@ -65,7 +65,7 @@ module DeepCover
     def builtin_coverage(source, fn, lineno)
       fn = File.absolute_path(File.expand_path(fn))
       ::Coverage.start
-      DeepCover::Misc.with_warnings(nil) do
+      Tools.silence_warnings do
         execute_sample ->{ DeepCover::Misc.run_with_line_coverage(source, fn, lineno)}
       end
       Misc.unshift_coverage(::Coverage.result.fetch(fn), lineno)
@@ -167,7 +167,7 @@ module DeepCover
     def execute_sample(to_execute)
       # Disable some annoying warning by ruby. We are testing edge cases, so warnings are to be expected.
       begin
-        DeepCover::Misc.with_warnings(nil) do
+        Tools.silence_warnings do
           if to_execute.is_a?(CoveredCode)
             self.current_ast = to_execute.covered_ast
             to_execute.execute_code

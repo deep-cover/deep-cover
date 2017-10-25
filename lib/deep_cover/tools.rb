@@ -4,6 +4,7 @@ module DeepCover
   require_relative 'tools/require_relative_dir'
   extend Tools::RequireRelativeDir
   require_relative_dir 'tools'
+  extend Tools::SilenceWarnings
 
   # The functions defined in the submodules of Tools can be accessed
   # either by extending the desired module, or all of them by extending
