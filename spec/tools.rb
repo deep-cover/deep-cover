@@ -163,25 +163,6 @@ module DeepCover
       Dir.chdir(set_pwd || '.')
     end
 
-    # Returns true if the code would have continued, false if the rescue was triggered.
-    def execute_sample(to_execute)
-      # Disable some annoying warning by ruby. We are testing edge cases, so warnings are to be expected.
-      begin
-        Tools.silence_warnings do
-          if to_execute.is_a?(CoveredCode)
-            self.current_ast = to_execute.covered_ast
-            to_execute.execute_code
-          else
-            to_execute.call
-          end
-        end
-        true
-      rescue RuntimeError => e
-        raise unless e.message.empty?
-        false
-      end
-    end
-
     class AnnotatedExamplesParser
       SECTION = /^### (.*)$/
       EXAMPLE = /^#### (.*)$/
