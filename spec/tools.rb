@@ -59,21 +59,8 @@ module DeepCover
 
     UNIMPORTANT_CHARACTERS = /\s/
 
-    CONVERT = Hash.new('  ')
-    CONVERT[0] = 'x '
-    CONVERT[nil] = '- '
-
     extend self
     attr_accessor :current_ast
-
-    def format(*results, filename: nil, source: nil)
-      source ||= File.read(filename)
-      results.map!{|counts| counts.map{|c| CONVERT[c]}}
-      [*results, source.lines].transpose.map do |parts|
-        *line_results, line = parts
-        Term::ANSIColor.white(line_results.join) + line.to_s
-      end
-    end
 
     def number_lines(lines, lineno: 1, bad_linenos: [])
       max_lineno = lineno + lines.size - 1
