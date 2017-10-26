@@ -29,11 +29,18 @@ end
 module DeepCover
   class Node
     def self.[](source)
-      Tools.current_ast = CoveredCode.new(source: source).execute_code.covered_ast
+      CoveredCode.new(source: source).execute_code.covered_ast
     end
   end
 
   class CoveredCode
+    module CurrentExtension
+      def execute_code(*)
+        Tools.current_ast = covered_ast
+        super
+      end
+    end
+    prepend CurrentExtension
     # For now, when an overlap is found, just open a binding.pry to make fixing it easier.
     def check_node_overlap!
       node_to_positions = {}

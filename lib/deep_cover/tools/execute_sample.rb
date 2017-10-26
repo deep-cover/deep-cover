@@ -6,7 +6,6 @@ module DeepCover
       begin
         Tools.silence_warnings do
           if to_execute.is_a?(CoveredCode)
-            self.current_ast = to_execute.covered_ast
             to_execute.execute_code
           else
             to_execute.call
