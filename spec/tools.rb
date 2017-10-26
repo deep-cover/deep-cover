@@ -1,4 +1,3 @@
-require 'coverage'
 require 'term/ansicolor'
 require 'fileutils'
 require 'tmpdir'
@@ -61,15 +60,6 @@ module DeepCover
 
     extend self
     attr_accessor :current_ast
-
-    def builtin_coverage(source, fn, lineno)
-      fn = File.absolute_path(File.expand_path(fn))
-      ::Coverage.start
-      Tools.silence_warnings do
-        execute_sample ->{ DeepCover::Misc.run_with_line_coverage(source, fn, lineno)}
-      end
-      Misc.unshift_coverage(::Coverage.result.fetch(fn), lineno)
-    end
 
     def format_generated_code(covered_code)
       inserts = []
