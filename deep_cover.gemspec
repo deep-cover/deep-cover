@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "highline"
   spec.add_runtime_dependency "ruby-progressbar", '<1.9.0'
   spec.add_runtime_dependency 'with_progress'
+  spec.add_runtime_dependency 'slop', '~> 4.0'
 
   # While in 0.x
   spec.add_runtime_dependency 'pry'

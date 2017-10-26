@@ -7,7 +7,8 @@ module DeepCover
       include Tools
       attr_reader :dest_path
 
-      def initialize(gem_path)
+      def initialize(gem_path, command: 'rake', **_options)
+        @command = command
         @root_path = File.expand_path(gem_path)
         if File.exist?(File.join(@root_path, 'Gemfile'))
           @gem_relative_path = '' # Typical case
@@ -82,7 +83,7 @@ module DeepCover
 
       def process
         Bundler.with_clean_env do
-          system("cd #{dest_path} && rake", out: $stdout, err: :out)
+          system("cd #{dest_path} && #{@command}", out: $stdout, err: :out)
         end
       end
 
