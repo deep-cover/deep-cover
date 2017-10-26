@@ -4,7 +4,7 @@ module DeepCover
 
   $LOAD_PATH.unshift('../covered_deep_cover') if ENV["CC"]
   require "deep_cover"
-  require_relative "../spec/tools"
+  require_relative "../spec/specs_tools"
   require 'deep_cover/cli/debugger'
 
   example = ARGV[0] || 'simple_if'
@@ -18,7 +18,7 @@ module DeepCover
     source = ARGV[0].gsub(';;', "\n")
   end
 
-  groups = Tools::AnnotatedExamplesParser.process(source)
+  groups = Specs::AnnotatedExamplesParser.process(source)
   if groups.size == 1 && groups.first.last.size == 1
     lines, lineno = groups.values.first.values.first
   else

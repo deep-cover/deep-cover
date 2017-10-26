@@ -5,7 +5,7 @@ require "tempfile"
 RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, strict: false|
   match do
     @our = DeepCover::Tools.our_coverage(lines.join, filename, lineno, allow_partial: !strict)
-    answers = DeepCover::Tools::parse_cov_comments_answers(lines)
+    answers = DeepCover::Specs::parse_cov_comments_answers(lines)
 
     errors = @our.zip(answers, lines).each_with_index.reject do |(cov, comment_answer, line), _i|
       expected_result?(cov, line, comment_answer, strict: strict)
@@ -20,12 +20,12 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
   end
 
   def expected_result?(cov, line, comment_answer, strict: raise)
-    return cov == 0 if comment_answer == DeepCover::Tools::NOT_EXECUTED
+    return cov == 0 if comment_answer == DeepCover::Specs::NOT_EXECUTED
     return true if line.strip =~ /^#[ >]/
-    return cov == nil || cov > 0 if comment_answer == DeepCover::Tools::FULLY_EXECUTED
+    return cov == nil || cov > 0 if comment_answer == DeepCover::Specs::FULLY_EXECUTED
 
-    comment_answer = DeepCover::Tools.strip_when_unimportant(line, comment_answer)
-    line = DeepCover::Tools.strip_when_unimportant(line, line)
+    comment_answer = DeepCover::Specs.strip_when_unimportant(line, comment_answer)
+    line = DeepCover::Specs.strip_when_unimportant(line, line)
     comment_answer = comment_answer + " " * [line.size - comment_answer.size, 0].max
     if strict
       comment_answer.chars.zip(line.chars).each do |a, l|

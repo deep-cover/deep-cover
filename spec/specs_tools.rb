@@ -1,6 +1,5 @@
 require 'term/ansicolor'
 require 'fileutils'
-require 'tmpdir'
 
 require 'active_support/core_ext/object/blank'
 class Array
@@ -14,7 +13,7 @@ def dummy_method(*)
 end
 
 def current_ast
-  DeepCover::Tools.current_ast
+  DeepCover::Specs.current_ast
 end
 
 def assert(check)
@@ -36,7 +35,7 @@ module DeepCover
   class CoveredCode
     module CurrentExtension
       def execute_code(*)
-        Tools.current_ast = covered_ast
+        Specs.current_ast = covered_ast
         super
       end
     end
@@ -58,7 +57,7 @@ module DeepCover
     end
   end
 
-  module Tools
+  module Specs
     ANSWER = /^#>/
     FULLY_EXECUTED = /^[ -]*$/
     NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -

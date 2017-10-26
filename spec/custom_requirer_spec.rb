@@ -122,7 +122,7 @@ module DeepCover
     end
 
     def file_tree(tree_entries)
-      DeepCover::Tools.file_tree(root, tree_entries)
+      Specs.file_tree(root, tree_entries)
     end
 
     def from_root(path)

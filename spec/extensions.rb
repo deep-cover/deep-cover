@@ -6,7 +6,7 @@ class RSpec::Core::ExampleGroup
       index = 0
       spec = File.basename(fn, '.rb')
       describe spec do
-        example_groups = DeepCover::Tools::AnnotatedExamplesParser.process(File.read(fn).lines)
+        example_groups = DeepCover::Specs::AnnotatedExamplesParser.process(File.read(fn).lines)
         example_groups.each do |section, examples|
           context(section || '(General)') do
             examples.each do |title, (lines, lineno)|

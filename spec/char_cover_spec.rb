@@ -11,25 +11,25 @@ RSpec::Matchers.define :have_correct_char_coverage do |filename, lineno|
   end
 
   match do |lines|
-    answers = DeepCover::Tools::parse_cov_comments_answers(lines)
+    answers = DeepCover::Specs.parse_cov_comments_answers(lines)
     lines << "    'flow_completion check. (Must be red if previous raised, green otherwise)'"
     @covered_code = DeepCover::CoveredCode.new(path: filename, source: lines.join, lineno: lineno)
 
     reached_end = DeepCover::Tools.execute_sample(@covered_code)
     if reached_end
-      answers[lines.size - 1] = DeepCover::Tools::FULLY_EXECUTED
+      answers[lines.size - 1] = DeepCover::Specs::FULLY_EXECUTED
     else
-      answers[lines.size - 1] = DeepCover::Tools::NOT_EXECUTED
+      answers[lines.size - 1] = DeepCover::Specs::NOT_EXECUTED
     end
     @covered_code.check_node_overlap!
     cov = @covered_code.char_cover
     errors = cov.zip(answers, lines).each_with_index.reject do |(a, expected, line), i|
-      actual = DeepCover::Tools.strip_when_unimportant(line, a)
+      actual = DeepCover::Specs.strip_when_unimportant(line, a)
       next true if line.strip =~ /^#[ >]/
       if expected.is_a?(Regexp)
         actual =~ expected
       else
-        expected = DeepCover::Tools.strip_when_unimportant(line, expected).ljust(actual.size, ' ')
+        expected = DeepCover::Specs.strip_when_unimportant(line, expected).ljust(actual.size, ' ')
         ok = actual == expected
         autofix(filename, a, line, i + lineno)  if ENV['FIX'] && !ok
         ok

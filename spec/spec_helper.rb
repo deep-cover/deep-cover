@@ -10,7 +10,7 @@ require "bundler/setup"
 require 'pry'
 $LOAD_PATH.unshift('../covered_deep_cover') if ENV["CC"]
 require "deep_cover"
-require_relative "tools"
+require_relative "specs_tools"
 require_relative "extensions"
 
 RSpec.configure do |config|
