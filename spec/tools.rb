@@ -71,12 +71,6 @@ module DeepCover
       Misc.unshift_coverage(::Coverage.result.fetch(fn), lineno)
     end
 
-    def our_coverage(source, fn, lineno, **options)
-      covered_code = DeepCover::CoveredCode.new(source:source, path: fn, lineno: lineno)
-      execute_sample(covered_code)
-      covered_code.line_coverage(options)
-    end
-
     def format_generated_code(covered_code)
       inserts = []
       generated_code = covered_code.instrument_source do |inserted, _node, expr_limit|
