@@ -1,95 +1,43 @@
 #!/usr/bin/env ruby
+module DeepCover
+  require "bundler/setup"
 
-require "bundler/setup"
+  $LOAD_PATH.unshift('../covered_deep_cover') if ENV["CC"]
+  require "deep_cover"
+  require_relative "../spec/tools"
+  require 'deep_cover/cli/debugger'
 
-$LOAD_PATH.unshift('../covered_deep_cover') if ENV["CC"]
-require "deep_cover"
-require_relative "../spec/tools"
-require 'term/ansicolor'
-extend DeepCover::Tools
-
-all_good = true
-
-example = ARGV[0] || 'simple_if'
-fn = "./spec/samples/#{example}.rb"
-fn = "./spec/char_cover/#{example}.rb" unless File.exist?(fn)
-if File.exist?(fn)
-  fn = File.absolute_path(fn)
-  source = File.read(fn)
-else
-  fn = "<passed_from_command_line>"
-  source = ARGV[0].gsub(';;', "\n")
-end
-
-groups = DeepCover::Tools::AnnotatedExamplesParser.process(source)
-if groups.size == 1 && groups.first.last.size == 1
-  lines, lineno = groups.values.first.values.first
-else
-  menu = []
-  item = -1
-  examples = groups.flat_map do |title, examples|
-    menu << Term::ANSIColor.green(title) if title
-    menu.concat(examples.keys.map {|ex| "  #{item+=1}: #{ex || '(General)'}"})
-    examples.values
-  end
-  if ARGV[1]
-    answer = ARGV[1].to_i
+  example = ARGV[0] || 'simple_if'
+  fn = "./spec/samples/#{example}.rb"
+  fn = "./spec/char_cover/#{example}.rb" unless File.exist?(fn)
+  if File.exist?(fn)
+    fn = File.absolute_path(fn)
+    source = File.read(fn)
   else
-    require 'highline'
-    puts menu
-    answer = HighLine.new.ask(Term::ANSIColor.blue("Which?  "), Integer) { |q| q.in = 0...examples.size }
+    fn = "<passed_from_command_line>"
+    source = ARGV[0].gsub(';;', "\n")
   end
-  lines, lineno = examples[answer]
-end
 
-source = lines.join
-puts "Builtin, DeepCover line coverages and strict:\n"
-begin
-  builtin_line_coverage = builtin_coverage(source, fn, lineno)
-  our_line_coverage = our_coverage(source, fn, lineno)
-  our_strict_line_coverage = our_coverage(source, fn, lineno, allow_partial: false)
-  lines = format(builtin_line_coverage, our_line_coverage, our_strict_line_coverage, source: source)
-  puts number_lines(lines, lineno: lineno)
-rescue Exception => e
-  puts "Can't run coverage: #{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
-  all_good = false
-end
-
-puts "\nGenerated code:\n"
-covered_code = DeepCover::CoveredCode.new(source:source, path: fn, lineno: lineno)
-puts format_generated_code(covered_code)
-
-puts "\nParsed code:\n"
-begin
-  execute_sample(covered_code)
-rescue Exception => e
-  puts "Can't `execute_sample`:#{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
-  all_good = false
-end
-
-module ColorAST
-  def fancy_type
-    color = case
-    when !executable?
-      :faint
-    when !was_executed?
-      :red
-    when flow_interrupt_count > 0
-      :yellow
-    else
-      :green
+  groups = Tools::AnnotatedExamplesParser.process(source)
+  if groups.size == 1 && groups.first.last.size == 1
+    lines, lineno = groups.values.first.values.first
+  else
+    menu = []
+    item = -1
+    examples = groups.flat_map do |title, examples|
+      menu << Term::ANSIColor.green(title) if title
+      menu.concat(examples.keys.map {|ex| "  #{item+=1}: #{ex || '(General)'}"})
+      examples.values
     end
-    Term::ANSIColor.send(color, super)
+    if ARGV[1]
+      answer = ARGV[1].to_i
+    else
+      require 'highline'
+      puts menu
+      answer = HighLine.new.ask(Term::ANSIColor.blue("Which?  "), Integer) { |q| q.in = 0...examples.size }
+    end
+    lines, lineno = examples[answer]
   end
+
+  CLI::Debugger.new(lines.join, filename: fn, lineno: lineno, pry: true).show
 end
-DeepCover::Node.prepend ColorAST
-
-puts covered_code.covered_ast
-puts "\nChar coverage:\n"
-
-puts format_char_cover(covered_code, show_whitespace: !!ENV['W'])
-
-a = covered_code.covered_ast
-b = a.children.first
-binding.pry
-exit(all_good)
