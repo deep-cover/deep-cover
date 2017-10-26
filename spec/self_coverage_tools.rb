@@ -1,18 +1,6 @@
 require 'with_progress'
 
 module DeepCover
-  class CoveredCode
-    def tracker_info
-      [@nb, @tracker_count]
-    end
-  end
-
-  class Coverage
-    def tracker_sizes
-      @covered_code.values.map(&:tracker_info).to_h
-    end
-  end
-
   module Tools
     def dump_covered_code(source_path, dest_path = Dir.mktmpdir)
       coverage = Coverage.new(tracker_global: '$_sc')
