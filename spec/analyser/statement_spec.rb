@@ -1,5 +1,4 @@
 require "spec_helper"
-require 'backports/2.4.0/hash/transform_values'
 
 module DeepCover
   RSpec.describe Analyser::Statement do

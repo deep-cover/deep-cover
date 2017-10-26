@@ -28,7 +28,7 @@ module DeepCover
 
       def remap_child(child, name=nil)
         return unless child.is_a?(Parser::AST::Node)
-        class_name = Misc.camelize(child.type)
+        class_name = Tools.camelize(child.type)
         Node.const_defined?(class_name) ? Node.const_get(class_name) : Node
       end
 

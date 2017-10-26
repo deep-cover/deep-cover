@@ -1,6 +1,3 @@
-require 'backports/2.4.0/false_class/dup'
-require 'backports/2.4.0/true_class/dup'
-
 module DeepCover
   class Config
     DEFAULTS = {

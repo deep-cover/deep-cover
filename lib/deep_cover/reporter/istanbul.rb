@@ -1,4 +1,3 @@
-require 'backports/2.4.0/hash/transform_values'
 require 'json'
 
 module DeepCover
