@@ -25,12 +25,13 @@ module DeepCover
       end
 
       # Only need to add them to deal with ambiguous cases where a method is hidden by a local. Ex:
-      #   raise TypeError, 'hello'  #=> Works
-      #   raise (TypeError), 'hello'  #=> Simplification of what DeepCover generates, still works
-      #   raise = 1; raise TypeError, 'hello'  #=> works
-      #   raise = 1; raise (TypeError), 'hello'  #=> syntax error.
-      #   raise = 1; raise((TypeError), 'hello'0  #=> works
+      #   foo 42, 'hello'  #=> Works
+      #   foo (42), 'hello'  #=> Simplification of what DeepCover would generate, still works
+      #   foo = 1; foo 42, 'hello'  #=> works
+      #   foo = 1; foo (42), 'hello'  #=> syntax error.
+      #   foo = 1; foo((42), 'hello')  #=> works
       def add_parentheses?
+        # No issue when no arguments
         return if arguments.empty?
         # No ambiguity if there is a receiver
         return if receiver
