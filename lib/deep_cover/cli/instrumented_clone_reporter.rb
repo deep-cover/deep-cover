@@ -7,8 +7,9 @@ module DeepCover
       include Tools
       attr_reader :dest_path
 
-      def initialize(gem_path, command: 'rake', **_options)
+      def initialize(gem_path, command: 'rake', **options)
         @command = command
+        @options = options
         @root_path = File.expand_path(gem_path)
         if File.exist?(File.join(@root_path, 'Gemfile'))
           @gem_relative_path = '' # Typical case
@@ -89,7 +90,7 @@ module DeepCover
 
       def report
         coverage = Coverage.load @covered_path
-        puts coverage.report(dir: @covered_path)
+        puts coverage.report(dir: @covered_path, **@options)
       end
 
       def run

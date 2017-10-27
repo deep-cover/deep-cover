@@ -55,14 +55,16 @@ module DeepCover
       path
     end
 
-    def report_istanbul(reporter: :text, **options)
+    def report_istanbul(output: nil, **options)
       dir = output_istanbul(**options).dirname
-      `cd #{dir} && nyc report --reporter=#{reporter}`
+      if output
+        output = File.expand_path(output)
+        html = "--reporter=html --report-dir='#{output}' && open '#{output}/index.html'"
+      end
+      `cd #{dir} && nyc report --reporter=text #{html}`
     end
 
-    def report(**options)
-      return report_istanbul(**options) if Reporter::Istanbul.available?
-
+    def basic_report
       missing = map do |covered_code|
         if covered_code.has_executed?
           missed = covered_code.line_coverage.each_with_index.map do |line_cov, line_index|
@@ -76,6 +78,15 @@ module DeepCover
       missing.map do |path, lines|
         "#{File.basename(path)}: #{lines.join(', ')}"
       end.join("\n")
+    end
+
+    def report(**options)
+      if Reporter::Istanbul.available?
+        report_istanbul(**options)
+      else
+        warn "nyc not available. Please install `nyc` using `yarn global add nyc` or `npm i nyc -g`"
+        basic_report
+      end
     end
 
     def self.load(dest_path, dirname = 'deep_cover')
