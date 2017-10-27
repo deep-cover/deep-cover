@@ -2,34 +2,12 @@ require_relative 'literals'
 
 module DeepCover
   class Node
-    class MethodName < Node
-      has_child name: Symbol
-
-      def initialize(name, parent: raise, **kwargs)
-        super(parent, **kwargs, parent: parent, base_children: [name])
-      end
-
-      def loc_hash
-        # Expression is used in the rewriting
-        # if selector_end is present, then this won't be needed
-        {expression: parent.loc_hash[:selector_begin]}
-      end
-
-      def executable?
-        false
-      end
-    end
-
     class Send < Node
       check_completion
       has_child receiver: [Node, nil]
-      has_child method_name_wrapper: {Symbol => MethodName}, rewrite: :add_opening_parentheses
-      has_extra_children arguments: Node, rewrite: :add_closing_parentheses
+      has_child method_name: Symbol
+      has_extra_children arguments: Node
       executed_loc_keys :dot, :selector_begin, :selector_end, :operator
-
-      def method_name
-        method_name_wrapper.name
-      end
 
       def loc_hash
         base = super
@@ -61,15 +39,13 @@ module DeepCover
         true
       end
 
-      def add_opening_parentheses
-        return unless add_parentheses?
-        "%{node}("
-      end
-
-      def add_closing_parentheses(child)
-        return unless add_parentheses?
-        return unless child.index == children.size - 1
-        "%{node})"
+      def rewriting_rules
+        rules = super
+        if add_parentheses?
+          range = arguments.last.expression.with(begin_pos: loc_hash[:selector_begin].end_pos)
+          rules << [range, '(%{node})']
+        end
+        rules
       end
     end
 
