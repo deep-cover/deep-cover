@@ -107,16 +107,16 @@ module DeepCover
     def instrument_source
       rewriter = ::Parser::Source::Rewriter.new(@buffer)
       covered_ast.each_node do |node|
-        prefix, suffix = node.rewrite_prefix_suffix
-        unless prefix.empty?
-          expression = node.expression
-          prefix = yield prefix, node, expression.begin, :prefix if block_given?
-          rewriter.insert_before_multi expression, prefix rescue binding.pry
-        end
-        unless suffix.empty?
-          expression = node.expression
-          suffix = yield suffix, node, expression.end, :suffix if block_given?
-          rewriter.insert_after_multi  expression, suffix
+        node.rewriting_rules.each do |range, rule|
+          prefix, _node, suffix = rule.partition('%{node}')
+          unless prefix.empty?
+            prefix = yield prefix, node, range.begin, :prefix if block_given?
+            rewriter.insert_before_multi range, prefix rescue binding.pry
+          end
+          unless suffix.empty?
+            suffix = yield suffix, node, range.end, :suffix if block_given?
+            rewriter.insert_after_multi  range, suffix
+          end
         end
       end
       rewriter.process

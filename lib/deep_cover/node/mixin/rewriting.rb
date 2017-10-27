@@ -13,19 +13,19 @@ module DeepCover
       def rewrite_child(child, name=nil)
       end
 
+      # Replaces all the '%{local}' or '%{some_tracker}' in rewriting rules
       def resolve_rewrite(rule, context)
-        rule ||= '%{node}'
+        return if rule == nil
         sources = context.tracker_sources
-        rule.split('%{node}').map{|s| s % {local: covered_code.local_var, **sources} }
+        rule % {local: covered_code.local_var, node: '%{node}', **sources}
       end
 
-      def rewrite_prefix_suffix
-        parent_prefix, parent_suffix = resolve_rewrite(parent.rewrite_child(self), parent)
-        prefix, suffix = resolve_rewrite(rewrite, self)
+      # Returns an array of [range, rule], where rule is a string containing '%{node}'
+      def rewriting_rules
         [
-          "#{parent_prefix}#{prefix}",
-          "#{suffix}#{parent_suffix}"
-        ]
+          resolve_rewrite(parent.rewrite_child(self), parent),
+          resolve_rewrite(rewrite, self),
+        ].compact.map{|rule| [expression, rule]}
       end
     end
   end
