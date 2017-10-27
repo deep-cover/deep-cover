@@ -3,14 +3,9 @@ module DeepCover
     module HasChild
       def self.included(base)
         base.extend ClassMethods
-        setup_constants(base)
       end
-
-      def self.setup_constants(subclass)
-        subclass.const_set :CHILDREN, {}
-        subclass.const_set :CHILDREN_TYPES, {}
-      end
-
+      CHILDREN = {}
+      CHILDREN_TYPES = {}
 
       def initialize(*)
         super
@@ -91,7 +86,8 @@ module DeepCover
         end
 
         def inherited(subclass)
-          HasChild.setup_constants(subclass)
+          subclass.const_set :CHILDREN, self::CHILDREN.dup
+          subclass.const_set :CHILDREN_TYPES, self::CHILDREN_TYPES.dup
           super
         end
 

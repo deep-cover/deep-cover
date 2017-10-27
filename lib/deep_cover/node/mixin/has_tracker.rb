@@ -3,12 +3,8 @@ module DeepCover
     module HasTracker
       def self.included(base)
         base.extend ClassMethods
-        setup_constants(base)
       end
-
-      def self.setup_constants(base)
-        base.const_set :TRACKERS, {}
-      end
+      TRACKERS = {}
 
       def initialize(*)
         @tracker_offset = covered_code.allocate_trackers(self.class::TRACKERS.size).begin
@@ -23,8 +19,8 @@ module DeepCover
 
       module ClassMethods
         def inherited(base)
+          base.const_set :TRACKERS, self::TRACKERS.dup
           super
-          HasTracker.setup_constants(base)
         end
 
         def has_tracker(name)
