@@ -19,6 +19,13 @@
     foo.[]=(3, 4)
     foo.[]= 3, 4
 
+#### with raise
+    foo = []
+    foo[raise] rescue nil
+#>     x     x
+    foo[raise] = 2
+#>     x     x - x
+
 ### .()
     a = proc {|o| o}
     a.()
