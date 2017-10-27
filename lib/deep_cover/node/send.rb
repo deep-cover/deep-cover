@@ -24,29 +24,28 @@ module DeepCover
         hash
       end
 
+      def rewriting_rules
+        rules = super
+        if need_parentheses?
+          range = arguments.last.expression.with(begin_pos: loc_hash[:selector_begin].end_pos)
+          rules << [range, '(%{node})']
+        end
+        rules
+      end
+
+      private
+
       # Only need to add them to deal with ambiguous cases where a method is hidden by a local. Ex:
       #   foo 42, 'hello'  #=> Works
       #   foo (42), 'hello'  #=> Simplification of what DeepCover would generate, still works
       #   foo = 1; foo 42, 'hello'  #=> works
       #   foo = 1; foo (42), 'hello'  #=> syntax error.
       #   foo = 1; foo((42), 'hello')  #=> works
-      def add_parentheses?
-        # No issue when no arguments
-        return if arguments.empty?
-        # No ambiguity if there is a receiver
-        return if receiver
-        # Already has parentheses
-        return if self.loc_hash[:begin]
-        true
-      end
-
-      def rewriting_rules
-        rules = super
-        if add_parentheses?
-          range = arguments.last.expression.with(begin_pos: loc_hash[:selector_begin].end_pos)
-          rules << [range, '(%{node})']
-        end
-        rules
+      def need_parentheses?
+        true unless
+          arguments.empty? || # No issue when no arguments
+          receiver || # No ambiguity if there is a receiver
+          loc_hash[:begin] # Ok if has parentheses
       end
     end
 
