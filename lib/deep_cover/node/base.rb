@@ -19,7 +19,11 @@ module DeepCover
       @base_node = base_node
       @parent = parent
       @index = index
-      @children = augment_children(base_children)
+      @children = begin
+        augment_children(base_children)
+      rescue StandardError => e
+        diagnose(e)
+      end
       super()
     end
 
@@ -95,5 +99,21 @@ module DeepCover
       t.casecmp(class_name) == 0 ? t : "#{t}[#{class_name}]"
     end
 
+    private
+    def diagnose(exception)
+      if self.class == Node
+        exp = base_node.loc.expression
+        warn ["Unknown node type encountered: #{base_node.type}",
+          'This node will not be handled properly; its subnodes will be ignored',
+          'Source:',
+          exp && exp.source,
+          "Original exception:",
+          exception.inspect,
+        ].join("\n")
+        []
+      else
+        raise exception
+      end
+    end
   end
 end

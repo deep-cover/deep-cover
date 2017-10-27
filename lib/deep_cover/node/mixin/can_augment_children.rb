@@ -15,8 +15,7 @@ module DeepCover
           child_base_nodes = [*child_base_nodes, *Array.new(missing)]
         end
         child_base_nodes.map.with_index do |child, child_index|
-          child_name = self.class.child_index_to_name(child_index, child_base_nodes.size) rescue binding.pry
-
+          child_name = self.class.child_index_to_name(child_index, child_base_nodes.size)
           if (klass = remap_child(child, child_name))
             klass.new(child, parent: self, index: child_index)
           else
