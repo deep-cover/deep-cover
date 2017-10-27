@@ -33,11 +33,6 @@ module DeepCover
           ParentNoRest::CHILDREN.should eql(foo: 0, bar: 1)
           ParentWithRest::CHILDREN.should eql(foo: 0, bar: 1..-3, baz: -2, qux: -1)
         end
-
-        it "children's are set" do
-          ParentNoRest::BAR.should eql 1
-          ParentWithRest::BAR.should eql 1..-3
-        end
       end
 
       describe :expected_types do

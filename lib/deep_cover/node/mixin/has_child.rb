@@ -91,10 +91,6 @@ module DeepCover
           super
         end
 
-        def const_missing(name)
-          const_set(name, self::CHILDREN.fetch(name.downcase) { return super })
-        end
-
         def update_children_const(name, rest: false)
           children_map = self::CHILDREN
           already_has_rest = false
@@ -120,7 +116,7 @@ module DeepCover
           warn "child name '#{name}' conflicts with existing method for #{self}" if method_defined? name
           class_eval <<-end_eval, __FILE__, __LINE__
             def #{name}
-              children[#{name.upcase}]
+              children[CHILDREN.fetch(#{name.inspect})]
             end
           end_eval
         end
