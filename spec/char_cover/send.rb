@@ -50,3 +50,7 @@
     raise TypeError, 'hello' rescue nil
     raise(TypeError, 'hello') rescue nil
     raise (TypeError, 'hello') rescue nil
+
+### &. (Ruby 2.3+)
+    0&.to_s&.to_i&.nonzero?&.foo(42)&.to_i.nil?
+#>                           xxx-xx-  xxxx

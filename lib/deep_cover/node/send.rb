@@ -18,6 +18,7 @@ module DeepCover
           hash[:selector_begin] = selector.resize(1)
           hash[:selector_end] = Parser::Source::Range.new(selector.source_buffer, selector.end_pos - 1, selector.end_pos)
         else
+          hash.delete(:dot) if type == :safe_send # Hack. API to get a Parser::AST::Send::Map without the dot is crappy.
           hash[:selector_begin] = selector
         end
 
@@ -46,6 +47,29 @@ module DeepCover
           arguments.empty? || # No issue when no arguments
           receiver || # No ambiguity if there is a receiver
           loc_hash[:begin] # Ok if has parentheses
+      end
+    end
+
+    class Csend < Node
+      has_tracker :conditional
+      has_child receiver: Node,
+                rewrite: '(%{local}=%{node};%{conditional_tracker} if %{local} != nil;%{local})'
+
+      has_child actual_send: {safe_send: Send},
+                flow_entry_count: :conditional_tracker_hits
+
+      def initialize(base_node, base_children: base_node.children, **)
+        send_without_receiver = base_node.updated(:safe_send, [nil, *base_node.children.drop(1)])
+        base_children = [base_children.first, send_without_receiver]
+        super
+      end
+
+      executed_loc_keys :dot
+
+      alias_method :execution_count, :flow_entry_count
+
+      def message
+        actual_send.message
       end
     end
 
