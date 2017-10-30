@@ -5,7 +5,7 @@ module DeepCover
     class Send < Node
       check_completion
       has_child receiver: [Node, nil]
-      has_child method_name: Symbol
+      has_child message: Symbol
       has_extra_children arguments: Node
       executed_loc_keys :dot, :selector_begin, :selector_end, :operator
 
@@ -14,7 +14,7 @@ module DeepCover
         selector = hash.delete(:selector)
 
         # Special case for foo[bar]=baz, but not for foo.[]= bar, baz: we split selector into begin and end
-        if base_node.location.dot == nil && [:[], :[]=].include?(method_name)
+        if base_node.location.dot == nil && [:[], :[]=].include?(message)
           hash[:selector_begin] = selector.resize(1)
           hash[:selector_end] = Parser::Source::Range.new(selector.source_buffer, selector.end_pos - 1, selector.end_pos)
         else
