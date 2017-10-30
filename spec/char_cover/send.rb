@@ -24,7 +24,7 @@
     foo[raise] rescue nil
 #>     x     x
     foo[raise] = 2
-#>     x     x - x
+#>     x     xxxxx
 
 ### .()
     a = proc {|o| o}

@@ -10,15 +10,14 @@ module DeepCover
       executed_loc_keys :dot, :selector_begin, :selector_end, :operator
 
       def loc_hash
-        base = super
-        hash = { expression: base[:expression], begin: base[:begin], end: base[:end], dot: base[:dot]}
-        selector = base[:selector]
+        hash = super.dup
+        selector = hash.delete(:selector)
 
         if [:[], :[]=].include?(method_name)
           hash[:selector_begin] = selector.resize(1)
           hash[:selector_end] = Parser::Source::Range.new(selector.source_buffer, selector.end_pos - 1, selector.end_pos)
         else
-          hash[:selector_begin] = base[:selector]
+          hash[:selector_begin] = selector
         end
 
         hash
