@@ -13,7 +13,8 @@ module DeepCover
         hash = super.dup
         selector = hash.delete(:selector)
 
-        if [:[], :[]=].include?(method_name)
+        # Special case for foo[bar]=baz, but not for foo.[]= bar, baz: we split selector into begin and end
+        if base_node.location.dot == nil && [:[], :[]=].include?(method_name)
           hash[:selector_begin] = selector.resize(1)
           hash[:selector_end] = Parser::Source::Range.new(selector.source_buffer, selector.end_pos - 1, selector.end_pos)
         else
