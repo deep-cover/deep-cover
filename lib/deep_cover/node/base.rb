@@ -79,7 +79,7 @@ module DeepCover
     end
 
     def type
-      return base_node.type if base_node
+      return base_node.type if base_node.respond_to? :type
       self.class.name.split('::').last.to_sym
     end
 
