@@ -21,10 +21,11 @@ module DeepCover
       end
 
       # Returns an array of [range, rule], where rule is a string containing '%{node}'
+      # Rules must be ordered inner-most first
       def rewriting_rules
         [
-          resolve_rewrite(parent.rewrite_child(self), parent),
           resolve_rewrite(rewrite, self),
+          resolve_rewrite(parent.rewrite_child(self), parent),
         ].compact.map{|rule| [expression, rule]}
       end
     end

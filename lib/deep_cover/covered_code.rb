@@ -106,7 +106,7 @@ module DeepCover
 
     def instrument_source
       rewriter = ::Parser::Source::Rewriter.new(@buffer)
-      covered_ast.each_node do |node|
+      covered_ast.each_node(:postorder) do |node|
         node.rewriting_rules.each do |range, rule|
           prefix, _node, suffix = rule.partition('%{node}')
           unless prefix.empty?

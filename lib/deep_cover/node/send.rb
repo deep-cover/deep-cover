@@ -26,11 +26,12 @@ module DeepCover
         hash
       end
 
+      # Rules must be ordered inner-most first
       def rewriting_rules
         rules = super
         if need_parentheses?
           range = arguments.last.expression.with(begin_pos: loc_hash[:selector_begin].end_pos)
-          rules << [range, '(%{node})']
+          rules.unshift [range, '(%{node})']
         end
         rules
       end
