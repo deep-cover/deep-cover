@@ -44,7 +44,7 @@ module DeepCover
     context 'for the safe navigation' do
       let(:node){ Node['nil&.foo'] }
       it { type_runs.should == {csend: {safe_send: 0, EmptyBody: 1}} }
-    end
+    end unless RUBY_VERSION < '2.3'
 
   end
 end
