@@ -79,7 +79,7 @@ module DeepCover
 
       def cover
         `cp -R #{dest_path}/lib #{dest_path}/lib_original`
-        @covered_path = Tools.dump_covered_code(File.join(dest_path, 'lib_original'), File.join(dest_path, 'lib'))
+        @covered_path = Tools.dump_covered_code_and_save(File.join(dest_path, 'lib_original'), dest_path: File.join(dest_path, 'lib'))
       end
 
       def process

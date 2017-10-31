@@ -9,7 +9,7 @@ end
 require "deep_cover"
 
 if covered_path.nil?
-  covered_path = DeepCover::Tools.dump_covered_code('./lib', '../covered_deep_cover')
+  covered_path = DeepCover::Tools.dump_covered_code_and_save('./lib', dest_path: '../covered_deep_cover')
   puts "Covered code generation done. Output in", covered_path
   exec 'bin/selfcov', covered_path
 else
