@@ -22,6 +22,7 @@ module DeepCover
           o.separator ''
           o.string '-o', '--output', 'output folder', default: './coverage'
           o.string '-c', '--command', 'command to run tests', default: 'rake'
+          o.bool '--bundle', 'run bundle before the tests', default: true
 
           o.separator ''
           o.separator 'For testing purposes:'

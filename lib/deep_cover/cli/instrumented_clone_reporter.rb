@@ -112,7 +112,7 @@ module DeepCover
         copy
         cover
         patch
-        bundle
+        bundle if @options.fetch(:bundle, true)
         process
         report
       end
