@@ -57,7 +57,7 @@ module DeepCover
 
     def report_istanbul(output: nil, **options)
       dir = output_istanbul(**options).dirname
-      if output
+      unless [nil, '', 'false'].include? output
         output = File.expand_path(output)
         html = "--reporter=html --report-dir='#{output}' && open '#{output}/index.html'"
       end
