@@ -25,13 +25,16 @@ module DeepCover
         nil
       end
 
-      def executed_locs
+      def executed_loc_hash
+        h = Tools.slice(loc_hash, *executed_loc_keys)
         if (keys = parent.child_executed_loc_keys(self))
-          inherited = parent.loc_hash.values_at(*keys)
+          h.merge!(Tools.slice(parent.loc_hash, *keys))
         end
-        [  *loc_hash.values_at(*executed_loc_keys),
-           *inherited
-        ].compact
+        h.reject{|k, v| v.nil? }
+      end
+
+      def executed_locs
+        executed_loc_hash.values
       end
 
       def loc_hash
