@@ -31,7 +31,7 @@ module DeepCover
           1
           :a
         end
-        dummy_method('x') || []
+        dummy_method(nil, 'x') || []
         RUBY
 
       it { should == {false => [2, 3], true => [1, 5]} }

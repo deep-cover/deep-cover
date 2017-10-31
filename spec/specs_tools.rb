@@ -9,7 +9,8 @@ class Array
   end
 end
 
-def dummy_method(*)
+def dummy_method(*args)
+  args.first
 end
 
 def current_ast
