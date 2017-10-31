@@ -35,7 +35,11 @@ module DeepCover
 
       def each_gem_path
         return to_enum __method__ unless block_given?
-        yield @main_path
+        if @main_path.join('lib').exist?
+          yield @main_path
+        else # Rails style
+          Pathname.glob(@main_path.join('*/lib')).each{|p| yield p.dirname}
+        end
       end
 
       def patch_main_ruby_files
