@@ -1,3 +1,5 @@
+require_relative 'empty_body'
+
 module DeepCover
   class Node
     module Branch
@@ -13,14 +15,15 @@ module DeepCover
       # Also define flow_entry_count
     end
 
-    class TrivialBranch < Struct.new(:condition, :other_branch)
-      def flow_entry_count
-        condition.flow_completion_count - other_branch.flow_entry_count
+    class TrivialBranch < Node::EmptyBody
+      def initialize(condition, other_branch, position: true)
+        @condition = condition
+        @other_branch = other_branch
+        super(nil, parent: condition.parent, position: position)
       end
-      alias_method :flow_completion_count, :flow_entry_count
-      alias_method :execution_count, :flow_entry_count
-      def executable?
-        true
+
+      def flow_entry_count
+        @condition.flow_completion_count - @other_branch.flow_entry_count
       end
     end
 
