@@ -89,8 +89,8 @@ module DeepCover
       end
     end
 
-    def self.load(dest_path, dirname = 'deep_cover')
-      Persistence.new(dest_path, dirname).load
+    def self.load(dest_path, dirname = 'deep_cover', with_trackers: true)
+      Persistence.new(dest_path, dirname).load(with_trackers: with_trackers)
     end
 
     def self.saved?(dest_path, dirname = 'deep_cover')
@@ -120,9 +120,9 @@ module DeepCover
         @dir_path = Pathname(dest_path).join(dirname).expand_path
       end
 
-      def load
+      def load(with_trackers: true)
         saved?
-        load_trackers
+        load_trackers if with_trackers
         load_coverage
       end
 

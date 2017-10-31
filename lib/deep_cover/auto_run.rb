@@ -20,7 +20,7 @@ module DeepCover
       end
 
       def load
-        @coverage = Coverage.load(@covered_path)
+        @coverage = Coverage.load(@covered_path, with_trackers: false)
       end
 
       def save
