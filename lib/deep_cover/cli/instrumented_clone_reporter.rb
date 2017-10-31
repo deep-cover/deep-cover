@@ -9,14 +9,14 @@ module DeepCover
       def initialize(gem_path, command: 'rake', **options)
         @command = command
         @options = options
-        @root_path = File.expand_path(gem_path)
-        if File.exist?(File.join(@root_path, 'Gemfile'))
+        @root_path = Pathname.new(gem_path).expand_path
+        if @root_path.join('Gemfile').exist?
           @gem_relative_path = '' # Typical case
         else
           # E.g. rails/activesupport
-          @gem_relative_path = File.basename(@root_path)
-          @root_path = File.dirname(@root_path)
-          raise "Can't find Gemfile" unless File.exist?(File.join(@root_path, 'Gemfile'))
+          @gem_relative_path = @root_path.basename.to_s
+          @root_path = @root_path.dirname
+          raise "Can't find Gemfile" unless @root_path.join('Gemfile').exist?
         end
         @dest_root = File.expand_path('~/test_deep_cover')
         @dest_root = Dir.mktmpdir("deep_cover_test") unless Dir.exist?(@dest_root)
