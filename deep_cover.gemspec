@@ -29,7 +29,6 @@ Gem::Specification.new do |spec|
   # CLI
   spec.add_runtime_dependency "term-ansicolor"
   spec.add_runtime_dependency "highline"
-  spec.add_runtime_dependency "ruby-progressbar", '<1.9.0'
   spec.add_runtime_dependency 'with_progress'
   spec.add_runtime_dependency 'slop', '~> 4.0'
 

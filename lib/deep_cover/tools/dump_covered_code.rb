@@ -1,6 +1,7 @@
-require 'with_progress'
-
 module DeepCover
+  silence_warnings do
+    require 'with_progress'
+  end
   module Tools::DumpCoveredCode
     def dump_covered_code(source_path, dest_path = Dir.mktmpdir)
       coverage = Coverage.new(tracker_global: '$_sc')
