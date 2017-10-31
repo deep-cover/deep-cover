@@ -1,2 +1,3 @@
 --color
+--pattern spec/*_spec.rb, spec/*/*_spec.rb
 --tag ~skip
