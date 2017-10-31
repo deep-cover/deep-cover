@@ -95,7 +95,7 @@ module DeepCover
 
     def root
       @root ||= begin
-        ast = Parser::CurrentRuby.new.parse(@buffer)
+        ast = DeepCover.parser.parse(@buffer)
         Node::Root.new(ast, self)
       end
     end
