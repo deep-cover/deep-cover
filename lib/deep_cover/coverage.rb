@@ -108,7 +108,7 @@ module DeepCover
     end
 
     def tracker_global
-      @options[:tracker_global]
+      @options.fetch(:tracker_global, CoveredCode::DEFAULT_TRACKER_GLOBAL)
     end
 
     class Persistence
