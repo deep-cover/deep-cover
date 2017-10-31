@@ -9,19 +9,17 @@ module DeepCover
       def initialize(gem_path, command: 'rake', **options)
         @command = command
         @options = options
-        @root_path = Pathname.new(gem_path).expand_path
-        if @root_path.join('Gemfile').exist?
-          @gem_relative_path = '' # Typical case
-        else
+        @root_path = gem_path = Pathname.new(gem_path).expand_path
+        unless @root_path.join('Gemfile').exist?
           # E.g. rails/activesupport
-          @gem_relative_path = @root_path.basename.to_s
           @root_path = @root_path.dirname
           raise "Can't find Gemfile" unless @root_path.join('Gemfile').exist?
         end
-        @dest_root = File.expand_path('~/test_deep_cover')
-        @dest_root = Dir.mktmpdir("deep_cover_test") unless Dir.exist?(@dest_root)
+        @dest_root = Pathname('~/test_deep_cover').expand_path
+        @dest_root = Pathname.mktmpdir("deep_cover_test") unless @dest_root.exist?
         `rm -rf #{@dest_root}/* #{@dest_root}/.*`
-        @main_path = File.expand_path(File.join(@dest_root, @gem_relative_path))
+        gem_relative_path = gem_path.relative_path_from(@root_path)
+        @main_path = @dest_root.join(gem_relative_path)
       end
 
       def copy
@@ -42,7 +40,7 @@ module DeepCover
 
       def patch_main_ruby_files
         each_gem_path do |dest_path|
-          main = File.join(dest_path, 'lib/*.rb')
+          main = dest_path.join('lib/*.rb')
           Dir.glob(main).each do |main|
             puts "Patching #{main}"
             patch_ruby_file(main)
@@ -51,7 +49,7 @@ module DeepCover
       end
 
       def patch_gemfile
-        gemfile = File.expand_path(File.join(@dest_root, 'Gemfile'))
+        gemfile = @dest_root.join('Gemfile')
         content = File.read(gemfile)
         unless content =~ /gem 'deep-cover'/
           puts "Patching Gemfile #{gemfile}"
@@ -65,12 +63,12 @@ module DeepCover
       end
 
       def patch_rubocop
-        path = File.expand_path(File.join(@dest_root, '.rubocop.yml'))
-        return unless File.exists?(path)
+        path = @dest_root.join('.rubocop.yml')
+        return unless path.exist?
         puts "Patching .rubocop.yml"
-        config = YAML.load(File.read(path).gsub(/(?<!\w)lib(?!\w)/, 'lib_original'))
+        config = YAML.load(path.read.gsub(/(?<!\w)lib(?!\w)/, 'lib_original'))
         ((config['AllCops'] ||= {})['Exclude'] ||= []) << 'lib/**/*' << 'app/**/*'
-        File.write(path, "# This file was modified by DeepCover\n" + YAML.dump(config))
+        path.write("# This file was modified by DeepCover\n" + YAML.dump(config))
       end
 
       def patch
@@ -84,10 +82,10 @@ module DeepCover
         each_gem_path do |dest_path|
           `cp -R #{dest_path}/lib #{dest_path}/lib_original`
           Tools.dump_covered_code(File.join(dest_path, 'lib_original'),
-            coverage: coverage, root_path: @dest_root,
+            coverage: coverage, root_path: @dest_root.to_s,
             dest_path: File.join(dest_path, 'lib'))
         end
-        coverage.save(@dest_root)
+        coverage.save(@dest_root.to_s)
       end
 
       def process
@@ -97,8 +95,8 @@ module DeepCover
       end
 
       def report
-        coverage = Coverage.load @dest_root
-        puts coverage.report(dir: @dest_root, **@options)
+        coverage = Coverage.load @dest_root.to_s
+        puts coverage.report(dir: @dest_root.to_s, **@options)
       end
 
       def bundle
