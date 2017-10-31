@@ -26,12 +26,6 @@ def assert_equal(expected, actual)
 end
 
 module DeepCover
-  class Node
-    def self.[](source)
-      CoveredCode.new(source: source).execute_code.covered_ast
-    end
-  end
-
   class CoveredCode
     module CurrentExtension
       def execute_code(*)

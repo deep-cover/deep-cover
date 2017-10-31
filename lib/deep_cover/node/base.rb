@@ -27,13 +27,17 @@ module DeepCover
       super()
     end
 
-    ### High level API for coverage purposes
+    ### Public API
 
+    # Shortcut to access children
     def [](v)
       children[v]
     end
 
-    ### Public API
+    # Shortcut to create a node from source code
+    def self.[](source)
+      CoveredCode.new(source: source).execute_code.covered_ast
+    end
 
     def children_nodes
       children.select{|c| c.is_a? Node }
