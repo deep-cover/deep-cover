@@ -22,6 +22,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   ### Runtime dependencies
+  spec.required_ruby_version = ">= 2.0.0"
+
   spec.add_runtime_dependency 'parser'
   spec.add_runtime_dependency 'backports', '>= 3.10.1'
   spec.add_runtime_dependency 'binding_of_caller'
