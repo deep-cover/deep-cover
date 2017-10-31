@@ -49,7 +49,8 @@ module DeepCover
     end
 
     def self.run!(covered_path)
-      Runner.new(covered_path).run!
+      Runner.new(covered_path).run! unless @already_setup
+      @already_setup = true
     end
   end
 end
