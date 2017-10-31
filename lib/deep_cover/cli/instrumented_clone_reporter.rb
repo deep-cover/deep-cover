@@ -62,10 +62,6 @@ module DeepCover
             '',
           ].join("\n"))
         end
-        puts "Running `bundle install`"
-        Bundler.with_clean_env do
-          `cd #{@dest_root} && bundle`
-        end
       end
 
       def patch_rubocop
@@ -105,10 +101,18 @@ module DeepCover
         puts coverage.report(dir: @dest_root, **@options)
       end
 
+      def bundle
+        puts "Running `bundle install`"
+        Bundler.with_clean_env do
+          `cd #{@dest_root} && bundle`
+        end
+      end
+
       def run
         copy
         cover
         patch
+        bundle
         process
         report
       end
