@@ -17,7 +17,6 @@ module DeepCover
         end.to_h]
       end.to_h
     }
-    subject { line_runs }
 
     context 'for a if' do
       let(:node){ Node[ <<-RUBY ] }
@@ -27,11 +26,11 @@ module DeepCover
           "yay"
         end
       RUBY
-      it { should == {1 => {2 => false, 4 => true}} }
+      it { line_runs.should == {1 => {2 => false, 4 => true}} }
 
       context 'when ignoring trivial ifs' do
         let(:options) { {ignore_uncovered: :trivial_if} }
-        it { should == {1 => {2 => true, 4 => true}} }
+        it { line_runs.should == {1 => {2 => true, 4 => true}} }
       end
     end
   end
