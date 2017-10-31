@@ -9,18 +9,19 @@ module DeepCover
       coverage.save(dest_path)
     end
 
-    def dump_covered_code(source_path, coverage: raise, dest_path: Dir.mktmpdir)
+    def dump_covered_code(source_path, coverage: raise, dest_path: Dir.mktmpdir, root_path: source_path)
       source_path = File.join(File.expand_path(source_path), '')
       dest_path = File.join(File.expand_path(dest_path), '')
+      root_path = Pathname.new(root_path)
       skipped = []
       Dir.glob("#{source_path}**/*.rb").each.with_progress(title: 'Rewriting') do |path|
+        new_path = Pathname(path.gsub(source_path, dest_path))
         begin
-          covered_code = coverage.covered_code(path)
+          covered_code = coverage.covered_code(path, name: new_path.relative_path_from(root_path))
         rescue Parser::SyntaxError
           skipped << path
           next
         end
-        new_path = Pathname(path.gsub(source_path, dest_path))
         new_path.dirname.mkpath
         new_path.write(covered_code.covered_source)
       end

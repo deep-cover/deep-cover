@@ -29,9 +29,9 @@ module DeepCover
       covered_code(filename).line_coverage(**options)
     end
 
-    def covered_code(path)
+    def covered_code(path, **options)
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
-      @covered_codes[path] ||= CoveredCode.new(path: path, **@options)
+      @covered_codes[path] ||= CoveredCode.new(path: path, **options, **@options)
     end
 
     def each
