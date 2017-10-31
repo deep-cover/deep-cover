@@ -1,4 +1,5 @@
 require_relative 'literals'
+require_relative 'branch'
 
 module DeepCover
   class Node
@@ -51,6 +52,7 @@ module DeepCover
     end
 
     class Csend < Node
+      include Branch
       has_tracker :conditional
       has_child receiver: Node,
                 rewrite: '(%{local}=%{node};%{conditional_tracker} if %{local} != nil;%{local})'
@@ -70,6 +72,12 @@ module DeepCover
 
       def message
         actual_send.message
+      end
+
+      def branches
+        [ actual_send,
+          TrivialBranch.new(receiver, actual_send)
+        ]
       end
     end
 

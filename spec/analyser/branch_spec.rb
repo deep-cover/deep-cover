@@ -40,5 +40,11 @@ module DeepCover
         it { type_runs.should == {if: {int: 0, EmptyBody: 1}} }
       end
     end
+
+    context 'for the safe navigation' do
+      let(:node){ Node['nil&.foo'] }
+      it { type_runs.should == {csend: {safe_send: 0, EmptyBody: 1}} }
+    end
+
   end
 end
