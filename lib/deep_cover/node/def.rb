@@ -7,7 +7,7 @@ module DeepCover
     has_child method_name: Symbol
     has_child signature: Args
     has_child body: Node,
-      rewrite: '%{method_call_tracker};%{local}=nil;%{node};',
+      rewrite: '%{method_call_tracker};%{local}=nil;%{node}',
       can_be_empty: -> { base_node.loc.end.begin },
       is_statement: true,
       flow_entry_count: :method_call_tracker_hits
@@ -25,7 +25,7 @@ module DeepCover
     has_child method_name: Symbol
     has_child signature: Args
     has_child body: Node,
-      rewrite: '%{method_call_tracker};%{local}=nil;%{node};',
+      rewrite: '%{method_call_tracker};%{local}=nil;%{node}',
       can_be_empty: -> { base_node.loc.end.begin },
       is_statement: true,
       flow_entry_count: :method_call_tracker_hits
