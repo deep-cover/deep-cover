@@ -16,6 +16,7 @@ module DeepCover
     }
     let(:results) { analyser.results }
     let(:line_runs) { map(results){|node| node.expression.line } }
+    let(:type_runs) { map(results, &:type) }
 
     context 'for a if' do
       let(:node){ Node[ <<-RUBY ] }
@@ -26,10 +27,17 @@ module DeepCover
         end
       RUBY
       it { line_runs.should == {1 => {2 => 0, 4 => 1}} }
+      it { type_runs.should == {if: {send: 0, str: 1}} }
 
       context 'when ignoring trivial ifs' do
         let(:options) { {ignore_uncovered: :trivial_if} }
         it { line_runs.should == {1 => {2 => nil, 4 => 1}} }
+        it { type_runs.should == {if: {send: nil, str: 1}} }
+      end
+
+      context 'without an else' do
+        let(:node){ Node['42 if false'] }
+        it { type_runs.should == {if: {int: 0, EmptyBody: 1}} }
       end
     end
   end
