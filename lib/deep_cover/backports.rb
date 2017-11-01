@@ -2,6 +2,12 @@
 class Module
   public :prepend # Public in Ruby 2.1+.
 end
+require 'pathname'
+class Pathname
+  def write(*args)
+    File.write(to_path, *args)
+  end unless method_defined? :write
+end
 require 'backports/2.1.0/module/include'
 require 'backports/2.1.0/enumerable/to_h'
 require 'backports/2.4.0/false_class/dup'
