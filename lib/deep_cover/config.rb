@@ -36,15 +36,17 @@ module DeepCover
     end
 
     module Setter
-      def configure(&block)
+      def config
         @config ||= Config.new
+      end
 
+      def configure(&block)
         raise "Must provide a block" unless block
         case block.arity
         when 0
-          @config.instance_eval(&block)
+          config.instance_eval(&block)
         when 1
-          block.call(@config)
+          block.call(config)
         end
       end
     end

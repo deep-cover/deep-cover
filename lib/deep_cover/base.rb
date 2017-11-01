@@ -17,7 +17,7 @@ module DeepCover
     end
 
     def line_coverage(filename)
-      coverage.line_coverage(handle_relative_filename(filename), **@config)
+      coverage.line_coverage(handle_relative_filename(filename), **config)
     end
 
     def covered_code(filename)
