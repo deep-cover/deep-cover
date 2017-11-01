@@ -41,6 +41,43 @@ module DeepCover
       end
     end
 
+    context 'for a case' do
+      let(:node){ Node[ <<-RUBY ] }
+        (1..5).each do |i|
+          case i
+          when 0
+            :a
+          when 1, 2
+            'b'
+          when 3
+            String
+          else
+            666
+          end
+        end
+      RUBY
+      it { line_runs.should == {2 => {4=>0, 6=>2, 8=>1, 10=>2}} }
+      it { type_runs.should == {case: {sym: 0, str: 2, const: 1, int: 2}} }
+
+      context 'without an else' do
+        let(:node){ Node[ <<-RUBY ] }
+          case 1
+          when 0
+            :a
+          when 1, 2
+            'b'
+          end
+        RUBY
+        it { line_runs.should == {1 => {3=>0, 5=>1, 6=>0}} }
+        it { type_runs.should == {case: {sym: 0, str: 1, EmptyBody: 0}} }
+        context 'when ignoring implicit else' do
+          let(:options) {  {ignore_uncovered: %w[case_implicit_else]} }
+          it { line_runs.should == {1 => {3=>0, 5=>1, 6=>nil}} }
+          it { type_runs.should == {case: {sym: 0, str: 1, EmptyBody: nil}} }
+        end
+      end
+    end
+
     context 'for the safe navigation' do
       let(:node){ Node['nil&.foo'] }
       it { type_runs.should == {csend: {safe_send: 0, EmptyBody: 1}} }

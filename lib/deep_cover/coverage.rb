@@ -4,7 +4,6 @@ module DeepCover
     require 'parser/current'
   end
   require 'pry'
-  require 'pathname'
   require_relative 'covered_code'
   require 'securerandom'
 
