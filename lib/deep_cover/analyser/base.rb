@@ -3,13 +3,8 @@ module DeepCover
     attr_reader :source, :options
 
     def initialize(source, **options)
-      @source = source.to_analyser
+      @source = to_source(source, **options)
       @options = options
-    end
-
-    # Basic coercion mechanism
-    def to_analyser
-      self
     end
 
     # Looking exclusively at our subset of nodes, returns the node's direct descendants
@@ -46,6 +41,25 @@ module DeepCover
 
     def covered_code
       @source.covered_code
+    end
+
+    protected
+
+    def convert(covered_code, **options)
+      Analyser::Node.new(covered_code, **options)
+    end
+
+    def to_source(source, **options)
+      case source
+      when Analyser
+        source
+      when CoveredCode
+        convert(source, **options)
+      when Node
+        convert(source.covered_code, **options)
+      else
+        raise ArgumentError, "expected Analyser, Node or CoveredCode, got #{source.class}"
+      end
     end
   end
 end

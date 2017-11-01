@@ -7,5 +7,10 @@ module DeepCover
     def is_default_argument?(node)
       node.parent.is_a?(Node::Optarg)
     end
+
+    protected
+    def convert(node, **)
+      Analyser::CoveredCodeSource.new(node)
+    end
   end
 end

@@ -15,17 +15,5 @@ module DeepCover
     def node_runs(node)
       node.execution_count if node.executable?
     end
-
-    module NodeExtension
-      def to_analyser
-        Analyser::CoveredCodeSource.new(covered_code)
-      end
-    end
-
-    module CoveredCodeExtension
-      def to_analyser
-        Analyser::CoveredCodeSource.new(self)
-      end
-    end
   end
 end
