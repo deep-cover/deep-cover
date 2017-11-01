@@ -21,11 +21,13 @@ module DeepCover
         end
       end
 
-      def initialize(source, filename: '(source)', lineno: 1, pry: false)
+      attr_reader :options
+      def initialize(source, filename: '(source)', lineno: 1, pry: false, **options)
         @source = source
         @filename = filename
         @lineno = lineno
         @pry = pry
+        @options = options
       end
 
       def show
@@ -41,8 +43,8 @@ module DeepCover
         puts "Line Coverage: Builtin | DeepCover | DeepCover Strict:\n"
         begin
           builtin_line_coverage = builtin_coverage(@source, @filename, @lineno)
-          our_line_coverage = our_coverage(@source, @filename, @lineno)
-          our_strict_line_coverage = our_coverage(@source, @filename, @lineno, allow_partial: false)
+          our_line_coverage = our_coverage(@source, @filename, @lineno, **options)
+          our_strict_line_coverage = our_coverage(@source, @filename, @lineno, allow_partial: false, **options)
           lines = format(builtin_line_coverage, our_line_coverage, our_strict_line_coverage, source: @source)
           puts number_lines(lines, lineno: @lineno)
         rescue Exception => e
