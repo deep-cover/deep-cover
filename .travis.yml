@@ -7,4 +7,6 @@ rvm:
   - 2.1.10
   - 2.0.0
   - jruby-9.1.9.0
-before_install: gem install bundler -v 1.15.4
+before_install:
+	- gem install bundler -v 1.15.4
+	- npm install -g nyc
