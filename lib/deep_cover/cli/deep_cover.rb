@@ -13,7 +13,7 @@ module DeepCover
       end
 
       def show_help
-        puts options
+        puts menu
       end
 
       class Parser < Struct.new(:delegate)
@@ -32,8 +32,8 @@ module DeepCover
         end
       end
 
-      def options
-        @options ||= parse do |o|
+      def menu
+        @menu ||= parse do |o|
           o.banner = "usage: deep-cover [options] [path/to/app/or/gem]"
           o.separator ''
           o.string '-o', '--output', 'output folder', default: './coverage'
@@ -53,9 +53,10 @@ module DeepCover
       end
 
       def go
+        options = menu.to_h
         if options[:expression]
           Debugger.new(options[:expression], pry: options[:debug]).show
-        elsif (path = options.arguments.first)
+        elsif (path = menu.arguments.first)
           InstrumentedCloneReporter.new(path, **options).run
         else
           show_help
