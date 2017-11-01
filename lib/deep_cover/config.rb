@@ -6,8 +6,8 @@ module DeepCover
       allow_partial: false,
     }
 
-    def initialize
-      @options = copy(DEFAULTS)
+    def initialize(**options)
+      @options = copy(DEFAULTS.merge(options))
     end
 
     def to_hash
@@ -16,11 +16,13 @@ module DeepCover
     alias_method :to_h, :to_hash
 
     def ignore_uncovered(*keywords)
+      check_uncovered(keywords)
       @options[:ignore_uncovered] += keywords
       self
     end
 
     def detect_uncovered(*keywords)
+      check_uncovered(keywords)
       @options[:ignore_uncovered] -= keywords
       self
     end
@@ -31,6 +33,11 @@ module DeepCover
     end
 
     private
+    def check_uncovered(keywords)
+      unknown = keywords - Analyser.optionally_covered
+      raise ArgumentError, "unknown options: #{unknown.join(', ')}" unless unknown.empty?
+    end
+
     def copy(h)
       h.dup.transform_values(&:dup)
     end
