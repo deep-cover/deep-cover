@@ -16,12 +16,12 @@ module DeepCover
     alias_method :to_h, :to_hash
 
     def ignore_uncovered(*keywords)
-      @options[:ignore_uncovered] -= keywords
+      @options[:ignore_uncovered] += keywords
       self
     end
 
     def detect_uncovered(*keywords)
-      @options[:ignore_uncovered] += keywords
+      @options[:ignore_uncovered] -= keywords
       self
     end
 
