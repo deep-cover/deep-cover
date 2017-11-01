@@ -39,7 +39,12 @@ module DeepCover
           o.string '-o', '--output', 'output folder', default: './coverage'
           o.string '-c', '--command', 'command to run tests', default: 'rake'
           o.bool '--bundle', 'run bundle before the tests', default: true
-
+          o.separator 'Coverage options'
+          @ignore_uncovered_map = Analyser.optionally_covered.map do |option|
+            default = Config::DEFAULTS[:ignore_uncovered].include?(option)
+            o.bool "--ignore-#{Tools.dasherize(option)}", "", default: default
+            [:"ignore_#{option}", option]
+          end.to_h
           o.separator ''
           o.separator 'For testing purposes:'
           o.string '-e', '--expression', 'test ruby expression instead of a covering a path'
@@ -52,10 +57,18 @@ module DeepCover
         end
       end
 
+      def convert_options(options)
+        iu = options[:ignore_uncovered] = []
+        @ignore_uncovered_map.each do |cli_option, option|
+          iu << option if options.delete(cli_option)
+        end
+        options
+      end
+
       def go
-        options = menu.to_h
+        options = convert_options(menu.to_h)
         if options[:expression]
-          Debugger.new(options[:expression], pry: options[:debug]).show
+          Debugger.new(options[:expression], pry: options[:debug], **options).show
         elsif (path = menu.arguments.first)
           InstrumentedCloneReporter.new(path, **options).run
         else
