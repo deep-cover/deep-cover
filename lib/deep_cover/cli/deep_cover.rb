@@ -16,8 +16,24 @@ module DeepCover
         puts options
       end
 
+      class Parser < Struct.new(:delegate)
+        def method_missing(method, *args, &block)
+          options = args.last
+          if options.is_a?(Hash) && options.has_key?(:default)
+            args[-2] += " [#{options[:default]}]"
+          end
+          delegate.public_send(method, *args, &block)
+        end
+      end
+
+      def parse
+        Slop.parse do |o|
+          yield Parser.new(o)
+        end
+      end
+
       def options
-        @options ||= Slop.parse do |o|
+        @options ||= parse do |o|
           o.banner = "usage: deep-cover [options] [path/to/app/or/gem]"
           o.separator ''
           o.string '-o', '--output', 'output folder', default: './coverage'
