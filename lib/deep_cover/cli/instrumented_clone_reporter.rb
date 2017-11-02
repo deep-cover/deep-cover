@@ -94,7 +94,7 @@ module DeepCover
 
       def process
         Bundler.with_clean_env do
-          system("cd #{@main_path} && #{@command}", out: $stdout, err: :out)
+          system("cd #{@main_path} && #{@command}")
         end
       end
 
