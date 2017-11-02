@@ -46,6 +46,7 @@ module DeepCover
     end
 
     def self.run!(covered_path)
+      @already_setup ||= false # Avoid ruby warning
       Runner.new(covered_path).run! unless @already_setup
       @already_setup = true
     end
