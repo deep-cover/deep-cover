@@ -14,7 +14,9 @@ module DeepCover
       dest_path = File.join(File.expand_path(dest_path), '')
       root_path = Pathname.new(root_path)
       skipped = []
-      Dir.glob("#{source_path}**/*.rb").each.with_progress(title: 'Rewriting') do |path|
+      file_paths = Dir.glob("#{source_path}**/*.rb").select{|p| File.file?(p) }
+      file_paths.each.with_progress(title: 'Rewriting') do |path|
+
         new_path = Pathname(path.gsub(source_path, dest_path))
         begin
           covered_code = coverage.covered_code(path, name: new_path.relative_path_from(root_path))
