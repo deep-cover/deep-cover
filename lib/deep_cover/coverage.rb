@@ -161,7 +161,7 @@ module DeepCover
 
       def load_coverage
         Marshal.load(dir_path.join(BASENAME).binread).tap do |version: raise, coverage: raise|
-          raise "dump version mismatch: #{deep_cover}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
+          raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
           return coverage
         end
       end
@@ -169,7 +169,7 @@ module DeepCover
       def load_trackers
         tracker_files.each do |full_path|
           Marshal.load(full_path.binread).tap do |version: raise, global: raise, trackers: raise|
-            raise "dump version mismatch: #{deep_cover}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
+            raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
             merge_trackers(eval("#{global} ||= {}"), trackers)
           end
         end
