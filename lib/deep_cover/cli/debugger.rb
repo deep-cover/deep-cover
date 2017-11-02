@@ -74,7 +74,7 @@ module DeepCover
       def show_char_coverage
         puts "\nChar coverage:\n"
 
-        puts format_char_cover(covered_code, show_whitespace: !!ENV['W'])
+        puts format_char_cover(covered_code, show_whitespace: !!ENV['W'], **options)
       end
 
       def pry
