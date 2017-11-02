@@ -95,14 +95,13 @@ module DeepCover
 
       # Subject to change; istanbul seems to output the same location for loc & locations...
       it 'converts branches' do
-        loc = {start: {line: 1, column:  8}, end: {line: 5, column: 10}}
         convert_branch(branch_node).should == {
           line: 1,
           type: :if,
-          loc: loc,
+          loc: {start: {line: 1, column:  8}, end: {line: 5, column: 10}},
           locations: [
-            loc,
-            loc,
+            {start: {line: 2, column:  10}, end: {line: 2, column: 13}},
+            {start: {line: 4, column:  10}, end: {line: 4, column: 13}},
           ],
         }
       end
