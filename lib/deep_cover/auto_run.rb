@@ -30,19 +30,16 @@ module DeepCover
       def after_tests
         use_at_exit = true
         if defined?(Minitest)
-          puts "Registering with Minitest"
           use_at_exit = false
           Minitest.after_run { yield }
         end
         if defined?(Rspec)
           use_at_exit = false
-          puts "Registering with Rspec"
           RSpec.configure do |config|
             config.after(:suite) { yield }
           end
         end
         if use_at_exit
-          puts "Using at_exit"
           at_exit { yield }
         end
       end
