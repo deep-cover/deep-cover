@@ -102,11 +102,13 @@ After checking out the repo, run `bundle` to install dependencies. Then, run `ra
 
 For detailed analysis:
 
-`deep-cover -e "if(:try_me); puts 'cool'; end"`
+`deep-cover -d -e "if(:try_me); puts 'cool'; end"`
 
 To run one of the specs in `spec`:
 
 `bin/cov boolean`
+
+More details in the [contributing guide](https://github.com/deep-cover/deep-cover/blob/master/CONTRIBUTING.md).
 
 ### Status
 
