@@ -140,7 +140,7 @@ module DeepCover
       }
       class Splat < Node
         include BackwardsStrategy
-        has_child rest_arg: BASE_MAP
+        has_child rest_arg: [nil], remap: BASE_MAP
         executed_loc_keys :operator
       end
 

@@ -91,6 +91,10 @@
     a, (b, c, (d, *e)) = 1
     MULTIPLE, String::MULTIPLE_SCOPED, ::MULTIPLE_GLOBAL = 1
 
+#### Empty splat
+
+    a, b, * = nil
+
 #### raising on the value side
     (a, b, c = 1, raise, 2) rescue nil
 #>  -x- x- xxx  -      - x-
