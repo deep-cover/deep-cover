@@ -2,18 +2,12 @@ require "spec_helper"
 
 RSpec::Matchers.define :run_successfully do
   match do |path|
-    reader, writer = IO.pipe
-    error_r, error_w = IO.pipe
-    options = {in: File::NULL, out: writer, err: error_w}
+    require 'open3'
+    output, errors, status = Open3.capture3('ruby', "spec/full_usage/#{path}")
+    @output = output.chomp
+    @errors = errors.chomp
+    @exit_code = status.exitstatus
 
-    pid = spawn('ruby', "spec/full_usage/#{path}", options)
-    writer.close
-    error_w.close
-    @output = reader.read.chomp
-    @errors = error_r.read.chomp
-    Process.wait(pid)
-    @exit_code = $?.exitstatus
-    reader.close
     @ouput_ok = @expected_output.nil? || @expected_output == @output
 
     @exit_code == 0 && @ouput_ok && (@errors == '' || RUBY_PLATFORM == 'java')
