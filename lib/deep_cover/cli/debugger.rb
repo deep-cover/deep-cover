@@ -22,20 +22,23 @@ module DeepCover
       end
 
       attr_reader :options
-      def initialize(source, filename: '(source)', lineno: 1, pry: false, **options)
+      def initialize(source, filename: '(source)', lineno: 1, debug: false, **options)
         @source = source
         @filename = filename
         @lineno = lineno
-        @pry = pry
+        @debug = debug
         @options = options
       end
 
       def show
-        show_line_coverage
-        show_instrumented_code
-        show_ast
+        execute
+        if @debug
+          show_line_coverage
+          show_instrumented_code
+          show_ast
+        end
         show_char_coverage
-        pry if @pry
+        pry if @debug
         finish
       end
 
@@ -60,13 +63,6 @@ module DeepCover
 
       def show_ast
         puts "\nParsed code:\n"
-        begin
-          execute_sample(covered_code)
-        rescue Exception => e
-          puts "Can't `execute_sample`:#{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
-          @failed = true
-        end
-
         Node.prepend ColorAST
         puts covered_code.covered_ast
       end
@@ -89,6 +85,15 @@ module DeepCover
 
       def covered_code
         @covered_code ||= CoveredCode.new(source: @source, path: @filename, lineno: @lineno)
+      end
+
+      def execute
+        begin
+          execute_sample(covered_code)
+        rescue Exception => e
+          puts "Can't `execute_sample`:#{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
+          @failed = true
+        end
       end
     end
   end

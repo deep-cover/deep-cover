@@ -68,7 +68,7 @@ module DeepCover
       def go
         options = convert_options(menu.to_h)
         if options[:expression]
-          Debugger.new(options[:expression], pry: options[:debug], **options).show
+          Debugger.new(options[:expression], **options).show
         elsif (path = menu.arguments.first)
           InstrumentedCloneReporter.new(path, **options).run
         else
