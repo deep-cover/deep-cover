@@ -44,7 +44,7 @@
 
 ### Empty Block
 #### with no arguments
-  1.times{}
+    1.times{}
 
 #### with arguments [#6]
-  lambda { |*_| }
+    lambda { |*_| }
