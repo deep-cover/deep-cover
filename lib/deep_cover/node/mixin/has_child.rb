@@ -9,7 +9,7 @@ module DeepCover
 
       def initialize(*)
         super
-        self.validate_children_types(children) rescue binding.pry
+        self.validate_children_types(children)
       end
 
       def validate_children_types(nodes)
