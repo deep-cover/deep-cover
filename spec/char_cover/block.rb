@@ -44,3 +44,6 @@
 
 ### Empty Block
   1.times{}
+
+### With braces and arguments [#6]
+  lambda { |*_| }
