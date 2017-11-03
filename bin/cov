@@ -39,5 +39,5 @@ module DeepCover
     lines, lineno = examples[answer]
   end
 
-  CLI::Debugger.new(lines.join, filename: fn, lineno: lineno, pry: true).show
+  CLI::Debugger.new(lines.join, filename: fn, lineno: lineno, debug: true).show
 end
