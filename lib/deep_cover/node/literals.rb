@@ -6,7 +6,7 @@ module DeepCover
     class SingletonLiteral < Node
       executed_loc_keys :expression
     end
-    True = False = Nil = SingletonLiteral
+    True = False = Nil = Self = SingletonLiteral
 
     # Atoms
     def self.atom(type)

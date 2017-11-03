@@ -110,3 +110,7 @@
 #### raising (!JRuby)
     (`echoqweqwe`.to_s) rescue nil
 #>  -            xxxxx-
+
+### self
+     var = self
+#>
