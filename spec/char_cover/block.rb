@@ -48,3 +48,8 @@
 
 #### with arguments [#6]
     lambda { |*_| }
+
+#### Failures in devise [#6]
+    dummy_method 42.to_s, *nil do ; end
+    Kernel.puts(1, raise, 2) do ; 42; end
+#>        xxxxxx -      - xx -- - xx- ---
