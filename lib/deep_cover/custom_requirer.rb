@@ -17,13 +17,13 @@ module DeepCover
       path = File.absolute_path(path) if path.start_with?('./') || path.start_with?('../')
 
       if Pathname.new(path).absolute?
-        return path if File.exists?(path)
+        return path if File.exist?(path)
         return nil
       end
 
       @load_path.each do |load_path|
         possible_path = File.absolute_path(path, load_path)
-        return possible_path if File.exists?(possible_path)
+        return possible_path if File.exist?(possible_path)
       end
 
       nil
@@ -69,7 +69,7 @@ module DeepCover
       if found_path.nil?
         # #load has a final fallback of always trying relative to current work directory of process
         possible_path = File.absolute_path(path)
-        found_path = possible_path if File.exists?(possible_path)
+        found_path = possible_path if File.exist?(possible_path)
       end
 
       return :not_found unless found_path
