@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec::Matchers.define :have_correct_char_coverage do |filename, lineno|
   def autofix(filename, answer, line, lineno)
     line.chomp.each_char.with_index do |c, i|
-      answer[i] = ' ' if answer[i] == '-' && c =~ DeepCover::Tools::UNIMPORTANT_CHARACTERS
+      answer[i] = ' ' if answer[i] == '-' && c =~ DeepCover::Specs::UNIMPORTANT_CHARACTERS
     end
     lines = File.read(filename).lines
     lines[lineno] = "#>  #{answer[4..-1].rstrip}\n"
