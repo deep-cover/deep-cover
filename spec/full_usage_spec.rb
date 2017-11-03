@@ -3,7 +3,9 @@ require "spec_helper"
 RSpec::Matchers.define :run_successfully do
   match do |path|
     require 'open3'
-    output, errors, status = Open3.capture3('ruby', "spec/full_usage/#{path}")
+    output, errors, status = Bundler.with_clean_env do
+      Open3.capture3('ruby', "spec/full_usage/#{path}")
+    end
     @output = output.chomp
     @errors = errors.chomp
     @exit_code = status.exitstatus
