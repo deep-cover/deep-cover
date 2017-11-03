@@ -1,10 +1,10 @@
 require "spec_helper"
 
 RSpec::Matchers.define :run_successfully do
-  match do |path|
+  match do |command|
     require 'open3'
     output, errors, status = Bundler.with_clean_env do
-      Open3.capture3('ruby', "spec/full_usage/#{path}")
+      Open3.capture3(*command)
     end
     @output = output.chomp
     @errors = errors.chomp
@@ -29,8 +29,11 @@ RSpec::Matchers.define :run_successfully do
 end
 
 RSpec.describe 'DeepCover usage' do
-  it { 'simple/simple.rb'.should run_successfully.and_output('Done') }
-  it { 'with_configure/test.rb'.should run_successfully.and_output('[1, 0, 2, 0, nil, 2, nil, nil]') }
+  it { %w(ruby spec/full_usage/simple/simple.rb).should run_successfully.and_output('Done') }
+
+  it do
+    %w(ruby spec/full_usage/with_configure/test.rb).should run_successfully.and_output('[1, 0, 2, 0, nil, 2, nil, nil]')
+  end
 
   it 'Can still require gems when there is no bundler' do
     ignore_output = {in: File::NULL, out: File::NULL, err: File::NULL}
