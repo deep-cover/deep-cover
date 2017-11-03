@@ -33,10 +33,10 @@ RSpec.describe 'DeepCover usage' do
   it 'Can still require gems when there is no bundler' do
     ignore_output = {in: File::NULL, out: File::NULL, err: File::NULL}
     Bundler.with_clean_env do
-      install_success = system("gem install --local spec/full_usage/tiny_gem-0.1.0.gem", ignore_output)
+      install_success = system("gem install --local spec/cli_fixtures/trivial_gem/pkg/trivial_gem-0.1.0.gem", ignore_output)
       install_success.should be true
 
-      require_success = system(%(ruby -e 'require "./lib/deep_cover"; DeepCover.start; require "tiny_gem"'), ignore_output)
+      require_success = system(%(ruby -e 'require "./lib/deep_cover"; DeepCover.start; require "trivial_gem"'), ignore_output)
       require_success.should be true
     end
   end
