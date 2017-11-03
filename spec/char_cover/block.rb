@@ -43,7 +43,8 @@
 #>X
 
 ### Empty Block
+#### with no arguments
   1.times{}
 
-### With braces and arguments [#6]
+#### with arguments [#6]
   lambda { |*_| }
