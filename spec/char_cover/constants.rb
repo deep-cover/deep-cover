@@ -14,6 +14,12 @@
     ::Float::INFINITY
     DeepCover::SpecConstantsSampleScopedAssignation = 1
     ::DeepCover::SpecConstantsSampleScopedAssignation = 1
+    class Float
+      self::INFINITY
+      self::ANSWER = 42.0
+      obj = {}; self::WHATEVER, foo, obj.nope, self::NOPE = nil rescue nil
+#>            -               -    -         - xxxxxxxxxx
+    end
 
 ### Undefined
 #### Scoped
