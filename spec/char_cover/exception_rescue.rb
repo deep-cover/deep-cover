@@ -22,6 +22,13 @@
 #>X
     end
 
+#### With a comment
+    begin
+      raise
+    rescue # this comment after the rescue with empty block can be a problem. Leave it HERE
+
+    end
+
 ### With exception list, but no assignment
 
     begin
@@ -30,6 +37,8 @@
 #>X
     rescue NotImplementedError, TypeError
 #>  xxxxxx                    -
+    rescue ZeroDivisionError # this comment after the rescue with empty block can be a problem. Leave it HERE
+#>  xxxxxx                   --------------------------------------------------------------------------------
     rescue Exception
       "here"
     rescue SyntaxError, TypeError
