@@ -98,7 +98,7 @@ puts DeepCover.line_coverage('foo')
 
 ## Development
 
-After checking out the repo, run `bundle` to install dependencies. Then, run `rake` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bundle` then `rake dev:install` to install dependencies. Then, run `rake` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 For detailed analysis:
 
