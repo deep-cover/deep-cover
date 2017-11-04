@@ -9,6 +9,7 @@ module DeepCover
         autoload_tracker.initialize_autoloaded_paths
       end
       require_relative 'core_ext/require_overrides'
+      RequireOverride.active = true
       @started = true
     end
 

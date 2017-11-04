@@ -4,9 +4,8 @@
 # each can have been already overwritten individually. (Rubygems only
 # overrides Kernel#require)
 
-[Kernel, Kernel.singleton_class].each do |mod|
-  mod.module_eval do
-    alias_method :require_without_coverage, :require
+module DeepCover
+  module RequireOverride
     def require(path)
       result = DeepCover.custom_requirer.require(path)
       if [:not_found, :cover_failed, :not_supported].include?(result)
@@ -23,5 +22,29 @@
 
       require(File.absolute_path(path, base))
     end
+
+    class << self
+      def active=(active)
+        each do |mod, method_name|
+          mod.send :alias_method, method_name, :"#{method_name}_#{active ? 'with' : 'without'}_coverage"
+        end
+      end
+
+      def setup
+        each do |mod, method_name|
+          mod.send :alias_method, :"#{method_name}_without_coverage", method_name
+          mod.send :define_method, :"#{method_name}_with_coverage", RequireOverride.instance_method(method_name)
+        end
+      end
+
+      def each(&block)
+        [::Kernel, ::Kernel.singleton_class].each do |mod|
+          %i[require require_relative].each do |method_name|
+            yield mod, method_name
+          end
+        end
+      end
+    end
+    setup
   end
 end
