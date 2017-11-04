@@ -38,6 +38,8 @@ end
 RSpec.describe 'DeepCover usage' do
   it { %w(ruby spec/full_usage/simple/simple.rb).should run_successfully.and_output('Done') }
 
+  it { %w(ruby spec/full_usage/simple/simple.rb takeover).should run_successfully.and_output('Done') }
+
   it do
     %w(ruby spec/full_usage/with_configure/test.rb).should run_successfully.and_output('[1, 0, 2, 0, nil, 2, nil, nil]')
   end

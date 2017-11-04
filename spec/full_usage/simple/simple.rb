@@ -26,8 +26,15 @@ begin
 
   # Load deep_cover
   $LOAD_PATH << File.absolute_path('../../../lib', absolute_dir)
-  require 'deep_cover'
-  DeepCover.start
+  if ARGV[0] == 'takeover'
+    require 'deep_cover/builtin_takeover'
+    Coverage.start
+  elsif ARGV[0].nil?
+    require 'deep_cover'
+    DeepCover.start
+  else
+    raise "Unsupported ARGV[0]: #{ARGV[0].inspect}"
+  end
 
   test_require('beside_simple')
   test_require('./relative_beside_simple')
