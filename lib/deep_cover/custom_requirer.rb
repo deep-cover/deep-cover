@@ -82,7 +82,15 @@ module DeepCover
 
     protected
     def cover_and_execute(path)
-      covered_code = DeepCover.coverage.covered_code(path)
+      begin
+        covered_code = DeepCover.coverage.covered_code(path)
+      rescue Parser::SyntaxError => e
+        if e.message =~ /contains escape sequences incompatible with UTF-8/
+          warn "Can't cover #{path} because of incompatible encoding (see issue #9)"
+        else
+          raise
+        end
+      end
       return :cover_failed unless covered_code
       DeepCover.autoload_tracker.wrap_require(path) do
         covered_code.execute_code

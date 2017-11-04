@@ -14,6 +14,15 @@ RSpec.describe DeepCover do
         methods.map{|m| method(m).source_location }.compact.size.should == 0
       end
     end
+
+    it "doesn't choke on libs with encoding snafus" do
+      DeepCover.cover do
+        expect {
+          require('rexml/source').should == true
+        }.to output(/Can't cover .*rexml\/source.rb because of incompatible encoding/).to_stderr
+      end
+      REXML::SourceFactory.should be_instance_of(Class)
+    end
   end
 
 end
