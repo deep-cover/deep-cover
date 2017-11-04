@@ -88,12 +88,18 @@ module DeepCover
         if e.message =~ /contains escape sequences incompatible with UTF-8/
           warn "Can't cover #{path} because of incompatible encoding (see issue #9)"
         else
-          raise
+          warn "The file #{path} can't be instrumented"
         end
+        return :cover_failed
       end
-      return :cover_failed unless covered_code
       DeepCover.autoload_tracker.wrap_require(path) do
-        covered_code.execute_code
+        begin
+          covered_code.execute_code
+        rescue ::SyntaxError => e
+          warn "DeepCover is getting confused with the file #{path} and it won't be instrumented.\n" +
+               "Please report this error and provide the source code around the following:\n#{e}"
+          return :cover_failed
+        end
       end
       covered_code
     end
