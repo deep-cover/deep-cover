@@ -47,4 +47,15 @@ RSpec.describe 'DeepCover usage' do
     %(ruby -e 'require "./lib/deep_cover"; DeepCover.start; require "trivial_gem"').should run_successfully
   end
 
+  it 'Can `rspec` a rails51 app' do
+    skip if RUBY_VERSION < '2.2.2'
+    skip if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    "rspec".should run_successfully.from_dir('spec/full_usage/rails51_project')
+  end
+
+  it 'Can `rake test` a rails51 app (minitest)' do
+    skip if RUBY_VERSION < '2.2.2'
+    skip if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    "rake test".should run_successfully.from_dir('spec/full_usage/rails51_project')
+  end
 end
