@@ -15,7 +15,9 @@ module DeepCover
     end
 
     def stop
-      # TODO
+      AutoloadOverride.active = false if defined? AutoloadOverride
+      RequireOverride.active = false
+      @started = false
     end
 
     def line_coverage(filename)
