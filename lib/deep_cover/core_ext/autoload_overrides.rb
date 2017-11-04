@@ -12,29 +12,31 @@
 
 require 'binding_of_caller'
 
-class << Kernel
-  alias_method :autoload_without_coverage, :autoload
-  def autoload(name, path)
-    mod = binding.of_caller(1).eval('Module.nesting').first || Object
-    DeepCover.autoload_tracker.add(mod, name, path)
-    mod.autoload_without_coverage(name, path)
+module DeepCover
+  module KernelAutoloadOverride
+    def autoload(name, path)
+      mod = binding.of_caller(1).eval('Module.nesting').first || Object
+      DeepCover.autoload_tracker.add(mod, name, path)
+      mod.autoload_without_deep_cover(name, path)
+    end
+
+    extend ModuleOverride
+    override ::Kernel, ::Kernel.singleton_class
   end
-end
 
-module Kernel
-  alias_method :autoload_without_coverage, :autoload
-  def autoload(name, path)
-    mod = binding.of_caller(1).eval('Module.nesting').first || Object
-    DeepCover.autoload_tracker.add(mod, name, path)
-    mod.autoload_without_coverage(name, path)
+  module ModuleAutoloadOverride
+    def autoload(name, path)
+      DeepCover.autoload_tracker.add(self, name, path)
+      autoload_without_deep_cover(name, path)
+    end
+
+    extend ModuleOverride
+    override Module
   end
-end
 
-
-class Module
-  alias_method :autoload_without_coverage, :autoload
-  def autoload(name, path)
-    DeepCover.autoload_tracker.add(self, name, path)
-    autoload_without_coverage(name, path)
+  module AutoloadOverride
+    def self.active=(flag)
+      KernelAutoloadOverride.active = ModuleAutoloadOverride.active = flag
+    end
   end
 end

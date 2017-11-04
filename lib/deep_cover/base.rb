@@ -6,6 +6,7 @@ module DeepCover
         # No issues with autoload in jruby, so no need to override it!
       else
         require_relative 'core_ext/autoload_overrides'
+        AutoloadOverride.active = true
         autoload_tracker.initialize_autoloaded_paths
       end
       require_relative 'core_ext/require_overrides'

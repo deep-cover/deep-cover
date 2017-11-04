@@ -33,14 +33,14 @@ module DeepCover
       begin
         pairs.each do |const, name|
           # Changing the autoload to an already loaded file (this one)
-          const.autoload_without_coverage(name, __FILE__)
+          const.autoload_without_deep_cover(name, __FILE__)
         end
 
         yield
       rescue Exception
         pairs.each do |const, name|
           # Changing the autoload to an already loaded file (this one)
-          const.autoload_without_coverage(name, absolute_path)
+          const.autoload_without_deep_cover(name, absolute_path)
         end
 
         raise
