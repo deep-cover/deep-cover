@@ -226,3 +226,6 @@
       "nor here"
 #>X
     end
+
+### When with empty then (from rdoc-5.0.0)
+    case 'url';when /^#/ then;end
