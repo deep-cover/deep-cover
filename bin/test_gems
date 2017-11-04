@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
+require "deep_cover"
+
+def gem_list
+  return %w[erubis thor i18n builder tzinfo diff-lcs rack-test tilt multipart-post diff-lcs
+    rubygems-bundler method_source daemons hike multi_json rails-deprecated_sanitizer slop
+    rspec-support thread_safe rspec-core rspec-expectations rspec-mocks rspec mini_portile
+    multi_json rspec-support rspec-expectations rspec-mocks mail nokogiri rack rspec unf
+    json thread_safe rspec-core json rack-protection sdoc docile faraday multi_xml coderay
+    mime-types net-scp multi_json turbolinks formatador coffee-script rack-test]
+  # How I got those:
+  require 'gems'
+  Gems.most_downloaded
+  .map(&:first) # discard nb downloads
+  .map{|h| h['full_name']} # get name-0.1.2
+  .map{|n| n.rpartition('-').first } # => name
+end
+
+def install_gems
+  gem_list.each do |n|
+    system "gem install #{n}"
+  end
+end
+
+# install_gems
+
+def test_gems
+  gem_list.each do |n|
+    puts "Require #{n}"
+    begin
+      DeepCover.cover { require n }
+    rescue LoadError
+      puts "Not sure how to load '#{n}'. Skipping"
+    rescue Exception => ours
+      begin
+        require n
+      rescue Exception => normal
+        puts "Gem #{n} doesn't require normally. Skipping"
+      else
+        puts "DeepCover creates issue with Gem #{n}:\n#{ours}"
+      end
+    end
+  end
+end
+
+test_gems
+# module DeepCover
+
+#   # puts
+#   names = Gems.most_downloaded
+# end
