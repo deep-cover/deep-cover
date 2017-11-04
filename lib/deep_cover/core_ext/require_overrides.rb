@@ -9,7 +9,7 @@ module DeepCover
     def require(path)
       result = DeepCover.custom_requirer.require(path)
       if [:not_found, :cover_failed, :not_supported].include?(result)
-        require_without_coverage(path)
+        require_without_deep_cover(path)
       else
         result
       end
@@ -26,14 +26,14 @@ module DeepCover
     class << self
       def active=(active)
         each do |mod, method_name|
-          mod.send :alias_method, method_name, :"#{method_name}_#{active ? 'with' : 'without'}_coverage"
+          mod.send :alias_method, method_name, :"#{method_name}_#{active ? 'with' : 'without'}_deep_cover"
         end
       end
 
       def setup
         each do |mod, method_name|
-          mod.send :alias_method, :"#{method_name}_without_coverage", method_name
-          mod.send :define_method, :"#{method_name}_with_coverage", RequireOverride.instance_method(method_name)
+          mod.send :alias_method, :"#{method_name}_without_deep_cover", method_name
+          mod.send :define_method, :"#{method_name}_with_deep_cover", RequireOverride.instance_method(method_name)
         end
       end
 
