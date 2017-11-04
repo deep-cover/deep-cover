@@ -9,8 +9,27 @@
 
 #### With args
     module M
+      def foo(a, b)
+#>           ------
+      end
+      def baz(a, b, c=1, *rest)
+#>           ---------x--------
+      end
       def bar(a, b, c=1, *rest, d: 2, **h)
 #>           ---------x------------x------
+      end
+    end
+
+#### With args without parens
+    module M
+      def foo a, b
+
+      end
+      def baz a, b, c=1, *rest
+#>           ---------x-------
+      end
+      def bar a, b, c=1, *rest, d: 2, **h
+#>           ---------x------------x-----
       end
     end
 
