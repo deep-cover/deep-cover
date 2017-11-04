@@ -10,3 +10,6 @@ rvm:
 before_install:
   - gem install bundler -v 1.15.4
   - npm install -g nyc
+matrix:
+  allow_failures:
+  - rvm: jruby-9.1.9.0
