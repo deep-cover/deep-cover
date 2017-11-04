@@ -3,8 +3,11 @@ require "spec_helper"
 RSpec::Matchers.define :run_successfully do
   match do |command|
     require 'open3'
+    options = {}
+    options[:chdir] = @from_dir if @from_dir
+
     output, errors, status = Bundler.with_clean_env do
-      Open3.capture3(*command)
+      Open3.capture3(*command, options)
     end
     @output = output.chomp
     @errors = errors.chomp
@@ -17,6 +20,10 @@ RSpec::Matchers.define :run_successfully do
 
   chain :and_output do |output|
     @expected_output = output
+  end
+
+  chain :from_dir do |dir|
+    @from_dir = dir
   end
 
   failure_message do
