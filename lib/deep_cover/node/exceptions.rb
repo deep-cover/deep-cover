@@ -8,7 +8,7 @@ module DeepCover
       has_child exception: [Node::Array, nil]
       has_child assignment: [Lvasgn, nil], flow_entry_count: :entered_body_tracker_hits
       has_child body: Node,
-                can_be_empty: -> { base_node.loc.expression.succ },
+                can_be_empty: -> { base_node.loc.expression.end },
                 flow_entry_count: :entered_body_tracker_hits,
                 is_statement: true,
                 rewrite: '((%{entered_body_tracker};%{local}=nil;%{node}))'
@@ -28,7 +28,7 @@ module DeepCover
                 is_statement: true
       has_extra_children resbodies: Resbody
       has_child else: Node,
-                can_be_empty: -> { base_node.loc.expression.succ },
+                can_be_empty: -> { base_node.loc.expression.end },
                 flow_entry_count: :execution_count,
                 is_statement: true
       executed_loc_keys :else
@@ -62,7 +62,7 @@ module DeepCover
                 can_be_empty: -> { base_node.loc.expression.begin },
                 is_statement: true
       has_child ensure: Node,
-                can_be_empty: -> { base_node.loc.expression.succ },
+                can_be_empty: -> { base_node.loc.expression.end },
                 is_statement: true,
                 flow_entry_count: -> { body.flow_entry_count }
 

@@ -3,11 +3,6 @@ class Parser::Source::Range
     Parser::Source::Range.new(@source_buffer, begin_pos, end_pos)
   end
 
-  # Similar to `end`, but is just after the current Range
-  def succ
-    with begin_pos: @end_pos+1, end_pos: @end_pos+1
-  end
-
   # (1...10).split(2...3, 6...8) => [1...2, 3...6, 7...10]
   # Assumes inner_ranges are exclusive, and included in self
   def split(*inner_ranges)

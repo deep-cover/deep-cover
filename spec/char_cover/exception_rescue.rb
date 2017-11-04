@@ -29,6 +29,12 @@
 
     end
 
+#### With end on same line
+    begin
+      raise
+    # Make sure there are no spaces between rescue and end
+    rescue;end
+
 ### With exception list, but no assignment
 
     begin

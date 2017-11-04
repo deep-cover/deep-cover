@@ -49,7 +49,7 @@ module DeepCover
           if (after_then = base_node.loc.begin)
             after_then.end
           else
-            base_node.loc.expression.succ
+            base_node.loc.expression.end
           end
         },
         rewrite: ";%{body_entry_tracker};%{local}=nil;%{node}",
