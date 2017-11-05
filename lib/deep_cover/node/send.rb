@@ -3,8 +3,7 @@ require_relative 'branch'
 
 module DeepCover
   class Node
-    class Send < Node
-      check_completion
+    class SendBase < Node
       has_child receiver: [Node, nil]
       has_child message: Symbol
       has_extra_children arguments: Node
@@ -50,6 +49,10 @@ module DeepCover
           receiver || # No ambiguity if there is a receiver
           loc_hash[:begin] # Ok if has parentheses
       end
+    end
+
+    class Send < SendBase
+      check_completion
     end
 
     class Csend < Node
