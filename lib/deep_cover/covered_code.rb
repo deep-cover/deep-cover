@@ -2,14 +2,14 @@ module DeepCover
   class CoveredCode
     DEFAULT_TRACKER_GLOBAL = '$_cov'
 
-    attr_accessor :covered_source, :buffer, :tracker_global, :local_var, :name
+    attr_accessor :covered_source, :buffer, :tracker_global, :local_var, :name, :lineno
     @@counter = 0
     @@globals = Hash.new{|h, global| h[global] = eval("#{global} ||= {}") }
 
     def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULT_TRACKER_GLOBAL, local_var: '_temp', name: nil)
       raise "Must provide either path or source" unless path || source
 
-      @buffer = ::Parser::Source::Buffer.new(path)
+      @buffer = ::Parser::Source::Buffer.new(path, lineno)
       @buffer.source = source ||= File.read(path)
       @lineno = lineno
       @tracker_count = 0

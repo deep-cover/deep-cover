@@ -9,7 +9,7 @@ module DeepCover
         runs = node_runs(node)
         if runs != nil
           node.proper_range.each do |pos|
-            bc[buffer.line_for_position(pos)-1][buffer.column_for_position(pos)] = runs > 0 ? ' ' : 'x'
+            bc[buffer.line_for_position(pos)-buffer.first_line][buffer.column_for_position(pos)] = runs > 0 ? ' ' : 'x'
           end
         end
       end
