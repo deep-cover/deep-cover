@@ -26,6 +26,12 @@ def assert_equal(expected, actual)
   raise "assert failed: expected #{expected.inspect}, actual: #{actual.inspect}" if expected != actual
 end
 
+def assert_counts(node_or_lookup, expected)
+  expected = {flow_entry: expected, flow_completion: expected, execution: expected} unless expected.is_a? Hash
+  node = node.is_a?(DeepCover::Node) ? node : current_ast[node_or_lookup]
+  assert_equal expected, node.counts
+end
+
 module DeepCover
   class CoveredCode
     module CurrentExtension

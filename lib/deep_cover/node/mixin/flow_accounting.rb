@@ -58,6 +58,11 @@ module DeepCover
           flow_entry_count
         end
       end
+
+      # Returns the counts in a hash
+      def counts
+        {flow_entry: flow_entry_count, flow_completion: flow_completion_count, execution: execution_count}
+      end
     end
   end
 end
