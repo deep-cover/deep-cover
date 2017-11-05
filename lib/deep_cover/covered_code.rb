@@ -2,7 +2,7 @@ module DeepCover
   class CoveredCode
     DEFAULT_TRACKER_GLOBAL = '$_cov'
 
-    attr_accessor :covered_source, :buffer, :tracker_global, :local_var, :name, :lineno
+    attr_accessor :covered_source, :buffer, :tracker_global, :local_var, :name
     @@counter = 0
     @@globals = Hash.new{|h, global| h[global] = eval("#{global} ||= {}") }
 
@@ -11,7 +11,6 @@ module DeepCover
 
       @buffer = ::Parser::Source::Buffer.new(path, lineno)
       @buffer.source = source ||= File.read(path)
-      @lineno = lineno
       @tracker_count = 0
       @tracker_global = tracker_global
       @local_var = local_var
@@ -21,6 +20,10 @@ module DeepCover
 
     def path
       @buffer.name || "(source: '#{@buffer.source[0..20]}...')"
+    end
+
+    def lineno
+      @buffer.first_line
     end
 
     def nb_lines
@@ -37,7 +40,7 @@ module DeepCover
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
       return if has_executed?
       global[nb] = Array.new(@tracker_count, 0)
-      eval(@covered_source, binding, @buffer.name || '<raw_code>', @lineno)
+      eval(@covered_source, binding, @buffer.name || '<raw_code>', lineno)
       self
     end
 
