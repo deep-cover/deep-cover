@@ -30,6 +30,23 @@ module DeepCover
 
     ### Public API
 
+    # Search self and descendants for a particular Class or type
+    def find_all(lookup)
+      case lookup
+      when ::Class
+        each_node.grep(lookup)
+      when ::Symbol
+        each_node.find_all{|n| n.type == lookup}
+      when ::String
+        each_node.find_all{|n| n.source == lookup}
+      when ::Regexp
+        each_node.find_all{|n| n.source =~ lookup}
+      else
+        binding.pry
+        raise ::TypeError, "Expected class or symbol, got #{lookup.class}: #{lookup.inspect}"
+      end
+    end
+
     # Shortcut to access children
     def [](v)
       children[v]
