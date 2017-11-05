@@ -51,8 +51,11 @@ module DeepCover
         if prev.equal? watched_body
           prev.flow_entry_count - prev.flow_completion_count
         else # RESBODIES
-          # TODO is this okay?
-          prev.exception.flow_completion_count - prev.execution_count
+          if prev.exception
+            prev.exception.flow_completion_count - prev.execution_count
+          else
+            prev.flow_entry_count - prev.execution_count
+          end
         end
       end
     end

@@ -119,6 +119,17 @@
     end
     "here too"
 
+#### Wildcard rescue followed by exception list
+    begin
+      raise Exception
+    rescue
+#>X
+      "not here"
+#>X
+    rescue Exception
+      "here"
+    end
+
 ### Modifier
     "here" rescue "not here"
 #>         xxxxxx xxxxxxxxxx
