@@ -6,7 +6,7 @@ module DeepCover
     @@counter = 0
     @@globals = Hash.new{|h, global| h[global] = eval("#{global} ||= {}") }
 
-    def initialize(path: nil, source: nil, lineno: nil, tracker_global: DEFAULT_TRACKER_GLOBAL, local_var: '_temp', name: nil)
+    def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULT_TRACKER_GLOBAL, local_var: '_temp', name: nil)
       raise "Must provide either path or source" unless path || source
 
       @buffer = ::Parser::Source::Buffer.new(path)
@@ -37,7 +37,7 @@ module DeepCover
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
       return if has_executed?
       global[nb] = Array.new(@tracker_count, 0)
-      eval(@covered_source, binding, @buffer.name || '<raw_code>', @lineno || 1)
+      eval(@covered_source, binding, @buffer.name || '<raw_code>', @lineno)
       self
     end
 
