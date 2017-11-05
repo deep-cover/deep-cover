@@ -5,6 +5,8 @@ module DeepCover
   module CLI
     class InstrumentedCloneReporter
       include Tools
+      # matches regular files, .files, ..files, but not '.' or '..'
+      GLOB_ALL_CONTENT = '{,.[^.],..?}*'
 
       def initialize(gem_path, command: 'rake', **options)
         @command = command
@@ -17,13 +19,16 @@ module DeepCover
         end
         @dest_root = Pathname('~/test_deep_cover').expand_path
         @dest_root = Pathname.new(Dir.mktmpdir("deep_cover_test")) unless @dest_root.exist?
-        `rm -rf #{@dest_root}/* #{@dest_root}/.*`
+
+        FileUtils.rm_rf(Dir.glob("#{@dest_root}/#{GLOB_ALL_CONTENT}"))
         gem_relative_path = gem_path.relative_path_from(@root_path)
         @main_path = @dest_root.join(gem_relative_path)
       end
 
       def copy
-        @copy ||= `cp -r #{@root_path}/* #{@dest_root} && cp #{@root_path}/.* #{@dest_root}`
+        return true if @copied
+        FileUtils.cp_r(Dir.glob("#{@root_path}/#{GLOB_ALL_CONTENT}"), @dest_root)
+        @copied = true
       end
 
       def patch_ruby_file(ruby_file)
@@ -84,7 +89,7 @@ module DeepCover
       def cover
         coverage = Coverage.new
         each_gem_path do |dest_path|
-          `cp -R #{dest_path}/lib #{dest_path}/lib_original`
+          FileUtils.cp_r("#{dest_path}/lib", "#{dest_path}/lib_original")
           Tools.dump_covered_code(File.join(dest_path, 'lib_original'),
             coverage: coverage, root_path: @dest_root.to_s,
             dest_path: File.join(dest_path, 'lib'))
