@@ -53,3 +53,10 @@
     dummy_method 42.to_s, *nil do ; end
     Kernel.puts(1, raise, 2) do ; 42; end
 #>        xxxxx- -      - x- -- - xx- ---
+
+### With safe navigation [#11]
+
+    nil&.each{}.to_s
+#>       xxxx--
+    [42]&.each{|*|}.to_s
+#>            -----

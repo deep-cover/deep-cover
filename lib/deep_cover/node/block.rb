@@ -19,6 +19,11 @@ module DeepCover
       include WithBlock
     end
 
+    class CsendWithBlock < Csend
+      include WithBlock
+      refine_child actual_send: {safe_send: SendWithBlock}
+    end
+
     class SuperWithBlock < Node
       include WithBlock
       has_extra_children arguments: Node
@@ -27,7 +32,8 @@ module DeepCover
     class Block < Node
       check_completion
       has_tracker :body
-      has_child call: {send: SendWithBlock, zsuper: SuperWithBlock, super: SuperWithBlock}
+      has_child call: { send: SendWithBlock, csend: CsendWithBlock,
+                        zsuper: SuperWithBlock, super: SuperWithBlock }
       has_child args: Args
       has_child body: Node,
                 can_be_empty: -> { base_node.loc.end.begin },
