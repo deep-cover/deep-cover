@@ -49,7 +49,19 @@ module DeepCover
 
     # Shortcut to access children
     def [](v)
-      children[v]
+      if v.is_a?(Integer)
+        children.fetch(v)
+      else
+        found = find_all(v)
+        case found.size
+        when 1
+          found.first
+        when 0
+          raise "No children of type #{v}"
+        else
+          raise "Ambiguous lookup #{v}, found #{found}."
+        end
+      end
     end
 
     # Shortcut to create a node from source code

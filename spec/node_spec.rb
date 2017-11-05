@@ -12,5 +12,15 @@ module DeepCover
       it { node.find_all("42 || 'hello'").map(&:class) == [Node::Or] }
       it { node.find_all(/^'hel/).map(&:value) == ['hello'] }
     end
+
+    describe :[] do
+      it { node[1].should equal node.children[1] }
+      it { expect { node[3] }.to raise_error(IndexError) }
+      it { expect { node[Node::Int] }.to raise_error(RuntimeError) }
+      it { expect { node[Node::Float] }.to raise_error(RuntimeError) }
+      it { node[Node::If].should equal node }
+      it { node[Node::Send].should equal node[1] }
+      it { node[:str].value.should == 'hello' }
+    end
   end
 end
