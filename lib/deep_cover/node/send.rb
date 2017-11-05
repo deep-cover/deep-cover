@@ -72,7 +72,9 @@ module DeepCover
 
       executed_loc_keys :dot
 
-      alias_method :execution_count, :flow_entry_count
+      def execution_count
+        receiver.flow_completion_count
+      end
 
       def message
         actual_send.message

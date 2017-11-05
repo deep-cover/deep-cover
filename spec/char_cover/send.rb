@@ -52,10 +52,16 @@
     raise (TypeError, 'hello') rescue nil
 
 ### &. (Ruby 2.3+)
+    nil&.foo
+#>       xxx
+    42&.to_s
+#>
     0&.to_s&.to_i&.nonzero?&.foo(42)&.to_i.nil?
 #>                           xxx-xx-  xxxx
+    raise&.to_s
+#>       xxxxxx
 
-#### odd error case
+### odd error case
     def dummy_method2(*)
       dummy_method 42
     end
