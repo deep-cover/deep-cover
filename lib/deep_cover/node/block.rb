@@ -15,20 +15,8 @@ module DeepCover
       end
     end
 
-    class SendWithBlock < Node
+    class SendWithBlock < SendBase
       include WithBlock
-      has_child receiver: [Node, nil]
-      has_child method_name: Symbol
-      has_extra_children arguments: Node
-
-      def rewriting_rules # TODO: test more with foo[42]. Factorize with Send.
-        rules = super
-        unless arguments.empty? || loc_hash[:begin]
-          range = arguments.last.expression.with(begin_pos: loc_hash[:selector].end_pos)
-          rules.unshift [range, '(%{node})']
-        end
-        rules
-      end
     end
 
     class SuperWithBlock < Node
