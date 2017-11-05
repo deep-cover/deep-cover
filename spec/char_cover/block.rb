@@ -54,7 +54,7 @@
     Kernel.puts(1, raise, 2) do ; 42; end
 #>        xxxxx- -      - x- -- - xx- ---
 
-### With safe navigation [#11]
+### With safe navigation [#11] (Ruby 2.3+)
 
     nil&.each{}.to_s
 #>       xxxx--
