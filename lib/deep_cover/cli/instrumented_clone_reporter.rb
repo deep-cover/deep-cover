@@ -47,13 +47,17 @@ module DeepCover
         end
       end
 
-      def patch_main_ruby_files
+      def each_main_ruby_files(&block)
         each_gem_path do |dest_path|
           main = dest_path.join('lib/*.rb')
-          Pathname.glob(main).select(&:file?).each do |main|
-            puts "Patching #{main}"
-            patch_ruby_file(main)
-          end
+          Pathname.glob(main).select(&:file?).each(&block)
+        end
+      end
+
+      def patch_main_ruby_files
+        each_main_ruby_files do |main|
+          puts "Patching #{main}"
+          patch_ruby_file(main)
         end
       end
 
