@@ -14,6 +14,7 @@ namespace :dev do
     if RUBY_VERSION >= '2.2.2' && (!defined?(RUBY_ENGINE) || RUBY_ENGINE != 'jruby')
       commands << 'bundle install --gemfile=spec/full_usage/rails51_project/Gemfile'
     end
+    commands << 'bundle install --gemfile=spec/cli_fixtures/simple_rails42_app/Gemfile'
 
     commands.each do |command|
       puts "Running: #{command}"
