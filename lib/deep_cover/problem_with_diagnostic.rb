@@ -17,8 +17,14 @@ module DeepCover
       msg << "You found a problem with DeepCover!"
       msg << "Please open an issue at https://github.com/deep-cover/deep-cover/issues"
       msg << "and include the following diagnostic information:"
-      msg.concat diagnostic_information_lines.map{|line| "| #{line}"}
-
+      extra = begin
+        diagnostic_information_lines.map{|line| "| #{line}"}
+      rescue ProblemWithDiagnostic
+        ["Oh no! We're in deep trouble!!!"]
+      rescue Exception => e
+        ["Oh no! Even diagnostics are failing: #{e}\n#{e.backtrace}"]
+      end
+      msg.concat(extra)
       msg.join("\n")
     end
 
