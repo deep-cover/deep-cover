@@ -360,7 +360,7 @@ module DeepCover
         'two/test.so'.should actually_require(:not_supported)
       end
 
-      it "outputs some diagnostics if DeepCover creates a syntax error" do
+      it "outputs some diagnostics if DeepCover creates a syntax error", exclude: :JRuby do
         defined?(TrivialGem).should == nil # Sanity check
         path = Pathname.new(__dir__).join('cli_fixtures/trivial_gem/lib/trivial_gem/version.rb')
         # Fake a rewriting problem:
