@@ -35,6 +35,8 @@ module DeepCover
       children = node_children(from)
       begin
         yield from, children unless from.is_a?(Node::Root)
+      rescue ProblemWithDiagnostic
+        raise
       rescue StandardError, SystemStackError => e
         raise ProblemWithDiagnostic.new(covered_code, from.diagnostic_expression, e)
       end
