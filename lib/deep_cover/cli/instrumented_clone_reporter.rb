@@ -20,10 +20,13 @@ module DeepCover
         @dest_root = Pathname('~/test_deep_cover').expand_path
         @dest_root = Pathname.new(Dir.mktmpdir("deep_cover_test")) unless @dest_root.exist?
 
-        FileUtils.rm_rf(Dir.glob("#{@dest_root}/#{GLOB_ALL_CONTENT}"))
         gem_relative_path = @source_path.relative_path_from(@root_path)
         @main_path = @dest_root.join(gem_relative_path)
         singleton_class.include self.class.const_get(Tools.camelize(style))
+      end
+
+      def clear
+        FileUtils.rm_rf(Dir.glob("#{@dest_root}/#{GLOB_ALL_CONTENT}"))
       end
 
       def copy
@@ -159,11 +162,14 @@ module DeepCover
       end
 
       def run
-        copy
-        cover
-        patch
-        bundle if @options.fetch(:bundle, true)
-        process
+        if @options.fetch(:process, true)
+          clear
+          copy
+          cover
+          patch
+          bundle if @options.fetch(:bundle, true)
+          process
+        end
         report
       end
     end
