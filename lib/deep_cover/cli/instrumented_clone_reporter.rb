@@ -61,6 +61,12 @@ module DeepCover
         end
       end
 
+      def each_dir_to_cover
+        each_gem_path do |dest_path|
+          yield dest_path.join('lib')
+        end
+      end
+
       def patch_gemfile
         gemfile = @dest_root.join('Gemfile')
         content = File.read(gemfile)
@@ -92,8 +98,7 @@ module DeepCover
 
       def cover
         coverage = Coverage.new
-        each_gem_path do |dest_path|
-          to_cover = dest_path.join('lib')
+        each_dir_to_cover do |to_cover|
           original = to_cover.sub_ext('_original')
           FileUtils.cp_r(to_cover, original)
           Tools.dump_covered_code(original,
