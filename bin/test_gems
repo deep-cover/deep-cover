@@ -8,7 +8,8 @@ def gem_list
     rspec-support thread_safe rspec-core rspec-expectations rspec-mocks rspec mini_portile
     multi_json rspec-support rspec-expectations rspec-mocks mail nokogiri rack rspec unf
     json thread_safe rspec-core json rack-protection sdoc docile faraday multi_xml coderay
-    mime-types net-scp multi_json turbolinks formatador coffee-script rack-test]
+    mime-types net-scp multi_json turbolinks formatador coffee-script rack-test] +
+    %w[devise]
   # How I got those:
   require 'gems'
   Gems.most_downloaded
