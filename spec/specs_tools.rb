@@ -1,4 +1,3 @@
-require 'term/ansicolor'
 require 'fileutils'
 
 require 'active_support/core_ext/object/blank'

@@ -1,5 +1,3 @@
-require 'term/ansicolor'
-
 module DeepCover
   module CLI
     class Debugger
