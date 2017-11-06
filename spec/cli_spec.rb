@@ -35,11 +35,11 @@ module DeepCover
       end
 
       describe 'for a rails app' do
-        let(:path) { 'simple_rails51_app' }
+        let(:path) { 'simple_rails42_app' }
         it do
           should =~ Regexp.new(%w[dummy.rb 100 100 100].join('[ |]*'))
           should =~ Regexp.new(%w[user.rb 85.71 100 50].join('[ |]*'))
-          should include '3 examples, 0 failures'
+          should include '2 runs, 2 assertions, 0 failures, 0 errors, 0 skips'
         end
       end
     end
