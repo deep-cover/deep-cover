@@ -32,10 +32,10 @@ module DeepCover
       end
 
       def patch_ruby_file(ruby_file)
-        content = File.read(ruby_file)
+        content = ruby_file.read
         # Insert our code after leading comments:
         content.sub!(/^((#.*\n+)*)/, "#{$1}require 'deep_cover/auto_run';DeepCover::AutoRun.run! '#{@dest_root}';")
-        File.write(ruby_file, content)
+        ruby_file.write(content)
       end
 
       def each_gem_path
@@ -50,7 +50,7 @@ module DeepCover
       def patch_main_ruby_files
         each_gem_path do |dest_path|
           main = dest_path.join('lib/*.rb')
-          Dir.glob(main).select{|p| File.file?(p) }.each do |main|
+          Pathname.glob(main).select(&:file?).each do |main|
             puts "Patching #{main}"
             patch_ruby_file(main)
           end
