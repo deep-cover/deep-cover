@@ -39,7 +39,6 @@ GEM
     binding_of_caller (0.7.3)
       debug_inspector (>= 0.0.1)
     builder (3.2.3)
-    byebug (9.1.0)
     coffee-rails (4.1.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.1.x)
@@ -71,11 +70,11 @@ GEM
     mail (2.7.0)
       mini_mime (>= 0.1.1)
     mini_mime (0.1.4)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.1.0)
     minitest (5.10.3)
     multi_json (1.12.2)
-    nokogiri (1.8.1)
-      mini_portile2 (~> 2.3.0)
+    nokogiri (1.6.8.1)
+      mini_portile2 (~> 2.1.0)
     rack (1.6.8)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -152,10 +151,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  byebug
   coffee-rails (~> 4.1.0)
   jbuilder (~> 2.0)
   jquery-rails
+  nokogiri (~> 1.6.0)
   rails (= 4.2.10)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
