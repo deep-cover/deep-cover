@@ -33,7 +33,11 @@ module DeepCover
     def each_node(from = covered_code.root, &block)
       return to_enum(:each_node) unless block_given?
       children = node_children(from)
-      yield from, children unless from.is_a?(Node::Root)
+      begin
+        yield from, children unless from.is_a?(Node::Root)
+      rescue => e
+        raise ProblemWithDiagnostic.new(covered_code, from.diagnostic_expression, e)
+      end
       children.each do |child|
         each_node(child, &block)
       end

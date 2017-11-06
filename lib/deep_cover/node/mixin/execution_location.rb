@@ -49,6 +49,10 @@ module DeepCover
         expression.source if expression
       end
 
+      def diagnostic_expression
+        expression || parent.diagnostic_expression
+      end
+
       # Returns an array of character numbers (in the original buffer) that
       # pertain exclusively to this node (and thus not to any children).
       def proper_range
