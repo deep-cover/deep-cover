@@ -93,10 +93,12 @@ module DeepCover
       def cover
         coverage = Coverage.new
         each_gem_path do |dest_path|
-          FileUtils.cp_r("#{dest_path}/lib", "#{dest_path}/lib_original")
-          Tools.dump_covered_code(File.join(dest_path, 'lib_original'),
+          to_cover = dest_path.join('lib')
+          original = to_cover.sub_ext('_original')
+          FileUtils.cp_r(to_cover, original)
+          Tools.dump_covered_code(original,
             coverage: coverage, root_path: @dest_root.to_s,
-            dest_path: File.join(dest_path, 'lib'))
+            dest_path: to_cover)
         end
         coverage.save(@dest_root.to_s)
       end
