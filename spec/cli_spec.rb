@@ -33,6 +33,15 @@ module DeepCover
           should include '2 examples, 1 failure'
         end
       end
+
+      describe 'for a rails app' do
+        let(:path) { 'simple_rails51_app' }
+        it do
+          should =~ Regexp.new(%w[dummy.rb 100 100 100].join('[ |]*'))
+          should =~ Regexp.new(%w[user.rb 85.71 100 50].join('[ |]*'))
+          should include '3 examples, 0 failures'
+        end
+      end
     end
   end
 end

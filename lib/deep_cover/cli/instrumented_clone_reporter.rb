@@ -40,13 +40,16 @@ module DeepCover
       end
 
       def style
-        if @source_path.join('lib').exist?
+        if @source_path.join('config/environments/test.rb').exist?
+          :rails
+        elsif @source_path.join('lib').exist?
           :single_gem
         else # Rails style
           :gem_collection
         end
       end
 
+      # Style specific functionality
       module Gem
         def each_main_ruby_files(&block)
           each_gem_path do |dest_path|
@@ -76,6 +79,18 @@ module DeepCover
         end
       end
 
+      module Rails
+        def each_main_ruby_files
+          yield @main_path.join('config/environments/test.rb')
+        end
+
+        def each_dir_to_cover
+          yield @main_path.join('app')
+          yield @main_path.join('lib')
+        end
+      end
+
+      # Back to global functionality
       def patch_main_ruby_files
         each_main_ruby_files do |main|
           puts "Patching #{main}"
