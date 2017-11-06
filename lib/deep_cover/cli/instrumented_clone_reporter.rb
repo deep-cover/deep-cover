@@ -23,6 +23,7 @@ module DeepCover
         FileUtils.rm_rf(Dir.glob("#{@dest_root}/#{GLOB_ALL_CONTENT}"))
         gem_relative_path = @source_path.relative_path_from(@root_path)
         @main_path = @dest_root.join(gem_relative_path)
+        singleton_class.include self.class.const_get(Tools.camelize(style))
       end
 
       def copy
@@ -38,19 +39,40 @@ module DeepCover
         ruby_file.write(content)
       end
 
-      def each_gem_path
-        return to_enum __method__ unless block_given?
-        if @main_path.join('lib').exist?
-          yield @main_path
+      def style
+        if @source_path.join('lib').exist?
+          :single_gem
         else # Rails style
-          Pathname.glob(@main_path.join('*/lib')).each{|p| yield p.dirname}
+          :gem_collection
         end
       end
 
-      def each_main_ruby_files(&block)
-        each_gem_path do |dest_path|
-          main = dest_path.join('lib/*.rb')
-          Pathname.glob(main).select(&:file?).each(&block)
+      module Gem
+        def each_main_ruby_files(&block)
+          each_gem_path do |dest_path|
+            main = dest_path.join('lib/*.rb')
+            Pathname.glob(main).select(&:file?).each(&block)
+          end
+        end
+
+        def each_dir_to_cover
+          each_gem_path do |dest_path|
+            yield dest_path.join('lib')
+          end
+        end
+      end
+
+      module SingleGem
+        include Gem
+        def each_gem_path
+          yield @main_path
+        end
+      end
+
+      module GemCollection
+        include Gem
+        def each_gem_path
+          Pathname.glob(@main_path.join('*/lib')).each{|p| yield p.dirname}
         end
       end
 
@@ -58,12 +80,6 @@ module DeepCover
         each_main_ruby_files do |main|
           puts "Patching #{main}"
           patch_ruby_file(main)
-        end
-      end
-
-      def each_dir_to_cover
-        each_gem_path do |dest_path|
-          yield dest_path.join('lib')
         end
       end
 
