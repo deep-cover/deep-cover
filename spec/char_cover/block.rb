@@ -51,6 +51,7 @@
 
 #### Failures in devise [#6]
     dummy_method 42.to_s, *nil do ; end
+    dummy_method([]).unshift 42.to_s, 43 do ; end
     Kernel.puts(1, raise, 2) do ; 42; end
 #>        xxxxx- -      - x- -- - xx- ---
 

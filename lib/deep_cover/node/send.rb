@@ -37,16 +37,25 @@ module DeepCover
 
       private
 
-      # Only need to add them to deal with ambiguous cases where a method is hidden by a local. Ex:
+      # In different circumstances, we need ().
+      # Deal with ambiguous cases where a method is hidden by a local. Ex:
       #   foo 42, 'hello'  #=> Works
       #   foo (42), 'hello'  #=> Simplification of what DeepCover would generate, still works
       #   foo = 1; foo 42, 'hello'  #=> works
       #   foo = 1; foo (42), 'hello'  #=> syntax error.
       #   foo = 1; foo((42), 'hello')  #=> works
+      # Deal with do/end block. Ex:
+      #   x.foo 42, 43 # => ok
+      #   x.foo (42), 43 # => ok
+      #   x.foo ((42)), 43 # => ok
+      #   x.foo 42, 43 do ; end # => ok
+      #   x.foo (42), 43 do ; end # => ok
+      #   x.foo ((42)), 43 do ; end # => parse error!
       def need_parentheses?
         true unless
           arguments.empty? || # No issue when no arguments
-          receiver || # No ambiguity if there is a receiver
+          loc_hash[:selector_end] || # No issue with foo[bar]= and such
+          loc_hash[:operator] || # No issue with foo.bar=
           loc_hash[:begin] # Ok if has parentheses
       end
     end
