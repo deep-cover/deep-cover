@@ -28,6 +28,7 @@ module DeepCover
 
       def copy
         return true if @copied
+        puts "Cloning..."
         FileUtils.cp_r(Dir.glob("#{@root_path}/#{GLOB_ALL_CONTENT}"), @dest_root)
         @copied = true
       end
