@@ -8,10 +8,10 @@ module DeepCover
       # matches regular files, .files, ..files, but not '.' or '..'
       GLOB_ALL_CONTENT = '{,.[^.],..?}*'
 
-      def initialize(gem_path, command: 'rake', **options)
+      def initialize(source_path, command: 'rake', **options)
         @command = command
         @options = options
-        @root_path = gem_path = Pathname.new(gem_path).expand_path
+        @root_path = @source_path = Pathname.new(source_path).expand_path
         unless @root_path.join('Gemfile').exist?
           # E.g. rails/activesupport
           @root_path = @root_path.dirname
@@ -21,7 +21,7 @@ module DeepCover
         @dest_root = Pathname.new(Dir.mktmpdir("deep_cover_test")) unless @dest_root.exist?
 
         FileUtils.rm_rf(Dir.glob("#{@dest_root}/#{GLOB_ALL_CONTENT}"))
-        gem_relative_path = gem_path.relative_path_from(@root_path)
+        gem_relative_path = @source_path.relative_path_from(@root_path)
         @main_path = @dest_root.join(gem_relative_path)
       end
 
