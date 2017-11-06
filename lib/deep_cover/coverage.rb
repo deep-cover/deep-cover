@@ -133,11 +133,15 @@ module DeepCover
 
       def save_trackers(global)
         saved?
+        trackers = eval(global)
+        # Some testing involves more than one process, some of which don't run any of our covered code.
+        # Don't save anything if that's the case
+        return if trackers.nil?
         basename = TRACKER_TEMPLATE % {unique: SecureRandom.urlsafe_base64}
         dir_path.join(basename).binwrite(Marshal.dump({
           version: DeepCover::VERSION,
           global: global,
-          trackers: eval(global),
+          trackers: trackers,
         }))
       end
 
