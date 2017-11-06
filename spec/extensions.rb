@@ -12,6 +12,7 @@ class RSpec::Core::ExampleGroup
             examples.each do |title, (lines, lineno)|
               msg = case [section, title].join
                     when /\(pending/i then :pending
+                    when /\(skip/i then next
                     when /\(#{name}_pending/i then :pending
                     when /\(Ruby 2\.(\d)/i
                       :skip if RUBY_VERSION < "2.#{$1}.0"

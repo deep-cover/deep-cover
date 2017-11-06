@@ -229,3 +229,6 @@
 
 ### When with empty then (from rdoc-5.0.0)
     case 'url';when /^#/ then;end
+
+#### Matrix lib (skip)
+    case 42;when 0;+1;end
