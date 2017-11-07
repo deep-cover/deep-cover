@@ -37,7 +37,7 @@ module DeepCover
           o.banner = "usage: deep-cover [options] [path/to/app/or/gem]"
           o.separator ''
           o.string '-o', '--output', 'output folder', default: './coverage'
-          o.string '-c', '--command', 'command to run tests', default: 'rake'
+          o.string '-c', '--command', 'command to run tests', default: 'bundle exec rake'
           o.bool '--bundle', 'run bundle before the tests', default: true
           o.bool '--process', 'turn off to only redo the reporting', default: true
           o.separator 'Coverage options'
