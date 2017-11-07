@@ -3,7 +3,6 @@ module DeepCover
   silence_warnings do
     require 'parser/current'
   end
-  require 'pry'
   require_relative 'covered_code'
   require 'securerandom'
 
