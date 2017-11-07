@@ -135,7 +135,6 @@ module DeepCover
 
     private
     def diagnose(exception)
-      exp = base_node.loc.expression
       msg = if self.class == Node
         "Unknown node type encountered: #{base_node.type}"
       else
@@ -145,7 +144,7 @@ module DeepCover
         'Attempting to continue, but this node will not be handled properly',
         ('Its subnodes will be ignored' if children.empty?),
         'Source:',
-        exp && exp.source,
+        expression,
         "Original exception:",
         exception.inspect,
       ].join("\n")
