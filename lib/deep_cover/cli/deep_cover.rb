@@ -54,7 +54,7 @@ module DeepCover
           o.separator ''
           o.separator 'Other available commands:'
           o.on('--version', 'print the version') { version; exit }
-          o.on('-h', '--help') { show_help; exit }
+          o.boolean('-h', '--help')
         end
       end
 
@@ -68,7 +68,9 @@ module DeepCover
 
       def go
         options = convert_options(menu.to_h)
-        if options[:expression]
+        if options[:help]
+          show_help
+        elsif options[:expression]
           Debugger.new(options[:expression], **options).show
         elsif (path = menu.arguments.first)
           InstrumentedCloneReporter.new(path, **options).run
