@@ -25,7 +25,7 @@ module DeepCover
           child_method_name = template % {name: 'child'}
           action = template.gsub(/_%{name}/, '').gsub(/%{name}_/, '')
           const_name = "#{Tools.camelize(action)}Handler"
-          class_eval <<-end_eval, __FILE__, __LINE__
+          class_eval <<-end_eval, __FILE__, __LINE__ + 1
             module #{const_name}                                     # module RewriteHandler
               module ClassMethods                                    #   module ClassMethods
                 def has_child(#{action}: nil, **h)                   #     def has_child(rewrite: nil, **h)
