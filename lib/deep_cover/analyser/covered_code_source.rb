@@ -3,8 +3,7 @@ module DeepCover
     attr_reader :covered_code
 
     def initialize(covered_code)
-      @covered_code = covered_code
-      covered_code.lock
+      @covered_code = covered_code.freeze
     end
 
     # Looking exclusively at our subset of nodes, returns the node's direct descendants

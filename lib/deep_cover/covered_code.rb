@@ -69,7 +69,7 @@ module DeepCover
     # Returns a range of tracker ids
     def allocate_trackers(nb_needed)
       prev = @tracker_count
-      @tracker_count += nb_needed
+      @tracker_count += nb_needed if nb_needed > 0 # Avoid error if frozen and called with 0.
       prev...@tracker_count
     end
 
@@ -122,12 +122,13 @@ module DeepCover
       global[nb] != nil
     end
 
-    def lock
-      must_have_executed
-      unless @closed
-        @closed = true
-        covered_ast.each_node(&:freeze)
+    def freeze
+      unless frozen? # Guard against reentrance
+        must_have_executed
+        super
+        root.each_node(&:freeze)
       end
+      self
     end
 
     protected

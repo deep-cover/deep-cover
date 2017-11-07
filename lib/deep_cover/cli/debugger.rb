@@ -103,7 +103,7 @@ module DeepCover
             str = "#{node.type} #{(node.value if node.respond_to?(:value))} #{tr.method_id}"
             all << str unless all.last == str
           end
-        end.enable { covered_code.lock }
+        end.enable { covered_code.freeze }
         all
       end
     end
