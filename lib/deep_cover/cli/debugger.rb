@@ -88,10 +88,23 @@ module DeepCover
       def execute
         begin
           execute_sample(covered_code)
+          # puts *trace_counts  # Keep for low-level debugging purposes
         rescue Exception => e
           puts "Can't `execute_sample`:#{e.class.name}: #{e}\n#{e.backtrace.join("\n")}"
           @failed = true
         end
+      end
+
+      def trace_counts
+        all = []
+        TracePoint.new(:call) do |tr|
+          if %i[flow_entry_count flow_completion_count execution_count].include? tr.method_id
+            node = tr.self
+            str = "#{node.type} #{(node.value if node.respond_to?(:value))} #{tr.method_id}"
+            all << str unless all.last == str
+          end
+        end.enable { covered_code.lock }
+        all
       end
     end
   end
