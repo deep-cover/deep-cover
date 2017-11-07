@@ -4,6 +4,7 @@ module DeepCover
 
     def initialize(covered_code)
       @covered_code = covered_code
+      covered_code.lock
     end
 
     # Looking exclusively at our subset of nodes, returns the node's direct descendants

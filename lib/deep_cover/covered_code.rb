@@ -124,6 +124,14 @@ module DeepCover
       global[nb] != nil
     end
 
+    def lock
+      must_have_executed
+      unless @closed
+        @closed = true
+        covered_ast.each_node(&:freeze)
+      end
+    end
+
     protected
     def global
       @@globals[tracker_global]

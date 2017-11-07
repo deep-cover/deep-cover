@@ -38,7 +38,7 @@ module DeepCover
       end
 
       def loc_hash
-        @loc_hash ||= (base_node.respond_to?(:location) ? base_node.location.to_hash : {}).freeze
+        base_node.respond_to?(:location) ? base_node.location.to_hash : {}
       end
 
       def expression
