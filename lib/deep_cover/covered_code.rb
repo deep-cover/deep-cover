@@ -27,13 +27,11 @@ module DeepCover
     end
 
     def nb_lines
-      @nb_lines ||= begin
-        lines = buffer.source_lines
-        if lines.size == 0
-          0
-        else
-          lines.size - (lines.last.empty? ? 1 : 0)
-        end
+      lines = buffer.source_lines
+      if lines.size == 0
+        0
+      else
+        lines.size - (lines.last.empty? ? 1 : 0)
       end
     end
 
