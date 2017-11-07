@@ -54,7 +54,7 @@ module DeepCover
           o.separator ''
           o.separator 'Other available commands:'
           o.on('--version', 'print the version') { version; exit }
-          o.on('-h', '--help') { help; exit }
+          o.on('-h', '--help') { show_help; exit }
         end
       end
 
