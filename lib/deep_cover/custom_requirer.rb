@@ -16,7 +16,8 @@ module DeepCover
     def resolve_path(path)
       path = File.absolute_path(path) if path.start_with?('./') || path.start_with?('../')
 
-      if Pathname.new(path).absolute?
+      abs_path = File.absolute_path(path)
+      if path == abs_path
         return path if File.exist?(path)
         return nil
       end
