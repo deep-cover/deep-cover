@@ -49,6 +49,7 @@ module DeepCover
 
     def initialize_autoloaded_paths
       @autoloaded_paths = {}
+      # This is only used on MRI, so ObjectSpace is alright.
       ObjectSpace.each_object(Module) do |mod|
         mod.constants.each do |name|
           if path = mod.autoload?(name)
