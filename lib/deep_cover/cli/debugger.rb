@@ -29,13 +29,15 @@ module DeepCover
       end
 
       def show
-        execute
-        if @debug
-          show_line_coverage
-          show_instrumented_code
-          show_ast
+        Tools.profile(options[:profile]) do
+          execute
+          if @debug
+            show_line_coverage
+            show_instrumented_code
+            show_ast
+          end
+          show_char_coverage
         end
-        show_char_coverage
         pry if @debug
         finish
       end
@@ -110,7 +112,9 @@ module DeepCover
       end
 
       def output
-        puts yield
+        Tools.dont_profile do
+          puts yield
+        end
       end
     end
   end

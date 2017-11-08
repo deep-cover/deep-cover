@@ -48,6 +48,7 @@ module DeepCover
           end.to_h
           o.separator ''
           o.separator 'For testing purposes:'
+          o.bool '--profile', 'use profiler'
           o.string '-e', '--expression', 'test ruby expression instead of a covering a path'
           o.bool '-d', '--debug', 'enter debugging after cover'
 
