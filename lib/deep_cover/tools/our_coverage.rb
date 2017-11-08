@@ -1,5 +1,5 @@
 module DeepCover
-  module Tools::OutCoverage
+  module Tools::OurCoverage
     def our_coverage(source, fn, lineno, **options)
       covered_code = CoveredCode.new(source:source, path: fn, lineno: lineno)
       Tools.execute_sample(covered_code)
