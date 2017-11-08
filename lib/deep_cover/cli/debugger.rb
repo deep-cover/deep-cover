@@ -31,6 +31,7 @@ module DeepCover
       def show
         Tools.profile(options[:profile]) do
           execute
+          covered_code.freeze # Our output relies on the counts, so better freeze. See [#13]
           if @debug
             show_line_coverage
             show_instrumented_code
