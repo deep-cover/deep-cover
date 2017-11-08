@@ -60,8 +60,7 @@ RSpec.describe 'char cover' do
       end
     end
 
-    all_node_classes = DeepCover::Tools.all_node_classes
-    unvisited_node_classes = all_node_classes - visited.to_a
+    unvisited_node_classes = DeepCover::Node::CLASSES - visited.to_a
     unvisited_node_classes.sort_by!(&:name)
     fail_msg = "Node classes without char cover test:\n#{unvisited_node_classes.pretty_inspect}"
     unvisited_node_classes.should be_empty, fail_msg
