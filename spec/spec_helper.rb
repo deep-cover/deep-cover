@@ -41,3 +41,38 @@ if %w(true 1).include?(ENV["WITHOUT_PENDING"])
   RSpec::Core::Formatters::DocumentationFormatter.prepend FormatterOverrides
   RSpec::Core::Formatters::ProgressFormatter.prepend FormatterOverrides
 end
+
+RSpec::Matchers.define :run_successfully do
+  match do |command|
+    require 'open3'
+    options = {}
+    options[:chdir] = @from_dir if @from_dir
+
+    output, errors, status = Bundler.with_clean_env do
+      Open3.capture3(*command, options)
+    end
+    @output = output.chomp
+    @errors = errors.chomp
+    @exit_code = status.exitstatus
+
+    @ouput_ok = @expected_output.nil? || @expected_output == @output
+
+    @exit_code == 0 && @ouput_ok && (@errors == '' || RUBY_PLATFORM == 'java')
+  end
+
+  chain :and_output do |output|
+    @expected_output = output
+  end
+
+  chain :from_dir do |dir|
+    @from_dir = dir
+  end
+
+  failure_message do
+    [
+        ("expected output '#{@expected_output}', got '#{@output}'" unless @ouput_ok),
+        ("expected exit code 0, got #{@exit_code}" if @exit_code != 0),
+        ("expected no errors, got '#{@errors}'" unless @errors.empty?),
+    ].compact.join(' and ')
+  end
+end
