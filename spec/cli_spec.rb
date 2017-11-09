@@ -43,5 +43,9 @@ module DeepCover
         end
       end
     end
+
+    it 'Can run `exe/deep-cover --version`' do
+      "exe/deep-cover --version".should run_successfully
+    end
   end
 end

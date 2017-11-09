@@ -9,7 +9,7 @@ module DeepCover
       extend self
 
       def show_version
-        puts "deep-cover v#{DeepCover::VERSION}; parser v#{Parser::Version}"
+        puts "deep-cover v#{::DeepCover::VERSION}; parser v#{::Parser::VERSION}"
       end
 
       def show_help
@@ -54,7 +54,7 @@ module DeepCover
 
           o.separator ''
           o.separator 'Other available commands:'
-          o.on('--version', 'print the version') { version; exit }
+          o.on('--version', 'print the version') { show_version; exit }
           o.boolean('-h', '--help')
         end
       end
