@@ -22,6 +22,7 @@ module DeepCover
       @children = []
       begin
         @children = augment_children(base_children)
+        initialize_siblings
         super()
       rescue StandardError => e
         diagnose(e)
@@ -74,19 +75,16 @@ module DeepCover
     end
     alias_method :children_nodes_in_flow_order, :children_nodes
 
-    def next_sibling
-      parent.children_nodes_in_flow_order.each_cons(2) do |child, next_child|
-        return next_child if child.equal? self
+    attr_accessor :next_sibling
+    attr_accessor :previous_sibling
+    protected :next_sibling=, :previous_sibling=
+    def initialize_siblings
+      children_nodes_in_flow_order.each_cons(2) do |child, next_child|
+        child.next_sibling = next_child
+        next_child.previous_sibling = child
       end
-      nil
     end
-
-    def previous_sibling
-      parent.children_nodes_in_flow_order.each_cons(2) do |previous_child, child|
-        return previous_child if child.equal? self
-      end
-      nil
-    end
+    private :initialize_siblings
 
     # Adapted from https://github.com/whitequark/ast/blob/master/lib/ast/node.rb
     def to_s(indent=0)
