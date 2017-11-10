@@ -81,7 +81,7 @@ module DeepCover
         # Test ruby require
         begin
           tmp_load_path = $LOAD_PATH.dup
-          $LOAD_PATH[0..-1] = requirer.load_path
+          $LOAD_PATH[0..-1] = requirer.load_paths
           tmp_loaded_features = $LOADED_FEATURES.dup
           $LOADED_FEATURES[0..-1] = requirer.loaded_features
           @result[:ruby] = require(require_path)
@@ -118,7 +118,7 @@ module DeepCover
     end
 
     def add_load_path(path)
-      requirer.load_path << from_root(path)
+      requirer.load_paths << from_root(path)
     end
 
     def file_tree(tree_entries)

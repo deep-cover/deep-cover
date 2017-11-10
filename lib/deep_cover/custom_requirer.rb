@@ -2,9 +2,9 @@
 
 module DeepCover
   class CustomRequirer
-    attr_reader :load_path, :loaded_features
-    def initialize(load_path=$LOAD_PATH, loaded_features=$LOADED_FEATURES)
-      @load_path = load_path
+    attr_reader :load_paths, :loaded_features
+    def initialize(load_paths=$LOAD_PATH, loaded_features=$LOADED_FEATURES)
+      @load_paths = load_paths
       @loaded_features = loaded_features
     end
 
@@ -22,7 +22,7 @@ module DeepCover
         return nil
       end
 
-      @load_path.each do |load_path|
+      @load_paths.each do |load_path|
         possible_path = File.absolute_path(path, load_path)
         return possible_path if File.exist?(possible_path)
       end
