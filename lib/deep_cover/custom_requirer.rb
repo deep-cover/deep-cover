@@ -3,7 +3,7 @@
 module DeepCover
   class CustomRequirer
     attr_reader :load_paths, :loaded_features
-    def initialize(load_paths=$LOAD_PATH, loaded_features=$LOADED_FEATURES)
+    def initialize(load_paths: $LOAD_PATH, loaded_features: $LOADED_FEATURES)
       @load_paths = load_paths
       @loaded_features = loaded_features
     end

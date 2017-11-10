@@ -2,7 +2,7 @@ require "spec_helper"
 
 module DeepCover
   RSpec.describe CustomRequirer do
-    let(:requirer) { CustomRequirer.new([], []) }
+    let(:requirer) { CustomRequirer.new(load_paths: [], loaded_features: []) }
     before(:each) { $last_test_tree_file_executed = nil }
     around(:each) do |ex|
       begin
