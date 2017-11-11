@@ -97,7 +97,7 @@ module DeepCover
 
       def run_custom_require(require_path)
         $last_test_tree_file_executed = nil
-        @result[:custom] = requirer.require(require_path)
+        @result[:custom] = catch(:use_fallback) { requirer.require(require_path) }
         @loaded_features[:custom] = requirer.loaded_features.dup
         @executed_file[:custom] = $last_test_tree_file_executed
       end
@@ -368,7 +368,7 @@ module DeepCover
         .and_return("2 + 2 == 4\nthis is invalid ruby)}]")
 
         expect {
-          requirer.require(path.to_s).should == :cover_failed
+          catch(:use_fallback) { requirer.require(path.to_s) }.should == :cover_failed
         }.to output(/version.rb:2:/).to_stderr
       end
     end

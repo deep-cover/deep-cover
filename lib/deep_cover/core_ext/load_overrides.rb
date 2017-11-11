@@ -8,12 +8,9 @@ module DeepCover
     def load(path, wrap = false)
       return load_without_deep_cover(path, wrap) if wrap
 
-      result = DeepCover.custom_requirer.load(path)
-      if [:not_found, :cover_failed, :not_supported].include?(result)
-        load_without_deep_cover(path)
-      else
-        result
-      end
+      result = catch(:use_fallback) { DeepCover.custom_requirer.load(path) }
+      result = load_without_deep_cover(path) if result.is_a? Symbol
+      result
     end
   end
 
