@@ -18,16 +18,14 @@ module DeepCover
 
       abs_path = File.absolute_path(path)
       if path == abs_path
-        return path if File.exist?(path)
-        return nil
+        path if File.exist?(path)
+      else
+        @load_paths.each do |load_path|
+          possible_path = File.absolute_path(path, load_path)
+          return possible_path if File.exist?(possible_path)
+        end
+        nil
       end
-
-      @load_paths.each do |load_path|
-        possible_path = File.absolute_path(path, load_path)
-        return possible_path if File.exist?(possible_path)
-      end
-
-      nil
     end
 
     # Homemade #require to be able to instrument the code before it gets executed.
