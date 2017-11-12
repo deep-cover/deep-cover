@@ -55,18 +55,17 @@ module DeepCover
 
       def set_expectations(expected_executed_file, expected_loaded_feature)
         case expected_executed_file
-        when :not_found
+        when Symbol
           @executed_file[:expected] = nil
-          @result[:expected] = :not_found
-        when :not_supported
-          @executed_file[:expected] = nil
-          @result[:expected] = :not_supported
+          @result[:expected] = expected_executed_file
+        when String
+          @executed_file[:expected] = expected_executed_file
+          @result[:expected] = true
         when false
           @executed_file[:expected] = nil
           @result[:expected] = false
         else
-          @executed_file[:expected] = expected_executed_file
-          @result[:expected] = true
+          raise
         end
         @loaded_features[:expected] = requirer.loaded_features.dup
         if expected_executed_file.is_a?(String)
