@@ -368,8 +368,8 @@ module DeepCover
         .and_return("2 + 2 == 4\nthis is invalid ruby)}]")
 
         expect {
-          catch(:use_fallback) { requirer.require(path.to_s) }.should == :cover_failed
-        }.to output(/version.rb:2:/).to_stderr
+          requirer.require(path.to_s)
+        }.to throw_symbol(:use_fallback, equal(:cover_failed)).and output(/version.rb:2:/).to_stderr
       end
     end
 
