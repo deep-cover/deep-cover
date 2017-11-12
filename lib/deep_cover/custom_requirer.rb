@@ -3,10 +3,11 @@
 
 module DeepCover
   class CustomRequirer
-    attr_reader :load_paths, :loaded_features
-    def initialize(load_paths: $LOAD_PATH, loaded_features: $LOADED_FEATURES)
+    attr_reader :load_paths, :loaded_features, :filter
+    def initialize(load_paths: $LOAD_PATH, loaded_features: $LOADED_FEATURES, &filter)
       @load_paths = load_paths
       @loaded_features = loaded_features
+      @filter = filter
     end
 
     # Returns a path to an existing file or nil if none can be found.
@@ -37,6 +38,7 @@ module DeepCover
     #  - :not_found if the file couldn't be found.
     #  - :cover_failed if DeepCover couldn't apply instrumentation the file found.
     #  - :not_supported for files that are not supported (such as ike .so files)
+    #  - :skipped if the filter block returned `true`
     # Exceptions raised by the required code bubble up as normal.
     #     It is *NOT* recommended to simply delegate to the default #require, since it
     #     might not be safe to run part of the code again.
@@ -50,6 +52,8 @@ module DeepCover
 
       throw :use_fallback, :not_found unless found_path
       return false if @loaded_features.include?(found_path)
+
+      throw :use_fallback, :skipped if filter && filter.call(found_path)
 
       cover_and_execute(found_path)
 

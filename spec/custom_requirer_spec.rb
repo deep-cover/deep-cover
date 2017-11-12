@@ -371,6 +371,33 @@ module DeepCover
           requirer.require(path.to_s)
         }.to throw_symbol(:use_fallback, equal(:cover_failed)).and output(/version.rb:2:/).to_stderr
       end
+
+      describe "when filtering" do
+        let(:calls) { [] }
+        let(:requirer) do
+          CustomRequirer.new(load_paths: [], loaded_features: []) do |path|
+            calls << path
+            answer
+          end
+        end
+        before do
+          file_tree %w(one/test.rb)
+          add_load_path 'one'
+        end
+        describe "returns true" do
+          let(:answer) { true }
+          it 'allows skipping a custom require' do
+            expect {
+              requirer.require('test')
+            }.to throw_symbol(:use_fallback, equal(:skipped))
+            calls.should == ["#{root}/one/test.rb"]
+          end
+        end
+        describe "returns false" do
+          let(:answer) { false }
+          it { requirer.require('test').should == true }
+        end
+      end
     end
 
 
