@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 module DeepCover
   module Node::Mixin
@@ -30,15 +30,15 @@ module DeepCover
     end
 
     RSpec.describe HasChild do
-      describe "constants" do
-        it "CHILDREN is set" do
+      describe 'constants' do
+        it 'CHILDREN is set' do
           ParentNoRest::CHILDREN.should eql(foo: 0, bar: 1)
           ParentWithRest::CHILDREN.should eql(foo: 0, bar: 1..-3, baz: -2, qux: -1)
         end
       end
 
       describe :expected_types do
-        it "works" do
+        it 'works' do
           ParentNoRest.expected_types([]).should eql [String, Integer]
           ParentWithRest.expected_types([]).should eql [String, Float, Hash]
           ParentWithRest.expected_types(Array.new(5)).should eql [String, Integer, Integer, Float, Hash]
@@ -46,7 +46,7 @@ module DeepCover
       end
 
       describe :check_children_types do
-        it "works" do
+        it 'works' do
           ParentWithOptional.check_children_types([]).should eql []
           ParentNoRest.check_children_types(['x', 1]).should eql []
           ParentNoRest.check_children_types([1, 'x']).should eql [[1, String], ['x', Integer]]
@@ -55,7 +55,7 @@ module DeepCover
       end
 
       describe :node_matches_type? do
-        it "works" do
+        it 'works' do
           Parent.node_matches_type?(5, Integer).should eql true
           Parent.node_matches_type?(5, [Integer, nil]).should eql true
           Parent.node_matches_type?(nil, [Integer, nil]).should eql true
@@ -65,7 +65,7 @@ module DeepCover
       end
 
       describe :node_matches_type? do
-        it "works" do
+        it 'works' do
           ParentWithRest.child_index_to_name(0, 5).should eql :foo
           ParentWithRest.child_index_to_name(1, 5).should eql :bar
           ParentWithRest.child_index_to_name(2, 5).should eql :bar

@@ -9,7 +9,7 @@ module DeepCover
     @@globals = Hash.new{|h, global| h[global] = eval("#{global} ||= {}") }
 
     def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULT_TRACKER_GLOBAL, local_var: '_temp', name: nil)
-      raise "Must provide either path or source" unless path || source
+      raise 'Must provide either path or source' unless path || source
 
       @buffer = ::Parser::Source::Buffer.new(path, lineno)
       @buffer.source = source ||= File.read(path)

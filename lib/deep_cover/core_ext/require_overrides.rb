@@ -16,7 +16,7 @@ module DeepCover
 
     def require_relative(path)
       base = caller(1..1).first[/[^:]+/]
-      raise LoadError, "cannot infer basepath" unless base
+      raise LoadError, 'cannot infer basepath' unless base
       base = File.dirname(base)
 
       require(File.absolute_path(path, base))

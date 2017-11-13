@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 module DeepCover
-  require "bundler/setup"
+  require 'bundler/setup'
   require 'deep_cover'
   require 'deep_cover/cli/instrumented_clone_reporter'
 
-  CLI::InstrumentedCloneReporter.new(ARGV[0] || "~/inky-rb").run
+  CLI::InstrumentedCloneReporter.new(ARGV[0] || '~/inky-rb').run
 end

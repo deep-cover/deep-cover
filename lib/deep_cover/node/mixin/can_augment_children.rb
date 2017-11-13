@@ -45,7 +45,7 @@ module DeepCover
         def has_child(remap: nil, **h)
           name, types = h.first
           if types.is_a? Hash
-            raise "Use either remap or a hash as type but not both" if remap
+            raise 'Use either remap or a hash as type but not both' if remap
             remap = types
             h[name] = types = []
           end

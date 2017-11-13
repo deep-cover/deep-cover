@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "const"
-require_relative "literals"
+require_relative 'const'
+require_relative 'literals'
 
 module DeepCover
   class Node

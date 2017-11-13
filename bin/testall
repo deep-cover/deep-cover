@@ -39,18 +39,18 @@ rubies = {}
 results = []
 
 if (`which rvm`; $?.success?)
-  ruby_exec = "rvm-exec %{ruby_version} "
+  ruby_exec = 'rvm-exec %{ruby_version} '
 elsif (`which chruby-exec`; $?.success?)
-  ruby_exec = "chruby-exec %{version} -- "
+  ruby_exec = 'chruby-exec %{version} -- '
 end
 
 configs.each do |ruby_version, gemfile|
-  next if ruby_version == "ruby-head"
+  next if ruby_version == 'ruby-head'
 
   current_ruby_exec = ruby_exec % {ruby_version: ruby_version}
 
-  env_vars = { "BUNDLE_GEMFILE" => gemfile, "WITHOUT_PENDING" => ENV["WITHOUT_PENDING"] || "1"}
-  gemfile_text = gemfile || "Default gemfile"
+  env_vars = { 'BUNDLE_GEMFILE' => gemfile, 'WITHOUT_PENDING' => ENV['WITHOUT_PENDING'] || '1'}
+  gemfile_text = gemfile || 'Default gemfile'
   success = true
 
   if !rubies.include?(ruby_version)

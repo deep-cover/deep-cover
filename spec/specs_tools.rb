@@ -19,7 +19,7 @@ def current_ast
 end
 
 def assert(check)
-  raise "assert failed" if check == false
+  raise 'assert failed' if check == false
   raise "bad assert, expected true/false, got #{check.inspect}" unless check == true
 end
 
@@ -75,7 +75,7 @@ module DeepCover
       lines.chunk{|line| line !~ ANSWER}.each do |is_code, chunk|
         chunk.map!(&:chomp)
         unless is_code
-          raise "Hey" unless chunk.size == 1
+          raise 'Hey' unless chunk.size == 1
           answer = chunk.first
           if answer.start_with?('#>X')
             answer = NOT_EXECUTED
@@ -107,7 +107,7 @@ module DeepCover
       set_pwd = nil
       tree_contents.each do |tree_entry|
         if tree_entry.start_with?('pwd:')
-          raise "Already have a pwd selected" if set_pwd
+          raise 'Already have a pwd selected' if set_pwd
           tree_entry = tree_entry.sub(/^pwd:/, '')
           raise "#{tree_entry} is not a directory entry (must end with /), can't use as pwd" unless tree_entry.end_with?('/')
           set_pwd = true # Set later

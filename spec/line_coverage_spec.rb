@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-require "tempfile"
+require 'spec_helper'
+require 'tempfile'
 
 
 RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, strict: false|
@@ -28,7 +28,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
 
     comment_answer = DeepCover::Specs.strip_when_unimportant(line, comment_answer)
     line = DeepCover::Specs.strip_when_unimportant(line, line)
-    comment_answer = comment_answer + " " * [line.size - comment_answer.size, 0].max
+    comment_answer = comment_answer + ' ' * [line.size - comment_answer.size, 0].max
     if strict
       comment_answer.chars.zip(line.chars).each do |a, l|
         return cov == 0 if a == 'x' && l =~ /\S/

@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 module DeepCover
-  require "bundler/setup"
+  require 'bundler/setup'
 
-  $LOAD_PATH.unshift('../covered_deep_cover') if ENV["CC"]
-  require "deep_cover"
-  require_relative "../spec/specs_tools"
+  $LOAD_PATH.unshift('../covered_deep_cover') if ENV['CC']
+  require 'deep_cover'
+  require_relative '../spec/specs_tools'
   require 'deep_cover/cli/debugger'
 
   example = ARGV[0] || 'simple_if'
@@ -14,7 +14,7 @@ module DeepCover
     fn = File.absolute_path(fn)
     source = File.read(fn)
   else
-    fn = "<passed_from_command_line>"
+    fn = '<passed_from_command_line>'
     source = ARGV[0].gsub(';;', "\n")
   end
 
@@ -34,7 +34,7 @@ module DeepCover
     else
       require 'highline'
       puts menu
-      answer = HighLine.new.ask(Term::ANSIColor.blue("Which?  "), Integer) { |q| q.in = 0...examples.size }
+      answer = HighLine.new.ask(Term::ANSIColor.blue('Which?  '), Integer) { |q| q.in = 0...examples.size }
     end
     lines, lineno = examples[answer]
   end

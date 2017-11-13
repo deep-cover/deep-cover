@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 module DeepCover
   RSpec.describe CustomRequirer do
@@ -9,7 +9,7 @@ module DeepCover
     before(:each) { $last_test_tree_file_executed = nil }
     around(:each) do |ex|
       begin
-        dir = Dir.mktmpdir("deep_cover_test")
+        dir = Dir.mktmpdir('deep_cover_test')
         # Ensure presence of a separator at the end of the string
         @root = File.join(dir, '')
 
@@ -108,7 +108,7 @@ module DeepCover
         keys = [:expected, :ruby, :custom]
         max_ley_length = keys.map(&:size).max
         keys.map do |key|
-          indent = " " * (max_ley_length - key.size)
+          indent = ' ' * (max_ley_length - key.size)
           "  #{key}:#{indent} #{data_hash[key].inspect}"
         end.join("\n")
       end
@@ -131,7 +131,7 @@ module DeepCover
       File.absolute_path(path, root)
     end
 
-    describe "#require" do
+    describe '#require' do
       # TOMA: Pretty much all of those case could be repeated as-is, except for adding a .rb to the require's path.
       #       A lot of these tests could be make for #load also, minus the loaded_features check. What do you think?
       #       In the case of #load, the tests could again be repeated as it (with/without .rb), except now, the without
@@ -139,7 +139,7 @@ module DeepCover
       #       In every test, I have a few extra directories/files, is that dumb?
       #
       #
-      it "handles a ./path relatively to current work dir" do
+      it 'handles a ./path relatively to current work dir' do
         file_tree %w(pwd:one/two/
                          one/two/test.rb
                          one/two/three/test.rb)
@@ -147,7 +147,7 @@ module DeepCover
         './test'.should actually_require('one/two/test.rb')
       end
 
-      it "a ./path ignores the load_path" do
+      it 'a ./path ignores the load_path' do
         file_tree %w(one/two/test.rb
                      one/two/three/test.rb)
 
@@ -155,7 +155,7 @@ module DeepCover
         './test'.should actually_require(:not_found)
       end
 
-      it "handles a ../path relatively to current work dir" do
+      it 'handles a ../path relatively to current work dir' do
         file_tree %w(pwd:one/two/
                          one/test.rb
                          one/two/test.rb
@@ -164,7 +164,7 @@ module DeepCover
         '../test'.should actually_require('one/test.rb')
       end
 
-      it "a ../path ignores the load_path" do
+      it 'a ../path ignores the load_path' do
         file_tree %w(one/two/test.rb
                      one/two/three/test.rb)
         add_load_path 'one/two/three'
@@ -172,7 +172,7 @@ module DeepCover
         '../test'.should actually_require(:not_found)
       end
 
-      it "a /../ in a path after a name will go to the parent" do
+      it 'a /../ in a path after a name will go to the parent' do
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb)
@@ -181,7 +181,7 @@ module DeepCover
         'two/../test'.should actually_require('one/test.rb')
       end
 
-      it "a /./ in a path after a name will be ignored " do
+      it 'a /./ in a path after a name will be ignored ' do
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb)
@@ -190,7 +190,7 @@ module DeepCover
         'two/./test'.should actually_require('one/two/test.rb')
       end
 
-      it "Can go to parent of load_path with multiple /../" do
+      it 'Can go to parent of load_path with multiple /../' do
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb)
@@ -199,7 +199,7 @@ module DeepCover
         'three/../../test'.should actually_require('one/test.rb')
       end
 
-      it "finds files with directories in the required path" do
+      it 'finds files with directories in the required path' do
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb)
@@ -208,7 +208,7 @@ module DeepCover
         'two/three/test'.should actually_require('one/two/three/test.rb')
       end
 
-      it "uses the matching file from the the first matching load_path" do
+      it 'uses the matching file from the the first matching load_path' do
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb)
@@ -262,7 +262,7 @@ module DeepCover
         'test'.should actually_require(:not_found)
       end
 
-      it "regular path ignores current work dir" do
+      it 'regular path ignores current work dir' do
         file_tree %w(    one/test.rb
                      pwd:one/two/
                          one/two/test.rb
@@ -271,7 +271,7 @@ module DeepCover
         'test'.should actually_require(:not_found)
       end
 
-      it "ignores a not .rb file when path includes .rb" do
+      it 'ignores a not .rb file when path includes .rb' do
         file_tree %w(one/test.rb
                      one/two/test
                      one/two/three/test.rb)
@@ -280,7 +280,7 @@ module DeepCover
         'test.rb'.should actually_require(:not_found)
       end
 
-      it "ignores a not .rb file when path is without .rb" do
+      it 'ignores a not .rb file when path is without .rb' do
         file_tree %w(one/test.rb
                      one/two/test
                      one/two/three/test.rb)
@@ -289,31 +289,31 @@ module DeepCover
         'test'.should actually_require(:not_found)
       end
 
-      it "accepts an absolute .rb file with absolute path without .rb" do
+      it 'accepts an absolute .rb file with absolute path without .rb' do
         file_tree %w(one/two/test.rb)
 
         File.join(root, 'one/two/test').should actually_require('one/two/test.rb')
       end
 
-      it "accepts an absolute .rb file with absolute path with .rb" do
+      it 'accepts an absolute .rb file with absolute path with .rb' do
         file_tree %w(one/two/test.rb)
 
         File.join(root, 'one/two/test.rb').should actually_require('one/two/test.rb')
       end
 
-      it "ignores an absolute not .rb file with absolute path without .rb" do
+      it 'ignores an absolute not .rb file with absolute path without .rb' do
         file_tree %w(one/two/test)
 
         File.join(root, 'one/two/test').should actually_require(:not_found)
       end
 
-      it "ignores an absolute not .rb file with absolute path with .rb" do
+      it 'ignores an absolute not .rb file with absolute path with .rb' do
         file_tree %w(one/two/test)
 
         File.join(root, 'one/two/test.rb').should actually_require(:not_found)
       end
 
-      it "keeps symlinks when going through load_path" do
+      it 'keeps symlinks when going through load_path' do
         file_tree %w(one/test.rb)
         FileUtils.ln_s from_root('one'), from_root('sym_one')
         add_load_path 'sym_one'
@@ -321,7 +321,7 @@ module DeepCover
         'test'.should actually_require('one/test.rb', expected_loaded_feature: 'sym_one/test.rb')
       end
 
-      it "a ./path keeps symlinks after the current work dir" do
+      it 'a ./path keeps symlinks after the current work dir' do
         file_tree %w(pwd:one/
                          one/test.rb
                          one/two/test.rb)
@@ -330,7 +330,7 @@ module DeepCover
         './sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/sym_two/test.rb')
       end
 
-      it "a ../path keeps symlinks after the current work dir" do
+      it 'a ../path keeps symlinks after the current work dir' do
         file_tree %w(pwd:one/deeper/
                          one/test.rb
                          one/two/test.rb)
@@ -342,7 +342,7 @@ module DeepCover
       # NOTE: This actually happens at OS level (at least on Linux and Mac)
       #       But this verifies that the test system won't fail when the current work dir
       #       contains a symlink.
-      it "a ./path resolves symlinks in the current work dir" do
+      it 'a ./path resolves symlinks in the current work dir' do
         file_tree %w(one/test.rb
                      one/two/test.rb)
 
@@ -355,14 +355,14 @@ module DeepCover
         './two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'two/test.rb')
       end
 
-      it "it indicates that .so files are not supported" do
+      it 'it indicates that .so files are not supported' do
         file_tree %w(one/two/test.so)
 
         add_load_path 'one'
         'two/test.so'.should actually_require(:not_supported)
       end
 
-      it "outputs some diagnostics if DeepCover creates a syntax error", exclude: :JRuby do
+      it 'outputs some diagnostics if DeepCover creates a syntax error', exclude: :JRuby do
         defined?(TrivialGem).should == nil # Sanity check
         path = Pathname.new(__dir__).join('cli_fixtures/trivial_gem/lib/trivial_gem/version.rb')
         # Fake a rewriting problem:
@@ -374,7 +374,7 @@ module DeepCover
         }.to throw_symbol(:use_fallback, equal(:cover_failed)).and output(/version.rb:2:/).to_stderr
       end
 
-      describe "when filtering" do
+      describe 'when filtering' do
         let(:calls) { [] }
         let(:requirer) do
           CustomRequirer.new(load_paths: [], loaded_features: [], lookup_paths: ['/']) do |path|
@@ -386,7 +386,7 @@ module DeepCover
           file_tree %w(one/test.rb)
           add_load_path 'one'
         end
-        describe "returns true" do
+        describe 'returns true' do
           let(:answer) { true }
           it 'allows skipping a custom require' do
             expect {
@@ -395,14 +395,14 @@ module DeepCover
             calls.should == ["#{root}/one/test.rb"]
           end
         end
-        describe "returns false" do
+        describe 'returns false' do
           let(:answer) { false }
           it { requirer.require('test').should == true }
         end
       end
     end
 
-    describe "when given a lookup root" do
+    describe 'when given a lookup root' do
       let(:lookup_paths) { ["#{root}/other", "#{root}/one/root"] }
       let(:calls) { [] }
       before do
@@ -420,7 +420,7 @@ module DeepCover
       { 'relative — from above the root' => 'outside',
         'relative — not related to root' => 'also_outside',
         'absolute - not inside root' => '../outside.rb',
-        'absolute - not existing' => "./not_existing",
+        'absolute - not existing' => './not_existing',
       }.each do |kind, path|
         describe "for a file outside of it (#{kind})" do
           it 'requires fallback' do
@@ -433,7 +433,7 @@ module DeepCover
       { 'relative — from the root' => 'test',
         'relative — from inside the root' => 'other',
         'relative — from above the root' => 'root/sub/other',
-        'absolute' => "./test",
+        'absolute' => './test',
       }.each do |kind, path|
         describe "for a file inside of it (#{kind})" do
           it { requirer.require(path).should == true }
@@ -441,8 +441,8 @@ module DeepCover
       end
     end
 
-    describe "#load" do
-      it "regular path checks current work dir" do
+    describe '#load' do
+      it 'regular path checks current work dir' do
         file_tree %w(    one/test.rb
                      pwd:one/two/
                          one/two/test.rb

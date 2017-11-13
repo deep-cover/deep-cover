@@ -16,9 +16,9 @@ module DeepCover
 
     def message
       msg = []
-      msg << "You found a problem with DeepCover!"
-      msg << "Please open an issue at https://github.com/deep-cover/deep-cover/issues"
-      msg << "and include the following diagnostic information:"
+      msg << 'You found a problem with DeepCover!'
+      msg << 'Please open an issue at https://github.com/deep-cover/deep-cover/issues'
+      msg << 'and include the following diagnostic information:'
       extra = begin
         diagnostic_information_lines.map{|line| "| #{line}"}
       rescue ProblemWithDiagnostic
@@ -34,10 +34,10 @@ module DeepCover
       lines = []
       lines << "Source file: #{covered_code.path}"
       lines << "Line numbers: #{line_range}"
-      lines << "Source lines around location:"
+      lines << 'Source lines around location:'
       lines.concat source_lines.map{|line| "   #{line}" }
       if original_exception
-        lines << "Original exception:"
+        lines << 'Original exception:'
         lines << "  #{original_exception.class.name}: #{original_exception.message}"
         backtrace = Tools.truncate_backtrace(original_exception)
         lines.concat backtrace.map{|line| "    #{line}"}

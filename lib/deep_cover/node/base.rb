@@ -91,7 +91,7 @@ module DeepCover
     # Adapted from https://github.com/whitequark/ast/blob/master/lib/ast/node.rb
     def to_s(indent=0)
       [
-        "  " * indent,
+        '  ' * indent,
         '(',
         fancy_type,
         *children.map do |child, idx|
@@ -145,7 +145,7 @@ module DeepCover
         ('Its subnodes will be ignored' if children.empty?),
         'Source:',
         expression,
-        "Original exception:",
+        'Original exception:',
         exception.inspect,
       ].join("\n")
     end

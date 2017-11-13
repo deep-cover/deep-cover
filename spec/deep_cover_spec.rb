@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 RSpec.describe DeepCover do
-  describe "cover" do
-    it "temporarily overrides `require`, `require_relative` and `autoload`" do
+  describe 'cover' do
+    it 'temporarily overrides `require`, `require_relative` and `autoload`' do
       methods = %i[require require_relative]
       methods << :autoload unless RUBY_PLATFORM == 'java'
       2.times do

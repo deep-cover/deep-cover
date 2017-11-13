@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 module DeepCover
   RSpec.describe Memoize do
@@ -42,7 +42,7 @@ module DeepCover
 
     let(:o) { klass.new }
     let(:subject) { o }
-    describe "Hot class" do
+    describe 'Hot class' do
       let(:klass) { Test }
       it { klass.memoized.should =~ [:foo] }
       it 'maintains arity 0' do
@@ -54,7 +54,7 @@ module DeepCover
       end
     end
 
-    describe "Inheritance" do
+    describe 'Inheritance' do
       let(:klass) { TestInheritance }
       it { klass.memoized.should =~ [:foo, :qux] }
       it 'is memoized' do
@@ -65,7 +65,7 @@ module DeepCover
       end
     end
 
-    describe "Frozen class" do
+    describe 'Frozen class' do
       let(:klass) { TestFrozen }
       it { klass.memoized.should =~ [:foo] }
       it 'is memoized' do

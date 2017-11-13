@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
-require "deep_cover"
+require 'deep_cover'
 
 def gem_list
   return %w[erubis thor i18n builder tzinfo diff-lcs rack-test tilt multipart-post diff-lcs

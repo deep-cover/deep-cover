@@ -20,7 +20,7 @@ module DeepCover
           raise "Can't find Gemfile" unless @root_path.join('Gemfile').exist?
         end
         @dest_root = Pathname('~/test_deep_cover').expand_path
-        @dest_root = Pathname.new(Dir.mktmpdir("deep_cover_test")) unless @dest_root.exist?
+        @dest_root = Pathname.new(Dir.mktmpdir('deep_cover_test')) unless @dest_root.exist?
 
         gem_relative_path = @source_path.relative_path_from(@root_path)
         @main_path = @dest_root.join(gem_relative_path)
@@ -33,7 +33,7 @@ module DeepCover
 
       def copy
         return true if @copied
-        puts "Cloning..."
+        puts 'Cloning...'
         FileUtils.cp_r(Dir.glob("#{@root_path}/#{GLOB_ALL_CONTENT}"), @dest_root)
         @copied = true
       end
@@ -110,7 +110,7 @@ module DeepCover
         unless content =~ /gem 'deep-cover'/
           puts "Patching Gemfile #{gemfile}"
           File.write(gemfile, [
-            "# This file was modified by DeepCover",
+            '# This file was modified by DeepCover',
             content,
             "gem 'deep-cover', path: '#{File.expand_path(__dir__ + '/../../../')}'",
             '',
@@ -121,7 +121,7 @@ module DeepCover
       def patch_rubocop
         path = @dest_root.join('.rubocop.yml')
         return unless path.exist?
-        puts "Patching .rubocop.yml"
+        puts 'Patching .rubocop.yml'
         config = YAML.load(path.read.gsub(/(?<!\w)lib(?!\w)/, 'lib_original'))
         ((config['AllCops'] ||= {})['Exclude'] ||= []) << 'lib/**/*' << 'app/**/*'
         path.write("# This file was modified by DeepCover\n" + YAML.dump(config))
@@ -157,7 +157,7 @@ module DeepCover
       end
 
       def bundle
-        puts "Running `bundle install`"
+        puts 'Running `bundle install`'
         Bundler.with_clean_env do
           `cd #{@dest_root} && bundle`
         end

@@ -60,7 +60,7 @@ module DeepCover
       end
 
       def configure(&block)
-        raise "Must provide a block" unless block
+        raise 'Must provide a block' unless block
         case block.arity
         when 0
           config.instance_eval(&block)

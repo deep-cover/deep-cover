@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 module DeepCover
   RSpec.describe Config do
@@ -11,7 +11,7 @@ module DeepCover
         config.to_h[:ignore_uncovered]
       end
 
-      it "be modified by {ignore|detect}_uncovered}" do
+      it 'be modified by {ignore|detect}_uncovered}' do
         config.ignore_uncovered :raise
         result.should == [:raise]
         config.ignore_uncovered :trivial_if, :case_implicit_else
@@ -20,7 +20,7 @@ module DeepCover
         result.should =~ [:case_implicit_else]
       end
 
-      it "rejects unknown options" do
+      it 'rejects unknown options' do
         -> { config.ignore_uncovered :foo }.should raise_error(ArgumentError)
         -> { config.detect_uncovered :foo }.should raise_error(ArgumentError)
       end

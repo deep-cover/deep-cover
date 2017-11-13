@@ -47,7 +47,7 @@ module DeepCover
       end.inject(:merge)
     end
 
-    def output_istanbul(dir: '.', name: ".nyc_output", **options)
+    def output_istanbul(dir: '.', name: '.nyc_output', **options)
       path = Pathname.new(dir).expand_path.join(name)
       path.mkpath
       path.each_child(&:delete)
@@ -84,7 +84,7 @@ module DeepCover
       if Reporter::Istanbul.available?
         report_istanbul(**options)
       else
-        warn "nyc not available. Please install `nyc` using `yarn global add nyc` or `npm i nyc -g`"
+        warn 'nyc not available. Please install `nyc` using `yarn global add nyc` or `npm i nyc -g`'
         basic_report
       end
     end

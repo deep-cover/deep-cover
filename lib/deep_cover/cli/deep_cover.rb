@@ -36,7 +36,7 @@ module DeepCover
 
       def menu
         @menu ||= parse do |o|
-          o.banner = "usage: deep-cover [options] [path/to/app/or/gem]"
+          o.banner = 'usage: deep-cover [options] [path/to/app/or/gem]'
           o.separator ''
           o.string '-o', '--output', 'output folder', default: './coverage'
           o.string '-c', '--command', 'command to run tests', default: 'bundle exec rake'
@@ -45,7 +45,7 @@ module DeepCover
           o.separator 'Coverage options'
           @ignore_uncovered_map = Analyser.optionally_covered.map do |option|
             default = Config::DEFAULTS[:ignore_uncovered].include?(option)
-            o.bool "--ignore-#{Tools.dasherize(option)}", "", default: default
+            o.bool "--ignore-#{Tools.dasherize(option)}", '', default: default
             [:"ignore_#{option}", option]
           end.to_h
           o.separator "\nFor testing purposes:"

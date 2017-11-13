@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 require 'deep_cover/reporter/istanbul'
 
 module DeepCover

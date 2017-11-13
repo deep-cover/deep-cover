@@ -16,7 +16,7 @@ module DeepCover
       # See https://github.com/jruby/jruby/issues/4804
       # This is solved in jruby 9.2.0.0, better keep the workaround
       # for compatibility.
-      has_child condition: Node, rewrite: "(((%{entry_tracker}) && %{node}))",
+      has_child condition: Node, rewrite: '(((%{entry_tracker}) && %{node}))',
         flow_entry_count: :entry_tracker_hits
       executed_loc_keys []
 
@@ -54,7 +54,7 @@ module DeepCover
             base_node.loc.expression.end
           end
         },
-        rewrite: ";%{body_entry_tracker};%{local}=nil;%{node}",
+        rewrite: ';%{body_entry_tracker};%{local}=nil;%{node}',
         is_statement: true,
         flow_entry_count: :body_entry_tracker_hits
 

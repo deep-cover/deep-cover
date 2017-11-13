@@ -18,7 +18,7 @@ module DeepCover
         when 'else', '#{'
           %i[begin end]
         else
-          warn "Unknown context for Begin node"
+          warn 'Unknown context for Begin node'
           []
         end
       end

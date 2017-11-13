@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 module DeepCover
   RSpec.describe 'CLI' do
@@ -47,7 +47,7 @@ module DeepCover
     end
 
     it 'Can run `exe/deep-cover --version`' do
-      "exe/deep-cover --version".should run_successfully
+      'exe/deep-cover --version'.should run_successfully
     end
   end
 end
