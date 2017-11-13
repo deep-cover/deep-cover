@@ -7,7 +7,8 @@ module DeepCover
       allow_partial: false,
     }
 
-    def initialize(**options)
+    def initialize(notify = nil, **options)
+      @notify = notify
       @options = copy(DEFAULTS.merge(options))
     end
 
@@ -18,19 +19,20 @@ module DeepCover
 
     def ignore_uncovered(*keywords)
       check_uncovered(keywords)
-      @options[:ignore_uncovered] |= keywords
-      self
+      change(:ignore_uncovered, @options[:ignore_uncovered] | keywords)
     end
 
     def detect_uncovered(*keywords)
       check_uncovered(keywords)
-      @options[:ignore_uncovered] -= keywords
-      self
+      change(:ignore_uncovered, @options[:ignore_uncovered] - keywords)
     end
 
-    def paths(paths)
-      @options[:paths] = paths
-      self
+    def paths(paths = nil)
+      if paths
+        change(:paths, Array(paths).dup.freeze)
+      else
+        @options[:paths]
+      end
     end
 
     private
@@ -39,13 +41,21 @@ module DeepCover
       raise ArgumentError, "unknown options: #{unknown.join(', ')}" unless unknown.empty?
     end
 
+    def change(option, value)
+      if @options[option] != value
+        @options[option] = value
+        @notify.config_changed(option) if @notify.respond_to? :config_changed
+      end
+      self
+    end
+
     def copy(h)
-      h.dup.transform_values(&:dup)
+      h.dup.transform_values(&:dup).transform_values(&:freeze)
     end
 
     module Setter
-      def config
-        @config ||= Config.new
+      def config(notify = self)
+        @config ||= Config.new(notify)
       end
 
       def configure(&block)
