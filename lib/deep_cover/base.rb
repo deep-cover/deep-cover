@@ -36,12 +36,19 @@ module DeepCover
       stop
     end
 
+    def config_changed(what)
+      if what == :paths
+        warn "Changing DeepCover's paths after starting coverage is highly discouraged" if @started
+        @custom_requirer = nil
+      end
+    end
+
     def coverage
       @coverage ||= Coverage.new
     end
 
     def custom_requirer
-      @custom_requirer ||= CustomRequirer.new
+      @custom_requirer ||= CustomRequirer.new(lookup_paths: config.paths)
     end
 
     def autoload_tracker

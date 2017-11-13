@@ -17,10 +17,16 @@ RSpec.describe DeepCover do
     end
 
     it "doesn't choke on libs with encoding snafus" do
-      DeepCover.cover do
-        expect {
-          require('rexml/source').should == true
-        }.to output(/Can't cover .*rexml\/source.rb because of incompatible encoding/).to_stderr
+      begin
+        prev = DeepCover.config.paths
+        DeepCover.config.paths '/'
+        DeepCover.cover do
+          expect {
+            require('rexml/source').should == true
+          }.to output(/Can't cover .*rexml\/source.rb because of incompatible encoding/).to_stderr
+        end
+      ensure
+        DeepCover.config.paths prev
       end
       REXML::SourceFactory.should be_instance_of(Class)
     end

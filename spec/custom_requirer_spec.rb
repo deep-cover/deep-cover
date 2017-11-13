@@ -3,7 +3,8 @@ require "spec_helper"
 
 module DeepCover
   RSpec.describe CustomRequirer do
-    let(:requirer) { CustomRequirer.new(load_paths: [], loaded_features: []) }
+    let(:lookup_paths) { ['/'] }
+    let(:requirer) { CustomRequirer.new(load_paths: [], loaded_features: [], lookup_paths: lookup_paths) }
     before(:each) { $last_test_tree_file_executed = nil }
     around(:each) do |ex|
       begin
@@ -375,7 +376,7 @@ module DeepCover
       describe "when filtering" do
         let(:calls) { [] }
         let(:requirer) do
-          CustomRequirer.new(load_paths: [], loaded_features: []) do |path|
+          CustomRequirer.new(load_paths: [], loaded_features: [], lookup_paths: ['/']) do |path|
             calls << path
             answer
           end
@@ -400,6 +401,44 @@ module DeepCover
       end
     end
 
+    describe "when given a lookup root" do
+      let(:lookup_paths) { ["#{root}/other", "#{root}/one/root"] }
+      let(:calls) { [] }
+      before do
+        file_tree %w(pwd:one/root/
+                         one/outside.rb
+                         one/root/test.rb
+                         one/root/sub/other.rb
+                         two/also_outside.rb
+                         )
+        add_load_path 'one'
+        add_load_path 'one/root'
+        add_load_path 'one/root/sub'
+        add_load_path 'two'
+      end
+      { 'relative — from above the root' => 'outside',
+        'relative — not related to root' => 'also_outside',
+        'absolute - not inside root' => '../outside.rb',
+        'absolute - not existing' => "./not_existing",
+      }.each do |kind, path|
+        describe "for a file outside of it (#{kind})" do
+          it 'requires fallback' do
+            expect {
+              requirer.require(path % {root: root})
+            }.to throw_symbol(:use_fallback, equal(:not_found))
+          end
+        end
+      end
+      { 'relative — from the root' => 'test',
+        'relative — from inside the root' => 'other',
+        'relative — from above the root' => 'root/sub/other',
+        'absolute' => "./test",
+      }.each do |kind, path|
+        describe "for a file inside of it (#{kind})" do
+          it { requirer.require(path).should == true }
+        end
+      end
+    end
 
     describe "#load" do
       it "regular path checks current work dir" do

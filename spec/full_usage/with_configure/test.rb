@@ -5,6 +5,7 @@ require 'deep_cover'
 DeepCover.configure do
   detect_uncovered :default_argument
   ignore_uncovered :raise
+  paths '.'
 end
 
 DeepCover.cover do
