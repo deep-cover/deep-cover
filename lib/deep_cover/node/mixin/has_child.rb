@@ -6,8 +6,8 @@ module DeepCover
       def self.included(base)
         base.extend ClassMethods
       end
-      CHILDREN = {}
-      CHILDREN_TYPES = {}
+      CHILDREN = {}.freeze
+      CHILDREN_TYPES = {}.freeze
 
       def initialize(*)
         super
@@ -22,25 +22,25 @@ module DeepCover
       end
 
       module ClassMethods
-        def has_child(_rest: false, _refine: false, **h)
+        def has_child(rest_: false, refine_: false, **h)
           raise "Needs exactly one custom named argument, got #{h.size}" if h.size != 1
           name, types = h.first
           raise TypeError, "Expect a Symbol for name, got a #{name.class} (#{name.inspect})" unless name.is_a?(Symbol)
-          update_children_const(name, rest: _rest) unless _refine
-          define_accessor(name) unless _refine
+          update_children_const(name, rest: rest_) unless refine_
+          define_accessor(name) unless refine_
           add_runtime_check(name, types)
           self
         end
 
         def has_extra_children(**h)
-          has_child(**h, _rest: true)
+          has_child(**h, rest_: true)
         end
 
         def refine_child(child_name = nil, **h)
           if child_name
             h = {child_name => self::CHILDREN_TYPES.fetch(child_name), **h}
           end
-          has_child(**h, _refine: true)
+          has_child(**h, refine_: true)
         end
 
         def child_index_to_name(index, nb_children)
@@ -112,22 +112,24 @@ module DeepCover
             end
           end
           children_map[name] = if rest
-                                 raise "Class #{self} can't have extra children '#{name}' because it already has '#{name}' (#{children_map.inspect})" if already_has_rest
+                                 if already_has_rest
+                                   raise "Class #{self} can't have extra children '#{name}' because it already has '#{name}' (#{children_map})"
+                                 end
                                  children_map.size..-1
                                elsif already_has_rest
                                  -1
                                else
                                  children_map.size
-          end
+                               end
         end
 
         def define_accessor(name)
           warn "child name '#{name}' conflicts with existing method for #{self}" if method_defined? name
-          class_eval <<-end_eval, __FILE__, __LINE__ + 1
+          class_eval <<-EVAL, __FILE__, __LINE__ + 1
             def #{name}
               children[CHILDREN.fetch(#{name.inspect})]
             end
-          end_eval
+          EVAL
         end
 
         def add_runtime_check(name, type)

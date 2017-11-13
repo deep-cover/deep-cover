@@ -19,7 +19,7 @@ module DeepCover
       def resolve_rewrite(rule, context)
         return if rule == nil
         sources = context.tracker_sources
-        rule % {local: covered_code.local_var, node: '%{node}', **sources}
+        format(rule, local: covered_code.local_var, node: '%{node}', **sources)
       end
 
       # Returns an array of [range, rule], where rule is a string containing '%{node}'

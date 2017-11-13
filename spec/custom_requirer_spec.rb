@@ -382,15 +382,15 @@ module DeepCover
       end
 
       it 'outputs some diagnostics if DeepCover creates a syntax error', exclude: :JRuby do
-        defined?(TrivialGem).should == nil # Sanity check
+        defined?(TrivialGem).should be_nil # Sanity check
         path = Pathname.new(__dir__).join('cli_fixtures/trivial_gem/lib/trivial_gem/version.rb')
         # Fake a rewriting problem:
         allow_any_instance_of(DeepCover::CoveredCode).to receive(:instrument_source)
           .and_return("2 + 2 == 4\nthis is invalid ruby)}]")
 
-        expect {
+        expect do
           requirer.require(path.to_s)
-        }.to throw_symbol(:use_fallback, equal(:cover_failed)).and output(/version.rb:2:/).to_stderr
+        end.to throw_symbol(:use_fallback, equal(:cover_failed)).and output(/version.rb:2:/).to_stderr
       end
 
       describe 'when filtering' do
@@ -408,9 +408,9 @@ module DeepCover
         describe 'returns true' do
           let(:answer) { true }
           it 'allows skipping a custom require' do
-            expect {
+            expect do
               requirer.require('test')
-            }.to throw_symbol(:use_fallback, equal(:skipped))
+            end.to throw_symbol(:use_fallback, equal(:skipped))
             calls.should == ["#{root}/one/test.rb"]
           end
         end
@@ -443,9 +443,9 @@ module DeepCover
       }.each do |kind, path|
         describe "for a file outside of it (#{kind})" do
           it 'requires fallback' do
-            expect {
-              requirer.require(path % {root: root})
-            }.to throw_symbol(:use_fallback, equal(:not_found))
+            expect do
+              requirer.require(format(path, root: root))
+            end.to throw_symbol(:use_fallback, equal(:not_found))
           end
         end
       end

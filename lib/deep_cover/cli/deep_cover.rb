@@ -19,7 +19,7 @@ module DeepCover
       end
 
       class Parser < Struct.new(:delegate)
-        def method_missing(method, *args, &block)
+        def method_missing(method, *args, &block) # rubocop:disable Style/MethodMissing
           options = args.last
           if options.is_a?(Hash) && options.has_key?(:default)
             args[-2] += " [#{options[:default]}]"
@@ -54,7 +54,10 @@ module DeepCover
           o.bool '-d', '--debug', 'enter debugging after cover'
 
           o.separator "\nOther available commands:"
-          o.on('--version', 'print the version') { show_version; exit }
+          o.on('--version', 'print the version') do
+            show_version
+            exit
+          end
           o.boolean('-h', '--help')
         end
       end

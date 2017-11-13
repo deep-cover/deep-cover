@@ -9,7 +9,7 @@ module DeepCover
       include HasChild
       # Make all private methods public for testing purposes
       class << self
-        public *HasChild::ClassMethods.private_instance_methods(false)
+        public(*HasChild::ClassMethods.private_instance_methods(false))
       end
     end
 

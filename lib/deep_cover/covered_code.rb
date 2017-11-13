@@ -6,7 +6,7 @@ module DeepCover
 
     attr_accessor :covered_source, :buffer, :tracker_global, :local_var, :name
     @@counter = 0
-    @@globals = Hash.new { |h, global| h[global] = eval("#{global} ||= {}") }
+    @@globals = Hash.new { |h, global| h[global] = eval("#{global} ||= {}") } # rubocop:disable Security/Eval
 
     def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULT_TRACKER_GLOBAL, local_var: '_temp', name: nil)
       raise 'Must provide either path or source' unless path || source
@@ -30,7 +30,7 @@ module DeepCover
 
     def nb_lines
       lines = buffer.source_lines
-      if lines.size == 0
+      if lines.empty?
         0
       else
         lines.size - (lines.last.empty? ? 1 : 0)
@@ -40,7 +40,7 @@ module DeepCover
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
       return if has_executed?
       global[nb] = Array.new(@tracker_count, 0)
-      eval(@covered_source, binding, @buffer.name || '<raw_code>', lineno)
+      eval(@covered_source, binding, @buffer.name || '<raw_code>', lineno) # rubocop:disable Security/Eval
       self
     end
 
@@ -109,7 +109,7 @@ module DeepCover
           prefix, _node, suffix = rule.partition('%{node}')
           unless prefix.empty?
             prefix = yield prefix, node, range.begin, :prefix if block_given?
-            rewriter.insert_before_multi range, prefix rescue binding.pry
+            rewriter.insert_before_multi range, prefix
           end
           unless suffix.empty?
             suffix = yield suffix, node, range.end, :suffix if block_given?

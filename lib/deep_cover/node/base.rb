@@ -140,7 +140,7 @@ module DeepCover
               "Unknown node type encountered: #{base_node.type}"
             else
               "Node class #{self.class} incorrectly defined"
-      end
+            end
       warn [msg,
             'Attempting to continue, but this node will not be handled properly',
             ('Its subnodes will be ignored' if children.empty?),

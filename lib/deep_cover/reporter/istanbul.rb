@@ -33,7 +33,7 @@ module DeepCover
         def convert_block(node)
           decl = node.loc_hash[:begin]
           if (args = node.args.expression)
-            decl = decl.join(args) rescue binding.pry
+            decl = decl.join(args)
           end
           _convert_function(node, '(block)', decl)
         end

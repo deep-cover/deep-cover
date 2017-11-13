@@ -7,8 +7,11 @@ module DeepCover
                               .constants.map { |c| Analyser.const_get(c) }
                               .select { |klass| klass < Analyser }
                               .flat_map do |klass|
-          klass.instance_methods(false).map { |m| m.match(/^is_(.*)\?$/); $1 }
-        end
+                                klass.instance_methods(false).map do |method|
+                                  method =~ /^is_(.*)\?$/
+                                  Regexp.last_match(1)
+                                end
+                              end
                               .compact
                               .map(&:to_sym)
     end

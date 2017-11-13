@@ -12,7 +12,7 @@ module DeepCover
       ext = File.extname(path)
       # We don't care about .so files
       return if ext == '.so'
-      path = path + '.rb' if ext != '.rb'
+      path += '.rb' if ext != '.rb'
 
       pairs = @autoloaded_paths[path] ||= []
       pairs << [WeakRef.new(const), name]
@@ -54,7 +54,7 @@ module DeepCover
       # This is only used on MRI, so ObjectSpace is alright.
       ObjectSpace.each_object(Module) do |mod|
         mod.constants.each do |name|
-          if path = mod.autoload?(name)
+          if (path = mod.autoload?(name))
             add(mod, name, path)
           end
         end

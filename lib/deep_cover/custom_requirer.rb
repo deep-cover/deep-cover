@@ -53,7 +53,7 @@ module DeepCover
     # An absolute path is returned directly if it exists, otherwise nil
     # is returned without searching anywhere else.
     def resolve_path(path)
-      path = File.absolute_path(path) if path.start_with?('./') || path.start_with?('../')
+      path = File.absolute_path(path) if path.start_with?('./', '../')
 
       abs_path = File.absolute_path(path)
       if path == abs_path
@@ -82,7 +82,7 @@ module DeepCover
     def require(path)
       ext = File.extname(path)
       throw :use_fallback, :not_supported if ext == '.so'
-      path = path + '.rb' if ext != '.rb'
+      path += '.rb' if ext != '.rb'
       return false if @loaded_features.include?(path)
 
       found_path = resolve_path(path)
@@ -135,8 +135,10 @@ module DeepCover
         begin
           covered_code.execute_code
         rescue ::SyntaxError => e
-          warn "DeepCover is getting confused with the file #{path} and it won't be instrumented.\n" +
-               "Please report this error and provide the source code around the following:\n#{e}"
+          warn ["DeepCover is getting confused with the file #{path} and it won't be instrumented.",
+                'Please report this error and provide the source code around the following:',
+                e,
+               ].join("\n")
           throw :use_fallback, :cover_failed
         end
       end

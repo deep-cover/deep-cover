@@ -4,9 +4,9 @@ require 'spec_helper'
 
 module DeepCover
   RSpec.describe Analyser::Statement do
-    let(:analyser) {
+    let(:analyser) do
       Analyser::Statement.new(node)
-    }
+    end
     let(:results) { analyser.results }
     let(:by_execution) do
       results

@@ -41,7 +41,7 @@ module DeepCover
       def patch_ruby_file(ruby_file)
         content = ruby_file.read
         # Insert our code after leading comments:
-        content.sub!(/^((#.*\n+)*)/, "#{$1}require 'deep_cover/auto_run';DeepCover::AutoRun.run! '#{@dest_root}';")
+        content.sub!(/^(#.*\n+)*/) { |header| "#{header}require 'deep_cover/auto_run';DeepCover::AutoRun.run! '#{@dest_root}';" }
         ruby_file.write(content)
       end
 
@@ -122,7 +122,7 @@ module DeepCover
         path = @dest_root.join('.rubocop.yml')
         return unless path.exist?
         puts 'Patching .rubocop.yml'
-        config = YAML.load(path.read.gsub(/(?<!\w)lib(?!\w)/, 'lib_original'))
+        config = YAML.safe_load(path.read.gsub(/(?<!\w)lib(?!\w)/, 'lib_original'))
         ((config['AllCops'] ||= {})['Exclude'] ||= []) << 'lib/**/*' << 'app/**/*'
         path.write("# This file was modified by DeepCover\n" + YAML.dump(config))
       end

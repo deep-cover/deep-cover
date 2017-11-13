@@ -2,7 +2,7 @@
 
 module DeepCover
   module Tools::FormatCharCover
-    COLOR = {'x' => :red, ' ' => :green, '-' => :faint}
+    COLOR = {'x' => :red, ' ' => :green, '-' => :faint}.freeze
     WHITESPACE_MAP = Hash.new { |_, v| v }.merge!(' ' => '·', "\t" => '→ ')
     def format_char_cover(covered_code, show_whitespace: false, **options)
       bc = covered_code.char_cover(**options)

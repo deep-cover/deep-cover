@@ -10,9 +10,9 @@ module DeepCover
       end
       foo(100)
       RUBY
-    let(:analyser) {
+    let(:analyser) do
       Analyser::Node.new(node, ignore_uncovered: ignore_uncovered)
-    }
+    end
     let(:results) { analyser.results }
     let(:not_executed) { results.select { |node, runs| node.executable? && runs == 0 }.keys }
     subject { not_executed.map(&:type) }

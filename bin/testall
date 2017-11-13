@@ -47,7 +47,7 @@ end
 configs.each do |ruby_version, gemfile|
   next if ruby_version == 'ruby-head'
 
-  current_ruby_exec = ruby_exec % {ruby_version: ruby_version}
+  current_ruby_exec = format(ruby_exec, ruby_version: ruby_version)
 
   env_vars = {'BUNDLE_GEMFILE' => gemfile, 'WITHOUT_PENDING' => ENV['WITHOUT_PENDING'] || '1'}
   gemfile_text = gemfile || 'Default gemfile'

@@ -14,9 +14,9 @@ module DeepCover
     end
 
     let(:options) { {} }
-    let(:analyser) {
+    let(:analyser) do
       Analyser::Branch.new(node, **options)
-    }
+    end
     let(:results) { analyser.results }
     let(:line_runs) { map(results) { |node| node.expression.line } }
     let(:type_runs) { map(results, &:type) }

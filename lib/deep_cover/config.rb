@@ -6,7 +6,7 @@ module DeepCover
                  ignore_uncovered: [],
                  paths: %w[./app ./lib],
                  allow_partial: false,
-               }
+               }.freeze
 
     def initialize(notify = nil, **options)
       @notify = notify

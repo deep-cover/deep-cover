@@ -4,9 +4,9 @@ require 'spec_helper'
 
 module DeepCover
   RSpec.describe Analyser::Function do
-    let(:analyser) {
+    let(:analyser) do
       Analyser::Function.new(node)
-    }
+    end
     let(:results) { analyser.results }
 
     context 'for defs' do

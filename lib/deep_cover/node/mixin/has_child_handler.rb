@@ -7,9 +7,9 @@ module DeepCover
         base.extend ClassMethods
       end
 
-      def call_child_handler template, child, child_name = nil
-        child_name ||= self.class.child_index_to_name(child.index, children.size) rescue binding.pry
-        method_name = template % {name: child_name}
+      def call_child_handler(template, child, child_name = nil)
+        child_name ||= self.class.child_index_to_name(child.index, children.size)
+        method_name = format(template, name: child_name)
         if respond_to?(method_name)
           args = [child, child_name]
           arity = method(method_name).arity
@@ -24,10 +24,10 @@ module DeepCover
 
       module ClassMethods
         def has_child_handler(template)
-          child_method_name = template % {name: 'child'}
+          child_method_name = format(template, name: 'child')
           action = template.gsub(/_%{name}/, '').gsub(/%{name}_/, '')
           const_name = "#{Tools.camelize(action)}Handler"
-          class_eval <<-end_eval, __FILE__, __LINE__ + 1
+          class_eval <<-EVAL, __FILE__, __LINE__ + 1
             module #{const_name}                                     # module RewriteHandler
               module ClassMethods                                    #   module ClassMethods
                 def has_child(#{action}: nil, **h)                   #     def has_child(rewrite: nil, **h)
@@ -45,11 +45,11 @@ module DeepCover
             end                                                      # end
             include #{const_name}                                    # include RewriteHandler
             singleton_class.prepend #{const_name}::ClassMethods      # singleton_class.prepend RewriteHandler::ClassMethods
-          end_eval
+          EVAL
         end
 
         def define_child_handler(template, name, action)
-          method_name = template % {name: name}
+          method_name = format(template, name: name)
           case action
           when nil
             # Nothing to do

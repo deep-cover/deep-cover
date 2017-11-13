@@ -53,7 +53,7 @@ module DeepCover
         if prev.equal? watched_body
           prev.flow_entry_count - prev.flow_completion_count
         else # RESBODIES
-          if prev.exception
+          if prev.exception # rubocop:disable Style/IfInsideElse
             prev.exception.flow_completion_count - prev.execution_count
           else
             prev.flow_entry_count - prev.execution_count

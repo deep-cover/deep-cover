@@ -36,7 +36,7 @@ module DeepCover
 
     def each
       return to_enum unless block_given?
-      @covered_codes.each { |_path, covered_code| yield covered_code }
+      @covered_codes.each_value { |covered_code| yield covered_code }
       self
     end
 
@@ -112,6 +112,7 @@ module DeepCover
     end
 
     class Persistence
+      # rubocop:disable Security/MarshalLoad
       BASENAME = 'coverage.dc'
       TRACKER_TEMPLATE = 'trackers%{unique}.dct'
 
@@ -134,16 +135,16 @@ module DeepCover
 
       def save_trackers(global)
         saved?
-        trackers = eval(global)
+        trackers = eval(global) # rubocop:disable Security/Eval
         # Some testing involves more than one process, some of which don't run any of our covered code.
         # Don't save anything if that's the case
         return if trackers.nil?
-        basename = TRACKER_TEMPLATE % {unique: SecureRandom.urlsafe_base64}
-        dir_path.join(basename).binwrite(Marshal.dump({
-                                                        version: DeepCover::VERSION,
-                                                        global: global,
-                                                        trackers: trackers,
-                                                      }))
+        basename = format(TRACKER_TEMPLATE, unique: SecureRandom.urlsafe_base64)
+        dir_path.join(basename).binwrite(Marshal.dump(
+                                             version: DeepCover::VERSION,
+                                             global: global,
+                                             trackers: trackers,
+        ))
       end
 
       def saved?
@@ -158,10 +159,10 @@ module DeepCover
       end
 
       def save_coverage(coverage)
-        dir_path.join(BASENAME).binwrite(Marshal.dump({
-                                                        version: DeepCover::VERSION,
-                                                        coverage: coverage,
-                                                      }))
+        dir_path.join(BASENAME).binwrite(Marshal.dump(
+                                             version: DeepCover::VERSION,
+                                             coverage: coverage,
+        ))
       end
 
       def load_coverage
@@ -175,14 +176,14 @@ module DeepCover
         tracker_files.each do |full_path|
           Marshal.load(full_path.binread).tap do |version: raise, global: raise, trackers: raise|
             raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
-            merge_trackers(eval("#{global} ||= {}"), trackers)
+            merge_trackers(eval("#{global} ||= {}"), trackers) # rubocop:disable Security/Eval
           end
         end
       end
 
       def merge_trackers(hash, to_merge)
         hash.merge!(to_merge) do |_key, current, to_add|
-          unless current.size == 0 || current.size == to_add.size
+          unless current.empty? || current.size == to_add.size
             warn "Merging trackers of different sizes: #{current.size} vs #{to_add.size}"
           end
           to_add.zip(current).map { |a, b| a + b }
@@ -190,7 +191,7 @@ module DeepCover
       end
 
       def tracker_files
-        basename = TRACKER_TEMPLATE % {unique: '*'}
+        basename = format(TRACKER_TEMPLATE, unique: '*')
         Pathname.glob(dir_path.join(basename))
       end
 

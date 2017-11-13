@@ -140,7 +140,7 @@ module DeepCover
                    ivasgn: VariableAssignment, lvasgn: VariableAssignment,
                    casgn: ConstantAssignment,
                    send: Setter,
-                 }
+                 }.freeze
       class Splat < Node
         include BackwardsStrategy
         has_child rest_arg: [nil], remap: BASE_MAP

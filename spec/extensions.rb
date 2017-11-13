@@ -17,7 +17,7 @@ class RSpec::Core::ExampleGroup
                     when /\(skip/i then next
                     when /\(#{name}_pending/i then :pending
                     when /\(Ruby 2\.(\d)/i
-                      :skip if RUBY_VERSION < "2.#{$1}.0"
+                      :skip if RUBY_VERSION < "2.#{Regexp.last_match(1)}.0"
                     when /\(!Jruby/i
                       :skip if RUBY_PLATFORM == 'java'
                     end

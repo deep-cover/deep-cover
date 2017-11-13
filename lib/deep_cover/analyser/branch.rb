@@ -5,7 +5,7 @@ require_relative 'subset'
 module DeepCover
   class Analyser::Branch < Analyser
     include Analyser::Subset
-    SUBSET_CLASSES = [Node::Branch]
+    SUBSET_CLASSES = [Node::Branch].freeze
 
     def results
       each_node.map do |node, _children|

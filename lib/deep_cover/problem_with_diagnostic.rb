@@ -35,12 +35,12 @@ module DeepCover
       lines << "Source file: #{covered_code.path}"
       lines << "Line numbers: #{line_range}"
       lines << 'Source lines around location:'
-      lines.concat source_lines.map { |line| "   #{line}" }
+      lines.concat(source_lines.map { |line| "   #{line}" })
       if original_exception
         lines << 'Original exception:'
         lines << "  #{original_exception.class.name}: #{original_exception.message}"
         backtrace = Tools.truncate_backtrace(original_exception)
-        lines.concat backtrace.map { |line| "    #{line}" }
+        lines.concat(backtrace.map { |line| "    #{line}" })
       end
       lines
     end

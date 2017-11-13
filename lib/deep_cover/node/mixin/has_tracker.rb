@@ -27,14 +27,14 @@ module DeepCover
 
         def has_tracker(name)
           i = self::TRACKERS[name] = self::TRACKERS.size
-          class_eval <<-end_eval, __FILE__, __LINE__ + 1
+          class_eval <<-EVAL, __FILE__, __LINE__ + 1
             def #{name}_tracker_source
               covered_code.tracker_source(@tracker_offset + #{i})
             end
             def #{name}_tracker_hits
               covered_code.tracker_hits(@tracker_offset + #{i})
             end
-          end_eval
+          EVAL
         end
       end
     end

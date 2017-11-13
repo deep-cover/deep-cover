@@ -22,9 +22,9 @@ RSpec.describe DeepCover do
         prev = DeepCover.config.paths
         DeepCover.config.paths '/'
         DeepCover.cover do
-          expect {
+          expect do
             require('rexml/source').should == true
-          }.to output(/Can't cover .*rexml\/source.rb because of incompatible encoding/).to_stderr
+          end.to output(%r[Can't cover .*rexml/source.rb because of incompatible encoding]).to_stderr
         end
       ensure
         DeepCover.config.paths prev

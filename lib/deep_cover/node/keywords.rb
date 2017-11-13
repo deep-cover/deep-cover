@@ -33,7 +33,7 @@ module DeepCover
 
     class Break < Node
       has_extra_children arguments: Node
-      # TODO Anything special needed for the arguments?
+      # TODO: Anything special needed for the arguments?
 
       def flow_completion_count
         0
@@ -42,7 +42,7 @@ module DeepCover
 
     class Next < Node
       has_extra_children arguments: Node
-      # TODO Anything special needed for the arguments?
+      # TODO: Anything special needed for the arguments?
 
       def flow_completion_count
         0
