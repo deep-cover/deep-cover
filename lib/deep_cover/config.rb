@@ -17,7 +17,7 @@ module DeepCover
 
     def ignore_uncovered(*keywords)
       check_uncovered(keywords)
-      @options[:ignore_uncovered] += keywords
+      @options[:ignore_uncovered] |= keywords
       self
     end
 
