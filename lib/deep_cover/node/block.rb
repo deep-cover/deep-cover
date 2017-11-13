@@ -35,7 +35,7 @@ module DeepCover
       check_completion
       has_tracker :body
       has_child call: {send: SendWithBlock, csend: CsendWithBlock,
-                       zsuper: SuperWithBlock, super: SuperWithBlock
+                       zsuper: SuperWithBlock, super: SuperWithBlock,
 }
       has_child args: Args
       has_child body: Node,

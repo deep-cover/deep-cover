@@ -52,7 +52,7 @@ module DeepCover
             loc: convert_range(node.expression),
             type: node.type,
             line: node.expression.line,
-            locations: branches.map { |n| convert_range(n.expression || node.expression) }
+            locations: branches.map { |n| convert_range(n.expression || node.expression) },
           }
         end
 
@@ -136,7 +136,7 @@ module DeepCover
         {covered_code.name => {
                                 path: covered_code.path,
                                 **data.transform_values { |l| convert_list(l) },
-                              }
+                              },
 }
       end
 

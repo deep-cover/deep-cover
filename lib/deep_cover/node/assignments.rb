@@ -100,7 +100,7 @@ module DeepCover
               dot: base[:dot],
               expression: base[:expression],
               selector_begin: base[:selector],
-              selector_end: nil # ,
+              selector_end: nil, # ,
             }
           end
         end

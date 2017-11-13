@@ -8,7 +8,7 @@ module DeepCover
       results.map do |node, branches_runs|
         [yield(node), branches_runs.map do |branch, runs|
           [yield(branch), runs]
-        end.to_h
+        end.to_h,
 ]
       end.to_h
     end

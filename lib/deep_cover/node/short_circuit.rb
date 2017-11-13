@@ -14,7 +14,7 @@ module DeepCover
       def branches
         [
           conditional,
-          TrivialBranch.new(condition: lhs, other_branch: conditional)
+          TrivialBranch.new(condition: lhs, other_branch: conditional),
         ]
       end
     end

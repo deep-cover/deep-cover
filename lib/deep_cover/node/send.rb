@@ -93,7 +93,7 @@ module DeepCover
 
       def branches
         [actual_send,
-         TrivialBranch.new(condition: receiver, other_branch: actual_send)
+         TrivialBranch.new(condition: receiver, other_branch: actual_send),
         ]
       end
     end

@@ -101,7 +101,7 @@ module DeepCover
             " #{child.inspect}"
           end
         end,
-        ')'
+        ')',
       ].join
     end
 

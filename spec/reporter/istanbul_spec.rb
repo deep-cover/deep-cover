@@ -48,7 +48,7 @@ module DeepCover
       it 'converts ranges' do
         convert_range(pos).should == {
                                        start: {line: 2, column: 12},
-                                       end:   {line: 2, column: 14}
+                                       end:   {line: 2, column: 14},
                                      }
       end
 
