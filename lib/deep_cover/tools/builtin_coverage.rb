@@ -8,7 +8,7 @@ module DeepCover
       fn = File.absolute_path(File.expand_path(fn))
       ::Coverage.start
       Tools.silence_warnings do
-        execute_sample ->{ run_with_line_coverage(source, fn, lineno)}
+        execute_sample -> { run_with_line_coverage(source, fn, lineno) }
       end
       unshift_coverage(::Coverage.result.fetch(fn), lineno)
     end
@@ -16,7 +16,7 @@ module DeepCover
     if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
-      def run_with_line_coverage(source, fn=nil, lineno=1)
+      def run_with_line_coverage(source, fn = nil, lineno = 1)
         source = shift_source(source, lineno)
         Object.to_java.getRuntime.executeScript(source, fn)
       end
@@ -33,7 +33,7 @@ module DeepCover
 
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
-      def run_with_line_coverage(source, fn=nil, lineno=1)
+      def run_with_line_coverage(source, fn = nil, lineno = 1)
         source = shift_source(source, lineno)
         RubyVM::InstructionSequence.compile(source, fn).eval
       end
@@ -46,7 +46,7 @@ module DeepCover
     end
 
     def unshift_coverage(coverage, lineno)
-      coverage[(lineno-1)..-1]
+      coverage[(lineno - 1)..-1]
     end
   end
 end

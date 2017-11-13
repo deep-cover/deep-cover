@@ -9,7 +9,7 @@ module DeepCover
         Term::ANSIColor.yellow(inserted)
       end
 
-      inserts = inserts.sort_by{|exp, _| [exp.line, exp.column]}.reverse
+      inserts = inserts.sort_by { |exp, _| [exp.line, exp.column] }.reverse
       generated_lines = generated_code.split("\n")
 
       inserts.each do |exp_limit, size|

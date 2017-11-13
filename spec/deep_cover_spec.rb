@@ -10,10 +10,10 @@ RSpec.describe DeepCover do
       2.times do
         sources = nil
         DeepCover.cover do
-          sources = methods.map{|m| method(m).source_location }
+          sources = methods.map { |m| method(m).source_location }
         end
         sources.compact.size.should == methods.size
-        methods.map{|m| method(m).source_location }.compact.size.should == 0
+        methods.map { |m| method(m).source_location }.compact.size.should == 0
       end
     end
 
@@ -32,5 +32,4 @@ RSpec.describe DeepCover do
       REXML::SourceFactory.should be_instance_of(Class)
     end
   end
-
 end

@@ -8,20 +8,20 @@ module DeepCover
       # Converters has no dependency on the including class.
       module Converters
         def convert_range(range)
-          { start: {
-              line: range.line,
-              column: range.column,
-            },
-            end: {
-              line: range.last_line,
-              column: range.last_column-1, # Our ranges are exclusive, Istanbul's are inclusive
-            },
+          {start: {
+                    line: range.line,
+                    column: range.column,
+                  },
+           end: {
+                  line: range.last_line,
+                  column: range.last_column - 1, # Our ranges are exclusive, Istanbul's are inclusive
+                },
           }
         end
 
         # [:a, :b, :c] => {'1': :a, '2': :b, '3': :c}
         def convert_list(list)
-          list.map.with_index{ |val, i| [i.succ.to_s, val] }.to_h
+          list.map.with_index { |val, i| [i.succ.to_s, val] }.to_h
         end
 
         def convert_def(node)
@@ -52,11 +52,12 @@ module DeepCover
             loc: convert_range(node.expression),
             type: node.type,
             line: node.expression.line,
-            locations: branches.map{|n| convert_range(n.expression || node.expression)}
+            locations: branches.map { |n| convert_range(n.expression || node.expression) }
           }
         end
 
         private
+
         def _convert_function(node, name, decl)
           loc = node.body ? node.body.expression : decl.end
           {
@@ -97,15 +98,15 @@ module DeepCover
 
       # Istanbul doesn't understand how to ignore a branch...
       def zero_to_something(values)
-        values.map{|v| v || 1}
+        values.map { |v| v || 1 }
       end
 
       def branch_runs
-        branches.values.map{|r| zero_to_something(r.values) }
+        branches.values.map { |r| zero_to_something(r.values) }
       end
 
       def statement_map
-        statements.keys.map{ |range| convert_range(range) }
+        statements.keys.map { |range| convert_range(range) }
       end
 
       def statement_runs
@@ -113,7 +114,7 @@ module DeepCover
       end
 
       def function_map
-        functions.keys.map{|n| convert_function(n) }
+        functions.keys.map { |n| convert_function(n) }
       end
 
       def function_runs
@@ -122,20 +123,21 @@ module DeepCover
 
       def data
         {
-          statementMap: statement_map ,
+          statementMap: statement_map,
           s:            statement_runs,
-          fnMap:        function_map  ,
-          f:            function_runs ,
-          branchMap:    branch_map    ,
-          b:            branch_runs   ,
+          fnMap:        function_map,
+          f:            function_runs,
+          branchMap:    branch_map,
+          b:            branch_runs,
         }
       end
 
       def convert
-        { covered_code.name => {
-            path: covered_code.path,
-            **data.transform_values{|l| convert_list(l)},
-        } }
+        {covered_code.name => {
+                                path: covered_code.path,
+                                **data.transform_values { |l| convert_list(l) },
+                              }
+}
       end
 
       def report

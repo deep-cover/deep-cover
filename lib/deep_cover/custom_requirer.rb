@@ -9,14 +9,14 @@ module DeepCover
         @load_paths = load_paths
         @cached_rooted_load_paths = []
         @cached_load_paths_size = 0
-        @lookup_paths = lookup_paths.map{|p| File.expand_path(p)}
+        @lookup_paths = lookup_paths.map { |p| File.expand_path(p) }
       end
 
       def load_paths
         if @cached_load_paths_size != @load_paths.size
-           @cached_rooted_load_paths = @load_paths.map{ |p| File.expand_path(p) }
-            .select{|p| within_lookup?(p) || potentially_within_lookup?(p) }
-            .freeze
+          @cached_rooted_load_paths = @load_paths.map { |p| File.expand_path(p) }
+                                                 .select { |p| within_lookup?(p) || potentially_within_lookup?(p) }
+                                                 .freeze
           @cached_load_paths_size = @load_paths.size
         end
         @cached_rooted_load_paths
@@ -24,12 +24,12 @@ module DeepCover
 
       # E.g.  '/a/b/' => true if a lookup path is '/a/b/c/', because '/a/b/' + 'c/ok' is within lookup.
       def potentially_within_lookup?(full_dir_path)
-        @lookup_paths.any?{|p| p.start_with? full_dir_path }
+        @lookup_paths.any? { |p| p.start_with? full_dir_path }
       end
 
       # E.g.  '/a/b' => true when a lookup path is '/a/'
       def within_lookup?(full_path)
-        @lookup_paths.any?{|p| full_path.start_with? p}
+        @lookup_paths.any? { |p| full_path.start_with? p }
       end
 
       def exist?(full_path)
@@ -119,6 +119,7 @@ module DeepCover
     end
 
     protected
+
     def cover_and_execute(path)
       begin
         covered_code = DeepCover.coverage.covered_code(path)

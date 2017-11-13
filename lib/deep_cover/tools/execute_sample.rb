@@ -15,8 +15,8 @@ module DeepCover
         end
         true
       rescue RuntimeError => e
-         # In our samples, a simple `raise` doesn't need to be rescued
-         # Other exceptions are not rescued
+        # In our samples, a simple `raise` doesn't need to be rescued
+        # Other exceptions are not rescued
         raise unless e.message.empty?
         false
       end

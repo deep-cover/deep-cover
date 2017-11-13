@@ -7,9 +7,9 @@ module DeepCover
       has_child assignments: [Mlhs, VariableAssignment], flow_entry_count: -> { body.flow_entry_count if body }
       has_child iterable: [Node], flow_entry_count: -> { flow_entry_count }
       has_child body: Node,
-        can_be_empty: -> { base_node.loc.end.begin },
-        flow_entry_count: :body_tracker_hits,
-        rewrite: '((%{body_tracker};%{local}=nil;%{node}))'
+                can_be_empty: -> { base_node.loc.end.begin },
+                flow_entry_count: :body_tracker_hits,
+                rewrite: '((%{body_tracker};%{local}=nil;%{node}))'
       check_completion
 
       def execution_count

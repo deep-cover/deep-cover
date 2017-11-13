@@ -3,10 +3,10 @@
 module DeepCover
   class Config
     DEFAULTS = {
-      ignore_uncovered: [],
-      paths: %w[./app ./lib],
-      allow_partial: false,
-    }
+                 ignore_uncovered: [],
+                 paths: %w[./app ./lib],
+                 allow_partial: false,
+               }
 
     def initialize(notify = nil, **options)
       @notify = notify
@@ -37,6 +37,7 @@ module DeepCover
     end
 
     private
+
     def check_uncovered(keywords)
       unknown = keywords - Analyser.optionally_covered
       raise ArgumentError, "unknown options: #{unknown.join(', ')}" unless unknown.empty?

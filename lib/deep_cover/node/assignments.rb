@@ -90,17 +90,17 @@ module DeepCover
           if method_name == :[]=
             selector = base[:selector]
             {
-                expression: base[:expression],
-                selector_begin: selector.resize(1),
-                # The = is implicit, so only backtrack the end by one
-                selector_end: Parser::Source::Range.new(selector.source_buffer, selector.end_pos - 1, selector.end_pos),
+              expression: base[:expression],
+              selector_begin: selector.resize(1),
+              # The = is implicit, so only backtrack the end by one
+              selector_end: Parser::Source::Range.new(selector.source_buffer, selector.end_pos - 1, selector.end_pos),
             }
           else
             {
-                dot: base[:dot],
-                expression: base[:expression],
-                selector_begin: base[:selector],
-                selector_end: nil#,
+              dot: base[:dot],
+              expression: base[:expression],
+              selector_begin: base[:selector],
+              selector_end: nil # ,
             }
           end
         end
@@ -136,11 +136,11 @@ module DeepCover
       end
 
       BASE_MAP = {
-        cvasgn: VariableAssignment, gvasgn: VariableAssignment,
-        ivasgn: VariableAssignment, lvasgn: VariableAssignment,
-        casgn: ConstantAssignment,
-        send: Setter,
-      }
+                   cvasgn: VariableAssignment, gvasgn: VariableAssignment,
+                   ivasgn: VariableAssignment, lvasgn: VariableAssignment,
+                   casgn: ConstantAssignment,
+                   send: Setter,
+                 }
       class Splat < Node
         include BackwardsStrategy
         has_child rest_arg: [nil], remap: BASE_MAP
@@ -150,10 +150,10 @@ module DeepCover
       class LeftSide < Node
         include BackwardsStrategy
         has_extra_children receivers: {
-          splat: Splat,
-          mlhs: LeftSide,
-          **BASE_MAP,
-        }
+                                        splat: Splat,
+                                        mlhs: LeftSide,
+                                        **BASE_MAP,
+                                      }
         executed_loc_keys # none
 
         def flow_completion_count
@@ -197,7 +197,7 @@ module DeepCover
 
       def loc_hash
         base = super
-        hash = { expression: base[:expression], begin: base[:begin], end: base[:end], dot: base[:dot]}
+        hash = {expression: base[:expression], begin: base[:begin], end: base[:end], dot: base[:dot]}
         selector = base[:selector]
 
         if [:[], :[]=].include?(method_name)
@@ -216,11 +216,11 @@ module DeepCover
       check_completion
       has_tracker :reader
       has_child receiver: {
-        lvasgn: VariableOperatorAssign, ivasgn: VariableOperatorAssign,
-        cvasgn: VariableOperatorAssign, gvasgn: VariableOperatorAssign,
-        casgn: Casgn, # TODO
-        send: SendOperatorAssign,
-      }
+                            lvasgn: VariableOperatorAssign, ivasgn: VariableOperatorAssign,
+                            cvasgn: VariableOperatorAssign, gvasgn: VariableOperatorAssign,
+                            casgn: Casgn, # TODO
+                            send: SendOperatorAssign,
+                          }
       has_child operator: Symbol
       has_child value: Node, rewrite: '(%{reader_tracker};%{node})', flow_entry_count: :reader_tracker_hits
       executed_loc_keys :operator
@@ -235,11 +235,11 @@ module DeepCover
       check_completion
       has_tracker :long_branch
       has_child receiver: {
-        lvasgn: VariableOperatorAssign, ivasgn: VariableOperatorAssign,
-        cvasgn: VariableOperatorAssign, gvasgn: VariableOperatorAssign,
-        casgn: ConstantOperatorAssign,
-        send: SendOperatorAssign,
-      }
+                            lvasgn: VariableOperatorAssign, ivasgn: VariableOperatorAssign,
+                            cvasgn: VariableOperatorAssign, gvasgn: VariableOperatorAssign,
+                            casgn: ConstantOperatorAssign,
+                            send: SendOperatorAssign,
+                          }
       has_child value: Node, rewrite: '(%{long_branch_tracker};%{node})', flow_entry_count: :long_branch_tracker_hits
       executed_loc_keys :operator
 

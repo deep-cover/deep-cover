@@ -44,6 +44,7 @@ module DeepCover
     end
 
     private
+
     # Dependency injection
     def profiler
       require 'ruby-prof'

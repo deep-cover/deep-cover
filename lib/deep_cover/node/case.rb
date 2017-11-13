@@ -17,7 +17,7 @@ module DeepCover
       # This is solved in jruby 9.2.0.0, better keep the workaround
       # for compatibility.
       has_child condition: Node, rewrite: '(((%{entry_tracker}) && %{node}))',
-        flow_entry_count: :entry_tracker_hits
+                flow_entry_count: :entry_tracker_hits
       executed_loc_keys []
 
       def flow_entry_count
@@ -45,18 +45,18 @@ module DeepCover
 
     class When < Node
       has_tracker :body_entry
-      has_extra_children matches: { splat: WhenSplatCondition, Parser::AST::Node => WhenCondition }
+      has_extra_children matches: {splat: WhenSplatCondition, Parser::AST::Node => WhenCondition}
       has_child body: Node,
-        can_be_empty: -> {
+                can_be_empty: -> {
           if (after_then = base_node.loc.begin)
             after_then.end
           else
             base_node.loc.expression.end
           end
         },
-        rewrite: ';%{body_entry_tracker};%{local}=nil;%{node}',
-        is_statement: true,
-        flow_entry_count: :body_entry_tracker_hits
+                rewrite: ';%{body_entry_tracker};%{local}=nil;%{node}',
+                is_statement: true,
+                flow_entry_count: :body_entry_tracker_hits
 
       def flow_entry_count
         matches.first.flow_entry_count

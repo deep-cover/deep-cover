@@ -9,10 +9,10 @@ module DeepCover
     has_child method_name: Symbol
     has_child signature: Args
     has_child body: Node,
-      rewrite: '%{method_call_tracker};%{local}=nil;%{node}',
-      can_be_empty: -> { base_node.loc.end.begin },
-      is_statement: true,
-      flow_entry_count: :method_call_tracker_hits
+              rewrite: '%{method_call_tracker};%{local}=nil;%{node}',
+              can_be_empty: -> { base_node.loc.end.begin },
+              is_statement: true,
+              flow_entry_count: :method_call_tracker_hits
     executed_loc_keys :keyword, :name
 
     def children_nodes_in_flow_order
@@ -27,10 +27,10 @@ module DeepCover
     has_child method_name: Symbol
     has_child signature: Args
     has_child body: Node,
-      rewrite: '%{method_call_tracker};%{local}=nil;%{node}',
-      can_be_empty: -> { base_node.loc.end.begin },
-      is_statement: true,
-      flow_entry_count: :method_call_tracker_hits
+              rewrite: '%{method_call_tracker};%{local}=nil;%{node}',
+              can_be_empty: -> { base_node.loc.end.begin },
+              is_statement: true,
+              flow_entry_count: :method_call_tracker_hits
     executed_loc_keys :keyword, :name, :operator
 
     def children_nodes_in_flow_order

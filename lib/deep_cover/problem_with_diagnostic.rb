@@ -4,7 +4,7 @@ module DeepCover
   class ProblemWithDiagnostic < StandardError
     attr_reader :covered_code, :line_range, :original_exception
 
-    def initialize(covered_code, line_range, original_exception=nil)
+    def initialize(covered_code, line_range, original_exception = nil)
       @covered_code = covered_code
       if line_range.is_a?(Parser::Source::Range)
         @line_range = line_range.line..line_range.last_line
@@ -20,7 +20,7 @@ module DeepCover
       msg << 'Please open an issue at https://github.com/deep-cover/deep-cover/issues'
       msg << 'and include the following diagnostic information:'
       extra = begin
-        diagnostic_information_lines.map{|line| "| #{line}"}
+        diagnostic_information_lines.map { |line| "| #{line}" }
       rescue ProblemWithDiagnostic
         ["Oh no! We're in deep trouble!!!"]
       rescue Exception => e
@@ -35,12 +35,12 @@ module DeepCover
       lines << "Source file: #{covered_code.path}"
       lines << "Line numbers: #{line_range}"
       lines << 'Source lines around location:'
-      lines.concat source_lines.map{|line| "   #{line}" }
+      lines.concat source_lines.map { |line| "   #{line}" }
       if original_exception
         lines << 'Original exception:'
         lines << "  #{original_exception.class.name}: #{original_exception.message}"
         backtrace = Tools.truncate_backtrace(original_exception)
-        lines.concat backtrace.map{|line| "    #{line}"}
+        lines.concat backtrace.map { |line| "    #{line}" }
       end
       lines
     end

@@ -8,7 +8,7 @@ module DeepCover
 
     def format(*results, filename: nil, source: nil)
       source ||= File.read(filename)
-      results.map!{|counts| counts.map{|c| CONVERT[c]}}
+      results.map! { |counts| counts.map { |c| CONVERT[c] } }
       [*results, source.lines].transpose.map do |parts|
         *line_results, line = parts
         Term::ANSIColor.white(line_results.join) + line.to_s

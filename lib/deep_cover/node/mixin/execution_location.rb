@@ -32,7 +32,7 @@ module DeepCover
         if (keys = parent.child_executed_loc_keys(self))
           h.merge!(Tools.slice(parent.loc_hash, *keys))
         end
-        h.reject{|k, v| v.nil? }
+        h.reject { |k, v| v.nil? }
       end
 
       def executed_locs

@@ -6,7 +6,7 @@ module DeepCover
 
     attr_accessor :covered_source, :buffer, :tracker_global, :local_var, :name
     @@counter = 0
-    @@globals = Hash.new{|h, global| h[global] = eval("#{global} ||= {}") }
+    @@globals = Hash.new { |h, global| h[global] = eval("#{global} ||= {}") }
 
     def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULT_TRACKER_GLOBAL, local_var: '_temp', name: nil)
       raise 'Must provide either path or source' unless path || source
@@ -134,6 +134,7 @@ module DeepCover
     end
 
     protected
+
     def global
       @@globals[tracker_global]
     end

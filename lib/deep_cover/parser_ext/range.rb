@@ -11,7 +11,7 @@ class Parser::Source::Range
     inner_ranges.sort_by!(&:begin_pos)
     [self.begin, *inner_ranges, self.end]
       .each_cons(2)
-      .map{|i, j| with(begin_pos: i.end_pos, end_pos: j.begin_pos)}
+      .map { |i, j| with(begin_pos: i.end_pos, end_pos: j.begin_pos) }
       .reject(&:empty?)
   end
 

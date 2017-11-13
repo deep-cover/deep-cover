@@ -8,14 +8,14 @@ module DeepCover
       module ColorAST
         def fancy_type
           color = case
-          when !executable?
-            :faint
-          when !was_executed?
-            :red
-          when flow_interrupt_count > 0
-            :yellow
-          else
-            :green
+                  when !executable?
+                    :faint
+                  when !was_executed?
+                    :red
+                  when flow_interrupt_count > 0
+                    :yellow
+                  else
+                    :green
           end
           Term::ANSIColor.send(color, super)
         end

@@ -12,7 +12,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
     errors = @our.zip(answers, lines).each_with_index.reject do |(cov, comment_answer, line), _i|
       expected_result?(cov, line, comment_answer, strict: strict)
     end
-    @errors = errors.map{|_, i| i + lineno}
+    @errors = errors.map { |_, i| i + lineno }
     @errors.empty?
   end
   failure_message do |fn|

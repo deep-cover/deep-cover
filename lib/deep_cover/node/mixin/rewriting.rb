@@ -12,7 +12,7 @@ module DeepCover
       end
 
       # Default child rewriting rule
-      def rewrite_child(child, name=nil)
+      def rewrite_child(child, name = nil)
       end
 
       # Replaces all the '%{local}' or '%{some_tracker}' in rewriting rules
@@ -28,7 +28,7 @@ module DeepCover
         [
           resolve_rewrite(rewrite, self),
           resolve_rewrite(parent.rewrite_child(self), parent),
-        ].compact.map{|rule| [expression, rule]}
+        ].compact.map { |rule| [expression, rule] }
       end
     end
   end

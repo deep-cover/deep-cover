@@ -46,7 +46,7 @@ module DeepCover
         def child_index_to_name(index, nb_children)
           self::CHILDREN.each do |name, i|
             return name if i == index || (i == index - nb_children) ||
-              (i.is_a?(Range) && i.begin <= index && i.end + nb_children >= index)
+                           (i.is_a?(Range) && i.begin <= index && i.end + nb_children >= index)
           end
           raise IndexError, "index #{index} does not correspond to any child of #{self}"
         end
@@ -84,7 +84,7 @@ module DeepCover
           when nil
             node.nil?
           when Array
-            expected.any? {|exp| node_matches_type?(node, exp) }
+            expected.any? { |exp| node_matches_type?(node, exp) }
           when Class
             node.is_a?(expected)
           when Symbol
@@ -112,12 +112,12 @@ module DeepCover
             end
           end
           children_map[name] = if rest
-            raise "Class #{self} can't have extra children '#{name}' because it already has '#{name}' (#{children_map.inspect})" if already_has_rest
-            children_map.size..-1
-          elsif already_has_rest
-            -1
-          else
-            children_map.size
+                                 raise "Class #{self} can't have extra children '#{name}' because it already has '#{name}' (#{children_map.inspect})" if already_has_rest
+                                 children_map.size..-1
+                               elsif already_has_rest
+                                 -1
+                               else
+                                 children_map.size
           end
         end
 

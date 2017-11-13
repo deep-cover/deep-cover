@@ -10,16 +10,16 @@ module DeepCover
     let(:results) { analyser.results }
     let(:by_execution) do
       results
-        .sort_by{|range, _runs| range.begin_pos }
-        .group_by{|_range, runs| runs && runs != 0 }
-        .transform_values{|ranges_run_pairs| ranges_run_pairs.map(&:first)}
+        .sort_by { |range, _runs| range.begin_pos }
+        .group_by { |_range, runs| runs && runs != 0 }
+        .transform_values { |ranges_run_pairs| ranges_run_pairs.map(&:first) }
     end
-    let(:lines_by_execution) { by_execution.transform_values{|ranges| ranges.map(&:line)} }
-    let(:columns_by_execution) { by_execution.transform_values{|ranges| ranges.map{|r| r.begin_pos ... r.end_pos}} }
+    let(:lines_by_execution) { by_execution.transform_values { |ranges| ranges.map(&:line) } }
+    let(:columns_by_execution) { by_execution.transform_values { |ranges| ranges.map { |r| r.begin_pos...r.end_pos } } }
     subject { lines_by_execution }
 
     context 'With multiple expression in a line' do
-      let(:node){ Node[ <<-RUBY ] }
+      let(:node) { Node[<<-RUBY ] }
         1 + 1; 2 + 2 == 4; :bye
       RUBY
       it 'returns the right ranges' do
@@ -28,7 +28,7 @@ module DeepCover
     end
 
     context 'With expressions on different lines' do
-      let(:node){ Node[<<-RUBY] }
+      let(:node) { Node[<<-RUBY] }
         if false
           1
           :a
@@ -40,7 +40,7 @@ module DeepCover
     end
 
     context 'With unexecuted subexpressions' do
-      let(:node){ Node[<<-RUBY] }
+      let(:node) { Node[<<-RUBY] }
         dummy_method(
           'x' ||
           42
@@ -50,7 +50,7 @@ module DeepCover
     end
 
     context 'With unexecuted subexpressions' do
-      let(:node){ Node[<<-RUBY] }
+      let(:node) { Node[<<-RUBY] }
         if true
           dummy_method(
             42,
@@ -63,7 +63,7 @@ module DeepCover
     end
 
     context 'With modules and defs' do
-      let(:node){ Node[<<-RUBY] }
+      let(:node) { Node[<<-RUBY] }
         module M
           module N
             def foo
@@ -81,7 +81,7 @@ module DeepCover
     end
 
     context 'With comments' do
-      let(:node){ Node[<<-RUBY] }
+      let(:node) { Node[<<-RUBY] }
         module M
           def bar; end
           # a comment
@@ -92,7 +92,7 @@ module DeepCover
     end
 
     context 'With blocks' do
-      let(:node){ Node[<<-RUBY] }
+      let(:node) { Node[<<-RUBY] }
         def foo
           1.times do
             2.times do

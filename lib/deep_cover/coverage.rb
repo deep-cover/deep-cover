@@ -36,7 +36,7 @@ module DeepCover
 
     def each
       return to_enum unless block_given?
-      @covered_codes.each{|_path, covered_code| yield covered_code}
+      @covered_codes.each { |_path, covered_code| yield covered_code }
       self
     end
 
@@ -140,10 +140,10 @@ module DeepCover
         return if trackers.nil?
         basename = TRACKER_TEMPLATE % {unique: SecureRandom.urlsafe_base64}
         dir_path.join(basename).binwrite(Marshal.dump({
-          version: DeepCover::VERSION,
-          global: global,
-          trackers: trackers,
-        }))
+                                                        version: DeepCover::VERSION,
+                                                        global: global,
+                                                        trackers: trackers,
+                                                      }))
       end
 
       def saved?
@@ -159,9 +159,9 @@ module DeepCover
 
       def save_coverage(coverage)
         dir_path.join(BASENAME).binwrite(Marshal.dump({
-          version: DeepCover::VERSION,
-          coverage: coverage,
-        }))
+                                                        version: DeepCover::VERSION,
+                                                        coverage: coverage,
+                                                      }))
       end
 
       def load_coverage
@@ -185,12 +185,12 @@ module DeepCover
           unless current.size == 0 || current.size == to_add.size
             warn "Merging trackers of different sizes: #{current.size} vs #{to_add.size}"
           end
-          to_add.zip(current).map{|a, b| a+b}
+          to_add.zip(current).map { |a, b| a + b }
         end
       end
 
       def tracker_files
-        basename = TRACKER_TEMPLATE % { unique: '*' }
+        basename = TRACKER_TEMPLATE % {unique: '*'}
         Pathname.glob(dir_path.join(basename))
       end
 

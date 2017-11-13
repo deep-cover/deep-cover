@@ -72,9 +72,9 @@ RSpec::Matchers.define :run_successfully do
 
   failure_message do
     [
-        ("expected output '#{@expected_output}', got '#{@output}'" unless @ouput_ok),
-        ("expected exit code 0, got #{@exit_code}" if @exit_code != 0),
-        ("expected no errors, got '#{@errors}'" unless @errors.empty?),
+      ("expected output '#{@expected_output}', got '#{@output}'" unless @ouput_ok),
+      ("expected exit code 0, got #{@exit_code}" if @exit_code != 0),
+      ("expected no errors, got '#{@errors}'" unless @errors.empty?),
     ].compact.join(' and ')
   end
 end

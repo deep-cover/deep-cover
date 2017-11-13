@@ -4,18 +4,19 @@ require 'deep_cover'
 
 def gem_list
   return %w[erubis thor i18n builder tzinfo diff-lcs rack-test tilt multipart-post diff-lcs
-    rubygems-bundler method_source daemons hike multi_json rails-deprecated_sanitizer slop
-    rspec-support thread_safe rspec-core rspec-expectations rspec-mocks rspec mini_portile
-    multi_json rspec-support rspec-expectations rspec-mocks mail nokogiri rack rspec unf
-    json thread_safe rspec-core json rack-protection sdoc docile faraday multi_xml coderay
-    mime-types net-scp multi_json turbolinks formatador coffee-script rack-test] +
-    %w[devise]
+            rubygems-bundler method_source daemons hike multi_json rails-deprecated_sanitizer slop
+            rspec-support thread_safe rspec-core rspec-expectations rspec-mocks rspec mini_portile
+            multi_json rspec-support rspec-expectations rspec-mocks mail nokogiri rack rspec unf
+            json thread_safe rspec-core json rack-protection sdoc docile faraday multi_xml coderay
+            mime-types net-scp multi_json turbolinks formatador coffee-script rack-test
+] +
+         %w[devise]
   # How I got those:
   require 'gems'
   Gems.most_downloaded
-  .map(&:first) # discard nb downloads
-  .map{|h| h['full_name']} # get name-0.1.2
-  .map{|n| n.rpartition('-').first } # => name
+      .map(&:first) # discard nb downloads
+      .map { |h| h['full_name'] } # get name-0.1.2
+      .map { |n| n.rpartition('-').first } # => name
 end
 
 def install_gems

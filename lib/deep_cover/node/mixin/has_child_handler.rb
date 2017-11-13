@@ -65,7 +65,7 @@ module DeepCover
           when Proc
             define_method(method_name, &action)
           else
-            define_method(method_name) {|*| action }
+            define_method(method_name) { |*| action }
           end
         end
         private :define_child_handler

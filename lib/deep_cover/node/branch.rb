@@ -28,6 +28,5 @@ module DeepCover
         @condition.flow_completion_count - @other_branch.flow_entry_count
       end
     end
-
   end
 end

@@ -72,11 +72,9 @@ module DeepCover
           ParentWithRest.child_index_to_name(3, 5).should eql :baz
           ParentWithRest.child_index_to_name(4, 5).should eql :qux
           ParentWithRest.child_index_to_name(1, 3).should eql :baz
-          expect(->{ ParentNoRest.child_index_to_name(3, 4)}).to raise_error(IndexError)
+          expect(-> { ParentNoRest.child_index_to_name(3, 4) }).to raise_error(IndexError)
         end
       end
-
-
     end
   end
 end

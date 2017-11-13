@@ -39,11 +39,11 @@ module DeepCover
       when ::Class
         each_node.grep(lookup)
       when ::Symbol
-        each_node.find_all{|n| n.type == lookup}
+        each_node.find_all { |n| n.type == lookup }
       when ::String
-        each_node.find_all{|n| n.source == lookup}
+        each_node.find_all { |n| n.source == lookup }
       when ::Regexp
-        each_node.find_all{|n| n.source =~ lookup}
+        each_node.find_all { |n| n.source =~ lookup }
       else
         binding.pry
         raise ::TypeError, "Expected class or symbol, got #{lookup.class}: #{lookup.inspect}"
@@ -73,7 +73,7 @@ module DeepCover
     end
 
     def children_nodes
-      children.select{|c| c.is_a? Node }
+      children.select { |c| c.is_a? Node }
     end
     alias_method :children_nodes_in_flow_order, :children_nodes
 
@@ -89,7 +89,7 @@ module DeepCover
     private :initialize_siblings
 
     # Adapted from https://github.com/whitequark/ast/blob/master/lib/ast/node.rb
-    def to_s(indent=0)
+    def to_s(indent = 0)
       [
         '  ' * indent,
         '(',
@@ -128,25 +128,26 @@ module DeepCover
     end
 
     def fancy_type
-      class_name = self.class.to_s.gsub(/^DeepCover::/,'').gsub(/^Node::/, '')
+      class_name = self.class.to_s.gsub(/^DeepCover::/, '').gsub(/^Node::/, '')
       t = type.to_s
       t.casecmp(class_name) == 0 ? t : "#{t}[#{class_name}]"
     end
 
     private
+
     def diagnose(exception)
       msg = if self.class == Node
-        "Unknown node type encountered: #{base_node.type}"
-      else
-        "Node class #{self.class} incorrectly defined"
+              "Unknown node type encountered: #{base_node.type}"
+            else
+              "Node class #{self.class} incorrectly defined"
       end
       warn [msg,
-        'Attempting to continue, but this node will not be handled properly',
-        ('Its subnodes will be ignored' if children.empty?),
-        'Source:',
-        expression,
-        'Original exception:',
-        exception.inspect,
+            'Attempting to continue, but this node will not be handled properly',
+            ('Its subnodes will be ignored' if children.empty?),
+            'Source:',
+            expression,
+            'Original exception:',
+            exception.inspect,
       ].join("\n")
     end
   end

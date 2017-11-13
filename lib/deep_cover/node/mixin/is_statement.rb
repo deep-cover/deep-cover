@@ -12,7 +12,7 @@ module DeepCover
       end
 
       # Default child rewriting rule
-      def is_child_statement(child, name=nil)
+      def is_child_statement(child, name = nil)
         :if_incompatible
       end
     end

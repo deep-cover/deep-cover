@@ -5,8 +5,8 @@ require 'spec_helper'
 module DeepCover
   RSpec.describe 'CLI' do
     describe 'The output of deep-cover' do
-      let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --no-bundle"}
-      let(:output) { Bundler.with_clean_env{ `#{command}` } }
+      let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --no-bundle" }
+      let(:output) { Bundler.with_clean_env { `#{command}` } }
       subject { output }
       describe 'for a simple gem' do
         let(:path) { 'trivial_gem' }

@@ -9,6 +9,7 @@ module DeepCover
     end
 
     private
+
     def find_children(from, parent = from)
       @source.node_children(from).flat_map do |node|
         if in_subset?(node, parent)
@@ -20,7 +21,7 @@ module DeepCover
     end
 
     def in_subset?(node, _parent)
-      self.class::SUBSET_CLASSES.any?{|klass| node.is_a?(klass)}
+      self.class::SUBSET_CLASSES.any? { |klass| node.is_a?(klass) }
     end
   end
 end

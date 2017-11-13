@@ -27,14 +27,13 @@ module DeepCover
       end
       private :augment_children
 
-      def remap_child(child, name=nil)
+      def remap_child(child, name = nil)
         return unless child.is_a?(Parser::AST::Node)
         class_name = Tools.camelize(child.type)
         Node.const_defined?(class_name) ? Node.const_get(class_name) : Node
       end
 
       module ClassMethods
-
         # This handles the following shortcuts:
         #   has_child foo: {type: NodeClass, ...}
         # same as:
@@ -51,7 +50,7 @@ module DeepCover
           end
           if remap.is_a? Hash
             type_map = remap
-            remap = -> (child) do
+            remap = ->(child) do
               klass = type_map[child.type] if child.respond_to? :type
               klass ||= type_map[child.class]
               klass

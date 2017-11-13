@@ -23,7 +23,7 @@ module DeepCover
 
       paths.flat_map do |path|
         pairs = @autoloaded_paths[path] || []
-        pairs = pairs.map{|weak_const, name| [self.class.value_from_weak_ref(weak_const), name] }
+        pairs = pairs.map { |weak_const, name| [self.class.value_from_weak_ref(weak_const), name] }
         pairs.select!(&:first)
         pairs
       end

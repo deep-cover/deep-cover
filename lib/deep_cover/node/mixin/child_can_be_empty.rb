@@ -10,7 +10,7 @@ module DeepCover
         end
       end
 
-      def remap_child(child, name=raise)
+      def remap_child(child, name = raise)
         if child == nil
           if (ChildCanBeEmpty.last_empty_position = child_can_be_empty(child, name))
             return Node::EmptyBody
@@ -19,7 +19,7 @@ module DeepCover
         super
       end
 
-      def child_can_be_empty(_child, _name=nil)
+      def child_can_be_empty(_child, _name = nil)
         false
       end
     end

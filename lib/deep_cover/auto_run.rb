@@ -17,6 +17,7 @@ module DeepCover
       end
 
       private
+
       def detect
         Coverage.saved? @covered_path
       end

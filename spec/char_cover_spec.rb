@@ -33,12 +33,12 @@ RSpec::Matchers.define :have_correct_char_coverage do |filename, lineno|
       else
         expected = DeepCover::Specs.strip_when_unimportant(line, expected).ljust(actual.size, ' ')
         ok = actual == expected
-        autofix(filename, a, line, i + lineno)  if ENV['FIX'] && !ok
+        autofix(filename, a, line, i + lineno) if ENV['FIX'] && !ok
         ok
       end
     end
-    @errors = errors.map{|_, i| i + lineno}
-    #binding.pry unless @errors.empty?
+    @errors = errors.map { |_, i| i + lineno }
+    # binding.pry unless @errors.empty?
     @errors.empty?
   end
   failure_message do |fn|

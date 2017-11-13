@@ -21,7 +21,7 @@ module DeepCover
       executed_loc_keys :keyword, :question
 
       def branches
-        [ true_branch, false_branch ]
+        [true_branch, false_branch]
       end
 
       def execution_count

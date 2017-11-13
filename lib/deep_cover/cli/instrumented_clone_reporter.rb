@@ -81,7 +81,7 @@ module DeepCover
       module GemCollection
         include Gem
         def each_gem_path
-          Pathname.glob(@main_path.join('*/lib')).each{|p| yield p.dirname}
+          Pathname.glob(@main_path.join('*/lib')).each { |p| yield p.dirname }
         end
       end
 
@@ -110,11 +110,11 @@ module DeepCover
         unless content =~ /gem 'deep-cover'/
           puts "Patching Gemfile #{gemfile}"
           File.write(gemfile, [
-            '# This file was modified by DeepCover',
-            content,
-            "gem 'deep-cover', path: '#{File.expand_path(__dir__ + '/../../../')}'",
-            '',
-          ].join("\n"))
+                                '# This file was modified by DeepCover',
+                                content,
+                                "gem 'deep-cover', path: '#{File.expand_path(__dir__ + '/../../../')}'",
+                                '',
+                              ].join("\n"))
         end
       end
 
@@ -139,8 +139,8 @@ module DeepCover
           original = to_cover.sub_ext('_original')
           FileUtils.cp_r(to_cover, original)
           Tools.dump_covered_code(original,
-            coverage: coverage, root_path: @dest_root.to_s,
-            dest_path: to_cover)
+                                  coverage: coverage, root_path: @dest_root.to_s,
+                                  dest_path: to_cover)
         end
         coverage.save(@dest_root.to_s)
       end

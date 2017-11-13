@@ -6,7 +6,6 @@ module DeepCover
   RSpec.describe Config do
     let(:config) { Config.new({ignore_uncovered: []}) }
     describe :ignore_uncovered do
-
       def result
         config.to_h[:ignore_uncovered]
       end

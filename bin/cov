@@ -26,7 +26,7 @@ module DeepCover
     item = -1
     examples = groups.flat_map do |title, examples|
       menu << Term::ANSIColor.green(title) if title
-      menu.concat(examples.keys.map {|ex| "  #{item+=1}: #{ex || '(General)'}"})
+      menu.concat(examples.keys.map { |ex| "  #{item += 1}: #{ex || '(General)'}" })
       examples.values
     end
     if ARGV[1]

@@ -16,6 +16,7 @@ module DeepCover
     end
 
     protected
+
     def convert(node, **)
       Analyser::CoveredCodeSource.new(node)
     end

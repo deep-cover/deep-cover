@@ -72,7 +72,7 @@ module DeepCover
     def parse_cov_comments_answers(lines)
       answers = []
       line_index = 0
-      lines.chunk{|line| line !~ ANSWER}.each do |is_code, chunk|
+      lines.chunk { |line| line !~ ANSWER }.each do |is_code, chunk|
         chunk.map!(&:chomp)
         unless is_code
           raise 'Hey' unless chunk.size == 1
@@ -87,7 +87,7 @@ module DeepCover
         line_index += chunk.size
       end
       answers[lines.size] ||= nil
-      answers.map!{|a| a || FULLY_EXECUTED }
+      answers.map! { |a| a || FULLY_EXECUTED }
     end
 
     def strip_when_unimportant(code, data)
@@ -149,9 +149,9 @@ module DeepCover
       end
 
       # Breaks the lines of code into sub sections and sub tests
-      def process_grouped_examples(lines, pattern, lineno=1)
+      def process_grouped_examples(lines, pattern, lineno = 1)
         chunks = lines.slice_before(pattern)
-        chunks = chunks.map{|chunk| v = [chunk, lineno]; lineno += chunk.size; v }
+        chunks = chunks.map { |chunk| v = [chunk, lineno]; lineno += chunk.size; v }
         chunks.map do |chunk, chunk_lineno|
           trimmed_chunk = chunk.trim_blank
           [trimmed_chunk, chunk_lineno + chunk.index(trimmed_chunk.first)]
