@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Tools::RequireRelativeDir
     def require_relative_dir(dir_name, except: [])

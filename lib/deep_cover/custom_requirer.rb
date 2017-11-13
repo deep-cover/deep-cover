@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # TODO: must handle circular requires
 
 module DeepCover

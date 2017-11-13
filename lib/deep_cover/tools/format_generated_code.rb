@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Tools::FormatGeneratedCode
     def format_generated_code(covered_code)

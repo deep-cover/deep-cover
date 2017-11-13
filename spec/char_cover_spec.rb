@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 
 RSpec::Matchers.define :have_correct_char_coverage do |filename, lineno|

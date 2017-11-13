@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class RSpec::Core::ExampleGroup
   def self.each_code_examples(glob, max_files: nil, name: 'unnamed', &block)
     Dir.glob(glob).sort.each_with_index do |fn, i|

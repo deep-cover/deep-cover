@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   class Analyser::PerChar < Analyser
     # Returns an array of characters for each line of code.

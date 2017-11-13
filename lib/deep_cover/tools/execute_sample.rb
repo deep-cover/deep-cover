@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Tools::ExecuteSample
     # Returns true if the code would have continued, false if the rescue was triggered.

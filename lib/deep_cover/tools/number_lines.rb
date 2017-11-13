@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Tools::NumberLines
     def number_lines(lines, lineno: 1, bad_linenos: [])

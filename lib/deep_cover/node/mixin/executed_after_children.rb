@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Node::Mixin
     # By default, nodes are considered executed if they are entered.

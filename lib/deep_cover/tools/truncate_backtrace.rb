@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Tools::TruncateBacktrace
     def truncate_backtrace(backtrace, extra_context: 10)

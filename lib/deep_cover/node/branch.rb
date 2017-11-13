@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'empty_body'
 
 module DeepCover

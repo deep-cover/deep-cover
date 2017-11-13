@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Analyser::IgnoreUncovered
     def initialize(source, ignore_uncovered: [], **options)

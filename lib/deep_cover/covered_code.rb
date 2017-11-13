@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   class CoveredCode
     DEFAULT_TRACKER_GLOBAL = '$_cov'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   class Node::EmptyBody < Node
     def initialize(base_node, parent: raise, index: 0, position: ChildCanBeEmpty.last_empty_position)

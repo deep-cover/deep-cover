@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Node::Mixin
     module ExecutionLocation

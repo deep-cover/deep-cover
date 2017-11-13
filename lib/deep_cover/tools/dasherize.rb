@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Tools::Dasherize
     # Poor man's dasherize. 'an_example' => 'an-example'
