@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   # A module to create a subset from a criteria called `in_subset?`
   # Including classes can refine it, or specify SUBSET_CLASSES

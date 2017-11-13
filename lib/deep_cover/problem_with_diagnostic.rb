@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   class ProblemWithDiagnostic < StandardError
     attr_reader :covered_code, :line_range, :original_exception

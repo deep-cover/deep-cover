@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 if $SPEC_HELPER_TRIED
   puts "spec_helper.rb couldn't run properly and was executed again. Hopefully you got an exception from that."
   puts "Exiting since you are already in trouble!"

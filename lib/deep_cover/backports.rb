@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # We use a few features newer than our target of Ruby 2.0+:
 class Module
   public :prepend # Public in Ruby 2.1+.

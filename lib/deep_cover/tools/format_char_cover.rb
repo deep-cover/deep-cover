@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   module Tools::FormatCharCover
     COLOR = {'x' => :red, ' ' => :green, '-' => :faint}

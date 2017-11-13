@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   class Node::Root < Node
     has_tracker :root

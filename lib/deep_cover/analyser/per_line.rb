@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   class Analyser::PerLine < Analyser
     # Returns an array of runs, one per line.

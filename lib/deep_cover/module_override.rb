@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   # Helps redefine methods in overriden_modules.
   # For each methods in Mod, this defines `<method>_with{out}_deep_cover`.

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   module Tools::SilenceWarnings
     # copied from: activesupport/lib/active_support/core_ext/kernel/reporting.rb

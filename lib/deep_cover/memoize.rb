@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   # Memoize is a quick way to prepend a module that defines
   # the memoized methods as `@_cache ||= super.freeze`

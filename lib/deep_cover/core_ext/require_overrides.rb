@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # These are the monkeypatches to replace the default #require and
 # #require_relative in order to instrument the code before it gets run.
 # Kernel.require and Kernel#require must both have their version because

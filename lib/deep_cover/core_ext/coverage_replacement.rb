@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This is a complete replacement for the builtin Coverage module of Ruby
 
 require 'coverage'

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   class Node::Const < Node
     check_completion

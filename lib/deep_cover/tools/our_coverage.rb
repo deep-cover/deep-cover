@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   module Tools::OurCoverage
     def our_coverage(source, fn, lineno, **options)

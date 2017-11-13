@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 
 RSpec.describe 'DeepCover usage' do
@@ -6,7 +7,7 @@ RSpec.describe 'DeepCover usage' do
   it { %w(ruby spec/full_usage/simple/simple.rb takeover).should run_successfully.and_output('Done') }
 
   it do
-    %w(ruby spec/full_usage/with_configure/test.rb).should run_successfully.and_output('[1, 0, 2, 0, nil, 2, nil, nil]')
+    %w(ruby spec/full_usage/with_configure/test.rb).should run_successfully.and_output('[nil, 1, 0, 2, 0, nil, 2, nil, nil]')
   end
 
   it 'Can still require gems when there is no bundler' do

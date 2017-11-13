@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   class Analyser::Node < Analyser
     def is_raise?(node)

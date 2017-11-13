@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   # Base class to handle covered nodes.
   class Node

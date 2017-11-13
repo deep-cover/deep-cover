@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   require 'bundler/setup'
   require 'slop'
@@ -46,14 +47,12 @@ module DeepCover
             o.bool "--ignore-#{Tools.dasherize(option)}", "", default: default
             [:"ignore_#{option}", option]
           end.to_h
-          o.separator ''
-          o.separator 'For testing purposes:'
+          o.separator "\nFor testing purposes:"
           o.bool '--profile', 'use profiler'
           o.string '-e', '--expression', 'test ruby expression instead of a covering a path'
           o.bool '-d', '--debug', 'enter debugging after cover'
 
-          o.separator ''
-          o.separator 'Other available commands:'
+          o.separator "\nOther available commands:"
           o.on('--version', 'print the version') { show_version; exit }
           o.boolean('-h', '--help')
         end

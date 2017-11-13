@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'executed_after_children'
 
 module DeepCover

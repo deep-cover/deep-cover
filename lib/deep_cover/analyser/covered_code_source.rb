@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   class Analyser::CoveredCodeSource < Analyser
     attr_reader :covered_code

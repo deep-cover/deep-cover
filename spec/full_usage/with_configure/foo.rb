@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Foo
   def bar(value = 42)
     if value >= 666

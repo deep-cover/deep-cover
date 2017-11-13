@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # We need to override autoload, because MRI has special behaviors associated with it
 # that we can't reuse, hence we need to do workarounds.
 #

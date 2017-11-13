@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   module Tools::Camelize
     # Poor man's camelize. 'an_example' => 'AnExample'

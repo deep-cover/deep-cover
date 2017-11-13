@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'begin'
 require_relative 'variables'
 module DeepCover

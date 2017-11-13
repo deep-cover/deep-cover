@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DeepCover
   module Analyser::OptionallyCovered
     def optionally_covered
