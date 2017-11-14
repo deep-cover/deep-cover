@@ -7,13 +7,16 @@ RSpec.describe DeepCover do
     it 'temporarily overrides `require`, `require_relative` and `autoload`' do
       methods = %i[require require_relative]
       methods << :autoload unless RUBY_PLATFORM == 'java'
+      original = methods.map { |m| method(m).source_location }
       2.times do
         sources = nil
         DeepCover.cover do
           sources = methods.map { |m| method(m).source_location }
         end
-        sources.compact.size.should == methods.size
-        methods.map { |m| method(m).source_location }.compact.size.should == 0
+        sources.zip(original).each do |now, before|
+          now.should_not == before
+        end
+        methods.map { |m| method(m).source_location }.should == original
       end
     end
 
