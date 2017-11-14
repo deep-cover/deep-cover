@@ -4,22 +4,22 @@
 
 module DeepCover
   class CustomRequirer
-    class RootedLoadPaths
+    class LoadPathsSubset
       def initialize(load_paths: raise, lookup_paths: raise)
         @load_paths = load_paths
-        @cached_rooted_load_paths = []
-        @cached_load_paths_size = 0
+        @cached_load_paths_subset = []
+        @cached_load_paths_hash = nil
         @lookup_paths = lookup_paths.map { |p| File.expand_path(p) }
       end
 
       def load_paths
-        if @cached_load_paths_size != @load_paths.size
-          @cached_rooted_load_paths = @load_paths.map { |p| File.expand_path(p) }
+        if @cached_load_paths_hash != (h = @load_paths.hash)
+          @cached_load_paths_subset = @load_paths.map { |p| File.expand_path(p) }
                                                  .select { |p| within_lookup?(p) || potentially_within_lookup?(p) }
                                                  .freeze
-          @cached_load_paths_size = @load_paths.size
+          @cached_load_paths_hash = h
         end
-        @cached_rooted_load_paths
+        @cached_load_paths_subset
       end
 
       # E.g.  '/a/b/' => true if a lookup path is '/a/b/c/', because '/a/b/' + 'c/ok' is within lookup.
@@ -42,7 +42,7 @@ module DeepCover
       @load_paths = load_paths
       lookup_paths ||= Dir.getwd
       lookup_paths = Array(lookup_paths)
-      @cache = RootedLoadPaths.new(load_paths: load_paths, lookup_paths: lookup_paths) unless lookup_paths.include? '/'
+      @cache = LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths) unless lookup_paths.include? '/'
       @loaded_features = loaded_features
       @filter = filter
     end
