@@ -12,6 +12,6 @@ before_install:
   - npm install -g nyc
 before_script:
   - rake dev:install
-matrix:
-  allow_failures:
-  - rvm: jruby-9.1.9.0
+# matrix:
+#   allow_failures:
+#   - rvm: jruby-9.1.9.0
