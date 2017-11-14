@@ -1,0 +1,227 @@
+AllCops:
+  DisplayCopNames: true
+  Exclude:
+    - 'spec/char_cover/**/*'
+    - 'spec/cli_fixtures/**/*'
+    - 'spec/samples/**/*'
+    - 'spec/full_usage/**/*'
+    - 'spec/specs_tools.rb'
+    - 'bin/**/*'
+  TargetRubyVersion: 2.1
+
+
+Layout/EmptyLines:
+  Enabled: false
+
+Layout/EmptyLineBetweenDefs:
+  NumberOfEmptyLines: [1, 2]
+
+Layout/FirstParameterIndentation:
+  IndentationWidth: 4
+
+Layout/IndentArray:
+  EnforcedStyle: align_brackets
+
+Layout/IndentHash:
+  EnforcedStyle: align_braces
+
+Layout/MultilineArrayBraceLayout:
+  EnforcedStyle: new_line
+
+Layout/MultilineHashBraceLayout:
+  EnforcedStyle: new_line
+
+# Annoying when used with some api that have blocks with sometimes useful parameters
+Lint/UnusedBlockArgument:
+  Enabled: false
+
+# Annoying because it wines for &block parameters, which helps make signature more explicit
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+# Really, you aim for less than that, but we won't bug you unless you reach 150
+Metrics/LineLength:
+  IgnoreCopDirectives: true
+  Max: 150
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Performance/RedundantBlockCall:
+  Enabled: false
+
+Rails/FilePath:
+  Enabled: false
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+# Can use a single nil in the else clause to remove the warning
+Style/EmptyElse:
+  EnforcedStyle: empty
+
+Style/EmptyMethod:
+  Enabled: false
+
+Naming/FileName:
+  Enabled: false
+
+# We target 2.2 to avoid cops that are not backward compatible, but we want this cop!
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+
+Style/InverseMethods:
+  InverseMethods:
+    :present?: :blank?,
+    :include?: :exclude?
+  Exclude:
+    - bin/*
+    - gemfiles/*
+
+Style/NegatedIf:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  Enabled: false
+
+# We tend to prefer the explicit aspect of sometimes using self.
+Style/RedundantSelf:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+# Doesn't look right to force it in this case:
+# where(belongs_to_reflection.foreign_type => value_class.base_class.name,
+#       belongs_to_reflection.foreign_key => values.first.id)
+# But look better in some other cases. So disable
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Naming/VariableNumber:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
+Style/GlobalVars:
+  Enabled: false
+
+Style/FormatStringToken:
+  EnforcedStyle: template
+
+Style/MutableConstant:
+  Enabled: false # TODO: - Remove me one asap
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Naming/PredicateName:
+  NamePrefix:
+      - is_
+      - have_
+  NamePrefixBlacklist:
+      - have_
+  NameWhitelist:
+      - is_statement
+      - is_child_statement
+
+Style/GuardClause:
+  Enabled: false
+
+Lint/Debugger:
+  Enabled: false # TODO: - Remove me one day
+
+Style/EmptyCaseCondition:
+  Enabled: false
+
+Lint/RescueException:
+  Enabled: false # TODO: - Remove me one asap
+
+Style/DoubleNegation:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Lint/Void:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Style/ClassVars:
+  Enabled: false
+
+Style/MultilineIfModifier:
+  Enabled: false
+
+Style/NilComparison:
+  Enabled: false
+
+Lint/EmptyWhen:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Naming/ConstantName:
+  Enabled: true
+  Exclude:
+    - lib/deep_cover/node/**/*
+
+Style/RescueModifier:
+  Enabled: false
+
+Style/PreferredHashMethods:
+  EnforcedStyle: verbose
+
+Style/ModuleFunction:
+  Enabled: false
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/StructInheritance:
+  Enabled: false
