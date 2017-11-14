@@ -6,17 +6,15 @@ module DeepCover
   class CustomRequirer
     class LoadPathsSubset
       def initialize(load_paths: raise, lookup_paths: raise)
-        @load_paths = load_paths
+        @original_load_paths = load_paths
         @cached_load_paths_subset = []
         @cached_load_paths_hash = nil
         @lookup_paths = lookup_paths.map { |p| File.expand_path(p) }
       end
 
       def load_paths
-        if @cached_load_paths_hash != (h = @load_paths.hash)
-          @cached_load_paths_subset = @load_paths.map { |p| File.expand_path(p) }
-                                                 .select { |p| within_lookup?(p) || potentially_within_lookup?(p) }
-                                                 .freeze
+        if @cached_load_paths_hash != (h = @original_load_paths.hash)
+          @cached_load_paths_subset = compute_subset
           @cached_load_paths_hash = h
         end
         @cached_load_paths_subset
@@ -35,6 +33,14 @@ module DeepCover
       def exist?(full_path)
         within_lookup?(full_path) && File.exist?(full_path)
       end
+
+      private
+
+      def compute_subset
+        @original_load_paths.map { |p| File.expand_path(p) }
+                            .select { |p| within_lookup?(p) || potentially_within_lookup?(p) }
+                            .freeze
+      end
     end
 
     attr_reader :load_paths, :loaded_features, :filter
@@ -42,7 +48,7 @@ module DeepCover
       @load_paths = load_paths
       lookup_paths ||= Dir.getwd
       lookup_paths = Array(lookup_paths)
-      @cache = LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths) unless lookup_paths.include? '/'
+      @load_paths_subset = LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths) unless lookup_paths.include? '/'
       @loaded_features = loaded_features
       @filter = filter
     end
@@ -57,11 +63,11 @@ module DeepCover
 
       abs_path = File.absolute_path(path)
       if path == abs_path
-        path if (@cache || File).exist?(path)
+        path if (@load_paths_subset || File).exist?(path)
       else
-        (@cache || self).load_paths.each do |load_path|
+        (@load_paths_subset || self).load_paths.each do |load_path|
           possible_path = File.absolute_path(path, load_path)
-          return possible_path if (@cache || File).exist?(possible_path)
+          return possible_path if (@load_paths_subset || File).exist?(possible_path)
         end
         nil
       end
@@ -108,7 +114,7 @@ module DeepCover
       if found_path.nil?
         # #load has a final fallback of always trying relative to current work directory of process
         possible_path = File.absolute_path(path)
-        found_path = possible_path if (@cache || File).exist?(possible_path)
+        found_path = possible_path if (@load_paths_subset || File).exist?(possible_path)
       end
 
       throw :use_fallback, :not_found unless found_path
