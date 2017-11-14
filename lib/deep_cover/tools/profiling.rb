@@ -47,12 +47,12 @@ module DeepCover
 
     # Dependency injection
     def profiler
-      require 'ruby-prof'
       @profiler = RubyProfProfiler.new
     end
 
     class RubyProfProfiler < SimpleDelegator
       def initialize
+        raise 'Profiling is not available when using JRuby' if RUBY_PLATFORM == 'java'
         require 'ruby-prof'
         super(RubyProf)
       end

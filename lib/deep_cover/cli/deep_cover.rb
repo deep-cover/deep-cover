@@ -49,7 +49,7 @@ module DeepCover
             [:"ignore_#{option}", option]
           end.to_h
           o.separator "\nFor testing purposes:"
-          o.bool '--profile', 'use profiler'
+          o.bool '--profile', 'use profiler' unless RUBY_PLATFORM == 'java'
           o.string '-e', '--expression', 'test ruby expression instead of a covering a path'
           o.bool '-d', '--debug', 'enter debugging after cover'
 
