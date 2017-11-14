@@ -8,8 +8,7 @@ RuboCop::RakeTask.new
 
 RSpec::Core::RakeTask.new(:spec).tap { |task| task.pattern = 'spec/*_spec.rb, spec/*/*_spec.rb' }
 
-task default: [:rubocop, :spec]
-
+multitask default: RUBY_VERSION > '2.1' ? [:rubocop, :spec] : :spec
 
 namespace :dev do
   desc 'Setup extra things required to run the spec suite'
