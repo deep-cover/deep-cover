@@ -30,6 +30,32 @@ module DeepCover
       node_runs_map
     end
 
+    def node_stat_type(node)
+      return :not_executable unless node.executable?
+      case node_runs(node)
+      when nil
+        :ignored
+      when 0
+        :not_executed
+      else
+        :executed
+      end
+    end
+
+    def node_stat_contributions(nodes)
+      if respond_to? :node_stat_contribution
+        nodes.sum { |n| node_stat_contribution(n) }
+      else
+        nodes.size
+      end
+    end
+
+    def stats
+      st = each_node.group_by { |n| node_stat_type(n) }
+                    .transform_values { |nodes| node_stat_contributions(nodes) }
+      Analyser::Stats.new(**st)
+    end
+
     # Iterates on nodes in the subset.
     # Yields the node and it's children (within the subset)
     def each_node(from = covered_code.root, &block)
