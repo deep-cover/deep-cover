@@ -5,7 +5,8 @@ require 'spec_helper'
 module DeepCover
   RSpec.describe 'CLI' do
     describe 'The output of deep-cover' do
-      let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --no-bundle" }
+      let(:options) { '' }
+      let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --no-bundle #{options}" }
       let(:output) { Bundler.with_clean_env { `#{command}` } }
       subject { output }
       describe 'for a simple gem' do
@@ -37,6 +38,7 @@ module DeepCover
       end
 
       describe 'for a rails app' do
+        let(:options) { 'bundle exec rake' } # Bypass Spring
         let(:path) { 'simple_rails42_app' }
         it do
           should =~ Regexp.new(%w[dummy.rb 100 100 100].join('[ |]*'))
