@@ -7,7 +7,7 @@ module DeepCover
     def results
       buffer = covered_code.buffer
       bc = buffer.source_lines.map { |line| '-' * line.size }
-      each_node do |node, _children|
+      each_node do |node|
         runs = node_runs(node)
         next if runs == nil
         node.proper_range.each do |pos|

@@ -8,7 +8,7 @@ module DeepCover
     SUBSET_CLASSES = [Node::Branch].freeze
 
     def results
-      each_node.map do |node, _children|
+      each_node.map do |node|
         branches_runs = node.branches.map { |b| [b, node_runs(b)] }.to_h
         [node, branches_runs]
       end.to_h

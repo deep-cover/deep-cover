@@ -6,7 +6,7 @@ module DeepCover
     def results
       disallow_partial = !options.fetch(:allow_partial, true)
       line_hits = Array.new(covered_code.nb_lines + covered_code.lineno - 1)
-      each_node do |node, _children|
+      each_node do |node|
         next unless (runs = node_runs(node))
         node.executed_locs.each do |loc|
           lineno = loc.line - 1

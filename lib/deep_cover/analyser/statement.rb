@@ -7,7 +7,7 @@ module DeepCover
     include Analyser::Subset
     # Returns a map of Range => runs
     def results
-      each_node.map do |node, _sub_statements|
+      each_node.map do |node|
         [node.expression, node_runs(node)]
       end.to_h
     end

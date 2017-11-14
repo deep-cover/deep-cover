@@ -20,7 +20,7 @@ module DeepCover
     end
 
     def node_runs_map
-      each_node.map do |node, sub_statements|
+      each_node.map do |node|
         [node, node_runs(node)]
       end.to_h
     end
@@ -34,15 +34,14 @@ module DeepCover
     # Yields the node and it's children (within the subset)
     def each_node(from = covered_code.root, &block)
       return to_enum(:each_node) unless block_given?
-      children = node_children(from)
       begin
-        yield from, children unless from.is_a?(Node::Root)
+        yield from unless from.is_a?(Node::Root)
       rescue ProblemWithDiagnostic
         raise
       rescue StandardError, SystemStackError => e
         raise ProblemWithDiagnostic.new(covered_code, from.diagnostic_expression, e)
       end
-      children.each do |child|
+      node_children(from).each do |child|
         each_node(child, &block)
       end
     end
