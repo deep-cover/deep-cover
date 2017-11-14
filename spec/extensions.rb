@@ -21,7 +21,10 @@ class RSpec::Core::ExampleGroup
                     when /\(!Jruby/i
                       :skip if RUBY_PLATFORM == 'java'
                     end
-              send(msg || :it, "#{title || '(General)'} [#{spec} #{index}]") { self.instance_exec(fn, lines, lineno, &block) }
+              if [section, title].join =~ /\(tag: (\w+)/
+                tag = Regexp.last_match(1).to_sym
+              end
+              send(msg || :it, "#{title || '(General)'} [#{spec} #{index}]", *tag) { self.instance_exec(fn, lines, lineno, &block) }
               index += 1
             end
           end

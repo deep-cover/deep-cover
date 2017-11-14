@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'DeepCover usage' do
+RSpec.describe 'DeepCover usage', :slow do
   it { %w(ruby spec/full_usage/simple/simple.rb).should run_successfully.and_output('Done') }
 
   it { %w(ruby spec/full_usage/simple/simple.rb takeover).should run_successfully.and_output('Done') }

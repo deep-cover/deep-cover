@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 
-RSpec.describe 'bin/cov' do
+RSpec.describe 'bin/cov', :slow do
   params_sets = ['case 0', 'exception_ensure 0', 'if 0']
 
   params_sets.each do |params_set|

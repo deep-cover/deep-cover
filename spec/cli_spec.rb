@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 module DeepCover
-  RSpec.describe 'CLI' do
+  RSpec.describe 'CLI', :slow do
     describe 'The output of deep-cover' do
       let(:options) { '' }
       let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --no-bundle #{options}" }

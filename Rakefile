@@ -8,7 +8,14 @@ RuboCop::RakeTask.new
 
 RSpec::Core::RakeTask.new(:spec).tap { |task| task.pattern = 'spec/*_spec.rb, spec/*/*_spec.rb' }
 
+desc 'Run all tests'
+RSpec::Core::RakeTask.new('spec:all') do |task|
+  task.pattern = 'spec/*_spec.rb, spec/*/*_spec.rb'
+  task.rspec_opts = '-O .rspec_all'
+end
+
 multitask default: RUBY_VERSION > '2.1' ? [:rubocop, :spec] : :spec
+multitask 'test:all' => RUBY_VERSION > '2.1' ? [:rubocop, 'spec:all'] : 'spec:all'
 
 namespace :dev do
   desc 'Setup extra things required to run the spec suite'

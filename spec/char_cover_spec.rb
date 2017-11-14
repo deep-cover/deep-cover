@@ -53,7 +53,7 @@ RSpec.describe 'char cover' do
     lines.should have_correct_char_coverage(fn, lineno)
   end
 
-  it 'tests against at least one of every node types', pending: true do
+  it 'tests against at least one of every node types', :pending, :slow do
     visited = Set.new
     Dir.glob('./spec/char_cover/*.rb') do |filename|
       ast = DeepCover::CoveredCode.new(path: filename).covered_ast
