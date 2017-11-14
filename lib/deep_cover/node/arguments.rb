@@ -24,7 +24,6 @@ module DeepCover
       has_tracker :default
       has_child name: Symbol
       has_child default: Node, flow_entry_count: :default_tracker_hits, rewrite: '(%{default_tracker};%{node})'
-      executed_loc_keys :name, :operator
 
       def executable?
         false

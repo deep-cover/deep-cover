@@ -20,6 +20,7 @@ module DeepCover
       end
 
       def executed_loc_keys
+        return [] unless executable?
         loc_hash.keys - [:expression]
       end
 
