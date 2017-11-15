@@ -59,9 +59,14 @@ module DeepCover
       dir = output_istanbul(**options).dirname
       unless [nil, '', 'false'].include? output
         output = File.expand_path(output)
-        html = "--reporter=html --report-dir='#{output}' && open '#{output}/index.html'"
+        html = "--reporter=html --report-dir='#{output}'"
+        if options[:open]
+          html += " && open '#{output}/index.html'"
+        else
+          msg = "\nHTML coverage written to: '#{output}/index.html'"
+        end
       end
-      `cd #{dir} && nyc report --reporter=text #{html}`
+      `cd #{dir} && nyc report --reporter=text #{html}` + msg.to_s
     end
 
     def basic_report

@@ -42,6 +42,7 @@ module DeepCover
           o.string '-c', '--command', 'command to run tests', default: 'bundle exec rake'
           o.bool '--bundle', 'run bundle before the tests', default: true
           o.bool '--process', 'turn off to only redo the reporting', default: true
+          o.bool '--open', 'open the output coverage', default: false
           o.separator 'Coverage options'
           @ignore_uncovered_map = Analyser.optionally_covered.map do |option|
             default = Config::DEFAULTS[:ignore_uncovered].include?(option)
