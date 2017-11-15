@@ -76,10 +76,9 @@ module DeepCover
           show_help
         elsif options[:expression]
           Debugger.new(options[:expression], **options).show
-        elsif (path = menu.arguments.first)
-          InstrumentedCloneReporter.new(path, **options).run
         else
-          show_help
+          path = menu.arguments.first || '.'
+          InstrumentedCloneReporter.new(path, **options).run
         end
       end
     end
