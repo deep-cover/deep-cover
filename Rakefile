@@ -26,6 +26,7 @@ namespace :dev do
       commands << 'bundle install --gemfile=spec/full_usage/rails51_project/Gemfile'
     end
     commands << 'bundle install --gemfile=spec/cli_fixtures/simple_rails42_app/Gemfile'
+    commands << 'bundle install --gemfile=spec/cli_fixtures/rails_like_gem/Gemfile'
 
     commands.each do |command|
       puts "Running: #{command}"
