@@ -30,11 +30,16 @@ module DeepCover
       coverage.covered_code(handle_relative_filename(filename))
     end
 
-    def cover
+    def cover(paths: nil)
+      if paths
+        prev = config.paths
+        config.paths(paths)
+      end
       start
       yield
     ensure
       stop
+      config.paths(prev) if paths
     end
 
     def config_changed(what)
