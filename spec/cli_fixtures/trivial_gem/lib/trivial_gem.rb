@@ -1,4 +1,4 @@
-require "trivial_gem/version"
+require_relative "trivial_gem/version"
 
 module TrivialGem
   def self.hello
