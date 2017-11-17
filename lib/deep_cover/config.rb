@@ -30,7 +30,7 @@ module DeepCover
 
     def paths(paths = nil)
       if paths
-        change(:paths, Array(paths).dup.freeze)
+        change(:paths, Array(paths).dup)
       else
         @options[:paths]
       end
@@ -45,7 +45,7 @@ module DeepCover
 
     def change(option, value)
       if @options[option] != value
-        @options[option] = value
+        @options[option] = value.freeze
         @notify.config_changed(option) if @notify.respond_to? :config_changed
       end
       self
