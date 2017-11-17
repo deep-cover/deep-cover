@@ -14,7 +14,7 @@ module DeepCover
     end
 
     def to_hash
-      copy(@options)
+      @options.dup
     end
     alias_method :to_h, :to_hash
 
