@@ -19,13 +19,21 @@ module DeepCover
     alias_method :to_h, :to_hash
 
     def ignore_uncovered(*keywords)
-      check_uncovered(keywords)
-      change(:ignore_uncovered, @options[:ignore_uncovered] | keywords)
+      if keywords.empty?
+        @options[:ignore_uncovered]
+      else
+        check_uncovered(keywords)
+        change(:ignore_uncovered, @options[:ignore_uncovered] | keywords)
+      end
     end
 
     def detect_uncovered(*keywords)
-      check_uncovered(keywords)
-      change(:ignore_uncovered, @options[:ignore_uncovered] - keywords)
+      if keywords.empty?
+        Analyser.optionally_covered - @options[:ignore_uncovered]
+      else
+        check_uncovered(keywords)
+        change(:ignore_uncovered, @options[:ignore_uncovered] - keywords)
+      end
     end
 
     def paths(paths = nil)
