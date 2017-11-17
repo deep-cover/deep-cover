@@ -44,6 +44,12 @@ module DeepCover
       end
     end
 
+    def reset
+      DEFAULTS.each do |key, value|
+        change(key, value)
+      end
+    end
+
     private
 
     def check_uncovered(keywords)
