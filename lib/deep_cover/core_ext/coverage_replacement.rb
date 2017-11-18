@@ -16,10 +16,10 @@ module Coverage
   def self.result
     raise 'coverage measurement is not enabled' unless @started
     @started = false
-    self.peek
+    peek_result
   end
 
-  def self.peek
+  def self.peek_result
     results = DeepCover.coverage.covered_codes.map do |filename, covered_code|
       [filename, covered_code.line_coverage(allow_partial: false)]
     end
