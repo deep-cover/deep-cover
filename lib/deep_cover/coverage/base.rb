@@ -11,7 +11,7 @@ module DeepCover
     end
 
     def covered_codes
-      @covered_code_index.dup
+      @covered_code_index.values
     end
 
     def reset

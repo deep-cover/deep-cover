@@ -20,8 +20,8 @@ module Coverage
   end
 
   def self.peek_result
-    results = DeepCover.coverage.covered_codes.map do |filename, covered_code|
-      [filename, covered_code.line_coverage(allow_partial: false)]
+    results = DeepCover.coverage.covered_codes.map do |covered_code|
+      [covered_code.path, covered_code.line_coverage(allow_partial: false)]
     end
     Hash[results]
   end
