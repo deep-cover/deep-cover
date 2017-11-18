@@ -5,23 +5,27 @@
 module DeepCover
   module CoverageReplacement
     class << self
+      def running?
+        DeepCover.running?
+      end
+
       def start
-        @started = true
+        return if running?
         DeepCover.start
-        DeepCover.coverage.reset
+        nil
       end
 
       def result
-        raise 'coverage measurement is not enabled' unless @started
-        @started = false
-        peek_result
+        r = peek_result
+        DeepCover.stop
+        r
       end
 
       def peek_result
-        results = DeepCover.coverage.covered_codes.map do |covered_code|
+        raise 'coverage measurement is not enabled' unless running?
+        DeepCover.coverage.covered_codes.map do |covered_code|
           [covered_code.path, covered_code.line_coverage(allow_partial: false)]
-        end
-        Hash[results]
+        end.to_h
       end
     end
   end
