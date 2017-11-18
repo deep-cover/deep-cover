@@ -12,7 +12,7 @@ module DeepCover
       raise 'Must provide either path or source' unless path || source
 
       @buffer = ::Parser::Source::Buffer.new(path, lineno)
-      @buffer.source = source ||= File.read(path)
+      @buffer.source = source || File.read(path)
       @tracker_count = 0
       @tracker_global = tracker_global
       @local_var = local_var
