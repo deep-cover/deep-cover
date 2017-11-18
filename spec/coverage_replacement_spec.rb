@@ -29,16 +29,18 @@ module DeepCover
         cov_module.result.should == {}
       end
 
-      it 'allows calling peek_result many times, once after a start' do
-        expect { cov_module.peek_result }.to raise_error(RuntimeError)
-        cov_module.start
-        cov_module.peek_result.should == {}
-        cov_module.peek_result.should == {}
-        cov_module.result.should == {}
-        expect { cov_module.peek_result }.to raise_error(RuntimeError)
-        cov_module.start
-        cov_module.peek_result.should == {}
-        cov_module.peek_result.should == {}
+      if RUBY_VERSION >= '2.3' || cov_module.respond_to?(:peek_result)
+        it 'allows calling peek_result many times, once after a start' do
+          expect { cov_module.peek_result }.to raise_error(RuntimeError)
+          cov_module.start
+          cov_module.peek_result.should == {}
+          cov_module.peek_result.should == {}
+          cov_module.result.should == {}
+          expect { cov_module.peek_result }.to raise_error(RuntimeError)
+          cov_module.start
+          cov_module.peek_result.should == {}
+          cov_module.peek_result.should == {}
+        end
       end
 
       if RUBY_VERSION >= '2.5' || cov_module.respond_to?(:running?)
