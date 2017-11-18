@@ -2,6 +2,10 @@
 
 module DeepCover
   module Base
+    def running?
+      @started
+    end
+
     def start
       return if @started
       if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
