@@ -4,6 +4,7 @@ require 'spec_helper'
 
 RSpec.describe DeepCover do
   describe 'cover' do
+    after { DeepCover.reset }
     it 'temporarily overrides `require`, `require_relative` and `autoload`' do
       methods = %i[require require_relative]
       methods << :autoload unless RUBY_PLATFORM == 'java'

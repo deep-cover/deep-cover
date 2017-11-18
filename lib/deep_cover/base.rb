@@ -49,6 +49,13 @@ module DeepCover
       end
     end
 
+    def reset
+      stop if @started
+      @coverage = @custom_requirer = @autoload_tracker = nil
+      config.reset
+      self
+    end
+
     def coverage
       @coverage ||= Coverage.new
     end
