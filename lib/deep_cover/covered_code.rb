@@ -16,7 +16,7 @@ module DeepCover
       @tracker_count = 0
       @tracker_global = tracker_global
       @local_var = local_var
-      @name = name || (path ? File.basename(path) : '(source)')
+      @name = name.to_s || (path ? File.basename(path) : '(source)')
       @covered_source = instrument_source
     end
 
