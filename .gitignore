@@ -8,6 +8,7 @@
 /spec/reports/
 /tmp/
 /.idea
+/.sass-cache
 
 # rspec failure tracking
 .rspec_status
