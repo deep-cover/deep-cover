@@ -106,16 +106,18 @@ module DeepCover
 
       def patch_gemfile
         gemfile = @dest_root.join('Gemfile')
+        deps = Bundler::Definition.build(gemfile, nil, nil).dependencies
+
+        return if deps.find { |e| e.name == 'deep-cover' }
+
         content = File.read(gemfile)
-        unless content =~ /gem 'deep-cover'/
-          puts "Patching Gemfile #{gemfile}"
-          File.write(gemfile, [
-                                '# This file was modified by DeepCover',
-                                content,
-                                "gem 'deep-cover', path: '#{File.expand_path(__dir__ + '/../../../')}'",
-                                '',
-                              ].join("\n"))
-        end
+        puts "Patching Gemfile #{gemfile}"
+        File.write(gemfile, [
+                              '# This file was modified by DeepCover',
+                              content,
+                              "gem 'deep-cover', path: '#{File.expand_path(__dir__ + '/../../../')}'",
+                              '',
+                            ].join("\n"))
       end
 
       def patch_rubocop
