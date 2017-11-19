@@ -15,5 +15,15 @@ module DeepCover
         Tools.merge({a: 1}, {}, {a: 2, b: 2}, {b: 3}, :+).should == {a: 3, b: 5}
       end
     end
+
+    describe :content_tag do
+      it 'works' do
+        Tools.content_tag(:div, 'hello').should == '<div>hello</div>'
+      end
+      it 'works with a block' do
+        Tools.content_tag(:span, 'hello', class: 'foo', id: 'bar').should ==
+          %{<span class="foo" id="bar">hello</span>}
+      end
+    end
   end
 end
