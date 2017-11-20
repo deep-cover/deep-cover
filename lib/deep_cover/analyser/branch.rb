@@ -4,6 +4,9 @@ require_relative 'subset'
 
 module DeepCover
   class Analyser::Branch < Analyser
+    def self.human_name
+      'Branches'
+    end
     include Analyser::Subset
     SUBSET_CLASSES = [Node::Branch].freeze
 

@@ -2,6 +2,10 @@
 
 module DeepCover
   class Analyser::PerChar < Analyser
+    def self.human_name
+      'Chars'
+    end
+
     # Returns an array of characters for each line of code.
     # Each character is either ' ' (executed), '-' (not executable) or 'x' (not covered)
     def results

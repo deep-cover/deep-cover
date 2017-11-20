@@ -4,6 +4,10 @@ module DeepCover
   class Analyser::Node < Analyser
     include Analyser::Subset
 
+    def self.human_name
+      'Nodes'
+    end
+
     def is_raise?(node)
       node.is_a?(Node::Send) && (node.message == :raise || node.message == :exit)
     end
