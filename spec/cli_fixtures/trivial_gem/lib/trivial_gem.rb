@@ -2,7 +2,7 @@ require_relative "trivial_gem/version"
 
 module TrivialGem
   def self.hello
-    :world
+    'hello' && :world
   end
 
   def uncovered

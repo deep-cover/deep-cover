@@ -12,7 +12,7 @@ module DeepCover
       describe 'for a simple gem' do
         let(:path) { 'trivial_gem' }
         it do
-          should =~ Regexp.new(%w[trivial_gem.rb 83.33 100 50].join('[ |]*'))
+          should =~ Regexp.new(%w[trivial_gem.rb 83.33 50 50].join('[ |]*'))
           should include '2 examples, 0 failures'
         end
       end
