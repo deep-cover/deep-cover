@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'In depth coverage of your Ruby code.'
   spec.description   = 'expression and branch coverage for Ruby.'
-  spec.homepage      = 'http://github.com'
+  spec.homepage      = 'https://github.com/deep-cover/deep-cover'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
