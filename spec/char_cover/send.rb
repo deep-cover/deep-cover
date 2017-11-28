@@ -67,3 +67,6 @@
     end
     assert_equal 42, dummy_method2
 
+### operators and parens
+    2 + 2
+    assert !!(current_ast.covered_code.instrument_source =~ /2 \+ 2/)

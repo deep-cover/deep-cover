@@ -58,6 +58,7 @@ module DeepCover
           arguments.empty? || # No issue when no arguments
           loc_hash[:selector_end] || # No issue with foo[bar]= and such
           loc_hash[:operator] || # No issue with foo.bar=
+          (receiver && !loc_hash[:dot]) || # No issue with foo + bar
           loc_hash[:begin] # Ok if has parentheses
       end
     end
