@@ -148,6 +148,15 @@ module DeepCover
         './test'.should actually_require('one/two/test.rb')
       end
 
+      it 'handles a Pathname instance' do
+        file_tree %w(pwd:one/two/
+                     one/two/test.rb
+                     one/two/three/test.rb
+)
+
+        Pathname('./test').should actually_require('one/two/test.rb')
+      end
+
       it 'a ./path ignores the load_path' do
         file_tree %w(one/two/test.rb
                      one/two/three/test.rb
