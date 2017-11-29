@@ -88,6 +88,7 @@ module DeepCover
     #     It is *NOT* recommended to simply delegate to the default #require, since it
     #     might not be safe to run part of the code again.
     def require(path)
+      path = path.to_s
       ext = File.extname(path)
       throw :use_fallback, :not_supported if ext == '.so'
       path += '.rb' if ext != '.rb'
