@@ -39,28 +39,23 @@ module DeepCover
 
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
       return if has_executed?
-      global[nb] = Array.new(@tracker_count, 0)
       eval(@covered_source, binding, @buffer.name || '<raw_code>', lineno) # rubocop:disable Security/Eval
       self
     end
 
     def cover
-      must_have_executed
-      global[nb]
+      global[nb] ||= Array.new(@tracker_count, 0)
     end
 
     def line_coverage(**options)
-      must_have_executed
       Analyser::PerLine.new(self, **options).results
     end
 
     def to_istanbul(**options)
-      must_have_executed
       Reporter::Istanbul.new(self, **options).convert
     end
 
     def char_cover(**options)
-      must_have_executed
       Analyser::PerChar.new(self, **options).results
     end
 
@@ -126,7 +121,6 @@ module DeepCover
 
     def freeze
       unless frozen? # Guard against reentrance
-        must_have_executed
         super
         root.each_node(&:freeze)
       end
@@ -137,10 +131,6 @@ module DeepCover
 
     def global
       @@globals[tracker_global]
-    end
-
-    def must_have_executed
-      raise "cover for #{buffer.name} not available, file wasn't executed" unless has_executed?
     end
   end
 end
