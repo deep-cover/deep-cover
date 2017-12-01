@@ -36,6 +36,7 @@ module DeepCover
       end
 
       # Returns number of times the node itself was "executed". Definition of executed depends on the node.
+      # For now at least, don't return `nil`, instead return `false` in `executable?`
       def execution_count
         flow_entry_count
       end
