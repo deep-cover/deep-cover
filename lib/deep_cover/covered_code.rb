@@ -127,6 +127,11 @@ module DeepCover
       self
     end
 
+    def inspect
+      %{#<DeepCover::CoveredCode "#{name}">}
+    end
+    alias_method :to_s, :inspect
+
     protected
 
     def global
