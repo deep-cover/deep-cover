@@ -2,6 +2,8 @@
 
 module DeepCover
   class Analyser::Node < Analyser
+    include Analyser::Subset
+
     def is_raise?(node)
       node.is_a?(Node::Send) && (node.message == :raise || node.message == :exit)
     end
@@ -13,6 +15,10 @@ module DeepCover
     def is_case_implicit_else?(node)
       parent = node.parent
       node.is_a?(Node::EmptyBody) && parent.is_a?(Node::Case) && !parent.has_else?
+    end
+
+    def in_subset?(node, _parent)
+      node.executable?
     end
 
     protected
