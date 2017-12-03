@@ -30,9 +30,11 @@ namespace :dev do
 
     commands.each do |command|
       puts "Running: #{command}"
-      unless system(command)
-        puts "Failed to run `#{command}`, see above for details. When it is fixed, try running this rake task again."
-        exit(1)
+      Bundler.with_clean_env do
+        unless system(command)
+          puts "Failed to run `#{command}`, see above for details. When it is fixed, try running this rake task again."
+          exit(1)
+        end
       end
       puts "Command succeeded: #{command}"
     end
