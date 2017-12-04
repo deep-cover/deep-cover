@@ -8,4 +8,8 @@ RSpec.describe TrivialGem do
   it "does something useful" do
     expect(TrivialGem.hello).to eq(:world)
   end
+
+  it "runs a bunch of branches" do
+    expect(TrivialGem.branches(1)).to eq(1)
+  end
 end
