@@ -2,6 +2,8 @@
 
 module DeepCover
   module Analyser::Base
+    include Tools::Covered
+
     attr_reader :source, :options
 
     def initialize(source, **options)
@@ -17,6 +19,10 @@ module DeepCover
     # Returns the number of runs of the node (assumed to be in our subset)
     def node_runs(node)
       @source.node_runs(node)
+    end
+
+    def node_covered?(node)
+      covered?(node_runs(node))
     end
 
     def node_runs_map
