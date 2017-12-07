@@ -93,9 +93,15 @@ module DeepCover
       end
 
       def branches
-        [actual_send,
-         TrivialBranch.new(condition: receiver, other_branch: actual_send),
+        [TrivialBranch.new(condition: receiver, other_branch: actual_send),
+         actual_send,
         ]
+      end
+
+      def branches_summary(of = branches)
+        of.map do |jump|
+          jump == actual_send ? 'safe send' : 'nil shortcut'
+        end.join(' and ')
       end
     end
 

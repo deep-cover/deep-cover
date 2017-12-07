@@ -89,6 +89,17 @@ module DeepCover
         whens.map(&:body) << self.else
       end
 
+      def branches_summary(of = branches)
+        texts = []
+        n = of.size
+        if of.include? self.else
+          texts << "#{'implicit ' unless has_else?}else"
+          n -= 1
+        end
+        texts.unshift "#{n} when clause#{'s' if n > 1}" if n > 0
+        texts.join(' and ')
+      end
+
       def execution_count
         return evaluate.flow_completion_count if evaluate
         flow_entry_count

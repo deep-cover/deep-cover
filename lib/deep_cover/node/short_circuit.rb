@@ -17,6 +17,16 @@ module DeepCover
           TrivialBranch.new(condition: lhs, other_branch: conditional),
         ]
       end
+
+      def branches_summary(of = branches)
+        of.map do |jump|
+          if jump == conditional
+            'left-hand side'
+          else
+            "#{type == :and ? 'falsy' : 'truthy'} shortcut"
+          end
+        end.join(' and ')
+      end
     end
 
     And = Or = ShortCircuit
