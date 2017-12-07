@@ -103,14 +103,6 @@ Naming/FileName:
 Style/FrozenStringLiteralComment:
   EnforcedStyle: always
 
-Style/InverseMethods:
-  InverseMethods:
-    :present?: :blank?
-    :include?: :exclude?
-  Exclude:
-    - bin/*
-    - gemfiles/*
-
 Style/NegatedIf:
   Enabled: false
 
