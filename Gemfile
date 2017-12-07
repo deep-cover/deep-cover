@@ -9,4 +9,5 @@ gemspec
 
 eval_gemfile 'Gemfile.local' if File.exist?('Gemfile.local')
 
+gem 'parser', git: 'https://github.com/marcandre/parser.git', branch: 'tree_rewriter_release'
 gem 'ruby-prof', platforms: :mri

@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Parser::Source::Range
-  def with(begin_pos: @begin_pos, end_pos: @end_pos)
-    Parser::Source::Range.new(@source_buffer, begin_pos, end_pos)
-  end
-
   # (1...10).split(2...3, 6...8) => [1...2, 3...6, 7...10]
   # Assumes inner_ranges are exclusive, and included in self
   def split(*inner_ranges)

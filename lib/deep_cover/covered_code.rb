@@ -98,18 +98,13 @@ module DeepCover
     end
 
     def instrument_source
-      rewriter = ::Parser::Source::Rewriter.new(@buffer)
+      rewriter = ::Parser::Source::TreeRewriter.new(@buffer)
       covered_ast.each_node(:postorder) do |node|
         node.rewriting_rules.each do |range, rule|
           prefix, _node, suffix = rule.partition('%{node}')
-          unless prefix.empty?
-            prefix = yield prefix, node, range.begin, :prefix if block_given?
-            rewriter.insert_before_multi range, prefix
-          end
-          unless suffix.empty?
-            suffix = yield suffix, node, range.end, :suffix if block_given?
-            rewriter.insert_after_multi  range, suffix
-          end
+          prefix = yield prefix, node, range.begin, :prefix if block_given? && !prefix.empty?
+          suffix = yield suffix, node, range.end, :suffix if block_given? && !suffix.empty?
+          rewriter.wrap(range, prefix, suffix)
         end
       end
       rewriter.process

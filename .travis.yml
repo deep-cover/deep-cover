@@ -11,7 +11,7 @@ before_install:
   - gem install bundler -v 1.15.4
   - npm install -g nyc
 before_script:
-  - rake dev:install
+  - bundle exec rake dev:install
 script:
   - rake test:all
 matrix:

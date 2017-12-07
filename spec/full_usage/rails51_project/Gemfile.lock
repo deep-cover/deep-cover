@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/marcandre/parser.git
+  revision: 5ddb11ef59dac7cd50e2ca37306f7e9462789269
+  branch: tree_rewriter_release
+  specs:
+    parser (2.4.0.2)
+      ast (~> 2.3)
+
 PATH
   remote: ../../..
   specs:
@@ -110,8 +118,6 @@ GEM
     nio4r (2.1.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
-    parser (2.4.0.2)
-      ast (~> 2.3)
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -227,6 +233,7 @@ DEPENDENCIES
   deep-cover!
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
+  parser!
   puma (~> 3.7)
   rails (~> 5.1.4)
   rspec-rails
