@@ -40,6 +40,7 @@ module DeepCover
           o.separator ''
           o.string '-o', '--output', 'output folder', default: './coverage'
           o.string '-c', '--command', 'command to run tests', default: 'bundle exec rake'
+          o.string '--reporter', 'reporter', default: 'html'
           o.bool '--bundle', 'run bundle before the tests', default: true
           o.bool '--process', 'turn off to only redo the reporting', default: true
           o.bool '--open', 'open the output coverage', default: false

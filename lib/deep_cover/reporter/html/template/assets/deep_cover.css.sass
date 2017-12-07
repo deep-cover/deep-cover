@@ -1,0 +1,338 @@
+// Adapted from GitHub's scheme https://raw.githubusercontent.com/primer/github-syntax-light/master/lib/github-light.css
+$pl-c: #6a737d /* comment punctuation.definition.comment string.comment */
+
+/* constant entity.name.constant variable.other.constant variable.language support meta.property-name support.constant support.variable meta.module-reference markup.raw meta.diff.header meta.output */
+$pl-c1: #005cc5 /* string variable */
+
+$pl-en: #6f42c1 /* entity.name */
+
+/* variable.parameter.function storage.modifier.package storage.modifier.import storage.type.java variable.other */
+$pl-s1: #24292e /* string source */
+
+
+$pl-ent: #22863a /* entity.name.tag markup.quote */
+
+
+$pl-k: #d73a49 /* keyword storage storage.type */
+$pl-k: #a419ea /* override */
+
+/* string */
+/* punctuation.definition.string source.regexp string.regexp.character-class */
+/* string punctuation.section.embedded source */
+/* string.regexp */
+/* string.regexp constant.character.escape */
+/* string.regexp source.ruby.embedded */
+$pl-s: #032f62 /* string.regexp string.regexp.arbitrary-repitition */
+
+/* variable */
+$pl-v: #e36209 /* sublimelinter.mark.warning */
+
+$pl-bu: #b31d28 /* invalid.broken invalid.deprecated invalid.unimplemented message.error brackethighlighter.unmatched sublimelinter.mark.error */
+
+$pl-ii: #fafbfc /* invalid.illegal */
+$pl-ii-background: #b31d28
+
+$pl-sr: #22863a /* string.regexp constant.character.escape */
+
+$pl-ml: #735c0f /* markup.list */
+
+/* markup.heading */
+/* markup.heading entity.name */
+$pl-mh: #005cc5 /* meta.separator */
+
+$pl-mi2: #f6f8fa /* markup.ignored markup.untracked */
+$pl-mi2-background: #005cc5
+
+
+// http://meyerweb.com/eric/tools/css/reset/
+// v2.0 | 20110126
+// License: none (public domain)
+
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video
+  margin: 0
+  padding: 0
+  border: 0
+  font-size: 100%
+  // font: inherit
+  vertical-align: baseline
+
+// HTML5 display-role reset for older browsers
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section
+  display: block
+
+body
+  line-height: 1
+
+ol, ul
+  list-style: none
+
+blockquote, q
+  quotes: none
+
+blockquote:before, blockquote:after,
+q:before, q:after
+  content: ''
+  content: none
+
+table
+  border-collapse: collapse
+  border-spacing: 0
+
+
+// Global settings
+*
+  box-sizing: border-box
+  border-collapse: collapse
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+
+// *** DeepCover Source ***
+
+$dark-green: #25712b
+$light-green: #74b770
+$light-gray: #e1e4e8
+
+%light-border
+  border: 1px solid $light-gray
+
+.fork-branch > .fork-icon
+  display: none
+%show-fork-icon
+  .fork-branch > .fork-icon
+    display: inherit
+%center
+  width: 980px
+  margin: 0 auto 0 auto
+
+$toggled: $light-green
+$not-run: hsl(hue(#f00), 100%, 85%)
+$ignored: hsl(0, 0, 85%)
+
+// *** Common template ***
+main
+  @extend %center
+  padding-top: 10px
+.overlay
+  width: 100%
+  position: fixed
+  top: 0
+  z-index: 9999
+  .center
+    position: relative
+    @extend %center
+
+header
+  width: 100%
+  position: relative
+  top: 0
+  background: #24292e
+  color: rgba(255,255,255,0.75)
+  padding-bottom: 4px
+
+  .content
+    position: relative
+    @extend %center
+
+    .info
+      padding: 4px 0 4px 0
+      color: #88d483
+      .deep-cover
+        transition: opacity 0.4s
+        opacity: 0.3
+        font-size: 24px
+        font-weight: 900
+        .deep
+          color: #74b770
+      .version
+        transition: opacity 0.4s
+        opacity: 0.1
+        font-size: 12px
+        font-weight: lighter
+      &:hover
+        .deep-cover
+          opacity: 0.8
+        .version
+          opacity: 0.6
+
+    // *** DeepCover Source ***
+    body.source &
+      .nav
+        a
+          color: white
+body.source
+  .stats
+    th, td
+      padding: 6px
+      border-right: 1px solid $light-gray
+    td
+      padding-top: 0
+    table
+      @extend %light-border
+    position: absolute
+    background: white
+    right: 20px
+    top: 15px
+    color: $pl-s
+    .ignored
+      opacity: 0.7
+      &::before
+        content: "[+"
+      &::after
+        content: "]"
+
+  main
+    white-space: pre
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace
+    font-size: 12px
+    line-height: 20px
+
+    table.source
+      @extend %light-border
+      width: 100%
+
+      td
+        vertical-align: top
+
+      .nb
+        color: rgba(27,31,35,0.3)
+        text-align: right
+        width: 50px
+        padding-right: 10px
+        padding-left: 10px
+      // * Color scheme *
+
+      // Default color, for unexecutable code
+      color: $pl-c
+
+      // Executed code
+      .run
+        color: $pl-s
+
+      .not-run
+        background-color: $not-run
+        padding: 2px 0
+
+      .ignored
+        background-color: $ignored
+        padding: 2px 0
+
+      .kind-keyword, .kind-else
+        color: $pl-k
+
+      .node-def.kind-name
+        color: #3e920c
+
+      // Literals:
+      .kind-expression, .node-const
+        color: $pl-c1
+
+      .node-send
+        color: $dark-green
+
+      .node-str
+        color: $pl-s
+
+      // Icons
+      .icon-not-run
+        background-color: $not-run
+        border-color: red
+      .icon-ignored
+        background-color: $ignored
+        border-color: darken($ignored, 20%)
+      .icon
+        position: absolute
+        left: -2.2ex
+        width: 2ex
+        height: 1.5em
+        line-height: 1.5em
+        text-align: center
+        background-color: white
+        padding: 0
+        @extend %light-border
+
+      .kind-empty
+        position: relative
+        & > .empty-icon
+          @extend .icon
+          left: -2.5ex
+          width: 2.3ex
+        &.not-run > .empty-icon
+          @extend .icon-not-run
+
+      // Branches
+      .fork
+        position: relative
+      .fork-icon
+        @extend .icon
+      .fork-whole
+        & > .fork-icon
+          z-index: 1
+        &:hover
+          @extend %show-fork-icon
+          background: $light-gray
+          padding: 2px 0
+
+      .fork-with-uncovered-branches
+        &.fork-not-run > .fork-icon
+          @extend .icon-not-run
+        &.fork-ignored > .fork-icon
+          @extend .icon-ignored
+
+  &.show-forks
+    @extend %show-fork-icon
+    .fork-whole
+      background: $light-gray
+    .stats .branch
+      background: $toggled
+
+// *** Index ***
+
+.tree
+  // Overrides
+  .jstree-table-cell
+    padding-left: 0
+    span
+      padding-right: 4px
+  .jstree-table-header-cell
+    // Leave space for sort arrows:
+    padding-right: 17px
+    font-style: italic
+  .jstree-table-sort-icon
+    right: 4px
+    top: 8px
+    left: inherit
+  .jstree-table-separator
+    border: none
+
+  .jstree-table-column
+    text-align: right
+    border: gray 1px #ddd
+  .jstree-table-column-0
+    text-align: left
+
+  .percent-100
+    color: green
+  .percent-90
+    color: blue
+  .percent-80
+    color: brown
+  .percent-60, .percent-70
+    color: orange
+  .percent-00, .percent-10, .percent-20, .percent-30, .percent-40, .percent-50
+    color: red
+
+footer
+  display: none

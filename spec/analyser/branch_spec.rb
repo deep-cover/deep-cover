@@ -9,7 +9,7 @@ module DeepCover
         [yield(node), branches_runs.map do |branch, runs|
           [yield(branch), runs]
         end.to_h,
-]
+      ]
       end.to_h
     end
 
@@ -20,6 +20,7 @@ module DeepCover
     let(:results) { analyser.results }
     let(:line_runs) { map(results) { |node| node.expression.line } }
     let(:type_runs) { map(results, &:type) }
+    let(:runs) { analyser.node_runs(node) }
 
     context 'for a if' do
       let(:node) { Node[<<-RUBY ] }
@@ -31,16 +32,25 @@ module DeepCover
       RUBY
       it { line_runs.should == {1 => {2 => 0, 4 => 1}} }
       it { type_runs.should == {if: {send: 0, str: 1}} }
+      it { runs.should == 0 }
 
       context 'when ignoring trivial ifs' do
         let(:options) { {ignore_uncovered: :trivial_if} }
         it { line_runs.should == {1 => {2 => nil, 4 => 1}} }
         it { type_runs.should == {if: {send: nil, str: 1}} }
+        it { runs.should == nil }
       end
 
       context 'without an else' do
         let(:node) { Node['42 if false'] }
         it { type_runs.should == {if: {int: 0, EmptyBody: 1}} }
+        it { runs.should == 0 }
+      end
+
+      context 'for a fully covered if' do
+        let(:node) { Node['(1..2).each { |i| i == 1 ? :foo : 42 }'][:if] }
+        it { type_runs.should == {if: {sym: 1, int: 1}} }
+        it { runs.should == 2 }
       end
     end
 

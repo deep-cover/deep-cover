@@ -6,7 +6,7 @@ module DeepCover
   RSpec.describe 'CLI', :slow do
     describe 'The output of deep-cover' do
       let(:options) { '' }
-      let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --no-bundle #{options}" }
+      let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --reporter=istanbul --no-bundle #{options}" }
       let(:output) { Bundler.with_clean_env { `#{command}` } }
       subject { output }
       describe 'for a simple gem' do

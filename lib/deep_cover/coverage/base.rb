@@ -34,11 +34,19 @@ module DeepCover
     end
 
     def report(**options)
-      if Reporter::Istanbul.available?
-        report_istanbul(**options)
-      else
-        warn 'nyc not available. Please install `nyc` using `yarn global add nyc` or `npm i nyc -g`'
+      case (reporter = options.fetch(:reporter, :html).to_sym)
+      when :html
+        Reporter::HTML.report(self, **options)
+      when :istanbul
+        if Reporter::Istanbul.available?
+          report_istanbul(**options)
+        else
+          warn 'nyc not available. Please install `nyc` using `yarn global add nyc` or `npm i nyc -g`'
+        end
+      when :text
         basic_report
+      else
+        raise ArgumentError, "Unknown reporter: #{reporter}"
       end
     end
 

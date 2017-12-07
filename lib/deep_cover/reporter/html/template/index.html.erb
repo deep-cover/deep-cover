@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="assets/jquery-3.2.1.min.js"></script>
+    <script src="assets/jstree.js"></script>
+    <script src="assets/jstreetable.js"></script>
+    <script src="https://use.fontawesome.com/81e98abb93.js"></script>
+    <link href="assets/jstree.css" rel="stylesheet">
+    <link href="assets/deep_cover.css" rel="stylesheet">
+
+    <script>
+      window.DeepCover = {
+        index: <%= stats_to_data.to_json %>,
+        columns: <%= columns.to_json %>
+      };
+      var numColumns = {
+        width: 100,
+        sort: function(a, b) {
+          return (a.executed + a.ignored > b.executed + b.ignored ? 1 : -1);
+        },
+        format: function(stats) {
+          var ok = stats.executed + stats.ignored;
+          return '' + ok + '/' + (ok + stats.not_executed);
+        }
+      };
+      var percentColumns = {
+        width: 60,
+        format: function(percent) {
+          var decile = Math.floor(percent / 10);
+          return '<span class="percent-' + decile + '0">' + percent + '</span>';
+        }
+      }
+      for(var i = 1; i < DeepCover.columns.length;) {
+        $.extend(DeepCover.columns[i++], numColumns);
+        $.extend(DeepCover.columns[i++], percentColumns);
+      }
+    </script>
+
+    <script>
+      $(function() {
+        $(".tree").jstree({
+          plugins: ["table","sort"],
+          core: {
+            data: DeepCover.index
+          },
+          // configure tree table
+          table: {
+            columns: DeepCover.columns,
+            resizable: true,
+            width: "100%",
+            height: "100%"
+          }
+        });
+      });
+    </script>
+  </head>
+  <body class="index">
+    <header>
+      <div class="content">
+        <div class="info"><span class="deep-cover"><span class="deep">Deep</span>Cover</span>
+          <span class="version">v<%= DeepCover::VERSION %></span>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="tree"></div>
+    </main>
+    <footer>
+      <div class="details">
+        <span class="date"><%= Time.now %></span>
+        <span class="setup"><%= setup %></span>
+      </div>
+    </footer>
+  </body>
+</html>
