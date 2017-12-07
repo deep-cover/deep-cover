@@ -29,7 +29,7 @@ module DeepCover
 
     def detect_uncovered(*keywords)
       if keywords.empty?
-        Analyser.optionally_covered - @options[:ignore_uncovered]
+        Analyser::Node.optionally_covered - @options[:ignore_uncovered]
       else
         check_uncovered(keywords)
         change(:ignore_uncovered, @options[:ignore_uncovered] - keywords)
@@ -53,7 +53,7 @@ module DeepCover
     private
 
     def check_uncovered(keywords)
-      unknown = keywords - Analyser.optionally_covered
+      unknown = keywords - Analyser::Node.optionally_covered
       raise ArgumentError, "unknown options: #{unknown.join(', ')}" unless unknown.empty?
     end
 

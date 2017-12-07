@@ -20,6 +20,5 @@ module DeepCover
 
   require_relative_dir 'analyser'
 
-  Analyser.include Analyser::IgnoreUncovered, Analyser::Base
-  Analyser.extend Analyser::OptionallyCovered
+  Analyser.include Analyser::Base
 end

@@ -10,29 +10,28 @@ module DeepCover
     include Analyser::Subset
     SUBSET_CLASSES = [Node::Branch].freeze
 
-    def node_stat_type(node)
-      type = super
-      type = :not_executed unless type == :ignored || fully_executed?(node)
-      type
+    def node_runs(node)
+      runs = super
+      if node.is_a?(Node::Branch) && covered?(runs)
+        worst = worst_branch_runs(node)
+        runs = worst unless covered?(worst)
+      end
+      runs
     end
 
     def results
-      # Note: we also ask ourselves for the node runs of branches
       each_node.map do |node|
-        branches_runs = node.branches.map { |b| [b, node_runs(b)] }.to_h
+        branches_runs = node.branches.map { |jump| [jump, source.node_runs(jump)] }.to_h
         [node, branches_runs]
       end.to_h
     end
 
-    def is_trivial_if?(node)
-      # Supports only node being a branch or the fork itself
-      node.parent.is_a?(Node::If) && node.parent.condition.is_a?(Node::SingletonLiteral)
-    end
-
     private
 
-    def fully_executed?(fork)
-      fork.branches.all? { |jump| source.node_runs(jump) != 0 }
+    def worst_branch_runs(fork)
+      fork.branches.map { |jump| source.node_runs(jump) }
+          .sort_by { |runs| runs == 0 ? -2 : runs || -1 }
+          .first
     end
   end
 end
