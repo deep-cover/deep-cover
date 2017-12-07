@@ -34,4 +34,8 @@ class Parser::Source::Range
   def strip(pattern = /\s*/)
     lstrip(pattern).rstrip(pattern)
   end
+
+  def succ
+    adjust(begin_pos: +1, end_pos: +1)
+  end
 end
