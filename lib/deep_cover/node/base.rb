@@ -36,7 +36,7 @@ module DeepCover
     # Search self and descendants for a particular Class or type
     def find_all(lookup)
       case lookup
-      when ::Class
+      when ::Module
         each_node.grep(lookup)
       when ::Symbol
         each_node.find_all { |n| n.type == lookup }
