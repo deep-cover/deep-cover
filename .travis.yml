@@ -13,7 +13,7 @@ before_install:
 before_script:
   - bundle exec rake dev:install
 script:
-  - rake test:all
+  - bundle exec rake test:all
 matrix:
   allow_failures:
   - rvm: jruby-9.1.9.0
