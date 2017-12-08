@@ -34,13 +34,16 @@ def test_foo
 end
 ```
 
+## Examples
+
+These examples are direct outputs from our HTML reporter:
+
+* [Rails' `activesupport`](https://deep-cover.github.io/rails-cover/activesupport/)
+* [Rails' `activerecord`](https://deep-cover.github.io/rails-cover/activerecord/)
+
 ## Installation
 
     gem install deep-cover
-
-DeepCover currently uses [`Istanbul`](https://istanbul.js.org/)'s reporter, so you'll need `node` and Istanbul's command line `nyc`:
-
-    yarn global add nyc   # or npm install nyc -g
 
 ### Command line interface (for a Rails app or a Gem):
 
@@ -49,6 +52,8 @@ An easy way to check coverage, without any configuration needed:
     deep-cover /path/to/rails/app/or/gem
 
 This assumes your project has a `Gemfile`, and that your default `rake` task is set to execute all tests (otherwise set the `--command` option)
+
+It also uses our builtin HTML reporter. Check the produced `coverage/index.html`.
 
 ### Builtin Coverage (including SimpleCov) users
 
