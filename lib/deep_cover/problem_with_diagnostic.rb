@@ -6,7 +6,7 @@ module DeepCover
 
     def initialize(covered_code, line_range, original_exception = nil)
       @covered_code = covered_code
-      if line_range.is_a?(Parser::Source::Range)
+      if line_range.respond_to? :last_line
         @line_range = line_range.line..line_range.last_line
       else
         @line_range = line_range

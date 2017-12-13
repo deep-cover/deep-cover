@@ -4,7 +4,7 @@ module DeepCover
   class Node::Root < Node
     has_tracker :root
     has_child main: Node,
-              can_be_empty: -> { ::Parser::Source::Range.new(covered_code.buffer, 0, 0) },
+              can_be_empty: -> { Parser::Source::Range.new(covered_code.buffer, 0, 0) },
               is_statement: true,
               rewrite: -> {
                 "#{covered_code.trackers_setup_source};%{root_tracker};%{local}=nil;%{node}"

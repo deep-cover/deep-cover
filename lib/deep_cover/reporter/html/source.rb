@@ -25,7 +25,7 @@ module DeepCover
       end
 
       def convert_source
-        @rewriter = ::Parser::Source::TreeRewriter.new(covered_code.buffer)
+        @rewriter = Parser::Source::TreeRewriter.new(covered_code.buffer)
         insert_node_tags
         insert_branch_tags
         html_escape
@@ -126,7 +126,7 @@ module DeepCover
         {'<' => '&lt;', '>' => '&gt;', '&' => '&amp;'}.each do |char, escaped|
           source.scan(char) do
             m = Regexp.last_match
-            range = ::Parser::Source::Range.new(buffer, m.begin(0), m.end(0))
+            range = Parser::Source::Range.new(buffer, m.begin(0), m.end(0))
             @rewriter.replace(range, escaped)
           end
         end

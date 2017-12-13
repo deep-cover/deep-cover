@@ -11,7 +11,7 @@ module DeepCover
     def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULT_TRACKER_GLOBAL, local_var: '_temp', name: nil)
       raise 'Must provide either path or source' unless path || source
 
-      @buffer = ::Parser::Source::Buffer.new(path, lineno)
+      @buffer = Parser::Source::Buffer.new(path, lineno)
       @buffer.source = source || File.read(path)
       @tracker_count = 0
       @tracker_global = tracker_global
@@ -88,7 +88,7 @@ module DeepCover
 
     def root
       @root ||= begin
-        ast = DeepCover.parser.parse(@buffer)
+        ast = parser.parse(@buffer)
         Node::Root.new(ast, self)
       end
     end
@@ -98,7 +98,7 @@ module DeepCover
     end
 
     def instrument_source
-      rewriter = ::Parser::Source::TreeRewriter.new(@buffer)
+      rewriter = Parser::Source::TreeRewriter.new(@buffer)
       covered_ast.each_node(:postorder) do |node|
         node.rewriting_rules.each do |range, rule|
           prefix, _node, suffix = rule.partition('%{node}')
@@ -131,6 +131,15 @@ module DeepCover
 
     def global
       @@globals[tracker_global]
+    end
+
+    private
+
+    def parser
+      Parser::CurrentRuby.new.tap do |parser|
+        parser.diagnostics.all_errors_are_fatal = true
+        parser.diagnostics.ignore_warnings      = true
+      end
     end
   end
 end

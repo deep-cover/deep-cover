@@ -80,12 +80,5 @@ module DeepCover
       filename += '.rb' unless filename =~ /\.rb$/
       filename
     end
-
-    def parser
-      Parser::CurrentRuby.new.tap do |parser|
-        parser.diagnostics.all_errors_are_fatal = true
-        parser.diagnostics.ignore_warnings      = true
-      end
-    end
   end
 end
