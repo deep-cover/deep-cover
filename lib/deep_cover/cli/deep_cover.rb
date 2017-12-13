@@ -4,6 +4,7 @@ module DeepCover
   require 'bundler/setup'
   require 'slop'
   require 'deep_cover'
+  bootstrap
   require_relative_dir '.'
 
   module CLI::DeepCover

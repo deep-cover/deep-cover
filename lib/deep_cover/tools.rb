@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module DeepCover
-  Tools = Module.new
+  module Tools
+  end
 
   require_relative 'tools/require_relative_dir'
   extend Tools::RequireRelativeDir

@@ -2,9 +2,8 @@
 
 module DeepCover
   module Tools::BuiltinCoverage
-    require 'coverage'
-
     def builtin_coverage(source, fn, lineno)
+      require 'coverage'
       fn = File.absolute_path(File.expand_path(fn))
       ::Coverage.start
       Tools.silence_warnings do

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module DeepCover
-  require_relative 'covered_code'
-  Coverage = Class.new
+  bootstrap
+
+  class Coverage
+  end
   require_relative_dir 'coverage'
   Coverage.include Coverage::Istanbul
 end

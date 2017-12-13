@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'deep_cover/tools'
 
 module DeepCover
   RSpec.describe Tools do

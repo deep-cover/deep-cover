@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module DeepCover
+  bootstrap
+  load_parser
+
   class CoveredCode
     DEFAULT_TRACKER_GLOBAL = '$_cov'
 

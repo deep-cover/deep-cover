@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'node'
-require_relative 'covered_code'
-
 module DeepCover
+  bootstrap
+
   # An analyser works on a subset of the original Node AST.
   # The Root node is always considered part of the subset.
   # One can iterate this subset with `each_node`, or ask

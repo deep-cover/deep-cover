@@ -3,14 +3,16 @@
 module DeepCover
   class Config
     DEFAULTS = {
-                 ignore_uncovered: [],
-                 paths: %w[./app ./lib],
+                 ignore_uncovered: [].freeze,
+                 paths: %w[./app ./lib].freeze,
                  allow_partial: false,
                }.freeze
 
-    def initialize(notify = nil, **options)
+    OPTIONALLY_COVERED = %i[raise default_argument case_implicit_else trivial_if]
+
+    def initialize(notify = nil)
       @notify = notify
-      @options = copy(DEFAULTS.merge(options))
+      @options = DEFAULTS.dup
     end
 
     def to_hash
@@ -29,7 +31,7 @@ module DeepCover
 
     def detect_uncovered(*keywords)
       if keywords.empty?
-        Analyser::Node.optionally_covered - @options[:ignore_uncovered]
+        OPTIONALLY_COVERED - @options[:ignore_uncovered]
       else
         check_uncovered(keywords)
         change(:ignore_uncovered, @options[:ignore_uncovered] - keywords)
@@ -53,7 +55,7 @@ module DeepCover
     private
 
     def check_uncovered(keywords)
-      unknown = keywords - Analyser::Node.optionally_covered
+      unknown = keywords - OPTIONALLY_COVERED
       raise ArgumentError, "unknown options: #{unknown.join(', ')}" unless unknown.empty?
     end
 
@@ -63,10 +65,6 @@ module DeepCover
         @notify.config_changed(option) if @notify.respond_to? :config_changed
       end
       self
-    end
-
-    def copy(h)
-      h.dup.transform_values(&:dup).transform_values(&:freeze)
     end
 
     module Setter

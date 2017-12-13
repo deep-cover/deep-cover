@@ -7,6 +7,8 @@
 # overrides Kernel#require)
 
 module DeepCover
+  load_all
+
   module RequireOverride
     def require(path)
       result = catch(:use_fallback) { DeepCover.custom_requirer.require(path) }

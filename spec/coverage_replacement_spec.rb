@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'coverage'
 require 'deep_cover/core_ext/coverage_replacement'
+require 'coverage'
 # These are autoloaded, but will influence the builtin coverage, so preload them
 require 'rspec/matchers/built_in/operators.rb'
 require 'rspec/matchers/built_in/contain_exactly.rb'

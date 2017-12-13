@@ -21,6 +21,7 @@ module DeepCover
     end
 
     def stop
+      require_relative 'core_ext/require_overrides'
       AutoloadOverride.active = false if defined? AutoloadOverride
       RequireOverride.active = false
       @started = false
@@ -71,6 +72,8 @@ module DeepCover
     def autoload_tracker
       @autoload_tracker ||= AutoloadTracker.new
     end
+
+    private
 
     def handle_relative_filename(filename)
       unless Pathname.new(filename).absolute?

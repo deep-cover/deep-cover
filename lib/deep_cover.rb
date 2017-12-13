@@ -2,23 +2,9 @@
 
 # rubocop:disable Style/MixinUsage (See https://github.com/bbatsov/rubocop/issues/5055)
 module DeepCover
-  # External dependencies (ex parser)
-  require 'parser'
-  require 'term/ansicolor'
-  require 'pry'
+  require_relative 'deep_cover/load'
 
-  # Bootstrapping
-  require_relative 'deep_cover/backports'
-  require_relative 'deep_cover/tools'
-
-  # Parser
-  silence_warnings do
-    require 'parser/current'
-  end
-  require_relative_dir 'deep_cover/parser_ext'
-
-  # Main
-  require_relative_dir 'deep_cover', except: %w[auto_run builtin_takeover]
+  load_absolute_basics
 
   extend Base
   extend Config::Setter

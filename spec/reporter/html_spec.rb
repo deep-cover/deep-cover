@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'deep_cover/reporter/html'
 
 module DeepCover
   module Reporter
