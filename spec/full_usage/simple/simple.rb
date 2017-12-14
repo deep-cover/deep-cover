@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'bundler/setup'
+
 begin
   # __FILE__ can be a relative path. Since we change the current dir for the test,
   # need to track the absolute path instead.

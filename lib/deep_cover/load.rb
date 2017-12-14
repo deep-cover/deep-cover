@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module DeepCover
   module Load
     AUTOLOAD = %i[analyser autoload_tracker coverage covered_code custom_requirer memoize

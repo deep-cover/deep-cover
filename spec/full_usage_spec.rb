@@ -11,7 +11,7 @@ RSpec.describe 'DeepCover usage', :slow do
     %w(ruby spec/full_usage/with_configure/test.rb).should run_successfully.and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
   end
 
-  it 'Can still require gems when there is no bundler' do
+  xit 'Can still require gems when there is no bundler' do
     'gem install --local spec/cli_fixtures/trivial_gem/pkg/trivial_gem-0.1.0.gem'.should run_successfully
     %(ruby -e 'require "./lib/deep_cover"; DeepCover.start; require "trivial_gem"').should run_successfully
   end
