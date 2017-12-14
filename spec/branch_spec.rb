@@ -55,4 +55,6 @@ module DeepCover
       end
     end
   end
+  # rubocop:enable Layout/IndentHash
+  # rubocop:enable Performance/RedundantMerge
 end

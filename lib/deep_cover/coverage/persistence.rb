@@ -3,7 +3,6 @@
 module DeepCover
   require 'securerandom'
   class Coverage::Persistence
-    # rubocop:disable Security/MarshalLoad
     BASENAME = 'coverage.dc'
     TRACKER_TEMPLATE = 'trackers%{unique}.dct'
 
@@ -56,6 +55,7 @@ module DeepCover
       ))
     end
 
+    # rubocop:disable Security/MarshalLoad
     def load_coverage
       Marshal.load(dir_path.join(BASENAME).binread).tap do |version: raise, coverage: raise|
         raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
@@ -71,6 +71,7 @@ module DeepCover
         end
       end
     end
+    # rubocop:enable Security/MarshalLoad
 
     def merge_trackers(hash, to_merge)
       hash.merge!(to_merge) do |_key, current, to_add|

@@ -23,7 +23,7 @@ module DeepCover
     let(:runs) { analyser.node_runs(node) }
 
     context 'for a if' do
-      let(:node) { Node[<<-RUBY ] }
+      let(:node) { Node[<<-RUBY] }
         if false
           raise
         else
@@ -55,7 +55,7 @@ module DeepCover
     end
 
     context 'for a case' do
-      let(:node) { Node[<<-RUBY ] }
+      let(:node) { Node[<<-RUBY] }
         (1..5).each do |i|
           case i
           when 0
@@ -73,7 +73,7 @@ module DeepCover
       it { type_runs.should == {case: {sym: 0, str: 2, const: 1, int: 2}} }
 
       context 'without an else' do
-        let(:node) { Node[<<-RUBY ] }
+        let(:node) { Node[<<-RUBY] }
           case 1
           when 0
             :a

@@ -19,7 +19,7 @@ module DeepCover
     subject { lines_by_execution }
 
     context 'With multiple expression in a line' do
-      let(:node) { Node[<<-RUBY ] }
+      let(:node) { Node[<<-RUBY] }
         1 + 1; 2 + 2 == 4; :bye
       RUBY
       it 'returns the right ranges' do
