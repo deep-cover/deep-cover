@@ -16,7 +16,8 @@ module DeepCover
       def stats_to_data
         @map = Tools.transform_keys(analysis.stat_map, &:name)
         tree = paths_to_tree(@map.keys)
-        transform_data(populate(tree))
+        data = tree_to_data(tree)
+        transform_data(data)
       end
 
       def columns
@@ -39,20 +40,18 @@ module DeepCover
 
       # {a: {}}    => [{text: a, data: stat_map[a]}]
       # {b: {...}} => [{text: b, data: sum(stats), children: [...]}]
-      def populate(tree, dir = '')
-        tree.map do |path, children_hash|
-          full_path = [dir, path].join
-          if children_hash.empty?
+      def tree_to_data(tree)
+        populate(tree) do |full_path, partial_path, children|
+          if children.empty?
             {
-              text: %{<a href="#{full_path}.html">#{path}</a>},
+              text: %{<a href="#{full_path}.html">#{partial_path}</a>},
               data: @map[full_path],
             }
           else
-            children = populate(children_hash, "#{full_path}/")
-            data = Tools.merge(*children.map { |c| c[:data] }, :+)
+            children_data = Tools.merge(*children.map { |c| c[:data] }, :+)
             {
-              text: path,
-              data: data,
+              text: partial_path,
+              data: children_data,
               children: children,
               state: {opened: true},
             }

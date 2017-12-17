@@ -51,6 +51,18 @@ module DeepCover
             [key, sub_tree]
           end.to_h
         end
+
+        # {a: {b: {}}}    => [ra, rb]
+        # where rb = yield('a/b', 'b', [])
+        # and ra = yield('a', 'a', [rb])
+        def populate(tree, dir = '', &block)
+          return to_enum(__method__, tree, dir) unless block_given?
+          tree.map do |path, children_hash|
+            full_path = [dir, path].join
+            children = populate(children_hash, "#{full_path}/", &block)
+            yield full_path, path, children
+          end
+        end
       end
     end
   end
