@@ -14,7 +14,8 @@ module DeepCover
       include HTML::Base
 
       def stats_to_data
-        data = populate_stats(analysis) do |full_path, partial_path, data, children|
+        populate_stats(analysis) do |full_path, partial_path, data, children|
+          data = transform_data(data)
           if children.empty?
             {
               text: %{<a href="#{full_path}.html">#{partial_path}</a>},
@@ -29,7 +30,6 @@ module DeepCover
             }
           end
         end
-        transform_data(data)
       end
 
       def columns
@@ -50,17 +50,12 @@ module DeepCover
 
       private
 
-      # Modifies in place the tree:
       # {per_char: Stat, ...} => {per_char: {ignored: ...}, per_char_percent: 55.55, ...}
-      def transform_data(tree)
-        return unless tree
-        tree.each do |node|
-          node[:data] = Tools.merge(
-              node[:data].transform_values(&:to_h),
-              *node[:data].map { |type, stat| {:"#{type}_percent" => stat.percent_covered} }
-          )
-          transform_data(node[:children])
-        end
+      def transform_data(data)
+        Tools.merge(
+            data.transform_values(&:to_h),
+            *data.map { |type, stat| {:"#{type}_percent" => stat.percent_covered} }
+        )
       end
     end
   end
