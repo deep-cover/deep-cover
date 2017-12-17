@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
 module DeepCover
-  module Reporter
-    require_relative 'tree'
-    require_relative 'base'
+  require_relative 'base'
 
+  module Reporter
     class HTML::Index < Struct.new(:analysis, :options)
       def initialize(analysis, **options)
         raise ArgumentError unless analysis.is_a? Coverage::Analysis
         super
       end
 
-      include HTML::Tree
+      include Util::Tree
       include HTML::Base
 
       def stats_to_data
