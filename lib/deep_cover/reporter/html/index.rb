@@ -14,9 +14,21 @@ module DeepCover
       include HTML::Base
 
       def stats_to_data
-        @map = Tools.transform_keys(analysis.stat_map, &:name)
-        tree = paths_to_tree(@map.keys)
-        data = tree_to_data(tree)
+        data = populate_stats(analysis) do |full_path, partial_path, data, children|
+          if children.empty?
+            {
+              text: %{<a href="#{full_path}.html">#{partial_path}</a>},
+              data: data,
+            }
+          else
+            {
+              text: partial_path,
+              data: data,
+              children: children,
+              state: {opened: true},
+            }
+          end
+        end
         transform_data(data)
       end
 
@@ -37,27 +49,6 @@ module DeepCover
       end
 
       private
-
-      # {a: {}}    => [{text: a, data: stat_map[a]}]
-      # {b: {...}} => [{text: b, data: sum(stats), children: [...]}]
-      def tree_to_data(tree)
-        populate(tree) do |full_path, partial_path, children|
-          if children.empty?
-            {
-              text: %{<a href="#{full_path}.html">#{partial_path}</a>},
-              data: @map[full_path],
-            }
-          else
-            children_data = Tools.merge(*children.map { |c| c[:data] }, :+)
-            {
-              text: partial_path,
-              data: children_data,
-              children: children,
-              state: {opened: true},
-            }
-          end
-        end
-      end
 
       # Modifies in place the tree:
       # {per_char: Stat, ...} => {per_char: {ignored: ...}, per_char_percent: 55.55, ...}
