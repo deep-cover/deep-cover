@@ -9,3 +9,6 @@ module DeepCover
   extend Config::Setter
 end
 DeepCover::GLOBAL_BINDING = binding
+
+require './.deep_cover.rb' if File.exist?('./.deep_cover.rb')
+DeepCover.start if %w[1 t true].include?(ENV['DEEP_COVER'])
