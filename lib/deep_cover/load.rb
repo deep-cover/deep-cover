@@ -14,6 +14,7 @@ module DeepCover
         DeepCover.autoload(Tools::Camelize.camelize(module_name), "#{__dir__}/#{module_name}")
       end
       Object.autoload :Term, 'term/ansicolor'
+      Object.autoload :Terminal, 'terminal-table'
       require 'pry'
     end
 

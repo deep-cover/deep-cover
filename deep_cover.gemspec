@@ -38,6 +38,9 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'term-ansicolor'
   spec.add_runtime_dependency 'with_progress'
 
+  # Reporters
+  spec.add_runtime_dependency 'terminal-table'
+
   # While in 0.x
   spec.add_runtime_dependency 'pry'
 

@@ -15,6 +15,10 @@ module DeepCover
       analyser_map.transform_values { |a| a.transform_values(&:stats) }
     end
 
+    def self.template
+      {node: Analyser::Node, per_char: Analyser::PerChar, branch: Analyser::Branch}
+    end
+
     private
 
     def compute_analysers(covered_code)
