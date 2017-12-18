@@ -6,7 +6,7 @@ module DeepCover
   class IgnoreNodes
     include RSpec::Matchers
 
-    def initialize(*nodes, of: raise)
+    def initialize(*nodes, of:)
       @nodes = nodes.map(&:to_s)
       @source = of
     end
@@ -42,7 +42,7 @@ module DeepCover
   end
 
   RSpec.describe Analyser::Node do
-    def ignore_nodes(*nodes, of: raise)
+    def ignore_nodes(*nodes, of:)
       IgnoreNodes.new(*nodes, of: of)
     end
 

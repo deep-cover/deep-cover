@@ -11,7 +11,7 @@ module DeepCover
       coverage.save(dest_path)
     end
 
-    def dump_covered_code(source_path, coverage: raise, dest_path: Dir.mktmpdir, root_path: source_path)
+    def dump_covered_code(source_path, coverage:, dest_path: Dir.mktmpdir, root_path: source_path)
       source_path = File.join(File.expand_path(source_path), '')
       dest_path = File.join(File.expand_path(dest_path), '')
       root_path = Pathname.new(root_path)

@@ -18,7 +18,7 @@ module DeepCover
     end
 
     class TrivialBranch < Node::EmptyBody
-      def initialize(other_branch: raise, condition: raise, position: true)
+      def initialize(other_branch:, condition:, position: true)
         @condition = condition
         @other_branch = other_branch
         super(nil, parent: condition.parent, position: position)

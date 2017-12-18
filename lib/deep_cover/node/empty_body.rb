@@ -2,7 +2,7 @@
 
 module DeepCover
   class Node::EmptyBody < Node
-    def initialize(base_node, parent: raise, index: 0, position: ChildCanBeEmpty.last_empty_position)
+    def initialize(base_node, parent:, index: 0, position: ChildCanBeEmpty.last_empty_position)
       @position = position
       super(base_node, parent: parent, index: index, base_children: [])
     end

@@ -70,7 +70,7 @@ module DeepCover
         end
       end
 
-      def self.save(covered_codes, output: raise, **options)
+      def self.save(covered_codes, output:, **options)
         Site.new(covered_codes, output: output, **options).save
       end
     end

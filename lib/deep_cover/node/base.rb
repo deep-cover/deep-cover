@@ -17,7 +17,7 @@ module DeepCover
 
     attr_reader :index, :parent, :children, :base_node
 
-    def initialize(base_node, parent: raise, index: 0, base_children: base_node.children)
+    def initialize(base_node, parent:, index: 0, base_children: base_node.children)
       @base_node = base_node
       @parent = parent
       @index = index

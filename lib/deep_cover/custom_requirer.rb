@@ -7,7 +7,7 @@ module DeepCover
     class LoadPathsSubset
       attr_reader :last_lookup_path
 
-      def initialize(load_paths: raise, lookup_paths: raise)
+      def initialize(load_paths:, lookup_paths:)
         @original_load_paths = load_paths
         @cached_load_paths_subset = []
         @cached_load_paths_hash = nil

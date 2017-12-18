@@ -57,7 +57,7 @@ module DeepCover
 
     # rubocop:disable Security/MarshalLoad
     def load_coverage
-      Marshal.load(dir_path.join(BASENAME).binread).tap do |version: raise, coverage: raise|
+      Marshal.load(dir_path.join(BASENAME).binread).tap do |version:, coverage:|
         raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
         return coverage
       end
@@ -65,7 +65,7 @@ module DeepCover
 
     def load_trackers
       tracker_files.each do |full_path|
-        Marshal.load(full_path.binread).tap do |version: raise, global: raise, trackers: raise|
+        Marshal.load(full_path.binread).tap do |version:, global:, trackers:|
           raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
           merge_trackers(eval("#{global} ||= {}"), trackers) # rubocop:disable Security/Eval
         end
