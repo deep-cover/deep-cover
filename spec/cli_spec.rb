@@ -7,8 +7,15 @@ module DeepCover
     describe 'The output of deep-cover' do
       let(:options) { '' }
       let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --reporter=istanbul #{options}" } # --no-bundle when TreeRewriter is merged
-      let(:output) { Bundler.with_clean_env { `#{command}` } }
-      subject { output }
+      let(:expected_errors) { /^$/ }
+      subject do
+        require 'open3'
+        output, errors, _status = Bundler.with_clean_env do
+          Open3.capture3(command)
+        end
+        errors.should match expected_errors unless RUBY_PLATFORM == 'java'
+        output
+      end
       describe 'for a simple gem' do
         let(:path) { 'trivial_gem' }
         it do
@@ -27,6 +34,7 @@ module DeepCover
       end
 
       describe 'for a multiple component gem like rails' do
+        let(:expected_errors) { /Errors in another_component_gem/ }
         let(:path) { 'rails_like_gem' }
         it do
           should =~ Regexp.new(%w[component_gem.rb 80 100 50].join('[ |]*'))
@@ -38,6 +46,7 @@ module DeepCover
       end
 
       describe 'for a rails app' do
+        let(:expected_errors) { /^(Running via Spring preloader in process \d+\n)?$/ }
         let(:options) { 'bundle exec rake' } # Bypass Spring
         let(:path) { 'simple_rails42_app' }
         it do
