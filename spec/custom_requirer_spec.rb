@@ -46,14 +46,17 @@ module DeepCover
       end
 
       failure_message do |require_path|
-        output = "Unexpected effects of `require #{require_path.inspect}`:\n"
-        output << "Return value:\n"
-        output << build_output(@result)
-        output << "\n\nExecuted file:\n"
-        output << build_output(@executed_file)
-        output << "\n\nLoaded features:\n"
-        output << build_output(@loaded_features)
-        output
+        [
+          "Unexpected effects of `require #{require_path.inspect}`:",
+          'Return value:',
+          build_output(@result),
+          '',
+          'Executed file:',
+          build_output(@executed_file),
+          '',
+          'Loaded features:',
+          build_output(@loaded_features),
+        ].join("\n")
       end
 
       def set_expectations(expected_executed_file, expected_loaded_feature)
