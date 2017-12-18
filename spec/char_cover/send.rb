@@ -49,6 +49,9 @@
     raise TypeError rescue nil
     raise TypeError, 'hello' rescue nil
     raise(TypeError, 'hello') rescue nil
+
+#### With illegal syntax (Ruby 2.4-)
+    raise = 1
     raise (TypeError, 'hello') rescue nil
 
 ### &. (Ruby 2.3+)
