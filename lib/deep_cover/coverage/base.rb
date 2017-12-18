@@ -37,6 +37,7 @@ module DeepCover
       case (reporter = options.fetch(:reporter, :html).to_sym)
       when :html
         Reporter::HTML.report(self, **options)
+        Reporter::Text.report(self, **options) + "\n\nHTML generated: open #{options[:output]}/index.html"
       when :istanbul
         if Reporter::Istanbul.available?
           report_istanbul(**options)
@@ -44,26 +45,10 @@ module DeepCover
           warn 'nyc not available. Please install `nyc` using `yarn global add nyc` or `npm i nyc -g`'
         end
       when :text
-        basic_report
+        Reporter::Text.report(self, **options)
       else
         raise ArgumentError, "Unknown reporter: #{reporter}"
       end
-    end
-
-    def basic_report
-      missing = map do |covered_code|
-        if covered_code.has_executed?
-          missed = covered_code.line_coverage.each_with_index.map do |line_cov, line_index|
-            line_index + 1 if line_cov == 0
-          end.compact
-        else
-          missed = ['all']
-        end
-        [covered_code.buffer.name, missed] unless missed.empty?
-      end.compact.to_h
-      missing.map do |path, lines|
-        "#{File.basename(path)}: #{lines.join(', ')}"
-      end.join("\n")
     end
 
     def self.load(dest_path, dirname = 'deep_cover', with_trackers: true)
