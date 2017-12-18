@@ -9,7 +9,7 @@ GIT
 PATH
   remote: ../../..
   specs:
-    deep-cover (0.2.0)
+    deep-cover (0.3.0)
       backports (>= 3.10.1)
       binding_of_caller
       highline
