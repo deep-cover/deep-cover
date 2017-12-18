@@ -227,9 +227,6 @@ Style/ExtendSelf:
 Style/CommentedKeyword:
   Enabled: false # See https://github.com/bbatsov/rubocop/issues/5259
 
-Gemspec/RequiredRubyVersion:
-  Enabled: false # See https://github.com/bbatsov/rubocop/issues/5260
-
 Style/MixinUsage:
   Enabled: false # See https://github.com/bbatsov/rubocop/issues/5261
 

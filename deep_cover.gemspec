@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   ### Runtime dependencies
-  spec.required_ruby_version = '>= 2.0.0'
+  spec.required_ruby_version = '>= 2.1.0'
 
   # Main dependency
   spec.add_runtime_dependency 'parser'
