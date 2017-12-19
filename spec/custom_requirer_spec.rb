@@ -146,7 +146,7 @@ module DeepCover
         file_tree %w(pwd:one/two/
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
 
         './test'.should actually_require('one/two/test.rb')
       end
@@ -155,7 +155,7 @@ module DeepCover
         file_tree %w(pwd:one/two/
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
 
         Pathname('./test').should actually_require('one/two/test.rb')
       end
@@ -163,7 +163,7 @@ module DeepCover
       it 'a ./path ignores the load_path' do
         file_tree %w(one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
 
         add_load_path 'one/two'
         './test'.should actually_require(:not_found)
@@ -174,7 +174,7 @@ module DeepCover
                      one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
 
         '../test'.should actually_require('one/test.rb')
       end
@@ -182,7 +182,7 @@ module DeepCover
       it 'a ../path ignores the load_path' do
         file_tree %w(one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one/two/three'
 
         '../test'.should actually_require(:not_found)
@@ -192,7 +192,7 @@ module DeepCover
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one'
 
         'two/../test'.should actually_require('one/test.rb')
@@ -202,7 +202,7 @@ module DeepCover
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one'
 
         'two/./test'.should actually_require('one/two/test.rb')
@@ -212,7 +212,7 @@ module DeepCover
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one/two'
 
         'three/../../test'.should actually_require('one/test.rb')
@@ -222,7 +222,7 @@ module DeepCover
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one'
 
         'two/three/test'.should actually_require('one/two/three/test.rb')
@@ -232,7 +232,7 @@ module DeepCover
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one'
         add_load_path 'one/two'
         add_load_path 'one/two/three'
@@ -247,7 +247,7 @@ module DeepCover
                      one/two/test.rb
                      one/two/zyx.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one/two'
 
         'test'.should actually_require('one/two/test.rb')
@@ -257,7 +257,7 @@ module DeepCover
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one'
         add_load_path 'one/two'
         add_load_path 'one/two/three'
@@ -270,7 +270,7 @@ module DeepCover
         file_tree %w(one/test.rb
                      one/two/test.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one/two'
         'test'.should actually_require('one/two/test.rb')
 
@@ -281,18 +281,18 @@ module DeepCover
       it "doesn't find from parent or subdir of the load_path" do
         file_tree %w(one/test.rb
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one/two'
 
         'test'.should actually_require(:not_found)
       end
 
       it 'regular path ignores current work dir' do
-        file_tree %w(    one/test.rb
-                         pwd:one/two/
-                         one/two/test.rb
-                         one/two/three/test.rb
-)
+        file_tree %w(one/test.rb
+                     pwd:one/two/
+                     one/two/test.rb
+                     one/two/three/test.rb
+                    )
 
         'test'.should actually_require(:not_found)
       end
@@ -301,7 +301,7 @@ module DeepCover
         file_tree %w(one/test.rb
                      one/two/test
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one/two'
 
         'test.rb'.should actually_require(:not_found)
@@ -311,7 +311,7 @@ module DeepCover
         file_tree %w(one/test.rb
                      one/two/test
                      one/two/three/test.rb
-)
+                    )
         add_load_path 'one/two'
 
         'test'.should actually_require(:not_found)
@@ -341,7 +341,7 @@ module DeepCover
         File.join(root, 'one/two/test.rb').should actually_require(:not_found)
       end
 
-      it 'keeps symlinks when going through load_path (RB < 2.5)' do
+      it 'keeps symlinks when going through load_path (Ruby < 2.5)' do
         skip if RUBY_VERSION >= '2.5'
         file_tree %w(one/test.rb)
         FileUtils.ln_s from_root('one'), from_root('sym_one')
@@ -350,7 +350,7 @@ module DeepCover
         'test'.should actually_require('one/test.rb', expected_loaded_feature: 'sym_one/test.rb')
       end
 
-      it 'symlinks are removed when going through load_path (RB > 2.5)' do
+      it 'symlinks are removed when going through load_path (Ruby >= 2.5)' do
         skip if RUBY_VERSION < '2.5'
         file_tree %w(one/test.rb)
         FileUtils.ln_s from_root('one'), from_root('sym_one')
@@ -363,7 +363,7 @@ module DeepCover
         file_tree %w(pwd:one/
                      one/test.rb
                      one/two/test.rb
-)
+                    )
         FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
 
         './sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/sym_two/test.rb')
@@ -373,7 +373,7 @@ module DeepCover
         file_tree %w(pwd:one/deeper/
                      one/test.rb
                      one/two/test.rb
-)
+                    )
         FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
 
         '../sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/sym_two/test.rb')
@@ -385,7 +385,7 @@ module DeepCover
       it 'a ./path resolves symlinks in the current work dir' do
         file_tree %w(one/test.rb
                      one/two/test.rb
-)
+                    )
 
         FileUtils.ln_s from_root('one'), from_root('sym_one')
 
@@ -452,7 +452,7 @@ module DeepCover
                      one/root/test.rb
                      one/root/sub/other.rb
                      two/also_outside.rb
-                         )
+                    )
         add_load_path 'one'
         add_load_path 'one/root'
         add_load_path 'one/root/sub'
@@ -488,7 +488,7 @@ module DeepCover
                          pwd:one/two/
                          one/two/test.rb
                          one/two/three/test.rb
-)
+        )
 
         result = requirer.load('test.rb')
         result.should == true
