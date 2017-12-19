@@ -341,12 +341,22 @@ module DeepCover
         File.join(root, 'one/two/test.rb').should actually_require(:not_found)
       end
 
-      it 'keeps symlinks when going through load_path' do
+      it 'keeps symlinks when going through load_path (RB < 2.5)' do
+        skip if RUBY_VERSION >= '2.5'
         file_tree %w(one/test.rb)
         FileUtils.ln_s from_root('one'), from_root('sym_one')
         add_load_path 'sym_one'
 
         'test'.should actually_require('one/test.rb', expected_loaded_feature: 'sym_one/test.rb')
+      end
+
+      it 'symlinks are removed when going through load_path (RB > 2.5)' do
+        skip if RUBY_VERSION < '2.5'
+        file_tree %w(one/test.rb)
+        FileUtils.ln_s from_root('one'), from_root('sym_one')
+        add_load_path 'sym_one'
+
+        'test'.should actually_require('one/test.rb', expected_loaded_feature: 'one/test.rb')
       end
 
       it 'a ./path keeps symlinks after the current work dir' do
