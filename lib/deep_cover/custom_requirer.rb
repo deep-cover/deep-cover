@@ -70,12 +70,11 @@ module DeepCover
         (@load_paths_subset || self).load_paths.each do |load_path|
           possible_path = File.absolute_path(path, load_path)
 
-          if (@load_paths_subset || File).exist?(possible_path)
-            # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
-            # https://bugs.ruby-lang.org/issues/10222
-            return File.realpath(possible_path) if RUBY_VERSION >= '2.5'
-            return possible_path
-          end
+          next unless (@load_paths_subset || File).exist?(possible_path)
+          # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
+          # https://bugs.ruby-lang.org/issues/10222
+          return File.realpath(possible_path) if RUBY_VERSION >= '2.5'
+          return possible_path
         end
         nil
       end
