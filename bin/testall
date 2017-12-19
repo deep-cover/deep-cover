@@ -12,6 +12,7 @@
 # Other differences from wwtd:
 #  * automatically installs the bundler gem if it is missing from a ruby version.
 #
+require 'term/ansicolor'
 require 'yaml'
 TRAVIS_CONFIG = '.travis.yml'
 
