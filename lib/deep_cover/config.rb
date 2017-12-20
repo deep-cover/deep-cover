@@ -16,7 +16,7 @@ module DeepCover
       if keywords.empty?
         @options[:ignore_uncovered]
       else
-        check_uncovered(keywords)
+        keywords = check_uncovered(keywords)
         change(:ignore_uncovered, @options[:ignore_uncovered] | keywords)
       end
     end
@@ -25,7 +25,7 @@ module DeepCover
       if keywords.empty?
         OPTIONALLY_COVERED - @options[:ignore_uncovered]
       else
-        check_uncovered(keywords)
+        keywords = check_uncovered(keywords)
         change(:ignore_uncovered, @options[:ignore_uncovered] - keywords)
       end
     end
@@ -58,13 +58,25 @@ module DeepCover
       DEFAULTS.each do |key, value|
         change(key, value)
       end
+      self
+    end
+
+    def set(**options)
+      @options[:ignore_uncovered] = [] if options.has_key?(:ignore_uncovered)
+      options.each do |key, value|
+        next if key == :allow_partial
+        public_send key, value
+      end
+      self
     end
 
     private
 
     def check_uncovered(keywords)
+      keywords = keywords.first if keywords.size == 1 && keywords.first.is_a?(Array)
       unknown = keywords - OPTIONALLY_COVERED
       raise ArgumentError, "unknown options: #{unknown.join(', ')}" unless unknown.empty?
+      keywords
     end
 
     def change(option, value)
