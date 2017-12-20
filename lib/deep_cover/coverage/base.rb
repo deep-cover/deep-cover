@@ -70,7 +70,7 @@ module DeepCover
     end
 
     def tracker_global
-      @options.fetch(:tracker_global, CoveredCode::DEFAULT_TRACKER_GLOBAL)
+      @options.fetch(:tracker_global, DEFAULTS[:tracker_global])
     end
   end
 end

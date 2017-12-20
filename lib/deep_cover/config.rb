@@ -38,6 +38,14 @@ module DeepCover
       end
     end
 
+    def tracker_global(tracker_global = nil)
+      if tracker_global
+        change(:tracker_global, tracker_global)
+      else
+        @options[:tracker_global]
+      end
+    end
+
     def reset
       DEFAULTS.each do |key, value|
         change(key, value)

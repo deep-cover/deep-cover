@@ -28,7 +28,7 @@ module DeepCover
     end
 
     def line_coverage(filename)
-      coverage.line_coverage(handle_relative_filename(filename), **config)
+      coverage.line_coverage(handle_relative_filename(filename), **config.to_h)
     end
 
     def covered_code(filename)
@@ -48,9 +48,13 @@ module DeepCover
     end
 
     def config_changed(what)
-      if what == :paths
+      case what
+      when :paths
         warn "Changing DeepCover's paths after starting coverage is highly discouraged" if @started
         @custom_requirer = nil
+      when :tracker_global
+        raise NotImplementedError, "Changing DeepCover's tracker global after starting coverage is not supported" if @started
+        @coverage = nil
       end
     end
 
@@ -62,7 +66,7 @@ module DeepCover
     end
 
     def coverage
-      @coverage ||= Coverage.new
+      @coverage ||= Coverage.new(tracker_global: config.tracker_global)
     end
 
     def custom_requirer
