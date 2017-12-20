@@ -11,18 +11,34 @@ module DeepCover
       end
 
       def run!
-        load
+        @coverage = load_coverage
         after_tests { save }
+        self
+      end
+
+      def report!(**options)
+        after_tests { puts report(**options) }
+        self
       end
 
       private
 
-      def load
-        @coverage = Coverage.load(@covered_path, with_trackers: false)
+      def load_coverage
+        @not_saved = DeepCover.respond_to?(:running?) && DeepCover.running?
+        if @not_saved
+          DeepCover.coverage
+        else
+          Coverage.load(@covered_path, with_trackers: false)
+        end
       end
 
       def save
+        @coverage.save(@covered_path) if @not_saved
         @coverage.save_trackers(@covered_path)
+      end
+
+      def report(**options)
+        @coverage.report(**options)
       end
 
       def after_tests
@@ -44,9 +60,12 @@ module DeepCover
     end
 
     def self.run!(covered_path)
-      @already_setup ||= false # Avoid ruby warning
-      Runner.new(covered_path).run! unless @already_setup
-      @already_setup = true
+      @runner ||= Runner.new(covered_path).run!
+      self
+    end
+
+    def self.and_report!(**options)
+      @runner.report!(**options)
     end
   end
 end
