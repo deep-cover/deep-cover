@@ -46,6 +46,14 @@ module DeepCover
       end
     end
 
+    def reporter(reporter = nil)
+      if reporter
+        change(:reporter, reporter)
+      else
+        @options[:reporter]
+      end
+    end
+
     def reset
       DEFAULTS.each do |key, value|
         change(key, value)

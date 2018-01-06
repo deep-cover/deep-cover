@@ -34,7 +34,7 @@ module DeepCover
     end
 
     def report(**options)
-      case (reporter = options.fetch(:reporter, :html).to_sym)
+      case (reporter = options.fetch(:reporter, DEFAULTS[:reporter]).to_sym)
       when :html
         Reporter::HTML.report(self, **options)
         Reporter::Text.report(self, **options) + "\n\nHTML generated: open #{options[:output]}/index.html"
