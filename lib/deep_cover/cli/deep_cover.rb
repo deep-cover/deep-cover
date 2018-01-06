@@ -46,7 +46,7 @@ module DeepCover
         o.bool '--open', 'open the output coverage', default: false
         o.separator 'Coverage options'
         @ignore_uncovered_map = Analyser::Node.optionally_covered.map do |option|
-          default = Config::DEFAULTS[:ignore_uncovered].include?(option)
+          default = DEFAULTS[:ignore_uncovered].include?(option)
           o.bool "--ignore-#{Tools.dasherize(option)}", '', default: default
           [:"ignore_#{option}", option]
         end.to_h

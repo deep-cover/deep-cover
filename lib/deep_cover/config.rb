@@ -2,12 +2,6 @@
 
 module DeepCover
   class Config
-    DEFAULTS = {
-                 ignore_uncovered: [].freeze,
-                 paths: %w[./app ./lib].freeze,
-                 allow_partial: false,
-               }.freeze
-
     OPTIONALLY_COVERED = %i[raise default_argument case_implicit_else trivial_if]
 
     def initialize(notify = nil)

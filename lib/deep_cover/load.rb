@@ -8,6 +8,7 @@ module DeepCover
 
     def load_absolute_basics
       require_relative 'base'
+      require_relative 'basics'
       require_relative 'config'
       require_relative 'tools/camelize'
       AUTOLOAD.each do |module_name|
