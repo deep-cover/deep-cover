@@ -40,12 +40,12 @@ module DeepCover
       @menu ||= parse do |o|
         o.banner = 'usage: deep-cover [options] [path/to/app/or/gem]'
         o.separator ''
-        o.string '-o', '--output', 'output folder', default: './coverage'
-        o.string '-c', '--command', 'command to run tests', default: 'bundle exec rake'
-        o.string '--reporter', 'reporter', default: 'html'
-        o.bool '--bundle', 'run bundle before the tests', default: true
-        o.bool '--process', 'turn off to only redo the reporting', default: true
-        o.bool '--open', 'open the output coverage', default: false
+        o.string '-o', '--output', 'output folder', default: DEFAULTS[:output]
+        o.string '-c', '--command', 'command to run tests', default: CLI_DEFAULTS[:command]
+        o.string '--reporter', 'reporter', default: DEFAULTS[:reporter]
+        o.bool '--bundle', 'run bundle before the tests', default: CLI_DEFAULTS[:bundle]
+        o.bool '--process', 'turn off to only redo the reporting', default: CLI_DEFAULTS[:process]
+        o.bool '--open', 'open the output coverage', default: CLI_DEFAULTS[:open]
         o.separator 'Coverage options'
         @ignore_uncovered_map = OPTIONALLY_COVERED.map do |option|
           default = DEFAULTS[:ignore_uncovered].include?(option)

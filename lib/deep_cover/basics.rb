@@ -11,5 +11,12 @@ module DeepCover
                output: './coverage',
              }.freeze
 
+  CLI_DEFAULTS = {
+                   command: 'bundle exec rake',
+                   bundle: true,
+                   process: true,
+                   open: false,
+                 }.freeze
+
   OPTIONALLY_COVERED = %i[case_implicit_else default_argument raise trivial_if].freeze
 end

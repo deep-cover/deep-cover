@@ -12,9 +12,8 @@ module DeepCover
       # matches regular files, .files, ..files, but not '.' or '..'
       GLOB_ALL_CONTENT = '{,.[^.],..?}*'
 
-      def initialize(source_path, command: 'rake', **options)
-        @command = command
-        @options = options
+      def initialize(source_path, **options)
+        @options = CLI_DEFAULTS.merge(options)
         @root_path = @source_path = Pathname.new(source_path).expand_path
         unless @root_path.join('Gemfile').exist?
           # E.g. rails/activesupport
@@ -151,7 +150,7 @@ module DeepCover
 
       def process
         Bundler.with_clean_env do
-          system("cd #{@main_path} && #{@command}")
+          system("cd #{@main_path} && #{@options[:command]}")
         end
       end
 
@@ -168,12 +167,12 @@ module DeepCover
       end
 
       def run
-        if @options.fetch(:process, true)
+        if @options[:process]
           clear
           copy
           cover
           patch
-          bundle if @options.fetch(:bundle, true)
+          bundle if @options[:bundle]
           process
         end
         report
