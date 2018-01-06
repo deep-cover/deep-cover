@@ -44,13 +44,6 @@ module DeepCover
       node.parent.is_a?(Node::If) && node.parent.condition.is_a?(Node::SingletonLiteral)
     end
 
-    def self.optionally_covered
-      @optionally_covered ||= instance_methods(false).map do |method|
-        method =~ /^is_(.*)\?$/
-        Regexp.last_match(1)
-      end.compact.map(&:to_sym).freeze
-    end
-
     protected
 
     def convert(node, **)

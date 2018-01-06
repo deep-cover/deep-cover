@@ -7,4 +7,6 @@ module DeepCover
                paths: %w[./app ./lib].freeze,
                allow_partial: false,
              }.freeze
+
+  OPTIONALLY_COVERED = %i[case_implicit_else default_argument raise trivial_if].freeze
 end

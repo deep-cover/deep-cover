@@ -2,8 +2,6 @@
 
 module DeepCover
   class Config
-    OPTIONALLY_COVERED = %i[raise default_argument case_implicit_else trivial_if]
-
     def initialize(notify = nil)
       @notify = notify
       @options = DEFAULTS.dup
