@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module DeepCover
+  require 'deep_cover'
+  bootstrap
+
   module CLI
     class Debugger
       include Tools

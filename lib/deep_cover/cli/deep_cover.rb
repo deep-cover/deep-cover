@@ -3,14 +3,16 @@
 module DeepCover
   require 'bundler/setup'
   require 'slop'
-  require 'deep_cover'
-  bootstrap
-  require_relative_dir '.'
+  require_relative '../basics'
 
+  module CLI
+  end
   module CLI::DeepCover
     extend self
 
     def show_version
+      require_relative '../version'
+      require 'parser'
       puts "deep-cover v#{DeepCover::VERSION}; parser v#{Parser::VERSION}"
     end
 
@@ -77,8 +79,10 @@ module DeepCover
       if options[:help]
         show_help
       elsif options[:expression]
+        require_relative 'debugger'
         CLI::Debugger.new(options[:expression], **options).show
       else
+        require_relative 'instrumented_clone_reporter'
         path = menu.arguments.first || '.'
         CLI::InstrumentedCloneReporter.new(path, **options).run
       end

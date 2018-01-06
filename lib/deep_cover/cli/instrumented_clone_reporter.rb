@@ -3,6 +3,9 @@
 require 'tmpdir'
 
 module DeepCover
+  require 'deep_cover'
+  bootstrap
+
   module CLI
     class InstrumentedCloneReporter
       include Tools
