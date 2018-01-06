@@ -47,7 +47,7 @@ module DeepCover
         o.separator 'Coverage options'
         @ignore_uncovered_map = OPTIONALLY_COVERED.map do |option|
           default = DEFAULTS[:ignore_uncovered].include?(option)
-          o.bool "--ignore-#{Tools.dasherize(option)}", '', default: default
+          o.bool "--ignore-#{dasherize(option)}", '', default: default
           [:"ignore_#{option}", option]
         end.to_h
         o.separator "\nFor testing purposes:"
@@ -82,6 +82,13 @@ module DeepCover
         path = menu.arguments.first || '.'
         CLI::InstrumentedCloneReporter.new(path, **options).run
       end
+    end
+
+    private
+
+    # Poor man's dasherize. 'an_example' => 'an-example'
+    def dasherize(string)
+      string.to_s.tr('_', '-')
     end
   end
 end
