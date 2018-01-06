@@ -4,18 +4,20 @@ require 'spec_helper'
 
 module DeepCover
   RSpec.describe 'CLI', :slow do
+    let(:expected_errors) { /^$/ }
+    let(:output) do
+      require 'open3'
+      out, errors, _status = Bundler.with_clean_env do
+        Open3.capture3(command)
+      end
+      errors.should match expected_errors unless RUBY_PLATFORM == 'java'
+      out
+    end
+
     describe 'The output of deep-cover' do
       let(:options) { '' }
       let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --reporter=istanbul #{options}" } # --no-bundle when TreeRewriter is merged
-      let(:expected_errors) { /^$/ }
-      subject do
-        require 'open3'
-        output, errors, _status = Bundler.with_clean_env do
-          Open3.capture3(command)
-        end
-        errors.should match expected_errors unless RUBY_PLATFORM == 'java'
-        output
-      end
+      subject { output }
       describe 'for a simple gem' do
         let(:path) { 'trivial_gem' }
         it do
