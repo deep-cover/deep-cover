@@ -1,0 +1,80 @@
+GIT
+  remote: https://github.com/marcandre/parser.git
+  revision: 5ddb11ef59dac7cd50e2ca37306f7e9462789269
+  branch: tree_rewriter_release
+  specs:
+    parser (2.4.0.2)
+      ast (~> 2.3)
+
+PATH
+  remote: .
+  specs:
+    covered_trivial_gem (0.1.0)
+
+PATH
+  remote: /Users/mal/deep-cover
+  specs:
+    deep-cover (0.3.0)
+      backports (>= 3.10.1)
+      binding_of_caller
+      highline
+      parser
+      pry
+      slop (~> 4.0)
+      term-ansicolor
+      terminal-table
+      with_progress
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ast (2.3.0)
+    backports (3.10.3)
+    binding_of_caller (0.7.3)
+      debug_inspector (>= 0.0.1)
+    coderay (1.1.2)
+    debug_inspector (0.0.3)
+    diff-lcs (1.3)
+    highline (1.7.10)
+    method_source (0.9.0)
+    pry (0.11.3)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+    rake (12.2.1)
+    rspec (3.7.0)
+      rspec-core (~> 3.7.0)
+      rspec-expectations (~> 3.7.0)
+      rspec-mocks (~> 3.7.0)
+    rspec-core (3.7.0)
+      rspec-support (~> 3.7.0)
+    rspec-expectations (3.7.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.7.0)
+    rspec-mocks (3.7.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.7.0)
+    rspec-support (3.7.0)
+    ruby-progressbar (1.9.0)
+    slop (4.6.1)
+    term-ansicolor (1.6.0)
+      tins (~> 1.0)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
+    tins (1.16.3)
+    unicode-display_width (1.3.0)
+    with_progress (1.0.1)
+      ruby-progressbar (~> 1.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.15)
+  covered_trivial_gem!
+  deep-cover!
+  parser!
+  rake (~> 12.0)
+  rspec (~> 3.0)
+
+BUNDLED WITH
+   1.16.0

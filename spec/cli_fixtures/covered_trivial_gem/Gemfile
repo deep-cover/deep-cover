@@ -1,0 +1,10 @@
+source "https://rubygems.org"
+
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+
+gem 'deep-cover', path: File.expand_path(__dir__ + '/../../../')
+
+# Specify your gem's dependencies in covered_trivial_gem.gemspec
+gemspec
+
+gem 'parser', git: 'https://github.com/marcandre/parser.git', branch: 'tree_rewriter_release' # Awaiting merge in official gem

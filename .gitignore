@@ -1,5 +1,5 @@
-/.bundle/
-/.yardoc
+.bundle/
+.yardoc
 /Gemfile.lock
 /_yardoc/
 /coverage/
@@ -7,9 +7,10 @@
 /pkg/
 /spec/reports/
 /tmp/
-/.idea
-/.sass-cache
+.idea
+.sass-cache
 
 # rspec failure tracking
 .rspec_status
 /Gemfile.local
+/spec/cli_fixtures/covered_trivial_gem/deep_cover/
