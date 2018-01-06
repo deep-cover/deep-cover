@@ -8,6 +8,7 @@ module DeepCover
                allow_partial: false,
                tracker_global: '$_cov',
                reporter: :html,
+               output: './coverage',
              }.freeze
 
   OPTIONALLY_COVERED = %i[case_implicit_else default_argument raise trivial_if].freeze

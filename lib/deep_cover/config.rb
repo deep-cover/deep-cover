@@ -54,6 +54,14 @@ module DeepCover
       end
     end
 
+    def output(path_or_false = nil)
+      if path_or_false != nil
+        change(:output, path_or_false)
+      else
+        @options[:output]
+      end
+    end
+
     def reset
       DEFAULTS.each do |key, value|
         change(key, value)

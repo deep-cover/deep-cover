@@ -19,7 +19,7 @@ module DeepCover
 
     def report_istanbul(output: nil, **options)
       dir = output_istanbul(**options).dirname
-      unless [nil, '', 'false'].include? output
+      unless [nil, false, '', 'false'].include? output
         output = File.expand_path(output)
         html = "--reporter=html --report-dir='#{output}'"
         if options[:open]

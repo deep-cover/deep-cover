@@ -71,6 +71,7 @@ module DeepCover
       @ignore_uncovered_map.each do |cli_option, option|
         iu << option if options.delete(cli_option)
       end
+      options[:output] = false if ['false', 'f', ''].include?(options[:output])
       options
     end
 
