@@ -11,16 +11,11 @@ module DeepCover
       end
 
       def run!
-        detect
         load
         after_tests { save }
       end
 
       private
-
-      def detect
-        Coverage.saved? @covered_path
-      end
 
       def load
         @coverage = Coverage.load(@covered_path, with_trackers: false)
