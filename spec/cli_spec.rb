@@ -12,6 +12,19 @@ module DeepCover
       out
     end
 
+    describe 'deep-cover exec' do
+      let(:options) { '' }
+      let(:command) { "cd spec/cli_fixtures/#{path} && ../../../exe/deep-cover -o=false #{options} exec rake" }
+      subject { output }
+      describe 'for a simple gem' do
+        let(:path) { 'covered_trivial_gem' }
+        it do
+          should include '3 examples, 0 failures'
+          should =~ /No HTML generated/
+        end
+      end
+    end
+
     describe 'The output of deep-cover' do
       let(:options) { '' }
       let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --reporter=istanbul #{options}" } # --no-bundle when TreeRewriter is merged

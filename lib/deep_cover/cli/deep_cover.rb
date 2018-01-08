@@ -38,20 +38,26 @@ module DeepCover
 
     def menu
       @menu ||= parse do |o|
-        o.banner = 'usage: deep-cover [options] [path/to/app/or/gem]'
+        o.banner = ['usage: deep-cover [options] exec <command ...>',
+                    '   or  deep-cover [options] [path/to/app/or/gem]',
+                   ].join("\n")
         o.separator ''
         o.string '-o', '--output', 'output folder', default: DEFAULTS[:output]
-        o.string '-c', '--command', 'command to run tests', default: CLI_DEFAULTS[:command]
         o.string '--reporter', 'reporter', default: DEFAULTS[:reporter]
-        o.bool '--bundle', 'run bundle before the tests', default: CLI_DEFAULTS[:bundle]
-        o.bool '--process', 'turn off to only redo the reporting', default: CLI_DEFAULTS[:process]
         o.bool '--open', 'open the output coverage', default: CLI_DEFAULTS[:open]
+
         o.separator 'Coverage options'
         @ignore_uncovered_map = OPTIONALLY_COVERED.map do |option|
           default = DEFAULTS[:ignore_uncovered].include?(option)
           o.bool "--ignore-#{dasherize(option)}", '', default: default
           [:"ignore_#{option}", option]
         end.to_h
+
+        o.separator '\nWhen not using ’exec’:'
+        o.string '-c', '--command', 'command to run tests', default: CLI_DEFAULTS[:command]
+        o.bool '--bundle', 'run bundle before the tests', default: CLI_DEFAULTS[:bundle]
+        o.bool '--process', 'turn off to only redo the reporting', default: CLI_DEFAULTS[:process]
+
         o.separator "\nFor testing purposes:"
         o.bool '--profile', 'use profiler' unless RUBY_PLATFORM == 'java'
         o.string '-e', '--expression', 'test ruby expression instead of a covering a path'
@@ -77,14 +83,18 @@ module DeepCover
 
     def go
       options = convert_options(menu.to_h)
+      first, *rest = menu.arguments
       if options[:help]
         show_help
       elsif options[:expression]
         require_relative 'debugger'
         CLI::Debugger.new(options[:expression], **options).show
+      elsif first == 'exec'
+        require_relative 'exec'
+        CLI::Exec.new(rest, **options).run
       else
         require_relative 'instrumented_clone_reporter'
-        path = menu.arguments.first || '.'
+        path = first || '.'
         CLI::InstrumentedCloneReporter.new(path, **options).run
       end
     end
