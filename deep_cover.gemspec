@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'parser'
 
   # Support
-  spec.add_runtime_dependency 'backports', '>= 3.10.1'
+  spec.add_runtime_dependency 'backports', '>= 3.11.0'
   spec.add_runtime_dependency 'binding_of_caller'
 
   # CLI
