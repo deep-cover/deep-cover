@@ -36,8 +36,13 @@ module DeepCover
     def report(**options)
       case (reporter = options.fetch(:reporter, DEFAULTS[:reporter]).to_sym)
       when :html
-        Reporter::HTML.report(self, **options)
-        Reporter::Text.report(self, **options) + "\n\nHTML generated: open #{options[:output]}/index.html"
+        msg = if (output = options.fetch(:output, DEFAULTS[:output]))
+                Reporter::HTML.report(self, **options)
+                "HTML generated: open #{output}/index.html"
+              else
+                'No HTML generated'
+              end
+        Reporter::Text.report(self, **options) + "\n\n" + msg
       when :istanbul
         if Reporter::Istanbul.available?
           report_istanbul(**options)
