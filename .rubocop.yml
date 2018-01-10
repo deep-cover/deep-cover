@@ -222,9 +222,6 @@ Style/StructInheritance:
 Security/YAMLLoad:
   Enabled: false
 
-Style/ExtendSelf:
-  Enabled: false
-
 Style/CommentedKeyword:
   Enabled: false # See https://github.com/bbatsov/rubocop/issues/5259
 
