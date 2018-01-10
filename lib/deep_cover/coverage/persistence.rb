@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'deep_cover/version'
-
 module DeepCover
   require 'securerandom'
   class Coverage::Persistence

@@ -13,6 +13,7 @@ module DeepCover
       AUTOLOAD.each do |module_name|
         DeepCover.autoload(Tools::Camelize.camelize(module_name), "#{__dir__}/#{module_name}")
       end
+      DeepCover.autoload :VERSION, 'deep_cover/version'
       Object.autoload :Term, 'term/ansicolor'
       Object.autoload :Terminal, 'terminal-table'
       require 'pry'
@@ -42,6 +43,7 @@ module DeepCover
       AUTOLOAD.each do |module_name|
         DeepCover.const_get(Tools::Camelize.camelize(module_name))
       end
+      DeepCover::VERSION # rubocop:disable Lint/Void
       @all_loaded = true
     end
   end
