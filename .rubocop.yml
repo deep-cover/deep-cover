@@ -193,6 +193,9 @@ Style/MultilineIfModifier:
 Style/NilComparison:
   Enabled: false
 
+Style/NonNilCheck:
+  Enabled: false
+
 Lint/EmptyWhen:
   Enabled: false
 
