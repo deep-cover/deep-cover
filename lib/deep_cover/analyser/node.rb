@@ -22,8 +22,9 @@ module DeepCover
       end
     end
 
+    RAISING_MESSAGES = %i[raise exit].freeze
     def is_raise?(node)
-      node.is_a?(Node::Send) && (node.message == :raise || node.message == :exit)
+      node.is_a?(Node::Send) && RAISING_MESSAGES.include?(node.message) && node.receiver == nil
     end
 
     def is_default_argument?(node)
