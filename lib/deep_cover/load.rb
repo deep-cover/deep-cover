@@ -2,7 +2,7 @@
 
 module DeepCover
   module Load
-    AUTOLOAD = %i[analyser autoload_tracker coverage covered_code custom_requirer
+    AUTOLOAD = %i[analyser autoload_tracker config coverage covered_code custom_requirer
                   flag_comment_associator memoize module_override node
                   problem_with_diagnostic reporter
                  ]
@@ -10,7 +10,7 @@ module DeepCover
     def load_absolute_basics
       require_relative 'base'
       require_relative 'basics'
-      require_relative 'config'
+      require_relative 'config_setter'
       require_relative 'tools/camelize'
       AUTOLOAD.each do |module_name|
         DeepCover.autoload(Tools::Camelize.camelize(module_name), "#{__dir__}/#{module_name}")

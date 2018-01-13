@@ -6,7 +6,7 @@ module DeepCover
   load_absolute_basics
 
   extend Base
-  extend Config::Setter
+  extend ConfigSetter
 end
 DeepCover::GLOBAL_BINDING = binding
 
