@@ -145,23 +145,6 @@ The file `.deep-cover.rb` is loaded automatically when requiring `deep-cover` an
 
 *Note*: The configuration block is only executed when `deep-cover` is actually started.
 
-### Low level usage
-
-```
-# Setup
-require 'deep-cover'
-DeepCover.configure { ignore_uncovered :trivial_if }
-# Cover
-DeepCover.cover do
-  require 'my_file_to_cover'
-  require 'my_other_file_to_cover'
-end
-require 'this_file_wont_be_covered'
-tests.run()
-puts DeepCover.line_coverage('foo')
-puts DeepCover.coverage.report
-```
-
 ## Development
 
 After checking out the repo, run `bundle` then `rake dev:install` to install dependencies. Then, run `rake` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
