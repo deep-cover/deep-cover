@@ -14,6 +14,7 @@ module DeepCover
     include IsStatement
     include ExecutionLocation
     include ChildCanBeEmpty
+    include Filters
 
     attr_reader :index, :parent, :children, :base_node
 

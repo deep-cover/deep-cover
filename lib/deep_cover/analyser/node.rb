@@ -11,7 +11,7 @@ module DeepCover
     def initialize(source, ignore_uncovered: [], **options)
       @cache = {}.compare_by_identity
       super
-      @allow_filters = Array(ignore_uncovered).map { |kind| method(:"is_#{kind}?") }
+      @allow_filters = Array(ignore_uncovered).map { |kind| :"is_#{kind}?" }
     end
 
     def node_runs(node)
@@ -22,27 +22,8 @@ module DeepCover
       end
     end
 
-    RAISING_MESSAGES = %i[raise exit].freeze
-    def is_raise?(node)
-      node.is_a?(Node::Send) && RAISING_MESSAGES.include?(node.message) && node.receiver == nil
-    end
-
-    def is_default_argument?(node)
-      node.parent.is_a?(Node::Optarg)
-    end
-
-    def is_case_implicit_else?(node)
-      parent = node.parent
-      node.is_a?(Node::EmptyBody) && parent.is_a?(Node::Case) && !parent.has_else?
-    end
-
     def in_subset?(node, _parent)
       node.executable?
-    end
-
-    def is_trivial_if?(node)
-      # Supports only node being a branch or the fork itself
-      node.parent.is_a?(Node::If) && node.parent.condition.is_a?(Node::SingletonLiteral)
     end
 
     protected
@@ -54,7 +35,7 @@ module DeepCover
     private
 
     def should_be_ignored?(node)
-      @allow_filters.any? { |f| f[node] } || is_ignored?(node.parent)
+      @allow_filters.any? { |f| node.public_send(f) } || is_ignored?(node.parent)
     end
 
     def is_ignored?(node)
