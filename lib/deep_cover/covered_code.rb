@@ -87,9 +87,14 @@ module DeepCover
       root.main
     end
 
+    def comments
+      root
+      @comments
+    end
+
     def root
       @root ||= begin
-        ast = parser.parse(@buffer)
+        ast, @comments = parser.parse_with_comments(@buffer)
         Node::Root.new(ast, self)
       end
     end
