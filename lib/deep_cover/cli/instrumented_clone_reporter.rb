@@ -99,9 +99,14 @@ module DeepCover
 
       # Back to global functionality
       def patch_main_ruby_files
-        each_main_ruby_files do |main|
-          puts "Patching #{main}"
-          patch_ruby_file(main)
+        if @options[:main].empty?
+          each_main_ruby_files do |main|
+            puts "Patching #{main}"
+            patch_ruby_file(main)
+          end
+        else
+          puts "Patching #{@options[:main]}"
+          patch_ruby_file(Pathname.new(@options[:main]).expand_path(@main_path))
         end
       end
 
