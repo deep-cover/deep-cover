@@ -42,6 +42,7 @@ module DeepCover
         o.separator ''
         o.string '-o', '--output', 'output folder', default: DEFAULTS[:output]
         o.string '-c', '--command', 'command to run tests', default: CLI_DEFAULTS[:command]
+        o.string '--main', 'main file', default: ''
         o.string '--reporter', 'reporter', default: DEFAULTS[:reporter]
         o.bool '--bundle', 'run bundle before the tests', default: CLI_DEFAULTS[:bundle]
         o.bool '--process', 'turn off to only redo the reporting', default: CLI_DEFAULTS[:process]
