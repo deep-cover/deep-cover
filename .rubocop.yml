@@ -233,3 +233,6 @@ Style/MixinUsage:
 
 Style/EvalWithLocation:
   Enabled: false
+
+Lint/BooleanSymbol:
+  Enabled: false

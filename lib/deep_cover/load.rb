@@ -2,8 +2,9 @@
 
 module DeepCover
   module Load
-    AUTOLOAD = %i[analyser autoload_tracker coverage covered_code custom_requirer memoize
-                  module_override node problem_with_diagnostic reporter
+    AUTOLOAD = %i[analyser autoload_tracker coverage covered_code custom_requirer
+                  flag_comment_associator memoize module_override node
+                  problem_with_diagnostic reporter
                  ]
 
     def load_absolute_basics
