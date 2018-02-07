@@ -1,5 +1,15 @@
 # Changelog
 
+## master
+
+* Added `deep-cover exec`
+* Support for # nocov
+
+## 0.3
+
+* Text reporter
+* Lazy loading
+
 ## 0.2
 
 * HTML reporter
