@@ -1,6 +1,6 @@
 # Changelog
 
-## master
+## 0.4
 
 * Added `deep-cover exec`
 * Support for # nocov
