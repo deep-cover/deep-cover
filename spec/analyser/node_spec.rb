@@ -20,7 +20,12 @@ module DeepCover
       with = Analyser::Node.new(node, ignore_uncovered: option)
       without = Analyser::Node.new(node)
       @matchers = [*results(without), *results(with)].map { |a| match_array(a) }
-      @err = @matchers.zip([@nodes, [], [], @nodes]).map do |m, values|
+      expected = [@nodes, [], [], @nodes]
+      if option == nil
+        @matchers.shift(2)
+        expected.shift(2)
+      end
+      @err = @matchers.zip(expected).map do |m, values|
         m.failure_message unless m.matches?(values)
       end.compact
       @err.empty?
@@ -60,6 +65,12 @@ module DeepCover
 
       it { :trivial_if.should ignore_nodes(42, 'foo(42)', of: <<-RUBY) }
           foo(42) if false
+          RUBY
+
+      it { nil.should ignore_nodes(42, 'foo(42)', of: <<-RUBY) }
+          if false
+            foo(42) # nocov
+          end
           RUBY
     end
   end

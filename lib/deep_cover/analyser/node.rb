@@ -12,6 +12,7 @@ module DeepCover
       @cache = {}.compare_by_identity
       super
       @allow_filters = Array(ignore_uncovered).map { |kind| :"is_#{kind}?" }
+      @nocov_ranges = FlagCommentAssociator.new(covered_code)
     end
 
     def node_runs(node)
@@ -35,7 +36,9 @@ module DeepCover
     private
 
     def should_be_ignored?(node)
-      @allow_filters.any? { |f| node.public_send(f) } || is_ignored?(node.parent)
+      @nocov_ranges.include?(node) ||
+        @allow_filters.any? { |f| node.public_send(f) } ||
+        is_ignored?(node.parent)
     end
 
     def is_ignored?(node)
