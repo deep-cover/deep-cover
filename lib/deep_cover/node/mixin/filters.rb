@@ -7,6 +7,18 @@ module DeepCover
         def filter_to_method_name(kind)
           :"is_#{kind}?"
         end
+
+        def create_filter(name, &block)
+          Filters.define_method(filter_to_method_name(name), &block)
+          OPTIONALLY_COVERED << name
+        end
+
+        def unique_filter
+          (1..Float::INFINITY).each do |i|
+            name = :"custom_filter_#{i}"
+            return name unless Filters.method_defined?(filter_to_method_name(name))
+          end
+        end
       end
 
       RAISING_MESSAGES = %i[raise exit].freeze

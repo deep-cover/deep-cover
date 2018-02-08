@@ -18,5 +18,5 @@ module DeepCover
                    open: false,
                  }.freeze
 
-  OPTIONALLY_COVERED = %i[case_implicit_else default_argument raise trivial_if].freeze
+  OPTIONALLY_COVERED = %i[case_implicit_else default_argument raise trivial_if]
 end

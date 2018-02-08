@@ -12,7 +12,12 @@ module DeepCover
     end
     alias_method :to_h, :to_hash
 
-    def ignore_uncovered(*keywords)
+    def ignore_uncovered(*keywords, &block)
+      if block
+        raise ArgumentError, "wrong number of arguments (given #{keywords.size}, expected 0..1)" if keywords.size > 1
+        keywords << Node.unique_filter if keywords.empty?
+        Node.create_filter(keywords.first, &block)
+      end
       if keywords.empty?
         @options[:ignore_uncovered]
       else
@@ -22,6 +27,7 @@ module DeepCover
     end
 
     def detect_uncovered(*keywords)
+      raise ArgumentError, 'No block is accepted' if block_given?
       if keywords.empty?
         OPTIONALLY_COVERED - @options[:ignore_uncovered]
       else

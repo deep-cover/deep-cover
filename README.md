@@ -145,6 +145,24 @@ The file `.deep-cover.rb` is loaded automatically when requiring `deep-cover` an
 
 *Note*: The configuration block is only executed when `deep-cover` is actually started.
 
+#### Custom filters
+
+`deep-cover` comes with a few filters that make it possible to ignore certain uncovered codes.
+
+It is easy to add you own filters.
+
+For example, if one wants to ignore uncovered calls to `raise` but the code uses `our_custom_raise` instead, the following with work:
+
+```
+DeepCover.configure do
+  ignore_uncovered do
+    type == :send &&
+      receiver == nil &&
+      message == :our_custom_raise
+  end
+end
+```
+
 ## Development
 
 After checking out the repo, run `bundle` then `rake dev:install` to install dependencies. Then, run `rake` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

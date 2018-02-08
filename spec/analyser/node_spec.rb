@@ -72,6 +72,14 @@ module DeepCover
             foo(42) # nocov
           end
           RUBY
+
+      DeepCover.config.ignore_uncovered :test_custom_filter do
+        type == :int
+      end
+
+      it { :test_custom_filter.should ignore_nodes('42', of: <<-RUBY) }
+          42 if false
+          RUBY
     end
   end
 end

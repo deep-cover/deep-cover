@@ -33,6 +33,18 @@ module DeepCover
         config.detect_uncovered [:raise, :trivial_if, :default_argument]
         result.should =~ [:case_implicit_else]
       end
+
+      it 'accepts a block' do
+        expect do
+          config.ignore_uncovered(:foo) {}
+        end.to change { Node.method_defined?(:is_foo?) }.from(false).to(true)
+        expect do
+          config.ignore_uncovered {}
+        end.to change { Node.method_defined?(:is_custom_filter_1?) }.from(false).to(true)
+        expect do
+          config.ignore_uncovered {}
+        end.to change { Node.method_defined?(:is_custom_filter_2?) }.from(false).to(true)
+      end
     end
 
     describe :set do

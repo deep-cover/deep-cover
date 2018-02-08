@@ -9,6 +9,6 @@ RSpec.describe 'DeepCover::OPTIONALLY_COVERED' do
       Regexp.last_match(1)
     end.compact.sort.map(&:to_sym)
 
-    DeepCover::OPTIONALLY_COVERED.should == list
+    DeepCover::OPTIONALLY_COVERED.should =~ list
   end
 end
