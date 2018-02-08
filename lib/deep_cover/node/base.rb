@@ -15,6 +15,7 @@ module DeepCover
     include ExecutionLocation
     include ChildCanBeEmpty
     include Filters
+    extend Filters::ClassMethods
 
     attr_reader :index, :parent, :children, :base_node
 

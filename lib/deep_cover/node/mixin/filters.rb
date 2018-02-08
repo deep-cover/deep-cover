@@ -3,6 +3,12 @@
 module DeepCover
   module Node::Mixin
     module Filters
+      module ClassMethods
+        def filter_to_method_name(kind)
+          :"is_#{kind}?"
+        end
+      end
+
       RAISING_MESSAGES = %i[raise exit].freeze
       def is_raise?
         is_a?(Node::Send) && RAISING_MESSAGES.include?(message) && receiver == nil
