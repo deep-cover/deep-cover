@@ -13,7 +13,7 @@ module DeepCover
                 can_be_empty: -> { (base_node.loc.begin || base_node.loc.expression.succ).end },
                 flow_entry_count: :entered_body_tracker_hits,
                 is_statement: true,
-                rewrite: '((%{entered_body_tracker};%{local}=nil;%{node}))'
+                rewrite: '(%{entered_body_tracker};%{local}=nil;%{node})'
 
       def is_statement
         false

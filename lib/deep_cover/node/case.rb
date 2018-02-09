@@ -16,7 +16,7 @@ module DeepCover
       # See https://github.com/jruby/jruby/issues/4804
       # This is solved in jruby 9.2.0.0, better keep the workaround
       # for compatibility.
-      has_child condition: Node, rewrite: '(((%{entry_tracker}) && %{node}))',
+      has_child condition: Node, rewrite: '((%{entry_tracker}) && %{node})',
                 flow_entry_count: :entry_tracker_hits
       executed_loc_keys []
 
@@ -78,7 +78,7 @@ module DeepCover
       has_extra_children whens: When
       has_child else: Node,
                 can_be_empty: -> { base_node.loc.end.begin },
-                rewrite: -> { "#{'else;' unless has_else?}((%{else_entry_tracker};%{local}=nil;%{node}))" },
+                rewrite: -> { "#{'else;' unless has_else?}(%{else_entry_tracker};%{local}=nil;%{node})" },
                 executed_loc_keys: [:else],
                 is_statement: true,
                 flow_entry_count: :else_entry_tracker_hits
