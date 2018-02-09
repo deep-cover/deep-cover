@@ -34,7 +34,7 @@ module DeepCover
         #    {a: {b: {d: {} } } }]
         # => {a: {b: {c: {}, d: {} }}}
         def deep_merge(trees)
-          trees.inject do |result, h|
+          trees.inject({}) do |result, h|
             result.merge(h) { |k, val, val_b| deep_merge([val, val_b]) }
           end
         end
