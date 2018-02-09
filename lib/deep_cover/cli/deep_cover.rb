@@ -53,7 +53,7 @@ module DeepCover
           [:"ignore_#{option}", option]
         end.to_h
 
-        o.separator '\nWhen not using ’exec’:'
+        o.separator "\nWhen not using ’exec’:"
         o.string '-c', '--command', 'command to run tests', default: CLI_DEFAULTS[:command]
         o.bool '--bundle', 'run bundle before the tests', default: CLI_DEFAULTS[:bundle]
         o.bool '--process', 'turn off to only redo the reporting', default: CLI_DEFAULTS[:process]
