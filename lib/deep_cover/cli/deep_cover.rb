@@ -7,6 +7,21 @@ module DeepCover
 
   module CLI
   end
+
+  module CLI::SlopExtension
+    attr_accessor :stopped
+    attr_reader :ignored
+
+    def try_process(*)
+      @ignored ||= 0
+      return if stopped
+      o = super
+      @ignored += 1 unless o
+      o
+    end
+  end
+  Slop::Parser.prepend CLI::SlopExtension
+
   module CLI::DeepCover
     extend self
 
@@ -69,6 +84,10 @@ module DeepCover
           exit
         end
         o.boolean('-h', '--help')
+
+        o.boolean('exec', '', help: false) do
+          o.parser.stopped = true if o.parser.ignored == 0
+        end
       end
     end
 
@@ -83,18 +102,17 @@ module DeepCover
 
     def go
       options = convert_options(menu.to_h)
-      first, *rest = menu.arguments
       if options[:help]
         show_help
       elsif options[:expression]
         require_relative 'debugger'
         CLI::Debugger.new(options[:expression], **options).show
-      elsif first == 'exec'
+      elsif menu.parser.stopped
         require_relative 'exec'
-        CLI::Exec.new(rest, **options).run
+        CLI::Exec.new(menu.arguments, **options).run
       else
         require_relative 'instrumented_clone_reporter'
-        path = first || '.'
+        path = menu.arguments.first || '.'
         CLI::InstrumentedCloneReporter.new(path, **options).run
       end
     end

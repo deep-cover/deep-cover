@@ -23,6 +23,14 @@ module DeepCover
           should =~ /No HTML generated/
         end
       end
+
+      describe 'for a command with options' do
+        let(:command) { %{exe/deep-cover -o=false exec ruby -Ilib -e 'require "./lib/deep-cover"; puts :hello'} }
+        it do
+          should include 'hello'
+          should =~ /No HTML generated/
+        end
+      end
     end
 
     describe 'The output of deep-cover' do
