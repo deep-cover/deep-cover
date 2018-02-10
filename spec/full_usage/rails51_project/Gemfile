@@ -36,7 +36,6 @@ gem 'jbuilder', '~> 2.5'
 
 group :development, :test do
   gem 'deep-cover', path: '../../..'
-  gem 'parser', git: 'https://github.com/marcandre/parser.git', branch: 'tree_rewriter_release' # Awaiting merge in official gem
   gem 'rspec-rails'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

@@ -36,6 +36,7 @@ module DeepCover
       silence_warnings do
         require 'parser/current'
       end
+      require 'parser_tree_rewriter'
       require_relative_dir 'parser_ext'
       @parser_loaded
     end

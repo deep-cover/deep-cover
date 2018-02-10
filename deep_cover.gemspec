@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
 
   # Main dependency
   spec.add_runtime_dependency 'parser'
+  spec.add_runtime_dependency 'parser_tree_rewriter'
 
   # Support
   spec.add_runtime_dependency 'backports', '>= 3.11.0'
