@@ -1,9 +1,14 @@
 # Changelog
 
+## 0.5
+
+* Added custom filters
+
 ## 0.4
 
 * Added `deep-cover exec`
-* Support for # nocov
+* Automatic loading of `.deep-cover.rb`
+* Support for `# nocov`
 
 ## 0.3
 
