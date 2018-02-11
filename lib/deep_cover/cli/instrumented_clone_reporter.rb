@@ -3,7 +3,7 @@
 require 'tmpdir'
 
 module DeepCover
-  require 'deep_cover'
+  require_relative '../../deep_cover'
   bootstrap
 
   module CLI

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'deep_cover'
+require_relative '../deep_cover'
 require 'pry'
 
 module DeepCover

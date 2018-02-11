@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DeepCover
-  require 'deep_cover'
+  require_relative '../../deep_cover'
   bootstrap
 
   module CLI
