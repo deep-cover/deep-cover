@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module DeepCover
-  require 'bundler/setup'
   require 'slop'
   require_relative '../basics'
 
