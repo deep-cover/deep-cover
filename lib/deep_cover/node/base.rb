@@ -47,7 +47,6 @@ module DeepCover
       when ::Regexp
         each_node.find_all { |n| n.source =~ lookup }
       else
-        binding.pry
         raise ::TypeError, "Expected class or symbol, got #{lookup.class}: #{lookup.inspect}"
       end
     end

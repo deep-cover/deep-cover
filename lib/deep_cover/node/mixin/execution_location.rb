@@ -59,7 +59,7 @@ module DeepCover
       # Returns an array of character numbers (in the original buffer) that
       # pertain exclusively to this node (and thus not to any children).
       def proper_range
-        executed_locs.map(&:to_a).inject([], :+).uniq rescue binding.pry
+        executed_locs.map(&:to_a).inject([], :+).uniq
       end
     end
   end

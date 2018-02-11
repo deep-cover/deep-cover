@@ -84,6 +84,7 @@ module DeepCover
       def pry
         a = covered_code.covered_ast
         b = a.children.first
+        ::DeepCover.load_pry
         binding.pry
       end
 

@@ -20,7 +20,6 @@ module DeepCover
       Object.autoload :Term, 'term/ansicolor'
       Object.autoload :Terminal, 'terminal-table'
       Object.autoload :YAML, 'yaml'
-      require 'pry'
     end
 
     def bootstrap
@@ -39,6 +38,20 @@ module DeepCover
       require 'parser_tree_rewriter'
       require_relative_dir 'parser_ext'
       @parser_loaded
+    end
+
+    def load_pry
+      # I don't know why I have to call these to avoid getting an error:
+      #     "WARN: Unresolved specs during Gem::Specification.reset"
+      gem 'binding_of_caller'
+      gem 'highline'
+      gem 'unicode-display_width'
+      gem 'backports'
+      gem 'ruby-progressbar'
+      gem 'tins'
+      gem 'ast'
+      #
+      require 'pry'
     end
 
     def load_all

@@ -111,13 +111,13 @@ module DeepCover
       end
 
       def replace(range, with)
-        @rewriter.replace(range, with) rescue binding.pry
+        @rewriter.replace(range, with)
       end
 
       def wrap(range, before, after = '</span>')
         line = @rewriter.source_buffer.line_range(range.first_line)
         pinned = range.with(end_pos: [range, line].map(&:end_pos).min)
-        @rewriter.wrap(pinned, before, after) rescue binding.pry
+        @rewriter.wrap(pinned, before, after)
       end
 
       def html_escape
