@@ -41,17 +41,9 @@ module DeepCover
     end
 
     def load_pry
-      # I don't know why I have to call these to avoid getting an error:
-      #     "WARN: Unresolved specs during Gem::Specification.reset"
-      gem 'binding_of_caller'
-      gem 'highline'
-      gem 'unicode-display_width'
-      gem 'backports'
-      gem 'ruby-progressbar'
-      gem 'tins'
-      gem 'ast'
-      #
-      require 'pry'
+      silence_warnings do # Avoid "WARN: Unresolved specs during Gem::Specification.reset"
+        require 'pry'     # after `pry` calls `Gem.refresh`
+      end
     end
 
     def load_all
