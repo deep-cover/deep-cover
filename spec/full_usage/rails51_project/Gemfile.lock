@@ -1,7 +1,7 @@
 PATH
   remote: ../../..
   specs:
-    deep-cover (0.5.0)
+    deep-cover (0.5.1)
       backports (>= 3.11.0)
       binding_of_caller
       highline
