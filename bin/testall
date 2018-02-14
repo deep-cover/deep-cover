@@ -30,10 +30,10 @@ matrix_exclude = matrix_options['exclude'] || []
 
 configs = ruby_versions.product(gemfiles)
 matrix_include.each do |conf|
-  configs << [conf[:rvm], conf[:gemfile] || nil]
+  configs << [conf['rvm'], conf['gemfile'] || nil]
 end
 matrix_exclude.each do |conf|
-  configs.delete [conf[:rvm], conf[:gemfile] || nil]
+  configs.delete [conf['rvm'], conf['gemfile'] || nil]
 end
 
 rubies = {}
