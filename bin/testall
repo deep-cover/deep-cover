@@ -22,7 +22,7 @@ def run_command(env_vars, command)
 end
 
 travis_yml = (File.exist?(TRAVIS_CONFIG) ? YAML.load_file(TRAVIS_CONFIG) : {})
-ruby_versions = travis_yml['rvm']
+ruby_versions = travis_yml['rvm'] || []
 gemfiles = travis_yml['gemfile'] || [nil]
 matrix_options = travis_yml['matrix'] || {}
 matrix_include = matrix_options['include'] || []
