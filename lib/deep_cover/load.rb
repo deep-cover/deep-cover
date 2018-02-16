@@ -23,6 +23,7 @@ module DeepCover
     end
 
     def bootstrap
+      @bootstrapped ||= false # Avoid warning
       return if @bootstrapped
       require_relative 'backports'
       require_relative 'tools'
@@ -30,14 +31,15 @@ module DeepCover
     end
 
     def load_parser
+      @parser_loaded ||= false # Avoid warning
       return if @parser_loaded
-      require 'parser'
       silence_warnings do
+        require 'parser'
         require 'parser/current'
+        require 'parser_tree_rewriter'
       end
-      require 'parser_tree_rewriter'
       require_relative_dir 'parser_ext'
-      @parser_loaded
+      @parser_loaded = true
     end
 
     def load_pry
@@ -47,13 +49,14 @@ module DeepCover
     end
 
     def load_all
+      @all_loaded ||= false
       return if @all_loaded
       bootstrap
       load_parser
       AUTOLOAD.each do |module_name|
         DeepCover.const_get(Tools::Camelize.camelize(module_name))
       end
-      DeepCover::VERSION # rubocop:disable Lint/Void
+      DeepCover.const_get(:VERSION)
       @all_loaded = true
     end
   end

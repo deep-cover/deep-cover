@@ -50,7 +50,7 @@ module DeepCover
       @load_paths = load_paths
       lookup_paths ||= Dir.getwd
       lookup_paths = Array(lookup_paths)
-      @load_paths_subset = LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths) unless lookup_paths.include? '/'
+      @load_paths_subset = lookup_paths.include?('/') ? nil : LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths)
       @loaded_features = loaded_features
       @filter = filter
     end

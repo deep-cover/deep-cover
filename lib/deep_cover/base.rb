@@ -3,11 +3,11 @@
 module DeepCover
   module Base
     def running?
-      @started
+      @started ||= false
     end
 
     def start
-      return if @started
+      return if running?
       if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
         # No issues with autoload in jruby, so no need to override it!
       else
@@ -51,16 +51,16 @@ module DeepCover
     def config_changed(what)
       case what
       when :paths
-        warn "Changing DeepCover's paths after starting coverage is highly discouraged" if @started
+        warn "Changing DeepCover's paths after starting coverage is highly discouraged" if running?
         @custom_requirer = nil
       when :tracker_global
-        raise NotImplementedError, "Changing DeepCover's tracker global after starting coverage is not supported" if @started
+        raise NotImplementedError, "Changing DeepCover's tracker global after starting coverage is not supported" if running?
         @coverage = nil
       end
     end
 
     def reset
-      stop if @started
+      stop if running?
       @coverage = @custom_requirer = @autoload_tracker = nil
       config.reset
       self
