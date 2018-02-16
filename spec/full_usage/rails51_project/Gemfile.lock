@@ -4,6 +4,7 @@ PATH
     deep-cover (0.5.2)
       backports (>= 3.11.0)
       binding_of_caller
+      bundler
       highline
       parser (~> 2.5.0)
       pry
