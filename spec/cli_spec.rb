@@ -35,7 +35,7 @@ module DeepCover
 
     describe 'The output of deep-cover' do
       let(:options) { '' }
-      let(:command) { "cd exe; ./deep-cover ../spec/cli_fixtures/#{path} -o=false --reporter=istanbul #{options}" } # --no-bundle when TreeRewriter is merged
+      let(:command) { "cd exe; ./deep-cover ../spec/cli_fixtures/#{path} -o=false --reporter=istanbul --no-bundle #{options}" }
       subject { output }
       describe 'for a simple gem' do
         let(:path) { 'trivial_gem' }
