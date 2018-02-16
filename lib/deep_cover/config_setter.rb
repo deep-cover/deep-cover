@@ -7,6 +7,7 @@ module DeepCover
     end
 
     def config(notify = self)
+      raise ArgumentError, 'config does not accept an argument. Did you mean `configure`?' if block_given?
       @config ||= Config.new(notify)
       config_queue.each { |block| configure(&block) }
       config_queue.clear
