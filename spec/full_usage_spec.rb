@@ -3,12 +3,12 @@
 require 'spec_helper'
 
 RSpec.describe 'DeepCover usage', :slow do
-  it { %w(ruby spec/full_usage/simple/simple.rb).should run_successfully.and_output('Done') }
+  it { %w(ruby simple/simple.rb).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
 
-  it { %w(ruby spec/full_usage/simple/simple.rb takeover).should run_successfully.and_output('Done') }
+  it { %w(ruby simple/simple.rb takeover).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
 
   it do
-    %w(ruby spec/full_usage/with_configure/test.rb).should run_successfully.and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
+    %w(ruby with_configure/test.rb).should run_successfully.from_dir('spec/full_usage').and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
   end
 
   xit 'Can still require gems when there is no bundler' do

@@ -25,7 +25,7 @@ module DeepCover
       end
 
       describe 'for a command with options' do
-        let(:command) { %{exe/deep-cover -o=false exec ruby -Ilib -e 'require "./lib/deep-cover"; puts :hello'} }
+        let(:command) { %{cd exe; ./deep-cover -o=false exec ruby -I../lib -e 'require "../lib/deep-cover"; puts :hello'} }
         it do
           should include 'hello'
           should =~ /No HTML generated/
@@ -35,7 +35,7 @@ module DeepCover
 
     describe 'The output of deep-cover' do
       let(:options) { '' }
-      let(:command) { "exe/deep-cover spec/cli_fixtures/#{path} -o=false --reporter=istanbul #{options}" } # --no-bundle when TreeRewriter is merged
+      let(:command) { "cd exe; ./deep-cover ../spec/cli_fixtures/#{path} -o=false --reporter=istanbul #{options}" } # --no-bundle when TreeRewriter is merged
       subject { output }
       describe 'for a simple gem' do
         let(:path) { 'trivial_gem' }
