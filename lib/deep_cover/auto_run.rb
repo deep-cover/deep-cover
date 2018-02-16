@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../deep_cover'
-require 'pry'
-
 module DeepCover
   module AutoRun
     class Runner
@@ -11,7 +8,6 @@ module DeepCover
       end
 
       def run!
-        @coverage = load_coverage
         after_tests { save }
         self
       end
@@ -23,22 +19,26 @@ module DeepCover
 
       private
 
-      def load_coverage
-        @not_saved = DeepCover.respond_to?(:running?) && DeepCover.running?
-        if @not_saved
-          DeepCover.coverage
-        else
-          Coverage.load(@covered_path, with_trackers: false)
-        end
+      def saved?
+        !(DeepCover.respond_to?(:running?) && DeepCover.running?)
+      end
+
+      def coverage
+        @coverage ||= if saved?
+                        Coverage.load(@covered_path, with_trackers: false)
+                      else
+                        DeepCover.coverage
+                      end
       end
 
       def save
-        @coverage.save(@covered_path) if @not_saved
-        @coverage.save_trackers(@covered_path)
+        require_relative '../deep_cover'
+        coverage.save(@covered_path) unless saved?
+        coverage.save_trackers(@covered_path)
       end
 
       def report(**options)
-        @coverage.report(**options)
+        coverage.report(**options)
       end
 
       def after_tests
