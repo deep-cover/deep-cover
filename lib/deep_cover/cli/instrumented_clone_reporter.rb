@@ -20,8 +20,13 @@ module DeepCover
           @root_path = @root_path.dirname
           raise "Can't find Gemfile" unless @root_path.join('Gemfile').exist?
         end
-        @dest_root = Pathname('~/test_deep_cover').expand_path
-        @dest_root = Pathname.new(Dir.mktmpdir('deep_cover_test')) unless @dest_root.exist?
+        path = Pathname('~/test_deep_cover').expand_path
+        if path.exist?
+          @dest_root = path.join(@source_path.basename)
+          @dest_root.mkpath
+        else
+          @dest_root = Pathname.new(Dir.mktmpdir('deep_cover_test'))
+        end
 
         gem_relative_path = @source_path.relative_path_from(@root_path)
         @main_path = @dest_root.join(gem_relative_path)
