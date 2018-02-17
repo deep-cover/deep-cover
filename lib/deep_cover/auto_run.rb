@@ -60,12 +60,8 @@ module DeepCover
     end
 
     def self.run!(covered_path)
-      @runner ||= Runner.new(covered_path).run!
-      self
-    end
-
-    def self.and_report!(**options)
-      @runner.report!(**options)
+      @runners ||= {}
+      @runners[covered_path] ||= Runner.new(covered_path).run!
     end
   end
 end

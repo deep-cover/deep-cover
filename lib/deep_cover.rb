@@ -18,5 +18,5 @@ end
 if %w[1 t true].include?(ENV['DEEP_COVER'])
   DeepCover.start
   require_relative 'deep_cover/auto_run'
-  DeepCover::AutoRun.run!('.').and_report!(**DeepCover.config)
+  DeepCover::AutoRun.run!('.').report!(**DeepCover.config)
 end
