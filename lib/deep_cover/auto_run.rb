@@ -5,6 +5,7 @@ module DeepCover
     class Runner
       def initialize(covered_path)
         @covered_path = covered_path
+        @saved = !(DeepCover.respond_to?(:running?) && DeepCover.running?)
       end
 
       def run!
@@ -20,7 +21,7 @@ module DeepCover
       private
 
       def saved?
-        !(DeepCover.respond_to?(:running?) && DeepCover.running?)
+        @saved
       end
 
       def coverage
