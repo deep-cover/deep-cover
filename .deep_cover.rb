@@ -2,7 +2,6 @@
 
 # This file is executed only when deep_cover is covering itself.
 
-p "Hello:"
 DeepCover.configure do
   tracker_global '$_dcg'
 end
