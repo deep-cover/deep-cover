@@ -2,6 +2,7 @@
 
 require_relative 'const'
 require_relative 'literals'
+require_relative 'keywords'
 
 module DeepCover
   class Node
@@ -18,7 +19,7 @@ module DeepCover
     Cvasgn = Gvasgn = Ivasgn = Lvasgn = VariableAssignment
 
     class Casgn < Node
-      has_child cbase: [Cbase, Const, nil, Self]
+      has_child cbase: [Cbase, Const, nil, Self, Begin, Kwbegin]
       has_child var_name: Symbol
       has_child value: [Node, nil]
 

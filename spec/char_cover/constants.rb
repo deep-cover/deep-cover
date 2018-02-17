@@ -12,8 +12,12 @@
 
     Float::INFINITY
     ::Float::INFINITY
+    (Float)::INFINITY
+    begin;Float;end::INFINITY
     DeepCover::SpecConstantsSampleScopedAssignation = 1
-    ::DeepCover::SpecConstantsSampleScopedAssignation = 1
+    ::DeepCover::SpecConstantsSampleScopedAssignation2 = 2
+    (DeepCover)::SpecConstantsSampleScopedAssignation3 = 3
+    begin;DeepCover;end::SpecConstantsSampleScopedAssignation4 = 4
     class Float
       self::INFINITY
       self::ANSWER = 42.0
