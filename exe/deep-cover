@@ -2,6 +2,8 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
+
+require_relative '../lib/deep_cover_entry'
 require 'deep_cover/cli/deep_cover'
 
 DeepCover::CLI::DeepCover.go
