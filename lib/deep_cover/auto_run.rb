@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'core_ext/exec_callbacks'
+
 module DeepCover
   module AutoRun
     class Runner
@@ -10,6 +12,7 @@ module DeepCover
 
       def run!
         after_tests { save }
+        ExecCallbacks.before_exec { save }
         self
       end
 
