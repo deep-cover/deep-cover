@@ -24,7 +24,7 @@ module DeepCover
             style: {border_bottom: false, border_top: false, alignment: :right},
         )
         table.align_column 0, :left
-        table.render
+        table.render + "\n\nOverall: #{analysis.overall}%"
       end
 
       def self.report(coverage, **options)

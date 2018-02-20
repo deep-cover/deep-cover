@@ -15,6 +15,12 @@ module DeepCover
       analyser_map.transform_values { |a| a.transform_values(&:stats) }
     end
 
+    def overall
+      return 100 if stat_map.empty?
+      node, branch = Tools.merge(*stat_map.values, :+).values_at(:node, :branch)
+      (node + branch).percent_covered
+    end
+
     def self.template
       {node: Analyser::Node, per_char: Analyser::PerChar, branch: Analyser::Branch}
     end
