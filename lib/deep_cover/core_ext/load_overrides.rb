@@ -14,8 +14,8 @@ module DeepCover
       result = load_without_deep_cover(path) if result.is_a? Symbol
       result
     end
-  end
 
-  extend ModuleOverride
-  override ::Kernel, ::Kernel.singleton_class
+    extend ModuleOverride
+    override ::Kernel, ::Kernel.singleton_class
+  end
 end
