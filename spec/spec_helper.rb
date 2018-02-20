@@ -11,7 +11,6 @@ $SPEC_HELPER_TRIED = true
 require 'bundler/setup'
 require 'pry'
 require 'pathname'
-$LOAD_PATH.unshift('../covered_deep_cover') if ENV['CC']
 require 'deep_cover'
 require_relative 'specs_tools'
 require_relative 'extensions'

@@ -2,7 +2,6 @@
 module DeepCover
   require 'bundler/setup'
 
-  $LOAD_PATH.unshift('../covered_deep_cover') if ENV['CC']
   require 'deep_cover'
   require_relative '../spec/specs_tools'
   require 'deep_cover/cli/debugger'

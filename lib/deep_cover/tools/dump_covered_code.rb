@@ -5,12 +5,6 @@ module DeepCover
     require 'with_progress'
   end
   module Tools::DumpCoveredCode
-    def dump_covered_code_and_save(source_path, dest_path: Dir.mktmpdir)
-      coverage = Coverage.new(tracker_global: '$_sc')
-      dump_covered_code(source_path, coverage: coverage, dest_path: dest_path)
-      coverage.save(dest_path)
-    end
-
     def dump_covered_code(source_path, coverage:, dest_path: Dir.mktmpdir, root_path: source_path)
       source_path = File.join(File.expand_path(source_path), '')
       dest_path = File.join(File.expand_path(dest_path), '')
