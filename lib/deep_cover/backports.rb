@@ -12,7 +12,7 @@ class Pathname
   def binwrite(*args)
     File.binwrite(to_path, *args)
   end unless method_defined? :binwrite
-end
+end # nocov
 require 'backports/2.4.0/false_class/dup'
 require 'backports/2.4.0/true_class/dup'
 require 'backports/2.4.0/hash/transform_values'
