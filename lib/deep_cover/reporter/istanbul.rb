@@ -137,7 +137,7 @@ module DeepCover
                                 path: covered_code.path,
                                 **data.transform_values { |l| convert_list(l) },
                               },
-}
+        }
       end
 
       def report
