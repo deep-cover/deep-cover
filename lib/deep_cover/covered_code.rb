@@ -12,7 +12,8 @@ module DeepCover
     def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULTS[:tracker_global], local_var: '_temp', name: nil)
       raise 'Must provide either path or source' unless path || source
 
-      @buffer = Parser::Source::Buffer.new(path, lineno)
+      @path = path
+      @buffer = Parser::Source::Buffer.new('', lineno)
       @buffer.source = source || File.read(path)
       @tracker_count = 0
       @tracker_global = tracker_global
@@ -22,7 +23,7 @@ module DeepCover
     end
 
     def path
-      @buffer.name || "(source: '#{@buffer.source[0..20]}...')"
+      @path || "(source: '#{@buffer.source[0..20]}...')"
     end
 
     def lineno
@@ -40,7 +41,7 @@ module DeepCover
 
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
       return if has_executed?
-      eval(@covered_source, binding, @buffer.name || '<raw_code>', lineno) # rubocop:disable Security/Eval
+      eval(@covered_source, binding, @path || '<raw_code>', lineno) # rubocop:disable Security/Eval
       self
     end
 
