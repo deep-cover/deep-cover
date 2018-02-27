@@ -24,7 +24,7 @@ module DeepCover
       def peek_result
         raise 'coverage measurement is not enabled' unless running?
         DeepCover.coverage.covered_codes.map do |covered_code|
-          [covered_code.path, covered_code.line_coverage(allow_partial: false)]
+          [covered_code.path.to_s, covered_code.line_coverage(allow_partial: false)]
         end.to_h
       end
     end

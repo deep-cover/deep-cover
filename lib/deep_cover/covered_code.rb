@@ -5,25 +5,21 @@ module DeepCover
   load_parser
 
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :tracker_global, :local_var, :name
+    attr_accessor :covered_source, :buffer, :tracker_global, :local_var, :name, :path
     @@counter = 0
     @@globals = Hash.new { |h, global| h[global] = eval("#{global} ||= {}") } # rubocop:disable Security/Eval
 
     def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULTS[:tracker_global], local_var: '_temp', name: nil)
       raise 'Must provide either path or source' unless path || source
 
-      @path = path
+      @path = path &&= Pathname(path)
       @buffer = Parser::Source::Buffer.new('', lineno)
-      @buffer.source = source || File.read(path)
+      @buffer.source = source || path.read
       @tracker_count = 0
       @tracker_global = tracker_global
       @local_var = local_var
-      @name = (name || (path ? File.basename(path) : '(source)')).to_s
+      @name = (name || (path ? path.basename : '(source)')).to_s
       @covered_source = instrument_source
-    end
-
-    def path
-      @path || "(source: '#{@buffer.source[0..20]}...')"
     end
 
     def lineno
@@ -41,7 +37,7 @@ module DeepCover
 
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
       return if has_executed?
-      eval(@covered_source, binding, @path || '<raw_code>', lineno) # rubocop:disable Security/Eval
+      eval(@covered_source, binding, (@path || '<raw_code>').to_s, lineno) # rubocop:disable Security/Eval
       self
     end
 
