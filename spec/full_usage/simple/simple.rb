@@ -49,10 +49,13 @@ begin
 
   expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb from_autoload.rb)
   if $executed_files != expected_executed_files
-    fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files}\nGot:      #{$executed_files}"
+    fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files.inspect}\nGot #{$executed_files.inspect}"
   end
+
   covered = DeepCover.coverage.covered_codes.map(&:path).map(&:basename).map(&:to_s)
-  fail_test("Covered: #{covered.inspect}") unless covered == expected_executed_files
+  if covered != expected_executed_files
+    fail_test("Didn't cover all executed files.\nExpected: #{expected_executed_files.inspect}\nGot: #{covered.inspect}")
+  end
 
 
 
