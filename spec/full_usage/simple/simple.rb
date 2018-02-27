@@ -29,15 +29,17 @@ begin
 
   # Load deep_cover
   $LOAD_PATH << File.absolute_path('../../../lib', absolute_dir)
-  if ARGV[0] == 'takeover'
+  cov = if ARGV[0] == 'takeover'
     require 'deep_cover/builtin_takeover'
-    Coverage.start
+    Coverage
   elsif ARGV[0].nil?
     require 'deep_cover'
-    DeepCover.start
+    DeepCover
   else
     raise "Unsupported ARGV[0]: #{ARGV[0].inspect}"
   end
+  DeepCover.configure { paths '.' }
+  cov.start
 
   test_require('beside_simple')
   test_require('./relative_beside_simple')
@@ -49,6 +51,8 @@ begin
   if $executed_files != expected_executed_files
     fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files}\nGot:      #{$executed_files}"
   end
+  covered = DeepCover.coverage.covered_codes.map(&:path).map(&:basename).map(&:to_s)
+  fail_test("Covered: #{covered.inspect}") unless covered == expected_executed_files
 
 
 
