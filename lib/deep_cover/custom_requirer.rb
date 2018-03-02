@@ -146,16 +146,14 @@ module DeepCover
         end
         throw :use_fallback, :cover_failed
       end
-      DeepCover.autoload_tracker.wrap_require(path) do
-        begin
-          covered_code.execute_code
-        rescue ::SyntaxError => e
-          warn ["DeepCover is getting confused with the file #{path} and it won't be instrumented.",
-                'Please report this error and provide the source code around the following:',
-                e,
-               ].join("\n")
-          throw :use_fallback, :cover_failed
-        end
+      begin
+        covered_code.execute_code
+      rescue ::SyntaxError => e
+        warn ["DeepCover is getting confused with the file #{path} and it won't be instrumented.",
+              'Please report this error and provide the source code around the following:',
+              e,
+             ].join("\n")
+        throw :use_fallback, :cover_failed
       end
       covered_code
     end
