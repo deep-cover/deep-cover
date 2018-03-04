@@ -9,7 +9,8 @@ module DeepCover
     def start
       return if running?
       if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-        # No issues with autoload in jruby, so no need to override it!
+        # Autoloaded files are not supported on jruby. We need to use binding_of_caller
+        # And that appears to be unavailable in jruby.
       else
         require_relative 'core_ext/autoload_overrides'
         AutoloadOverride.active = true
