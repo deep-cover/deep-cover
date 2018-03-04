@@ -13,13 +13,27 @@
 # we remove the autoloads from the constants first.
 
 require 'binding_of_caller'
+require 'tempfile'
 
 module DeepCover
+  module AutoloadInterceptor
+    def self.autoload_interceptor_for(path)
+      # Need to store all the tempfiles so that they are not GCed, which would delete the files themselves.
+      @@interceptor_files ||= []
+      new_file = Tempfile.new([File.basename(path), '.rb'])
+      @@interceptor_files << new_file
+      new_file.write("# Intermediary file for ruby's autoload made by deepcover\nrequire #{path.to_s.inspect}")
+      new_file.close
+
+      new_file.path
+    end
+  end
+
   module KernelAutoloadOverride
     def autoload(name, path)
       mod = binding.of_caller(1).eval('Module.nesting').first || Object
-      # TODO: apply new way of handling
-      mod.autoload_without_deep_cover(name, path)
+      interceptor_path = AutoloadInterceptor.autoload_interceptor_for(path)
+      mod.autoload_without_deep_cover(name, interceptor_path)
     end
 
     extend ModuleOverride
@@ -28,8 +42,8 @@ module DeepCover
 
   module ModuleAutoloadOverride
     def autoload(name, path)
-      # TODO: apply new way of handling
-      autoload_without_deep_cover(name, path)
+      interceptor_path = AutoloadInterceptor.autoload_interceptor_for(path)
+      autoload_without_deep_cover(name, interceptor_path)
     end
 
     extend ModuleOverride
