@@ -36,7 +36,6 @@ module DeepCover
     end
 
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
-      return if has_executed?
       eval(@covered_source, binding, (@path || '<raw_code>').to_s, lineno) # rubocop:disable Security/Eval
       self
     end
@@ -111,10 +110,6 @@ module DeepCover
         end
       end
       rewriter.process
-    end
-
-    def has_executed?
-      global[nb] != nil
     end
 
     def freeze

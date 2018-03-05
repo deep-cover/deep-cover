@@ -4,7 +4,6 @@ module DeepCover
   module Coverage::Istanbul
     def to_istanbul(**options)
       map do |covered_code|
-        next {} unless covered_code.has_executed?
         covered_code.to_istanbul(**options)
       end.inject(:merge)
     end
