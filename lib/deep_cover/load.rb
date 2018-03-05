@@ -5,7 +5,7 @@ module DeepCover
     AUTOLOAD = %i[analyser auto_run config
                   coverage covered_code custom_requirer
                   flag_comment_associator memoize module_override node
-                  problem_with_diagnostic reporter
+                  problem_with_diagnostic reporter tracker_bucket tracker_list
                  ]
 
     def load_absolute_basics

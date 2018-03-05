@@ -5,9 +5,7 @@ module DeepCover
   load_parser
 
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :tracker_global, :local_var, :name, :path
-    @@counter = 0
-    @@globals = Hash.new { |h, global| h[global] = eval("#{global} ||= {}") } # rubocop:disable Security/Eval
+    attr_accessor :covered_source, :buffer, :tracker_list, :local_var, :name, :path
 
     def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULTS[:tracker_global], local_var: '_temp', name: nil)
       raise 'Must provide either path or source' unless path || source
@@ -16,7 +14,7 @@ module DeepCover
       @buffer = Parser::Source::Buffer.new('', lineno)
       @buffer.source = source || path.read
       @tracker_count = 0
-      @tracker_global = tracker_global
+      @tracker_list = TrackerList.new(TrackerBucket[tracker_global])
       @local_var = local_var
       @name = (name || (path ? path.basename : '(source)')).to_s
       @covered_source = instrument_source
@@ -54,25 +52,6 @@ module DeepCover
 
     def char_cover(**options)
       Analyser::PerChar.new(self, **options).results
-    end
-
-    def nb
-      @nb ||= (@@counter += 1)
-    end
-
-    # Returns a range of tracker ids
-    def allocate_trackers(nb_needed)
-      prev = @tracker_count
-      @tracker_count += nb_needed if nb_needed > 0 # Avoid error if frozen and called with 0.
-      prev...@tracker_count
-    end
-
-    def tracker_source(tracker_id)
-      "#{tracker_global}[#{nb}][#{tracker_id}]+=1"
-    end
-
-    def trackers_setup_source
-      "(#{tracker_global}||={})[#{nb}]||=Array.new(#{@tracker_count},0)"
     end
 
     def tracker_hits(tracker_id)
@@ -124,12 +103,6 @@ module DeepCover
       %{#<DeepCover::CoveredCode "#{name}">}
     end
     alias_method :to_s, :inspect
-
-    protected
-
-    def global
-      @@globals[tracker_global]
-    end
 
     private
 
