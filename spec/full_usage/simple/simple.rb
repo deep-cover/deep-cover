@@ -47,7 +47,10 @@ begin
   autoload :ToAutoload, 'from_autoload'
   _foo = ::ToAutoload
 
-  expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb from_autoload.rb)
+  test_require('do_autoload_from_covered')
+
+  expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb from_autoload.rb
+                               do_autoload_from_covered.rb autoloaded_from_covered.rb)
   if $executed_files != expected_executed_files
     fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files.inspect}\nGot #{$executed_files.inspect}"
   end
