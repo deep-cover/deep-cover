@@ -14,10 +14,6 @@ module DeepCover
       @covered_code_index.values
     end
 
-    def reset
-      @covered_code_index = {}
-    end
-
     def line_coverage(filename, **options)
       covered_code(filename).line_coverage(**options)
     end
