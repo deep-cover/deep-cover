@@ -12,6 +12,7 @@ module DeepCover
       source: nil,
       lineno: 1,
       tracker_global: DEFAULTS[:tracker_global],
+      tracker_list: TrackerList.new(TrackerBucket[tracker_global]),
       local_var: '_temp'
     )
       raise 'Must provide either path or source' unless path || source
@@ -20,7 +21,7 @@ module DeepCover
       @buffer = Parser::Source::Buffer.new('', lineno)
       @buffer.source = source || path.read
       @tracker_count = 0
-      @tracker_list = TrackerList.new(TrackerBucket[tracker_global])
+      @tracker_list = tracker_list
       @local_var = local_var
       @covered_source = instrument_source
     end
