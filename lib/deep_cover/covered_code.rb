@@ -7,7 +7,14 @@ module DeepCover
   class CoveredCode
     attr_accessor :covered_source, :buffer, :tracker_list, :local_var, :name, :path
 
-    def initialize(path: nil, source: nil, lineno: 1, tracker_global: DEFAULTS[:tracker_global], local_var: '_temp', name: nil)
+    def initialize(
+      path: nil,
+      source: nil,
+      lineno: 1,
+      tracker_global: DEFAULTS[:tracker_global],
+      local_var: '_temp',
+      name: nil
+    )
       raise 'Must provide either path or source' unless path || source
 
       @path = path &&= Pathname(path)
