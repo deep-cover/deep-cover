@@ -30,11 +30,11 @@ module DeepCover
           class_eval <<-EVAL, __FILE__, __LINE__ + 1
             module #{const_name}                                     # module RewriteHandler
               module ClassMethods                                    #   module ClassMethods
-                def has_child(#{action}: nil, **h)                   #     def has_child(rewrite: nil, **h)
-                  name, _types = h.first                             #       name, _types = h.first
+                def has_child(#{action}: nil, **args)                #     def has_child(rewrite: nil, **args)
+                  name, _types = args.first                          #       name, _types = args.first
                   define_child_handler(#{template.inspect},          #       define_child_handler('rewrite_%{child}',
                     name, #{action})                                 #         name, rewrite)
-                  super(**h)                                         #       super(**h)
+                  super(**args)                                      #       super(**args)
                 end                                                  #     end
               end                                                    #   end
 

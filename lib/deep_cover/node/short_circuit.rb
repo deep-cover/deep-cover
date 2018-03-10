@@ -18,8 +18,8 @@ module DeepCover
         ]
       end
 
-      def branches_summary(of = branches)
-        of.map do |jump|
+      def branches_summary(of_branches = branches)
+        of_branches.map do |jump|
           if jump == conditional
             'left-hand side'
           else

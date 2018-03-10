@@ -33,8 +33,8 @@ module DeepCover
         [true_branch, false_branch]
       end
 
-      def branches_summary(of = branches)
-        of.map do |jump|
+      def branches_summary(of_branches = branches)
+        of_branches.map do |jump|
           "#{'implicit ' if jump.is_a?(EmptyBody) && !has_else?}#{jump == false_branch ? 'falsy' : 'truthy'} branch"
         end.join(' and ')
       end

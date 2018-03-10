@@ -22,9 +22,9 @@ module DeepCover
       end
 
       module ClassMethods
-        def has_child(rest_: false, refine_: false, **h)
-          raise "Needs exactly one custom named argument, got #{h.size}" if h.size != 1
-          name, types = h.first
+        def has_child(rest_: false, refine_: false, **args)
+          raise "Needs exactly one custom named argument, got #{args.size}" if args.size != 1
+          name, types = args.first
           raise TypeError, "Expect a Symbol for name, got a #{name.class} (#{name.inspect})" unless name.is_a?(Symbol)
           update_children_const(name, rest: rest_) unless refine_
           define_accessor(name) unless refine_
@@ -32,15 +32,15 @@ module DeepCover
           self
         end
 
-        def has_extra_children(**h)
-          has_child(**h, rest_: true)
+        def has_extra_children(**args)
+          has_child(**args, rest_: true)
         end
 
-        def refine_child(child_name = nil, **h)
+        def refine_child(child_name = nil, **args)
           if child_name
-            h = {child_name => self::CHILDREN_TYPES.fetch(child_name), **h}
+            args = {child_name => self::CHILDREN_TYPES.fetch(child_name), **args}
           end
-          has_child(**h, refine_: true)
+          has_child(**args, refine_: true)
         end
 
         def child_index_to_name(index, nb_children)

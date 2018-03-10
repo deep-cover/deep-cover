@@ -89,10 +89,10 @@ module DeepCover
         whens.map(&:body) << self.else
       end
 
-      def branches_summary(of = branches)
+      def branches_summary(of_branches = branches)
         texts = []
-        n = of.size
-        if of.include? self.else
+        n = of_branches.size
+        if of_branches.include? self.else
           texts << "#{'implicit ' unless has_else?}else"
           n -= 1
         end

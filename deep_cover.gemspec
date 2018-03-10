@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'deep_cover/version'
 
@@ -51,5 +51,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'psych', '>= 2.0'
   spec.add_development_dependency 'rake', '~> 12.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '0.52.1' # About every single release breaks something
+  spec.add_development_dependency 'rubocop', '0.53.0' # About every single release breaks something
 end

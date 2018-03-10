@@ -41,12 +41,12 @@ module DeepCover
         # same as:
         #   has_child foo: [NodeClass, ...], remap: {type: NodeClass, ...}
         #
-        def has_child(remap: nil, **h)
-          name, types = h.first
+        def has_child(remap: nil, **args)
+          name, types = args.first
           if types.is_a? Hash
             raise 'Use either remap or a hash as type but not both' if remap
             remap = types
-            h[name] = types = []
+            args[name] = types = []
           end
           if remap.is_a? Hash
             type_map = remap
@@ -57,7 +57,7 @@ module DeepCover
             end
             types.concat(type_map.values).uniq!
           end
-          super(**h, remap: remap)
+          super(**args, remap: remap)
         end
       end
     end

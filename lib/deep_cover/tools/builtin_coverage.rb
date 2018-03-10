@@ -2,22 +2,22 @@
 
 module DeepCover
   module Tools::BuiltinCoverage
-    def builtin_coverage(source, fn, lineno)
+    def builtin_coverage(source, filename, lineno)
       require 'coverage'
-      fn = File.absolute_path(File.expand_path(fn))
+      filename = File.absolute_path(File.expand_path(filename))
       ::Coverage.start
       Tools.silence_warnings do
-        execute_sample -> { run_with_line_coverage(source, fn, lineno) }
+        execute_sample -> { run_with_line_coverage(source, filename, lineno) }
       end
-      unshift_coverage(::Coverage.result.fetch(fn), lineno)
+      unshift_coverage(::Coverage.result.fetch(filename), lineno)
     end
 
     if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
-      def run_with_line_coverage(source, fn = nil, lineno = 1)
+      def run_with_line_coverage(source, filename = nil, lineno = 1)
         source = shift_source(source, lineno)
-        Object.to_java.getRuntime.executeScript(source, fn)
+        Object.to_java.getRuntime.executeScript(source, filename)
       end
     else
       # In ruby 2.0 and 2.1, using 2, 3 or 4 as lineno with RubyVM::InstructionSequence.compile
@@ -32,9 +32,9 @@ module DeepCover
 
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
-      def run_with_line_coverage(source, fn = nil, lineno = 1)
+      def run_with_line_coverage(source, filename = nil, lineno = 1)
         source = shift_source(source, lineno)
-        RubyVM::InstructionSequence.compile(source, fn).eval
+        RubyVM::InstructionSequence.compile(source, filename).eval
       end
     end
 

@@ -76,7 +76,7 @@ module DeepCover
       has_child actual_send: {safe_send: Send},
                 flow_entry_count: :conditional_tracker_hits
 
-      def initialize(base_node, base_children: base_node.children, **)
+      def initialize(base_node, base_children: base_node.children, **) # rubocop:disable Naming/UncommunicativeMethodParamName [#5436]
         send_without_receiver = base_node.updated(:safe_send, [nil, *base_node.children.drop(1)])
         base_children = [base_children.first, send_without_receiver]
         super
@@ -98,8 +98,8 @@ module DeepCover
         ]
       end
 
-      def branches_summary(of = branches)
-        of.map do |jump|
+      def branches_summary(of_branches = branches)
+        of_branches.map do |jump|
           jump == actual_send ? 'safe send' : 'nil shortcut'
         end.join(' and ')
       end

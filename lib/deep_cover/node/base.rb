@@ -52,18 +52,18 @@ module DeepCover
     end
 
     # Shortcut to access children
-    def [](v)
-      if v.is_a?(Integer)
-        children.fetch(v)
+    def [](lookup)
+      if lookup.is_a?(Integer)
+        children.fetch(lookup)
       else
-        found = find_all(v)
+        found = find_all(lookup)
         case found.size
         when 1
           found.first
         when 0
-          raise "No children of type #{v}"
+          raise "No children of type #{lookup}"
         else
-          raise "Ambiguous lookup #{v}, found #{found}."
+          raise "Ambiguous lookup #{lookup}, found #{found}."
         end
       end
     end

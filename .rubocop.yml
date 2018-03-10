@@ -127,7 +127,10 @@ Style/StringLiterals:
 Style/TrailingCommaInArguments:
   Enabled: false
 
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
 
 Naming/VariableNumber:
@@ -236,3 +239,11 @@ Style/EvalWithLocation:
 
 Lint/BooleanSymbol:
   Enabled: false
+
+Naming/UncommunicativeMethodParamName:
+  Exclude:
+    - spec/**/*
+
+Layout/SpaceInsideReferenceBrackets:
+  Exclude:
+    - spec/**/*

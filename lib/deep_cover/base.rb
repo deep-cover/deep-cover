@@ -3,7 +3,7 @@
 module DeepCover
   module Base
     def running?
-      @started ||= false
+      @started ||= false # rubocop:disable Naming/MemoizedInstanceVariableName [#5648]
     end
 
     def start
