@@ -7,7 +7,7 @@ module DeepCover
               can_be_empty: -> { Parser::Source::Range.new(covered_code.buffer, 0, 0) },
               is_statement: true,
               rewrite: -> {
-                "#{tracker_list.setup_source};%{root_tracker};%{local}=nil;%{node}"
+                "#{tracker_storage.setup_source};%{root_tracker};%{local}=nil;%{node}"
               }
     attr_reader :covered_code
     alias_method :flow_entry_count, :root_tracker_hits

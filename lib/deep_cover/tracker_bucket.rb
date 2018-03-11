@@ -3,7 +3,9 @@
 module DeepCover
   bootstrap
 
-  # A holder for TrackerLists, using some `global_name`.
+  require_relative 'tracker_storage'
+
+  # A holder for TrackerStorages, using some `global_name`.
   class TrackerBucket
     @@index = {}
 
@@ -40,8 +42,8 @@ module DeepCover
       @global_name
     end
 
-    # For use by TrackerList only
-    def allocate_tracker_list(index = nil)
+    # For use by TrackerStorage only
+    def allocate_tracker_storage(index = nil)
       index ||= @global.size
       [@global[index] ||= [], index]
     end

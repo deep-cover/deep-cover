@@ -5,14 +5,14 @@ module DeepCover
   load_parser
 
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :tracker_list, :local_var, :path
+    attr_accessor :covered_source, :buffer, :tracker_storage, :local_var, :path
 
     def initialize(
       path: nil,
       source: nil,
       lineno: 1,
       tracker_global: DEFAULTS[:tracker_global],
-      tracker_list: TrackerList.new(TrackerBucket[tracker_global]),
+      tracker_storage: TrackerBucket::TrackerStorage.new(TrackerBucket[tracker_global]),
       local_var: '_temp'
     )
       raise 'Must provide either path or source' unless path || source
@@ -21,7 +21,7 @@ module DeepCover
       @buffer = Parser::Source::Buffer.new('', lineno)
       @buffer.source = source || path.read
       @tracker_count = 0
-      @tracker_list = tracker_list
+      @tracker_storage = tracker_storage
       @local_var = local_var
       @covered_source = instrument_source
     end
