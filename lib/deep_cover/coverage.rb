@@ -18,7 +18,7 @@ module DeepCover
     end
 
     def covered_codes
-      @covered_code_index.values
+      each.to_a
     end
 
     def line_coverage(filename, **options)
@@ -35,7 +35,7 @@ module DeepCover
 
     def each
       return to_enum unless block_given?
-      @covered_code_index.each_value { |covered_code| yield covered_code }
+      @tracker_storage_per_path.each_key { |path| yield covered_code(path) }
       self
     end
 
@@ -86,6 +86,17 @@ module DeepCover
 
     def analysis(**options)
       Analysis.new(covered_codes, options)
+    end
+
+    private
+
+    def marshal_dump
+      {options: @options, tracker_storage_per_path: @tracker_storage_per_path}
+    end
+
+    def marshal_load(options:, tracker_storage_per_path:)
+      initialize(**options)
+      @tracker_storage_per_path = tracker_storage_per_path
     end
   end
 end
