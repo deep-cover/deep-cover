@@ -9,9 +9,12 @@ module DeepCover
   class Coverage
     include Enumerable
 
+    attr_reader :tracker_storage_per_path
+
     def initialize(**options)
       @covered_code_index = {}
       @options = options
+      @tracker_storage_per_path = TrackerStoragePerPath.new(TrackerBucket[tracker_global])
     end
 
     def covered_codes
@@ -24,7 +27,10 @@ module DeepCover
 
     def covered_code(path, **options)
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
-      @covered_code_index[path] ||= CoveredCode.new(path: path, **options, **@options)
+      @covered_code_index[path] ||= CoveredCode.new(path: path,
+                                                    tracker_storage: @tracker_storage_per_path[path],
+                                                    **options,
+                                                    **@options)
     end
 
     def each
