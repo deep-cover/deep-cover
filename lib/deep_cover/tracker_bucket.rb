@@ -25,6 +25,10 @@ module DeepCover
       private :_load, :new
     end
 
+    def inspect
+      %{#<DeepCover::TrackerBucket "#{@global_name}">}
+    end
+
     private
 
     def initialize(global_name)
