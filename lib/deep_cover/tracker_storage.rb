@@ -13,17 +13,19 @@ module DeepCover
 
       attr_reader :bucket
 
-      def initialize(bucket, index: nil, size: 0)
+      def initialize(bucket, index: nil)
         @bucket = bucket
+        @allocated = 0
         @array, @index = @bucket.send(:allocate_tracker_storage, index)
-        allocate_trackers(size - @array.size)
       end
 
       # Returns a range of tracker ids
       def allocate_trackers(nb_needed)
-        prev = size
-        @array.concat(Array.new(nb_needed, 0)) if nb_needed > 0 # Allow nb_needed <= 0
-        prev...size
+        prev = @allocated
+        @allocated += nb_needed
+        missing = @allocated - @array.size
+        @array.concat(Array.new(missing, 0)) if missing > 0
+        prev...@allocated
       end
 
       def setup_source
@@ -48,11 +50,12 @@ module DeepCover
       private
 
       def marshal_dump
-        [@bucket, {index: @index, size: size}]
+        {bucket: @bucket, index: @index, size: @array.size}
       end
 
-      def marshal_load(args)
-        initialize(*args)
+      def marshal_load(bucket:, index:, size:)
+        initialize(bucket, index: index)
+        allocate_trackers(size - @array.size)
       end
     end
   end
