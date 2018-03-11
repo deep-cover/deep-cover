@@ -76,7 +76,9 @@ module DeepCover
 
       def merge_trackers(hash, to_merge)
         hash.merge!(to_merge) do |_key, current, to_add|
-          unless current.empty? || current.size == to_add.size
+          next to_add if current.empty?
+          next current if to_add.empty?
+          unless current.size == to_add.size
             warn "Merging trackers of different sizes: #{current.size} vs #{to_add.size}"
           end
           to_add.zip(current).map { |a, b| a + b }
