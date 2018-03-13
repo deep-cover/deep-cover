@@ -14,8 +14,9 @@ module DeepCover
 
       def load(with_trackers: true)
         saved?
-        load_trackers if with_trackers
-        load_coverage
+        cov = load_coverage
+        cov.tracker_storage_per_path.tracker_hits_per_path = load_trackers if with_trackers
+        cov
       end
 
       def save(coverage)
@@ -24,17 +25,12 @@ module DeepCover
         save_coverage(coverage)
       end
 
-      def save_trackers(global)
+      def save_trackers(tracker_hits_per_path)
         saved?
-        trackers = eval(global) # rubocop:disable Security/Eval
-        # Some testing involves more than one process, some of which don't run any of our covered code.
-        # Don't save anything if that's the case
-        return if trackers.nil?
         basename = format(TRACKER_TEMPLATE, unique: SecureRandom.urlsafe_base64)
         dir_path.join(basename).binwrite(Marshal.dump(
                                              version: DeepCover::VERSION,
-                                             global: global,
-                                             trackers: trackers,
+                                             tracker_hits_per_path: tracker_hits_per_path,
         ))
       end
 
@@ -64,26 +60,16 @@ module DeepCover
         end
       end
 
+      # returns a TrackerHitsPerPath
       def load_trackers
-        tracker_files.each do |full_path|
-          Marshal.load(full_path.binread).tap do |version:, global:, trackers:|
+        tracker_files.map do |full_path|
+          Marshal.load(full_path.binread).yield_self do |version:, tracker_hits_per_path:|
             raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
-            merge_trackers(eval("#{global} ||= {}"), trackers) # rubocop:disable Security/Eval
+            tracker_hits_per_path
           end
-        end
+        end.inject(:merge!)
       end
       # rubocop:enable Security/MarshalLoad
-
-      def merge_trackers(hash, to_merge)
-        hash.merge!(to_merge) do |_key, current, to_add|
-          next to_add if current.empty?
-          next current if to_add.empty?
-          unless current.size == to_add.size
-            warn "Merging trackers of different sizes: #{current.size} vs #{to_add.size}"
-          end
-          to_add.zip(current).map { |a, b| a + b }
-        end
-      end
 
       def tracker_files
         basename = format(TRACKER_TEMPLATE, unique: '*')

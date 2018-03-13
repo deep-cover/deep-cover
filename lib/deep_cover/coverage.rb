@@ -76,7 +76,7 @@ module DeepCover
     end
 
     def save_trackers(dest_path, dirname = 'deep_cover')
-      Persistence.new(dest_path, dirname).save_trackers(tracker_global)
+      Persistence.new(dest_path, dirname).save_trackers(@tracker_storage_per_path.tracker_hits_per_path)
       self
     end
 
