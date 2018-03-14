@@ -26,6 +26,10 @@ module DeepCover
         is_a?(Node::Send) && RAISING_MESSAGES.include?(message) && receiver == nil
       end
 
+      def is_warn?
+        is_a?(Node::Send) && message == :warn
+      end
+
       def is_default_argument?
         parent.is_a?(Node::Optarg)
       end

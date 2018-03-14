@@ -67,6 +67,10 @@ module DeepCover
           foo(42) if false
           RUBY
 
+      it { :warn.should ignore_nodes("warn 'yo'", "'yo'", of: <<-RUBY) }
+          warn 'yo' if 1 + 1 == 3
+          RUBY
+
       it { nil.should ignore_nodes(42, 'foo(42)', of: <<-RUBY) }
           if false
             foo(42) # nocov
