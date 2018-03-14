@@ -52,8 +52,8 @@ module DeepCover
     end
 
     describe :ignore_uncovered do
-      it { :default_argument.should ignore_nodes(1, 2, 3, '2 + 3', of: <<-RUBY) }
-          def foo(foo = 1, bar = 2 + 3, baz = 4)
+      it { :default_argument.should ignore_nodes(1, [], of: <<-RUBY) }
+          def foo(foo = 1, bar = [], baz = 4)
             :ok
           end
           foo(:a, :b)

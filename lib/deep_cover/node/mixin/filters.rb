@@ -31,7 +31,7 @@ module DeepCover
       end
 
       def is_default_argument?
-        parent.is_a?(Node::Optarg)
+        parent.is_a?(Node::Optarg) && simple_literal?
       end
 
       def is_case_implicit_else?
@@ -40,7 +40,7 @@ module DeepCover
 
       def is_trivial_if?
         # Supports only node being a branch or the fork itself
-        parent.is_a?(Node::If) && parent.condition.is_a?(Node::SingletonLiteral)
+        parent.is_a?(Node::If) && parent.condition.simple_literal?
       end
     end
   end
