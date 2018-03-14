@@ -24,5 +24,16 @@ module DeepCover
       it { node[Node::Send].should equal node[1] }
       it { node[:str].value.should == 'hello' }
     end
+
+    describe :simple_literal? do
+      # rubocop:disable Lint/PercentStringArray
+      %w<nil true false 42 4.2 [] {} "hello" :world /foo/i>.each do |simple|
+        it { Node[simple].should be_simple_literal }
+      end
+      %w<2*21 [42] {a:1} "hello#{42}" :"worl#{:d}" /foo#{42}/>.each do |not_so_simple| # rubocop:disable Lint/InterpolationCheck
+        it { Node[not_so_simple].should_not be_simple_literal }
+      end
+      # rubocop:enable Lint/PercentStringArray
+    end
   end
 end

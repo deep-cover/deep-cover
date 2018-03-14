@@ -4,7 +4,14 @@ require_relative 'splat'
 
 module DeepCover
   class Node
+    module SimpleIfEmpty
+      def simple_literal?
+        children.empty?
+      end
+    end
+
     class Array < Node
+      include SimpleIfEmpty
       has_extra_children elements: Node
       executed_loc_keys :begin, :end
     end
@@ -16,6 +23,7 @@ module DeepCover
     end
 
     class Hash < Node
+      include SimpleIfEmpty
       has_extra_children elements: [Pair, Kwsplat]
       executed_loc_keys :begin, :end
     end

@@ -2,19 +2,30 @@
 
 require_relative 'begin'
 require_relative 'variables'
+require_relative 'collections'
 module DeepCover
   class Node
-    # Singletons
-    class SingletonLiteral < Node
+    def simple_literal?
+      false
+    end
+
+    class StaticLiteral < Node
       executed_loc_keys :expression
+
+      def simple_literal?
+        true
+      end
+    end
+
+    # Singletons
+    class SingletonLiteral < StaticLiteral
     end
     True = False = Nil = Self = SingletonLiteral
 
     # Atoms
     def self.atom(type)
-      ::Class.new(Node) do
+      ::Class.new(StaticLiteral) do
         has_child value: type
-        executed_loc_keys :expression
       end
     end
     Sym = atom(::Symbol)
@@ -22,12 +33,11 @@ module DeepCover
     Float = atom(::Float)
     Complex = atom(::Complex)
     Rational = atom(::Rational)
-    class Regopt < Node
+    class Regopt < StaticLiteral
       has_extra_children options: [::Symbol]
-      executed_loc_keys :expression
     end
 
-    class Str < Node
+    class Str < StaticLiteral
       has_child value: ::String
 
       def executed_loc_keys
@@ -43,8 +53,17 @@ module DeepCover
       end
     end
 
+    # (Potentially) dynamic
+    module SimpleIfItsChildrenAre
+      def simple_literal?
+        children.all?(&:simple_literal?)
+      end
+    end
+
     # Di-atomic
     class Range < Node
+      include SimpleIfItsChildrenAre
+
       has_child from: Node
       has_child to: Node
     end
@@ -67,6 +86,8 @@ module DeepCover
     DynamicLiteral.has_evaluated_segments
 
     class Regexp < Node
+      include SimpleIfItsChildrenAre
+
       has_evaluated_segments
       has_child option: Regopt
     end
