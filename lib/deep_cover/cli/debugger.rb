@@ -59,7 +59,7 @@ module DeepCover
             number_lines(lines, lineno: @lineno)
           end
         rescue Exception => e
-          output { "Can't run coverage: #{e.class.name}: #{e}\n#{e.backtrace.join("\n")}" }
+          output { "Can't run coverage: #{e.class}: #{e}\n#{e.backtrace.join("\n")}" }
           @failed = true
         end
       end
@@ -100,7 +100,7 @@ module DeepCover
         execute_sample(covered_code)
         # output { trace_counts }  # Keep for low-level debugging purposes
       rescue Exception => e
-        output { "Can't `execute_sample`:#{e.class.name}: #{e}\n#{e.backtrace.join("\n")}" }
+        output { "Can't `execute_sample`:#{e.class}: #{e}\n#{e.backtrace.join("\n")}" }
         @failed = true
       end
 

@@ -38,7 +38,7 @@ module DeepCover
       lines.concat(source_lines.map { |line| "   #{line}" })
       if original_exception
         lines << 'Original exception:'
-        lines << "  #{original_exception.class.name}: #{original_exception.message}"
+        lines << "  #{original_exception.class}: #{original_exception.message}"
         backtrace = Tools.truncate_backtrace(original_exception)
         lines.concat(backtrace.map { |line| "    #{line}" })
       end
