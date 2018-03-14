@@ -20,6 +20,13 @@ multitask default: RUBY_VERSION > '2.1' ? [:rubocop, :spec] : :spec
 multitask 'test:all' => RUBY_VERSION > '2.1' ? [:rubocop, 'spec:all'] : 'spec:all'
 
 namespace :dev do
+  desc 'Self cover'
+  task :cov do
+    command = "exe/deep-cover . --no-bundle --command 'rake spec:all'"
+    puts command
+    system command
+  end
+
   desc 'Setup extra things required to run the spec suite'
   task :install do
     commands = []
