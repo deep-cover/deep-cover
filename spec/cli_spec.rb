@@ -63,6 +63,7 @@ module DeepCover
           should include '1 example, 0 failures'
           should include 'another_component'
           should include '2 examples, 1 failure'
+          should include ' another_component_gem/lib/another_component_gem '
         end
       end
 
