@@ -2,9 +2,9 @@
 
 module DeepCover
   module Reporter
-    module Util
+    class Tree
       # Utility functions to deal with trees
-      module Tree
+      module Util
         extend self
 
         # Same as populate, but also yields data, which is either the analysis data (for leaves)

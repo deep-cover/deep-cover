@@ -13,7 +13,7 @@ module DeepCover
       include HTML::Base
 
       def stats_to_data
-        Util::Tree.populate_stats(analysis) do |full_path, partial_path, data, children|
+        Tree::Util.populate_stats(analysis) do |full_path, partial_path, data, children|
           data = transform_data(data)
           if children.empty?
             {

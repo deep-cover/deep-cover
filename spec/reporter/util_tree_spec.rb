@@ -4,8 +4,8 @@ require 'spec_helper'
 
 module DeepCover
   module Reporter
-    RSpec.describe Util::Tree do
-      include Util::Tree
+    RSpec.describe Tree::Util do
+      include Tree::Util
       it { path_to_partial_paths('a/b/c').should == %w[a b c] }
       it { list_to_twig(%i[a b c]).should == {a: {b: {c: {}}}} }
       it {
