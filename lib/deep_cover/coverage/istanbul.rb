@@ -4,7 +4,7 @@ module DeepCover
   module Coverage::Istanbul
     def to_istanbul(**options)
       map do |covered_code|
-        covered_code.to_istanbul(**options)
+        Reporter::Istanbul.new(covered_code, **options).convert
       end.inject(:merge)
     end
 

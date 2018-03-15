@@ -53,10 +53,6 @@ module DeepCover
       Analyser::PerLine.new(self, **options).results
     end
 
-    def to_istanbul(**options)
-      Reporter::Istanbul.new(self, **options).convert
-    end
-
     def char_cover(**options)
       Analyser::PerChar.new(self, **options).results
     end
