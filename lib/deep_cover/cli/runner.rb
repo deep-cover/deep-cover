@@ -2,7 +2,8 @@
 
 module DeepCover
   require 'slop'
-  require_relative '../basics'
+  require_relative '../../deep-cover'
+  bootstrap
 
   module CLI
     module SlopExtension
@@ -54,13 +55,13 @@ module DeepCover
                       '   or  deep-cover [options] [path/to/app/or/gem]',
                      ].join("\n")
           o.separator ''
-          o.string '-o', '--output', 'output folder', default: DEFAULTS[:output]
-          o.string '--reporter', 'reporter', default: DEFAULTS[:reporter]
+          o.string '-o', '--output', 'output folder', default: DeepCover.config.output
+          o.string '--reporter', 'reporter', default: DeepCover.config.reporter
           o.bool '--open', 'open the output coverage', default: CLI_DEFAULTS[:open]
 
           o.separator 'Coverage options'
           @ignore_uncovered_map = OPTIONALLY_COVERED.map do |option|
-            default = DEFAULTS[:ignore_uncovered].include?(option)
+            default = DeepCover.config.ignore_uncovered.include?(option)
             o.bool "--ignore-#{dasherize(option)}", '', default: default
             [:"ignore_#{option}", option]
           end.to_h
