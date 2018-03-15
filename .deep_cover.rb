@@ -4,4 +4,5 @@
 
 DeepCover.configure do
   tracker_global '$_dcg'
+  ignore_uncovered :warn, :raise, :default_argument
 end
