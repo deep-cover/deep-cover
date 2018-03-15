@@ -5,17 +5,12 @@ module DeepCover
   require_relative 'source'
 
   module Reporter::HTML
-    class Site < Struct.new(:covered_codes, :options)
-      def initialize(covered_codes, **options)
-        raise ArgumentError unless covered_codes.all? { |c| c.is_a? CoveredCode }
-        super
-      end
-
+    class Site < Struct.new(:coverage, :options)
       include Memoize
       memoize :analysis
 
       def analysis
-        Coverage::Analysis.new(covered_codes, **options)
+        Coverage::Analysis.new(coverage.covered_codes, **options)
       end
 
       def path
@@ -63,15 +58,15 @@ module DeepCover
       end
 
       def save_pages
-        covered_codes.each do |covered_code|
+        coverage.each do |covered_code|
           dest = path.join("#{covered_code.name}.html")
           dest.dirname.mkpath
           dest.write(render_source(covered_code))
         end
       end
 
-      def self.save(covered_codes, output:, **options)
-        Site.new(covered_codes, output: output, **options).save
+      def self.save(coverage, output:, **options)
+        Site.new(coverage, output: output, **options).save
       end
     end
   end

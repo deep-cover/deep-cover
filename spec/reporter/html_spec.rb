@@ -8,7 +8,7 @@ module DeepCover
       let(:coverage) { trivial_gem_coverage }
 
       describe HTML::Site do
-        let(:site) { HTML::Site.new(coverage.covered_codes) }
+        let(:site) { HTML::Site.new(coverage, {}) }
         it 'renders the index' do
           html = site.render_index
           html.should include '"header":"Nodes"'

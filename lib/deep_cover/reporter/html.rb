@@ -8,7 +8,7 @@ module DeepCover
   module Reporter::HTML
     class << self
       def report(coverage, **options)
-        Site.save(coverage.covered_codes, **options)
+        Site.save(coverage, **options)
       end
     end
   end
