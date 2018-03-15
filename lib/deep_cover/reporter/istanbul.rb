@@ -4,8 +4,7 @@ require 'json'
 
 module DeepCover
   module Reporter
-    class Istanbul < Struct.new(:covered_code, :options)
-      # Converters has no dependency on the including class.
+    class Istanbul
       module Converters
         def convert_range(range)
           {start: {
@@ -68,75 +67,78 @@ module DeepCover
           }
         end
       end
-      include Converters
 
-      def node_analyser
-        @node_analyser ||= Analyser::Node.new(covered_code, **options)
-      end
+      class CoveredCodeConverter < Struct.new(:covered_code, :options)
+        include Converters
 
-      def node_runs
-        @node_runs ||= node_analyser.results
-      end
-
-      def functions
-        @functions ||= Analyser::Function.new(node_analyser, **options).results
-      end
-
-      def statements
-        @statements ||= Analyser::Statement.new(node_analyser, **options).results
-      end
-
-      def branches
-        @branches ||= Analyser::Branch.new(node_analyser, **options).results
-      end
-
-      def branch_map
-        branches.map do |node, branches_runs|
-          convert_branch(node, branches_runs.keys)
+        def node_analyser
+          @node_analyser ||= Analyser::Node.new(covered_code, **options)
         end
-      end
 
-      # Istanbul doesn't understand how to ignore a branch...
-      def zero_to_something(values)
-        values.map { |v| v || 1 }
-      end
+        def node_runs
+          @node_runs ||= node_analyser.results
+        end
 
-      def branch_runs
-        branches.values.map { |r| zero_to_something(r.values) }
-      end
+        def functions
+          @functions ||= Analyser::Function.new(node_analyser, **options).results
+        end
 
-      def statement_map
-        statements.keys.map { |range| convert_range(range) }
-      end
+        def statements
+          @statements ||= Analyser::Statement.new(node_analyser, **options).results
+        end
 
-      def statement_runs
-        statements.values
-      end
+        def branches
+          @branches ||= Analyser::Branch.new(node_analyser, **options).results
+        end
 
-      def function_map
-        functions.keys.map { |n| convert_function(n) }
-      end
+        def branch_map
+          branches.map do |node, branches_runs|
+            convert_branch(node, branches_runs.keys)
+          end
+        end
 
-      def function_runs
-        functions.values
-      end
+        # Istanbul doesn't understand how to ignore a branch...
+        def zero_to_something(values)
+          values.map { |v| v || 1 }
+        end
 
-      def data
-        {
-          statementMap: statement_map,
-          s:            statement_runs,
-          fnMap:        function_map,
-          f:            function_runs,
-          branchMap:    branch_map,
-          b:            branch_runs,
-        }
-      end
+        def branch_runs
+          branches.values.map { |r| zero_to_something(r.values) }
+        end
 
-      def convert
-        {
-          path: covered_code.path,
-          **data.transform_values { |l| convert_list(l) },
-        }
+        def statement_map
+          statements.keys.map { |range| convert_range(range) }
+        end
+
+        def statement_runs
+          statements.values
+        end
+
+        def function_map
+          functions.keys.map { |n| convert_function(n) }
+        end
+
+        def function_runs
+          functions.values
+        end
+
+        def data
+          {
+            statementMap: statement_map,
+            s:            statement_runs,
+            fnMap:        function_map,
+            f:            function_runs,
+            branchMap:    branch_map,
+            b:            branch_runs,
+          }
+        end
+
+        def convert
+          {
+            path: covered_code.path,
+            **data.transform_values { |l| convert_list(l) },
+          }
+        end
       end
 
       class << self

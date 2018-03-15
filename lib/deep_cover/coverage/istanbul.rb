@@ -4,7 +4,7 @@ module DeepCover
   module Coverage::Istanbul
     def to_istanbul(**options)
       map do |covered_code|
-        [covered_code.name, Reporter::Istanbul.new(covered_code, **options).convert]
+        [covered_code.name, Reporter::Istanbul::CoveredCodeConverter.new(covered_code, **options).convert]
       end.to_h
     end
 

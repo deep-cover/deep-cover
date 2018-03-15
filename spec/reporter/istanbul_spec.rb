@@ -7,8 +7,8 @@ module DeepCover
     RSpec.describe Istanbul do
       let(:covered_code) { Node[source].covered_code }
       let(:options) { {} }
-      let(:reporter) { Istanbul.new(covered_code, **options) }
-      subject { reporter.convert }
+      let(:converter) { Istanbul::CoveredCodeConverter.new(covered_code, **options) }
+      subject { converter.convert }
 
       context 'given a simple code code' do
         let(:source) { <<-RUBY }
