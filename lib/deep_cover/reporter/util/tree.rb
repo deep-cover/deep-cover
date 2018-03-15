@@ -68,7 +68,7 @@ module DeepCover
         # of the sum of the children (for subtrees)
         def populate_stats(analysis)
           return to_enum(__method__, analysis) unless block_given?
-          map = Tools.transform_keys(analysis.stat_map, &:name)
+          map = analysis.stat_map.transform_keys(&:name)
           tree = paths_to_tree(map.keys)
           final_results, _final_data = populate(tree) do |full_path, partial_path, children|
             if children.empty?
