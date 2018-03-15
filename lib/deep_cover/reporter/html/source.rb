@@ -4,10 +4,10 @@ module DeepCover
   module Reporter
     require_relative 'base'
 
-    class HTML::Source < Struct.new(:analyser_map)
+    class HTML::Source < Struct.new(:analyser_map, :partial_path)
       include Tools::Covered
 
-      def initialize(analyser_map)
+      def initialize(analyser_map, partial_path)
         raise ArgumentError unless analyser_map.values.all? { |a| a.is_a?(Analyser) }
         super
       end
@@ -33,7 +33,7 @@ module DeepCover
       end
 
       def root_path
-        Pathname('.').relative_path_from(Pathname(covered_code.name).dirname)
+        Pathname('.').relative_path_from(Pathname(partial_path).dirname)
       end
 
       def stats

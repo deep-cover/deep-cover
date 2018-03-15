@@ -54,7 +54,7 @@ module DeepCover
       end
 
       def render_source(covered_code)
-        Tools.render_template(:source, Source.new(analysis.analyser_map.fetch(covered_code)))
+        Tools.render_template(:source, Source.new(analysis.analyser_map.fetch(covered_code), covered_code.name))
       end
 
       def save_pages
