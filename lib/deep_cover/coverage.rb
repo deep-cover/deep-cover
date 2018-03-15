@@ -6,5 +6,4 @@ module DeepCover
   class Coverage
   end
   require_relative_dir 'coverage'
-  Coverage.include Coverage::Istanbul
 end

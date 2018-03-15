@@ -4,7 +4,7 @@ require 'json'
 
 module DeepCover
   module Reporter
-    class Istanbul
+    class Istanbul < Struct.new(:coverage, :options)
       module Converters
         def convert_range(range)
           {start: {
@@ -141,7 +141,40 @@ module DeepCover
         end
       end
 
+      def convert
+        coverage.map do |covered_code|
+          [covered_code.name, CoveredCodeConverter.new(covered_code, **options).convert]
+        end.to_h
+      end
+
+      def save(dir: '.', name: '.nyc_output')
+        path = Pathname.new(dir).expand_path.join(name)
+        path.mkpath
+        path.each_child(&:delete)
+        path.join('deep_cover.json').write(JSON.pretty_generate(convert))
+        path
+      end
+
+      def report
+        output = options[:output]
+        dir = save.dirname
+        unless [nil, false, '', 'false'].include? output
+          output = File.expand_path(output)
+          html = "--reporter=html --report-dir='#{output}'"
+          if options[:open]
+            html += " && open '#{output}/index.html'"
+          else
+            msg = "\nHTML coverage written to: '#{output}/index.html'"
+          end
+        end
+        `cd #{dir} && nyc report --reporter=text #{html}` + msg.to_s
+      end
+
       class << self
+        def report(coverage, **options)
+          new(coverage, options).report
+        end
+
         def available?
           `nyc --version` >= '11.' rescue false
         end

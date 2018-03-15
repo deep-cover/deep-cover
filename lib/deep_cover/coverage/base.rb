@@ -41,7 +41,7 @@ module DeepCover
         Reporter::Text.report(self, **options) + "\n\n" + msg
       when :istanbul
         if Reporter::Istanbul.available?
-          report_istanbul(**options)
+          Reporter::Istanbul.report(self, **options)
         else
           warn 'nyc not available. Please install `nyc` using `yarn global add nyc` or `npm i nyc -g`'
         end
