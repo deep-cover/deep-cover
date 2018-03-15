@@ -8,7 +8,7 @@ module DeepCover
       let(:covered_code) { Node[source].covered_code }
       let(:options) { {} }
       let(:reporter) { Istanbul.new(covered_code, **options) }
-      subject { reporter.report }
+      subject { reporter.convert.first.last }
 
       context 'given a simple code code' do
         let(:source) { <<-RUBY }
@@ -17,9 +17,9 @@ module DeepCover
             dummy_method('example')
           end
           RUBY
-        it { should =~ /"statementMap":/ }
-        it { should =~ /"s":/ }
-        it { should include '"b":{"1":[0,1]}' }
+        it { should have_key :statementMap }
+        it { should have_key :s }
+        it { subject[:b].should == {'1' => [0, 1]} }
       end
     end
 

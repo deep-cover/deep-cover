@@ -140,10 +140,6 @@ module DeepCover
         }
       end
 
-      def report
-        convert.to_json
-      end
-
       class << self
         def available?
           `nyc --version` >= '11.' rescue false
