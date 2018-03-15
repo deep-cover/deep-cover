@@ -4,6 +4,6 @@
 $LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
 
 require_relative '../lib/deep_cover_entry'
-require 'deep_cover/cli/deep_cover'
+require 'deep_cover/cli/runner'
 
-DeepCover::CLI::DeepCover.go
+DeepCover::CLI::Runner.go
