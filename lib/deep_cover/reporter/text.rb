@@ -3,7 +3,6 @@
 module DeepCover
   module Reporter
     class Text
-      include Util::Tree
       def initialize(coverage, **options)
         @coverage = coverage
         @options = options
@@ -43,7 +42,7 @@ module DeepCover
       end
 
       def rows
-        populate_stats(analysis).map do |full_path, partial_path, data, children|
+        Util::Tree.populate_stats(analysis).map do |full_path, partial_path, data, children|
           [partial_path, *transform_data(data)]
         end
       end

@@ -5,6 +5,29 @@ module DeepCover
     module Util
       # Utility functions to deal with trees
       module Tree
+        extend self
+
+        # Same as populate, but also yields data, which is either the analysis data (for leaves)
+        # of the sum of the children (for subtrees)
+        def populate_stats(analysis)
+          return to_enum(__method__, analysis) unless block_given?
+          map = analysis.stat_map.transform_keys(&:name)
+          tree = paths_to_tree(map.keys)
+          final_results, _final_data = populate(tree) do |full_path, partial_path, children|
+            if children.empty?
+              data = map[full_path]
+            else
+              child_results, child_data = children.transpose
+              data = Tools.merge(*child_data, :+)
+            end
+            result = yield full_path, partial_path, data, child_results || []
+            [result, data]
+          end.transpose
+          final_results
+        end
+
+        private
+
         def paths_to_tree(paths)
           twigs = paths.map do |path|
             partials = path_to_partial_paths(path)
@@ -62,25 +85,6 @@ module DeepCover
             children = populate(children_hash, "#{full_path}/", &block)
             yield full_path, path, children
           end
-        end
-
-        # Same as populate, but also yields data, which is either the analysis data (for leaves)
-        # of the sum of the children (for subtrees)
-        def populate_stats(analysis)
-          return to_enum(__method__, analysis) unless block_given?
-          map = analysis.stat_map.transform_keys(&:name)
-          tree = paths_to_tree(map.keys)
-          final_results, _final_data = populate(tree) do |full_path, partial_path, children|
-            if children.empty?
-              data = map[full_path]
-            else
-              child_results, child_data = children.transpose
-              data = Tools.merge(*child_data, :+)
-            end
-            result = yield full_path, partial_path, data, child_results || []
-            [result, data]
-          end.transpose
-          final_results
         end
       end
     end

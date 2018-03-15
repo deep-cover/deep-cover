@@ -10,11 +10,10 @@ module DeepCover
         super
       end
 
-      include Util::Tree
       include HTML::Base
 
       def stats_to_data
-        populate_stats(analysis) do |full_path, partial_path, data, children|
+        Util::Tree.populate_stats(analysis) do |full_path, partial_path, data, children|
           data = transform_data(data)
           if children.empty?
             {
