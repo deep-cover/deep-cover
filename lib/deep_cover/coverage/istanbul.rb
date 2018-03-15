@@ -4,8 +4,8 @@ module DeepCover
   module Coverage::Istanbul
     def to_istanbul(**options)
       map do |covered_code|
-        Reporter::Istanbul.new(covered_code, **options).convert
-      end.inject(:merge)
+        [covered_code.name, Reporter::Istanbul.new(covered_code, **options).convert]
+      end.to_h
     end
 
     def output_istanbul(dir: '.', name: '.nyc_output', **options)

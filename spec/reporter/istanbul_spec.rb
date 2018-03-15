@@ -8,7 +8,7 @@ module DeepCover
       let(:covered_code) { Node[source].covered_code }
       let(:options) { {} }
       let(:reporter) { Istanbul.new(covered_code, **options) }
-      subject { reporter.convert.first.last }
+      subject { reporter.convert }
 
       context 'given a simple code code' do
         let(:source) { <<-RUBY }

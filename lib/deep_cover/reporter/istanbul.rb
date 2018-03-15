@@ -133,10 +133,9 @@ module DeepCover
       end
 
       def convert
-        {covered_code.name => {
-                                path: covered_code.path,
-                                **data.transform_values { |l| convert_list(l) },
-                              },
+        {
+          path: covered_code.path,
+          **data.transform_values { |l| convert_list(l) },
         }
       end
 
