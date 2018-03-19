@@ -1,17 +1,10 @@
 # frozen_string_literal: true
 
 module DeepCover
+  require_relative 'base'
+
   module Reporter
-    class Text
-      def initialize(coverage, **options)
-        @coverage = coverage
-        @options = options
-      end
-
-      def analysis
-        Coverage::Analysis.new(@coverage.covered_codes, **@options)
-      end
-
+    class Text < Base
       INDENT = '  '
       def report
         formatted_headings = headings.map.with_index { |h, i| {value: h, alignment: :center} }

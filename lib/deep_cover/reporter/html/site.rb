@@ -1,17 +1,14 @@
 # frozen_string_literal: true
 
 module DeepCover
+  require_relative 'base'
   require_relative 'index'
   require_relative 'source'
 
   module Reporter::HTML
-    class Site < Struct.new(:coverage, :options)
+    class Site < Reporter::Base
       include Memoize
       memoize :analysis
-
-      def analysis
-        Coverage::Analysis.new(coverage.covered_codes, **options)
-      end
 
       def path
         Pathname(options[:output])
