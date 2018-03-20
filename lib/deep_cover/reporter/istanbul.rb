@@ -142,9 +142,9 @@ module DeepCover
       end
 
       def convert
-        @coverage.map do |covered_code|
-          [covered_code.name, CoveredCodeConverter.new(covered_code, **@options).convert]
-        end.to_h
+        each.to_a.to_h.transform_values  do |covered_code|
+          CoveredCodeConverter.new(covered_code, **@options).convert
+        end
       end
 
       def save(dir: '.', name: '.nyc_output')

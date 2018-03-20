@@ -14,7 +14,7 @@ module DeepCover
           html.should include '"header":"Nodes"'
         end
         it 'renders the sources' do
-          html = site.render_source(coverage.covered_codes.first)
+          html = site.render_source('dummy_path', coverage.covered_codes.first)
           html.should include 'title="potentially_executable">8</span>'
         end
       end

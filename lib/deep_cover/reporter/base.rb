@@ -13,6 +13,14 @@ module DeepCover
       def analysis
         @analysis ||= Coverage::Analysis.new(@coverage.covered_codes, **options)
       end
+
+      def each(&block)
+        return to_enum :each unless block_given?
+        @coverage.each do |covered_code|
+          yield covered_code.name, covered_code
+        end
+        self
+      end
     end
   end
 end

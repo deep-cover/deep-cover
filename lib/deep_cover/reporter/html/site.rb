@@ -50,15 +50,15 @@ module DeepCover
         dest.join('deep_cover.css.sass').delete
       end
 
-      def render_source(covered_code)
-        Tools.render_template(:source, Source.new(analysis.analyser_map.fetch(covered_code), covered_code.name))
+      def render_source(partial_path, covered_code)
+        Tools.render_template(:source, Source.new(analysis.analyser_map.fetch(covered_code), partial_path))
       end
 
       def save_pages
-        coverage.each do |covered_code|
-          dest = path.join("#{covered_code.name}.html")
+        each do |partial_path, covered_code|
+          dest = path.join("#{partial_path}.html")
           dest.dirname.mkpath
-          dest.write(render_source(covered_code))
+          dest.write(render_source(partial_path, covered_code))
         end
       end
 
