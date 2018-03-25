@@ -35,7 +35,7 @@ module DeepCover
       end
 
       def rows
-        Tree::Util.populate_stats(analysis).map do |full_path, partial_path, data, children|
+        populate_stats.map do |full_path, partial_path, data, children|
           [partial_path, *transform_data(data)]
         end
       end

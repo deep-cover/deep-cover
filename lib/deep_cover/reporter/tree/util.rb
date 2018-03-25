@@ -7,20 +7,6 @@ module DeepCover
       module Util
         extend self
 
-        # Same as populate, but also yields data, which is either the analysis data (for leaves)
-        # of the sum of the children (for subtrees)
-        def populate_stats(analysis, &block)
-          return to_enum(__method__, analysis) unless block_given?
-          map = analysis.stat_map.transform_keys(&:name)
-          tree = paths_to_tree(map.keys)
-          populate_from_map(
-            tree: tree,
-            map: map,
-            merge: -> (child_data) { Tools.merge(*child_data, :+) },
-            &block
-          )
-        end
-
         def populate_from_map(tree:, map:, merge:)
           return to_enum(__method__, tree: tree, map: map, merge: merge) unless block_given?
           final_results, _final_data = populate(tree) do |full_path, partial_path, children|
@@ -35,8 +21,6 @@ module DeepCover
           end.transpose
           final_results
         end
-
-        private
 
         def paths_to_tree(paths)
           twigs = paths.map do |path|

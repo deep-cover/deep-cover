@@ -7,10 +7,10 @@ module DeepCover
     class HTML::Index < Struct.new(:base)
       include HTML::Base
       extend Forwardable
-      def_delegators :base, :analysis, :options
+      def_delegators :base, :analysis, :options, :populate_stats
 
       def stats_to_data
-        Tree::Util.populate_stats(analysis) do |full_path, partial_path, data, children|
+        populate_stats do |full_path, partial_path, data, children|
           data = transform_data(data)
           if children.empty?
             {
