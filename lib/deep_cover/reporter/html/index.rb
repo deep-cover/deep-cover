@@ -4,13 +4,10 @@ module DeepCover
   require_relative 'base'
 
   module Reporter
-    class HTML::Index < Struct.new(:analysis, :options)
-      def initialize(analysis, **options)
-        raise ArgumentError unless analysis.is_a? Coverage::Analysis
-        super
-      end
-
+    class HTML::Index < Struct.new(:base)
       include HTML::Base
+      extend Forwardable
+      def_delegators :base, :analysis, :options
 
       def stats_to_data
         Tree::Util.populate_stats(analysis) do |full_path, partial_path, data, children|

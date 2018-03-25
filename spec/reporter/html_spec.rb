@@ -20,7 +20,7 @@ module DeepCover
       end
 
       describe HTML::Index do
-        let(:index) { HTML::Index.new(coverage.analysis, {}) }
+        let(:index) { HTML::Index.new(Reporter::Base.new(coverage.analysis, {})) }
         it {
           data = index.stats_to_data
           children = data.first.delete(:children)

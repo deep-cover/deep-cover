@@ -34,7 +34,7 @@ module DeepCover
       end
 
       def render_index
-        Tools.render_template(:index, Index.new(analysis, **options))
+        Tools.render_template(:index, Index.new(self))
       end
 
       def save_index
