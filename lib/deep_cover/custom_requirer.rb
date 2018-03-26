@@ -5,8 +5,6 @@
 module DeepCover
   class CustomRequirer
     class LoadPathsSubset
-      attr_reader :last_lookup_path
-
       def initialize(load_paths:, lookup_paths:)
         @original_load_paths = load_paths
         @cached_load_paths_subset = []
@@ -29,7 +27,7 @@ module DeepCover
 
       # E.g.  '/a/b' => true when a lookup path is '/a/'
       def within_lookup?(full_path)
-        @lookup_paths.any? { |p| full_path.start_with?(p) && @last_lookup_path = p }
+        @lookup_paths.any? { |p| full_path.start_with?(p) }
       end
 
       def exist?(full_path)
