@@ -5,10 +5,9 @@ module DeepCover
     require 'with_progress'
   end
   module Tools::DumpCoveredCode
-    def dump_covered_code(source_path, coverage:, dest_path: Dir.mktmpdir, root_path: source_path)
+    def dump_covered_code(source_path, coverage:, dest_path: Dir.mktmpdir)
       source_path = File.join(File.expand_path(source_path), '')
       dest_path = File.join(File.expand_path(dest_path), '')
-      root_path = Pathname.new(root_path)
       skipped = []
       file_paths = Dir.glob("#{source_path}**/*.rb").select { |p| File.file?(p) }
       file_paths.each.with_progress(title: 'Rewriting') do |path|

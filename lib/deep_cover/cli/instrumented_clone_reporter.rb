@@ -146,7 +146,7 @@ module DeepCover
         each_dir_to_cover do |to_cover|
           FileUtils.cp_r(to_cover, to_cover.sub_ext('_original'))
           Tools.dump_covered_code(to_cover,
-                                  coverage: coverage, root_path: @dest_root.to_s,
+                                  coverage: coverage,
                                   dest_path: to_cover)
         end
         coverage.save(@dest_root.to_s)
