@@ -5,6 +5,9 @@ module DeepCover
     require_relative 'tree/util'
 
     class Base
+      include Memoize
+      memoize :map, :tree
+
       attr_reader :options
 
       def initialize(coverage, **options)
@@ -28,14 +31,22 @@ module DeepCover
       # of the sum of the children (for subtrees)
       def populate_stats(&block)
         return to_enum(__method__) unless block_given?
-        @map ||= analysis.stat_map.transform_keys(&:name)
-        @tree ||= Tree::Util.paths_to_tree(@map.keys)
         Tree::Util.populate_from_map(
-            tree: @tree,
-            map: @map,
+            tree: tree,
+            map: map,
             merge: ->(child_data) { Tools.merge(*child_data, :+) },
             &block
         )
+      end
+
+      private
+
+      def map
+        analysis.stat_map.transform_keys(&:name)
+      end
+
+      def tree
+        Tree::Util.paths_to_tree(map.keys)
       end
     end
   end
