@@ -136,8 +136,7 @@ module DeepCover
 
     def cover_and_execute(path)
       begin
-        name = path.sub(%r{^#{@load_paths_subset.last_lookup_path}/}, '') if @load_paths_subset
-        covered_code = DeepCover.coverage.covered_code(path, name: name)
+        covered_code = DeepCover.coverage.covered_code(path)
       rescue Parser::SyntaxError => e
         if e.message =~ /contains escape sequences incompatible with UTF-8/
           warn "Can't cover #{path} because of incompatible encoding (see issue #9)"

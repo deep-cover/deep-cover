@@ -14,7 +14,7 @@ module DeepCover
       file_paths.each.with_progress(title: 'Rewriting') do |path|
         new_path = Pathname(path.gsub(source_path, dest_path))
         begin
-          covered_code = coverage.covered_code(path, name: new_path.relative_path_from(root_path))
+          covered_code = coverage.covered_code(path)
         rescue Parser::SyntaxError
           skipped << path
           next

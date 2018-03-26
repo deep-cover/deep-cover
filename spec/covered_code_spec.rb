@@ -9,7 +9,7 @@ module DeepCover
     end
 
     it 'has a short inspect' do
-      DeepCover::CoveredCode.new(source: '', name: 'foo').inspect.should == '#<DeepCover::CoveredCode "foo">'
+      DeepCover::CoveredCode.new(source: '', path: 'a path').inspect.should == '#<DeepCover::CoveredCode "a path">'
     end
   end
 end
