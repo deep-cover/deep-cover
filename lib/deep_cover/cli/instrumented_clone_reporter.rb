@@ -158,6 +158,13 @@ module DeepCover
         end
       end
 
+      def restore
+        each_dir_to_cover do |to_cover|
+          FileUtils.mv(to_cover, to_cover.sub_ext('_instrumented'))
+          FileUtils.mv(to_cover.sub_ext('_original'), to_cover)
+        end
+      end
+
       def report
         coverage = Coverage.load @dest_root.to_s
         puts coverage.report(dir: @dest_root.to_s, **@options)
@@ -178,6 +185,7 @@ module DeepCover
           patch
           bundle if @options[:bundle]
           process
+          restore
         end
         report
       end
