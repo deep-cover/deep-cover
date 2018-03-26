@@ -6,7 +6,7 @@ module DeepCover
 
     class Base
       include Memoize
-      memoize :map, :tree
+      memoize :map, :tree, :root_path
 
       attr_reader :options
 
@@ -22,27 +22,42 @@ module DeepCover
       def each(&block)
         return to_enum :each unless block_given?
         @coverage.each do |covered_code|
-          yield covered_code.name, covered_code
+          yield relative_path(covered_code.path), covered_code
         end
         self
       end
 
       # Same as populate, but also yields data, which is either the analysis data (for leaves)
       # of the sum of the children (for subtrees)
-      def populate_stats(&block)
+      def populate_stats
         return to_enum(__method__) unless block_given?
         Tree::Util.populate_from_map(
             tree: tree,
             map: map,
-            merge: ->(child_data) { Tools.merge(*child_data, :+) },
-            &block
-        )
+            merge: ->(child_data) { Tools.merge(*child_data, :+) }
+        ) do |full_path, partial_path, data, children|
+          yield relative_path(full_path), relative_path(partial_path), data, children
+        end
       end
 
       private
 
+      def relative_path(path)
+        path = path.to_s
+        path = path.slice(root_path.length + 1..-1) if path.start_with?(root_path)
+        path
+      end
+
+      def root_path
+        return '' if tree.size > 1
+        path = tree.first.first
+        root = File.dirname(path)
+        root = File.dirname(root) if File.basename(path) == 'dir'
+        root
+      end
+
       def map
-        analysis.stat_map.transform_keys(&:name)
+        analysis.stat_map.transform_keys(&:path).transform_keys(&:to_s)
       end
 
       def tree
