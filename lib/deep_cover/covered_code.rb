@@ -12,7 +12,7 @@ module DeepCover
       source: nil,
       lineno: 1,
       tracker_global: DEFAULTS[:tracker_global],
-      tracker_storage: TrackerBucket::TrackerStorage.new(TrackerBucket[tracker_global]),
+      tracker_storage: TrackerBucket[tracker_global].create_storage,
       local_var: '_temp'
     )
       raise 'Must provide either path or source' unless path || source

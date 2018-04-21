@@ -31,6 +31,11 @@ module DeepCover
       %{#<DeepCover::TrackerBucket "#{@global_name}">}
     end
 
+    def create_storage(index = nil)
+      index ||= @global.size
+      TrackerStorage.new(bucket: self, array: @global[index] ||= [], index: index)
+    end
+
     private
 
     def initialize(global_name)
@@ -40,12 +45,6 @@ module DeepCover
 
     def _dump(_level)
       @global_name
-    end
-
-    # For use by TrackerStorage only
-    def allocate_tracker_storage(index = nil)
-      index ||= @global.size
-      [@global[index] ||= [], index]
     end
   end
 end

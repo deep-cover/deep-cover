@@ -13,10 +13,11 @@ module DeepCover
 
       attr_reader :bucket
 
-      def initialize(bucket, index: nil)
+      def initialize(bucket:, array:, index:)
         @bucket = bucket
+        @array = array
+        @index = index
         @allocated = 0
-        @array, @index = @bucket.send(:allocate_tracker_storage, index)
       end
 
       # Returns a range of tracker ids
@@ -49,14 +50,27 @@ module DeepCover
 
       private
 
-      def marshal_dump
+      def dump
         {bucket: @bucket, index: @index, size: @array.size}
       end
 
-      def marshal_load(bucket:, index:, size:)
-        initialize(bucket, index: index)
-        allocate_trackers(size - @array.size)
+      def _dump(_level)
+        Marshal.dump(dump)
+      end
+
+      class << self
+        private def load(bucket:, index:, size:)
+          storage = bucket.create_storage(index)
+          storage.allocate_trackers(size - storage.size)
+          storage
+        end
+
+        private def _load(data)
+          load(Marshal.load(data)) # rubocop:disable Security/MarshalLoad
+        end
       end
     end
+
+    private_constant :TrackerStorage
   end
 end

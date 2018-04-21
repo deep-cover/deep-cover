@@ -18,7 +18,7 @@ module DeepCover
     end
 
     def [](path)
-      @index[path] ||= TrackerBucket::TrackerStorage.new(@bucket)
+      @index[path] ||= @bucket.create_storage
     end
 
     def tracker_hits_per_path
