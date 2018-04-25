@@ -34,6 +34,17 @@ module DeepCover
         "#{bucket.source}[#{@index}][#{tracker_id}]+=1"
       end
 
+      def tracker_hits
+        @array.dup.freeze
+      end
+
+      def tracker_hits=(new_hits)
+        if new_hits.size != @array.size
+          warn 'Replacing tracker hits with array of different size'
+        end
+        @array.replace(new_hits)
+      end
+
       private
 
       def marshal_dump
