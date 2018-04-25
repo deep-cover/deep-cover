@@ -21,6 +21,7 @@ module DeepCover
       Object.autoload :Terminal, 'terminal-table'
       Object.autoload :Bundler, 'bundler'
       Object.autoload :YAML, 'yaml'
+      Object.autoload :Forwardable, 'forwardable'
     end
 
     def bootstrap
