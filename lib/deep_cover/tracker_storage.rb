@@ -8,18 +8,21 @@ module DeepCover
   # a limited interface.
   class TrackerBucket
     class TrackerStorage
-      attr_reader :bucket, :list
+      extend Forwardable
+      def_delegators :@array, :[], :size, :each, :map, :fetch
+
+      attr_reader :bucket
 
       def initialize(bucket, index: nil, size: 0)
         @bucket = bucket
-        @list, @index = @bucket.send(:allocate_tracker_storage, index)
-        allocate_trackers(size - list.size)
+        @array, @index = @bucket.send(:allocate_tracker_storage, index)
+        allocate_trackers(size - @array.size)
       end
 
       # Returns a range of tracker ids
       def allocate_trackers(nb_needed)
         prev = size
-        list.concat(Array.new(nb_needed, 0)) if nb_needed > 0 # Allow nb_needed <= 0
+        @array.concat(Array.new(nb_needed, 0)) if nb_needed > 0 # Allow nb_needed <= 0
         prev...size
       end
 
@@ -29,14 +32,6 @@ module DeepCover
 
       def tracker_source(tracker_id)
         "#{bucket.source}[#{@index}][#{tracker_id}]+=1"
-      end
-
-      def tracker_hits(tracker_id)
-        list[tracker_id]
-      end
-
-      def size
-        list.size
       end
 
       private

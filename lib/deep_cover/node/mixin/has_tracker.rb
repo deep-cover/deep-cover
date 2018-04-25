@@ -36,7 +36,7 @@ module DeepCover
               tracker_storage.tracker_source(@tracker_offset + #{i})
             end
             def #{name}_tracker_hits
-              tracker_storage.tracker_hits(@tracker_offset + #{i})
+              tracker_storage[@tracker_offset + #{i}]
             end
           EVAL
         end
