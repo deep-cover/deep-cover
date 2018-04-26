@@ -33,9 +33,7 @@ module DeepCover
       end
 
       def memoize(*methods)
-        @memoized ||= []
-        @memoized |= methods
-        @memoized.freeze
+        @memoized = (memoized | methods).freeze
 
         methods.each do |method|
           memoizer_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
