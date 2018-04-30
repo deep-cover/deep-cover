@@ -16,7 +16,7 @@ begin
   def fail_test(msg, exception=nil)
     puts(msg)
     puts("#{exception.class}: #{exception}\n#{exception.backtrace.join("\n")}") if exception
-    exit(1)
+    exit!(1)
   end
 
   def test_require(require_path, expected_value = true, detail=nil)
@@ -55,9 +55,12 @@ begin
     fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files.inspect}\nGot #{$executed_files.inspect}"
   end
 
+  expected_covered_files = expected_executed_files
+  # Autoload isn't covered by DeepCover for JRuby
+  expected_covered_files -= ['from_autoload.rb', 'autoloaded_from_covered.rb'] if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
   covered = DeepCover.coverage.covered_codes.map(&:path).map(&:basename).map(&:to_s)
-  if covered != expected_executed_files
-    fail_test("Didn't cover all executed files.\nExpected: #{expected_executed_files.inspect}\nGot: #{covered.inspect}")
+  if covered != expected_covered_files
+    fail_test("Didn't cover all executed files.\nExpected: #{expected_covered_files.inspect}\nGot: #{covered.inspect}")
   end
 
 
