@@ -20,7 +20,7 @@ module DeepCover
 
       def child_can_be_empty(child, name)
         return false if name == :condition || style == :ternary
-        if (name == :true_branch) == (style == :if)
+        if (name == :true_branch) == [:if, :elsif].include?(style)
           (base_node.loc.begin || base_node.children[0].loc.expression.succ).end
         elsif has_else?
           base_node.loc.else.end.succ
