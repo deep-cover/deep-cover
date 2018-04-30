@@ -49,6 +49,22 @@ module DeepCover
         keyword ? keyword.source.to_sym : :ternary
       end
 
+      def root_if_node
+        if style != :elsif
+          self
+        else
+          parent.root_if_node
+        end
+      end
+
+      def deepest_elsif_node
+        return if style != :elsif
+        return self if loc_hash[:else] && loc_hash[:else].source == 'else'
+        return self if false_branch.is_a?(EmptyBody)
+        false_branch.deepest_elsif_node
+      end
+
+
       def has_else?
         !!base_node.loc.to_hash[:else]
       end
