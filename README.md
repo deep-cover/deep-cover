@@ -45,10 +45,10 @@ These examples are direct outputs from our HTML reporter:
 
 Feature            | MRI        | DeepCover
 -------------------|:----------:|:--------:
-Line coverage      |  partial   |  √
-Statement coverage |  no        |  √
-Branch coverage    |  partial   |  √
-Method coverage    |  √         |  ~
+Line coverage      |  partial   |  ✓
+Statement coverage |  no        |  ✓
+Branch coverage    |  partial   |  ✓
+Method coverage    |  ✓         |  ~
 Slowdown           |  < 1%      |  ~20%
 Platform support   |  Ruby 2.5+ |  Ruby 2.1+, JRuby
 
@@ -60,12 +60,12 @@ Platform support   |  Ruby 2.5+ |  Ruby 2.1+, JRuby
 
 **Branch coverage**     | MRI | DeepCover
 ------------------------|:---:|:--------:
-`if` / `unless` / `?:`  |  √  |    √
-`case` / `when`         |  √  |    √
-`❘❘` / `&&`             |  no |    √
-`foo&.bar`              |  √  |    √
-`{❘foo = 42, bar: 43❘}` |  no |    √
-while / until           |  √  |    !
+`if` / `unless` / `?:`  |  ✓  |    ✓
+`case` / `when`         |  ✓  |    ✓
+`❘❘` / `&&`             |  no |    ✓
+`foo&.bar`              |  ✓  |    ✓
+`{❘foo = 42, bar: 43❘}` |  no |    ✓
+`while` / `until`       |  ✓  |    !
 
 *Note on loops (!)*: DeepCover doesn't consider loops to be branches, but it's
 easy to support it if needed.
