@@ -62,9 +62,9 @@ Platform support   |  Ruby 2.5+ |  Ruby 2.1+, JRuby
 ------------------------|:---:|:--------:
 `if` / `unless` / `?:`  |  √  |    √
 `case` / `when`         |  √  |    √
-`||` / `&&`             |  no |    √
+`&#124;&#124;` / `&&`   |  no |    √
 `foo&.bar`              |  √  |    √
-`{|foo = 42, bar: 43|}` |  no |    √
+`{&#124;foo = 42, bar: 43&#124;}` |  no |    √
 while / until           |  √  |    !
 
 *Note on loops (!)*: DeepCover doesn't consider loops to be branches, but it's
