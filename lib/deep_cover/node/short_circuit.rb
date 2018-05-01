@@ -27,6 +27,10 @@ module DeepCover
           end
         end.join(' and ')
       end
+
+      def operator
+        loc_hash[:operator].source.to_sym
+      end
     end
 
     class And < ShortCircuit
