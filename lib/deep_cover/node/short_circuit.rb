@@ -29,6 +29,10 @@ module DeepCover
       end
     end
 
-    And = Or = ShortCircuit
+    class And < ShortCircuit
+    end
+
+    class Or < ShortCircuit
+    end
   end
 end
