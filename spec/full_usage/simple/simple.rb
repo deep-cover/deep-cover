@@ -43,23 +43,30 @@ begin
   DeepCover.configure { paths '.' }
   cov.start
 
+  module TheParentModule
+    # used for nested autoloads
+  end
+
   test_require('beside_simple')
   test_require('./relative_beside_simple')
   test_require('subdir/deeper')
-  autoload :ToAutoload, 'from_autoload'
-  _foo = ::ToAutoload
+  autoload :RootModuleAutoloaded, 'root_module_autoloaded'
+  _foo = ::RootModuleAutoloaded
 
-  test_require('do_autoload_from_covered')
+  TheParentModule.autoload :NestedModuleAutoloaded, 'nested_module_autoloaded'
+  _foo = TheParentModule::NestedModuleAutoloaded
 
-  expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb from_autoload.rb
-                               do_autoload_from_covered.rb autoloaded_from_covered.rb)
+  expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb root_module_autoloaded.rb
+                               nested_module_autoloaded.rb)
   if $executed_files != expected_executed_files
     fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files.inspect}\nGot #{$executed_files.inspect}"
   end
 
   expected_covered_files = expected_executed_files
-  # Autoload isn't covered by DeepCover for JRuby
-  expected_covered_files -= ['from_autoload.rb', 'autoloaded_from_covered.rb'] if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    # Autoload isn't covered by DeepCover for JRuby
+    expected_covered_files -= %w(root_module_autoloaded.rb nested_module_autoloaded.rb)
+  end
   covered = DeepCover.coverage.covered_codes.map(&:path).map(&:basename).map(&:to_s)
   if covered != expected_covered_files
     fail_test("Didn't cover all executed files.\nExpected: #{expected_covered_files.inspect}\nGot: #{covered.inspect}")
