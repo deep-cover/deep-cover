@@ -25,6 +25,10 @@ module DeepCover
       covered_code(filename).line_coverage(**options)
     end
 
+    def covered_code?(path)
+      @covered_code_index.include?(path)
+    end
+
     def covered_code(path, **options)
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
       @covered_code_index[path] ||= CoveredCode.new(path: path,
@@ -35,7 +39,14 @@ module DeepCover
 
     def each
       return to_enum unless block_given?
-      @tracker_storage_per_path.each_key { |path| yield covered_code(path) }
+      @tracker_storage_per_path.each_key do |path|
+        begin
+          cov_code = covered_code(path)
+        rescue Parser::SyntaxError
+          next
+        end
+        yield cov_code
+      end
       self
     end
 
