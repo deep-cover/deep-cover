@@ -56,8 +56,11 @@ begin
   TheParentModule.autoload :NestedModuleAutoloaded, 'nested_module_autoloaded'
   _foo = TheParentModule::NestedModuleAutoloaded
 
+  autoload :RootModuleAutoloadManuallyRequired, 'root_module_autoload_manually_required'
+  require 'root_module_autoload_manually_required'
+
   expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb root_module_autoloaded.rb
-                               nested_module_autoloaded.rb)
+                               nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
   if $executed_files != expected_executed_files
     fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files.inspect}\nGot #{$executed_files.inspect}"
   end
@@ -65,7 +68,7 @@ begin
   expected_covered_files = expected_executed_files
   if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
     # Autoload isn't covered by DeepCover for JRuby
-    expected_covered_files -= %w(root_module_autoloaded.rb nested_module_autoloaded.rb)
+    expected_covered_files -= %w(root_module_autoloaded.rb nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
   end
   covered = DeepCover.coverage.covered_codes.map(&:path).map(&:basename).map(&:to_s)
   if covered != expected_covered_files
