@@ -16,6 +16,8 @@ begin
   def fail_test(msg, exception=nil)
     puts(msg)
     puts("#{exception.class}: #{exception}\n#{exception.backtrace.join("\n")}") if exception
+    STDOUT.flush
+    STDERR.flush
     exit!(1)
   end
 
