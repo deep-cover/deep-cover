@@ -7,7 +7,9 @@ module DeepCover
     let(:expected_errors) { /^$/ }
     let(:output) do
       require 'open3'
-      out, errors, _status = Open3.capture3(command)
+      out, errors, _status = Bundler.with_clean_env do
+       Open3.capture3(command)
+      end
       errors.should match expected_errors unless RUBY_PLATFORM == 'java'
       out
     end

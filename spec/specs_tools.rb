@@ -10,6 +10,12 @@ class Array
   end
 end
 
+def clean_env_system(*args)
+  Bundler.with_clean_env do
+    system(*args)
+  end
+end
+
 def dummy_method(*args)
   args.first
 end

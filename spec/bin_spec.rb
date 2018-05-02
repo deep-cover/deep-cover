@@ -8,7 +8,7 @@ RSpec.describe 'bin/cov', :slow do
 
   params_sets.each do |params_set|
     it "run `bin/cov #{params_set}` successfully" do
-      command_success = system({'DISABLE_PRY' => '1'}, "bin/cov #{params_set}", in: File::NULL, out: File::NULL, err: File::NULL)
+      command_success = clean_env_system({'DISABLE_PRY' => '1'}, "bin/cov #{params_set}", in: File::NULL, out: File::NULL, err: File::NULL)
       command_success.should be true
     end
   end
