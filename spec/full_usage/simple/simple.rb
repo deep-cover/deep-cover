@@ -31,16 +31,33 @@ begin
 
   # Load deep_cover
   $LOAD_PATH << File.absolute_path('../../../lib', absolute_dir)
-  cov = if ARGV[0] == 'takeover'
+  cov = if ARGV.delete('takeover')
     require 'deep_cover/builtin_takeover'
     Coverage
-  elsif ARGV[0].nil?
+  else
     require 'deep_cover'
     DeepCover
-  else
-    raise "Unsupported ARGV[0]: #{ARGV[0].inspect}"
   end
-  DeepCover.configure { paths '.' }
+  expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb root_module_autoloaded.rb
+                               nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
+
+  expected_covered_files = expected_executed_files
+  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    # Autoload isn't covered by DeepCover for JRuby
+    expected_covered_files -= %w(root_module_autoloaded.rb nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
+  end
+
+  if ARGV.delete('uncovered')
+    # Treat all of these files as if they were not covered
+    # This tests what happens inside of the gems of a project being run
+    DeepCover.configure { paths './uncovered' }
+    expected_covered_files = []
+  else
+    DeepCover.configure { paths '.' }
+  end
+
+  raise "Unsupported ARGV received: #{ARGV.inspect}" unless ARGV.empty?
+
   cov.start
 
   module TheParentModule
@@ -59,17 +76,11 @@ begin
   autoload :RootModuleAutoloadManuallyRequired, 'root_module_autoload_manually_required'
   require 'root_module_autoload_manually_required'
 
-  expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb root_module_autoloaded.rb
-                               nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
   if $executed_files != expected_executed_files
     fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files.inspect}\nGot #{$executed_files.inspect}"
   end
 
-  expected_covered_files = expected_executed_files
-  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-    # Autoload isn't covered by DeepCover for JRuby
-    expected_covered_files -= %w(root_module_autoloaded.rb nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
-  end
+
   covered = DeepCover.coverage.covered_codes.map(&:path).map(&:basename).map(&:to_s)
   if covered != expected_covered_files
     fail_test("Didn't cover all executed files.\nExpected: #{expected_covered_files.inspect}\nGot: #{covered.inspect}")

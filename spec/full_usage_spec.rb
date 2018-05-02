@@ -5,7 +5,11 @@ require 'spec_helper'
 RSpec.describe 'DeepCover usage' do
   it { %w(ruby simple/simple.rb).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
 
+  it { %w(ruby simple/simple.rb uncovered).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
+
   it { %w(ruby simple/simple.rb takeover).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
+
+  it { %w(ruby simple/simple.rb takeover uncovered).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
 
   describe '', :slow do
     it do
