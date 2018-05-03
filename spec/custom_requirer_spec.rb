@@ -341,6 +341,47 @@ module DeepCover
         File.join(root, 'one/two/test.rb').should actually_require(:not_found)
       end
 
+      it 'returns false when the path is already being required' do
+        begin
+          first_path = File.join(root, 'first.rb')
+          second_path = File.join(root, 'second.rb')
+          results = $recurse_require_spec_test = {require_executions: [],
+                                                  return_values_in_first: [],
+                                                  return_values_in_second: [],
+                                                  nb_requires: 0,
+                                                  requirer: requirer,
+                                                 }
+
+          File.write(first_path, <<-RUBY)
+            if $recurse_require_spec_test[:nb_requires] < 5
+              $recurse_require_spec_test[:nb_requires] += 1
+              $recurse_require_spec_test[:require_executions] << 'first'
+              requirer = $recurse_require_spec_test[:requirer]
+              $recurse_require_spec_test[:return_values_in_first] << requirer.require(#{second_path.inspect})
+            end
+          RUBY
+
+          File.write(second_path, <<-RUBY)
+            if $recurse_require_spec_test[:nb_requires] < 5
+              $recurse_require_spec_test[:nb_requires] += 1
+              $recurse_require_spec_test[:require_executions] << 'second'
+              requirer = $recurse_require_spec_test[:requirer]
+              $recurse_require_spec_test[:return_values_in_second] << requirer.require(#{first_path.inspect})
+            end
+          RUBY
+
+          ret_val = requirer.require first_path
+
+          ret_val.should == true
+          results[:require_executions].should == ['first', 'second']
+          results[:return_values_in_first].should == [true]
+          results[:return_values_in_second].should == [false]
+          results[:nb_requires].should == 2
+        ensure
+          $recurse_require_spec_test = nil
+        end
+      end
+
       it 'keeps symlinks when going through load_path (Ruby < 2.5)' do
         skip if RUBY_VERSION >= '2.5'
         file_tree %w(one/test.rb)

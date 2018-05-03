@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: must handle circular requires
-
 module DeepCover
   class CustomRequirer
     class LoadPathsSubset
@@ -51,6 +49,7 @@ module DeepCover
       @load_paths_subset = lookup_paths.include?('/') ? nil : LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths)
       @loaded_features = loaded_features
       @filter = filter
+      @paths_being_required = Set.new
     end
 
     # Returns a path to an existing file or nil if none can be found.
@@ -101,7 +100,7 @@ module DeepCover
 
       throw :use_fallback, :not_found unless found_path
       return false if @loaded_features.include?(found_path)
-
+      return false if @paths_being_required.include?(found_path)
       throw :use_fallback, :skipped if filter && filter.call(found_path)
 
       cover_and_execute(found_path)
@@ -144,6 +143,7 @@ module DeepCover
         throw :use_fallback, :cover_failed
       end
       begin
+        @paths_being_required.add(path)
         covered_code.execute_code
       rescue ::SyntaxError => e
         warn ["DeepCover is getting confused with the file #{path} and it won't be instrumented.",
@@ -151,6 +151,8 @@ module DeepCover
               e,
              ].join("\n")
         throw :use_fallback, :cover_failed
+      ensure
+        @paths_being_required.delete(path)
       end
       covered_code
     end
