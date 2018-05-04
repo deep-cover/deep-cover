@@ -32,11 +32,8 @@ module DeepCover
         run_ruby_require(require_path)
         run_custom_require(require_path)
 
-        if expected_executed_file == :not_supported && @result[:ruby] == :not_found
-          # Ruby should fail to load because we don't use a valid .so file, which
-          # will give :not_found. WE replace this to skip_this, which is removed from comparisons
-          @result[:ruby] = :skip_this
-        end
+        # At the moment, the only case of not_supported is when a .so file is found
+        @result[:custom] = :file_extension_is_so if @result[:custom] == :not_supported
 
         %w(result executed_file loaded_features).all? do |value_name|
           values = instance_variable_get("@#{value_name}").values
@@ -90,8 +87,12 @@ module DeepCover
           tmp_loaded_features = $LOADED_FEATURES.dup
           $LOADED_FEATURES[0..-1] = requirer.loaded_features
           @result[:ruby] = require(require_path)
-        rescue LoadError
-          @result[:ruby] = :not_found
+        rescue LoadError => e
+          if e.message[/file too short/]
+            @result[:ruby] = :file_extension_is_so
+          else
+            @result[:ruby] = :not_found
+          end
         ensure
           @loaded_features[:ruby] = $LOADED_FEATURES.dup
           $LOAD_PATH[0..-1] = tmp_load_path
@@ -445,7 +446,7 @@ module DeepCover
         file_tree %w(one/two/test.so)
 
         add_load_path 'one'
-        'two/test.so'.should actually_require(:not_supported)
+        'two/test.so'.should actually_require(:file_extension_is_so)
       end
 
       it 'outputs some diagnostics if DeepCover creates a syntax error', exclude: :JRuby do
