@@ -57,25 +57,37 @@ module DeepCover
     #
     # An absolute path is returned directly if it exists, otherwise nil
     # is returned without searching anywhere else.
-    def resolve_path(path)
+    def resolve_path(path, extensions_to_try = ['.rb', '.so'])
+      if extensions_to_try
+        extensions_to_try = [''] if extensions_to_try.any? { |ext| path.end_with?(ext) }
+      else
+        extensions_to_try = ['']
+      end
+
       abs_path = File.absolute_path(path)
 
       path = abs_path if path.start_with?('./', '../')
 
       if path == abs_path
-        path if (@load_paths_subset || File).exist?(path)
-      else
-        (@load_paths_subset || self).load_paths.each do |load_path|
-          possible_path = File.absolute_path(path, load_path)
-
-          next unless (@load_paths_subset || File).exist?(possible_path)
-          # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
-          # https://bugs.ruby-lang.org/issues/10222
-          return File.realpath(possible_path) if RUBY_VERSION >= '2.5'
-          return possible_path
+        extensions_to_try.each do |ext|
+          path_with_ext = path + ext
+          return path_with_ext if (@load_paths_subset || File).exist?(path_with_ext)
         end
-        nil
+      else
+        extensions_to_try.each do |ext|
+          path_with_ext = path + ext
+          (@load_paths_subset || self).load_paths.each do |load_path|
+            possible_path = File.absolute_path(path_with_ext, load_path)
+
+            next unless (@load_paths_subset || File).exist?(possible_path)
+            # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
+            # https://bugs.ruby-lang.org/issues/10222
+            return File.realpath(possible_path) if RUBY_VERSION >= '2.5'
+            return possible_path
+          end
+        end
       end
+      nil
     end
 
     # Homemade #require to be able to instrument the code before it gets executed.
@@ -92,15 +104,14 @@ module DeepCover
     # SyntaxError, which is turned into a :cover_failed which calls the fallback_block.
     def require(path, &fallback_block)
       path = path.to_s
-      ext = path[-3..-1] # We don't care about any other extensions than .rb and .so
-      return yield(:not_supported) if ext == '.so'
-      path += '.rb' if ext != '.rb'
+
       return false if @loaded_features.include?(path)
 
       found_path = resolve_path(path)
 
       return yield(:not_found) unless found_path
       return false if @loaded_features.include?(found_path)
+      return yield(:not_supported) if found_path.end_with?('.so')
       return false if @paths_being_required.include?(found_path)
       return yield(:skipped) if filter && filter.call(found_path)
 
@@ -116,7 +127,7 @@ module DeepCover
     # Same return/throw as CustomRequirer#require, except:
     # Cannot return false since #load doesn't care about a file already being executed.
     def load(path, &fallback_block)
-      found_path = resolve_path(path)
+      found_path = resolve_path(path, nil)
 
       if found_path.nil?
         # #load has a final fallback of always trying relative to current work directory of process
