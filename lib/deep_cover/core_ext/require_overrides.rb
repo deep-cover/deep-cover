@@ -11,9 +11,7 @@ module DeepCover
 
   module RequireOverride
     def require(path)
-      result = catch(:use_fallback) { DeepCover.custom_requirer.require(path) }
-      result = require_without_deep_cover(path) if result.is_a? Symbol
-      result
+      DeepCover.custom_requirer.require(path) { require_without_deep_cover(path) }
     end
 
     def require_relative(path)
