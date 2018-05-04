@@ -442,10 +442,59 @@ module DeepCover
         './two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'two/test.rb')
       end
 
-      it 'it indicates that .so files are not supported' do
+      it 'indicates that .so files are not supported when the .so is specified and the file is found' do
         file_tree %w(one/two/test.so)
 
         add_load_path 'one'
+        'two/test.so'.should actually_require(:file_extension_is_so)
+      end
+
+      it 'indicates that .so files are not supported when the .so is not specified and the file is found' do
+        file_tree %w(one/two/test.so)
+
+        add_load_path 'one'
+        'two/test'.should actually_require(:file_extension_is_so)
+      end
+
+      it 'indicates not_found for missing .so files' do
+        add_load_path 'one'
+        'two/test.so'.should actually_require(:not_found)
+      end
+
+      it 'prefers .rb files over .so files if in same LOAD_PATH' do
+        file_tree %w(one/two/test.rb
+                     one/two/test.so
+                    )
+
+        add_load_path 'one'
+        'two/test'.should actually_require('one/two/test.rb')
+        # Verify that the .so could be found
+        'two/test.so'.should actually_require(:file_extension_is_so)
+      end
+
+      # Makes sense, we load rb so much more frequently, this reduces disk access
+      it 'prefers .rb files of a later LOAD_PATH over previous .so files' do
+        file_tree %w(one/two/test.so
+                     then/two/test.rb
+                     )
+
+        add_load_path 'one'
+        add_load_path 'then'
+
+        'two/test'.should actually_require('then/two/test.rb')
+        # Verify that the .so could be found
+        'two/test.so'.should actually_require(:file_extension_is_so)
+      end
+
+      it 'prefers .rb files of a previous LOAD_PATH over .so file that follows' do
+        file_tree %w(one/two/test.rb
+                     then/two/test.so
+                     )
+
+        add_load_path 'one'
+        add_load_path 'then'
+        'two/test'.should actually_require('one/two/test.rb')
+        # Verify that the .so could be found
         'two/test.so'.should actually_require(:file_extension_is_so)
       end
 
