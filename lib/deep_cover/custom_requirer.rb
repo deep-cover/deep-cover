@@ -58,9 +58,10 @@ module DeepCover
     # An absolute path is returned directly if it exists, otherwise nil
     # is returned without searching anywhere else.
     def resolve_path(path)
-      path = File.absolute_path(path) if path.start_with?('./', '../')
-
       abs_path = File.absolute_path(path)
+
+      path = abs_path if path.start_with?('./', '../')
+
       if path == abs_path
         path if (@load_paths_subset || File).exist?(path)
       else
@@ -91,7 +92,7 @@ module DeepCover
     # SyntaxError, which is turned into a :cover_failed which calls the fallback_block.
     def require(path, &fallback_block)
       path = path.to_s
-      ext = File.extname(path)
+      ext = path[-3..-1] # We don't care about any other extensions than .rb and .so
       return yield(:not_supported) if ext == '.so'
       path += '.rb' if ext != '.rb'
       return false if @loaded_features.include?(path)
