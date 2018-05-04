@@ -80,40 +80,41 @@ module DeepCover
     # Homemade #require to be able to instrument the code before it gets executed.
     # Returns true when everything went right. (Same as regular ruby)
     # Returns false when the found file was already required. (Same as regular ruby)
-    # Throws :use_fallback in case caller should delegate to the default #require.
-    # Reasons given could be:
+    # Calls &fallback_block with the reason as parameter if the work couldn't be done.
+    # The possible reasons are:
     #  - :not_found if the file couldn't be found.
+    #  - :not_in_covered_paths if the file is not in the paths to cover
     #  - :cover_failed if DeepCover couldn't apply instrumentation the file found.
-    #  - :not_supported for files that are not supported (such as ike .so files)
+    #  - :not_supported for files that are not supported (such as .so files)
     #  - :skipped if the filter block returned `true`
-    # Exceptions raised by the required code bubble up as normal.
-    #     It is *NOT* recommended to simply delegate to the default #require, since it
-    #     might not be safe to run part of the code again.
-    def require(path)
+    # Exceptions raised by the required code bubble up as normal, except for
+    # SyntaxError, which is turned into a :cover_failed which calls the fallback_block.
+    def require(path, &fallback_block)
       path = path.to_s
       ext = File.extname(path)
-      throw :use_fallback, :not_supported if ext == '.so'
+      return yield(:not_supported) if ext == '.so'
       path += '.rb' if ext != '.rb'
       return false if @loaded_features.include?(path)
 
       found_path = resolve_path(path)
 
-      throw :use_fallback, :not_found unless found_path
+      return yield(:not_found) unless found_path
       return false if @loaded_features.include?(found_path)
       return false if @paths_being_required.include?(found_path)
-      throw :use_fallback, :skipped if filter && filter.call(found_path)
+      return yield(:skipped) if filter && filter.call(found_path)
 
-      cover_and_execute(found_path)
+      cover_and_execute(found_path) { |reason| return yield(reason) }
 
       @loaded_features << found_path
       true
     end
 
+    ### Not currently used ###
     # Homemade #load to be able to instrument the code before it gets executed.
     # Note, this doesn't support the `wrap` parameter that ruby's #load has.
     # Same return/throw as CustomRequirer#require, except:
     # Cannot return false since #load doesn't care about a file already being executed.
-    def load(path)
+    def load(path, &fallback_block)
       found_path = resolve_path(path)
 
       if found_path.nil?
@@ -122,16 +123,16 @@ module DeepCover
         found_path = possible_path if (@load_paths_subset || File).exist?(possible_path)
       end
 
-      throw :use_fallback, :not_found unless found_path
+      return yield(:not_found) unless found_path
 
-      cover_and_execute(found_path)
+      cover_and_execute(found_path) { |reason| return yield(reason) }
 
       true
     end
 
     protected
 
-    def cover_and_execute(path)
+    def cover_and_execute(path, &fallback_block)
       begin
         covered_code = DeepCover.coverage.covered_code(path)
       rescue Parser::SyntaxError => e
@@ -140,7 +141,8 @@ module DeepCover
         else
           warn "The file #{path} can't be instrumented"
         end
-        throw :use_fallback, :cover_failed
+        yield(:cover_failed)
+        raise "The fallback_block is supposed to either return or break, but didn't do either"
       end
       begin
         @paths_being_required.add(path)
@@ -150,7 +152,8 @@ module DeepCover
               'Please report this error and provide the source code around the following:',
               e,
              ].join("\n")
-        throw :use_fallback, :cover_failed
+        yield(:cover_failed)
+        raise "The fallback_block is supposed to either return or break, but didn't do either"
       ensure
         @paths_being_required.delete(path)
       end

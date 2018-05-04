@@ -10,9 +10,7 @@ module DeepCover
     def load(path, wrap = false)
       return load_without_deep_cover(path, wrap) if wrap
 
-      result = catch(:use_fallback) { DeepCover.custom_requirer.load(path) }
-      result = load_without_deep_cover(path) if result.is_a? Symbol
-      result
+      DeepCover.custom_requirer.load(path) { load_without_deep_cover(path) }
     end
 
     extend ModuleOverride

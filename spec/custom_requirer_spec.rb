@@ -102,7 +102,7 @@ module DeepCover
 
       def run_custom_require(require_path)
         $last_test_tree_file_executed = nil
-        @result[:custom] = catch(:use_fallback) { requirer.require(require_path) }
+        @result[:custom] = custom_require_or_reason(require_path)
         @loaded_features[:custom] = requirer.loaded_features.dup
         @executed_file[:custom] = $last_test_tree_file_executed
       end
@@ -132,6 +132,10 @@ module DeepCover
 
     def from_root(path)
       File.absolute_path(path, root)
+    end
+
+    def custom_require_or_reason(path)
+      requirer.require(path) { |reason| reason }
     end
 
     describe '#require' do
@@ -349,15 +353,15 @@ module DeepCover
                                                   return_values_in_first: [],
                                                   return_values_in_second: [],
                                                   nb_requires: 0,
-                                                  requirer: requirer,
+                                                  require_method: method(:custom_require_or_reason),
                                                  }
 
           File.write(first_path, <<-RUBY)
             if $recurse_require_spec_test[:nb_requires] < 5
               $recurse_require_spec_test[:nb_requires] += 1
               $recurse_require_spec_test[:require_executions] << 'first'
-              requirer = $recurse_require_spec_test[:requirer]
-              $recurse_require_spec_test[:return_values_in_first] << requirer.require(#{second_path.inspect})
+              require_method = $recurse_require_spec_test[:require_method]
+              $recurse_require_spec_test[:return_values_in_first] << require_method.call(#{second_path.inspect})
             end
           RUBY
 
@@ -365,12 +369,12 @@ module DeepCover
             if $recurse_require_spec_test[:nb_requires] < 5
               $recurse_require_spec_test[:nb_requires] += 1
               $recurse_require_spec_test[:require_executions] << 'second'
-              requirer = $recurse_require_spec_test[:requirer]
-              $recurse_require_spec_test[:return_values_in_second] << requirer.require(#{first_path.inspect})
+              require_method = $recurse_require_spec_test[:require_method]
+              $recurse_require_spec_test[:return_values_in_second] << require_method.call(#{first_path.inspect})
             end
           RUBY
 
-          ret_val = requirer.require first_path
+          ret_val = custom_require_or_reason(first_path)
 
           ret_val.should == true
           results[:require_executions].should == ['first', 'second']
@@ -451,9 +455,12 @@ module DeepCover
         allow_any_instance_of(DeepCover::CoveredCode).to receive(:instrument_source)
           .and_return("2 + 2 == 4\nthis is invalid ruby)}]")
 
+        return_value = nil
         expect do
-          requirer.require(path.to_s)
-        end.to throw_symbol(:use_fallback, equal(:cover_failed)).and output(/version.rb:2:/).to_stderr
+          return_value = custom_require_or_reason(path.to_s)
+        end.to output(/version.rb:2:/).to_stderr
+
+        return_value.should == :cover_failed
       end
 
       describe 'when filtering' do
@@ -471,15 +478,13 @@ module DeepCover
         describe 'returns true' do
           let(:answer) { true }
           it 'allows skipping a custom require' do
-            expect do
-              requirer.require('test')
-            end.to throw_symbol(:use_fallback, equal(:skipped))
+            custom_require_or_reason('test').should == :skipped
             calls.should == ["#{root}/one/test.rb"]
           end
         end
         describe 'returns false' do
           let(:answer) { false }
-          it { requirer.require('test').should == true }
+          it { custom_require_or_reason('test').should == true }
         end
       end
     end
@@ -506,9 +511,7 @@ module DeepCover
       }.each do |kind, path|
         describe "for a file outside of it (#{kind})" do
           it 'requires fallback' do
-            expect do
-              requirer.require(format(path, root: root))
-            end.to throw_symbol(:use_fallback, equal(:not_found))
+            custom_require_or_reason(format(path, root: root)).should == :not_found
           end
         end
       end
@@ -518,7 +521,7 @@ module DeepCover
        'absolute' => './test',
       }.each do |kind, path|
         describe "for a file inside of it (#{kind})" do
-          it { requirer.require(path).should == true }
+          it { custom_require_or_reason(path).should == true }
         end
       end
     end
