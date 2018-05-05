@@ -41,12 +41,28 @@ module DeepCover
       end
     end
 
+    class EveryLoadPaths
+      attr_reader :load_paths
+      def initialize(load_paths)
+        @load_paths = load_paths
+      end
+
+      def exist?(full_path)
+        File.exist?(full_path)
+      end
+    end
+
     attr_reader :load_paths, :loaded_features, :filter
     def initialize(load_paths: $LOAD_PATH, loaded_features: $LOADED_FEATURES, lookup_paths: nil, &filter)
       @load_paths = load_paths
       lookup_paths ||= Dir.getwd
       lookup_paths = Array(lookup_paths)
-      @load_paths_subset = lookup_paths.include?('/') ? nil : LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths)
+      if lookup_paths.include?('/')
+        @load_paths_subset = EveryLoadPaths.new(load_paths)
+      else
+        @load_paths_subset = LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths)
+      end
+
       @loaded_features = loaded_features
       @filter = filter
       @paths_being_required = Set.new
@@ -71,15 +87,15 @@ module DeepCover
       if path == abs_path
         extensions_to_try.each do |ext|
           path_with_ext = path + ext
-          return path_with_ext if (@load_paths_subset || File).exist?(path_with_ext)
+          return path_with_ext if @load_paths_subset.exist?(path_with_ext)
         end
       else
         extensions_to_try.each do |ext|
           path_with_ext = path + ext
-          (@load_paths_subset || self).load_paths.each do |load_path|
+          @load_paths_subset.load_paths.each do |load_path|
             possible_path = File.absolute_path(path_with_ext, load_path)
 
-            next unless (@load_paths_subset || File).exist?(possible_path)
+            next unless @load_paths_subset.exist?(possible_path)
             # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
             # https://bugs.ruby-lang.org/issues/10222
             return File.realpath(possible_path) if RUBY_VERSION >= '2.5'
@@ -132,7 +148,7 @@ module DeepCover
       if found_path.nil?
         # #load has a final fallback of always trying relative to current work directory of process
         possible_path = File.absolute_path(path)
-        found_path = possible_path if (@load_paths_subset || File).exist?(possible_path)
+        found_path = possible_path if @load_paths_subset.exist?(possible_path)
       end
 
       return yield(:not_found) unless found_path
