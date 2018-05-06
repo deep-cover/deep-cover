@@ -69,10 +69,11 @@ module DeepCover
     end
 
     # Returns a path to an existing file or nil if none can be found.
-    # The search follows how ruby search for files using the $LOAD_PATH
+    # The search follows how ruby search for files using the $LOAD_PATH, but limits
+    # those it checks based on the LoadPathsSubset.
     #
-    # An absolute path is returned directly if it exists, otherwise nil
-    # is returned without searching anywhere else.
+    # An absolute path is returned directly if it exists, otherwise nil is returned
+    # without searching anywhere else.
     def resolve_path(path, extensions_to_try = ['.rb', '.so'])
       if extensions_to_try
         extensions_to_try = [''] if extensions_to_try.any? { |ext| path.end_with?(ext) }
