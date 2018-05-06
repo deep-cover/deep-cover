@@ -26,6 +26,9 @@ Layout/IndentArray:
 Layout/IndentHash:
   EnforcedStyle: align_braces
 
+Layout/IndentHeredoc:
+  Enabled: false
+
 Layout/MultilineArrayBraceLayout:
   EnforcedStyle: new_line
 
