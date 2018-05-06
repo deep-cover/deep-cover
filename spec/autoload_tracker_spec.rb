@@ -50,14 +50,29 @@ module DeepCover
       it 'ignores frozen modules' do
         modules.first.autoload :A, 'hello'
         modules.first.freeze
-
-        do_initialize_autoloaded_path
+        expect do
+          do_initialize_autoloaded_path
+        end.to output(%r[There is an autoload on a frozen module/class]).to_stderr
+        AutoloadTracker.warned_for_frozen_module = false
 
         tracker.autoloads_by_basename.should be_empty
         tracker.interceptor_files.should be_empty
         autoload_calls_modules.should be_empty
         autoload_calls_names.should be_empty
         autoload_calls_paths.should be_empty
+      end
+
+      it 'whines for frozen modules only once' do
+        modules.first.autoload :A, 'hello'
+        modules.first.freeze
+        expect do
+          do_initialize_autoloaded_path
+        end.to output(%r[There is an autoload on a frozen module/class]).to_stderr
+
+        expect do
+          do_initialize_autoloaded_path
+        end.to_not output(%r[There is an autoload on a frozen module/class]).to_stderr
+        AutoloadTracker.warned_for_frozen_module = false
       end
     end
 
@@ -79,7 +94,10 @@ module DeepCover
         modules.first.autoload :A, interceptor_path
         modules.first.freeze
 
-        tracker.remove_interceptors(&autoload_block)
+        expect do
+          tracker.remove_interceptors(&autoload_block)
+        end.to output(%r[There is an autoload on a frozen module/class]).to_stderr
+        AutoloadTracker.warned_for_frozen_module = false
 
         autoload_calls_modules.should be_empty
         autoload_calls_names.should be_empty

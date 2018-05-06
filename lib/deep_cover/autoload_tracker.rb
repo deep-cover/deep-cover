@@ -41,6 +41,10 @@ module DeepCover
         entries.each do |entry|
           const = entry.const
           next unless const
+          if const.frozen?
+            warn_frozen_module(const)
+            next
+          end
           # We set the autoload to a file that is already loaded, this makes ruby happy
           const.autoload_without_deep_cover(entry.name, $LOADED_FEATURES.first)
         end
@@ -53,6 +57,10 @@ module DeepCover
           entries.each do |entry|
             const = entry.const
             next unless const
+            if const.frozen?
+              warn_frozen_module(const)
+              next
+            end
             # Putting the autoloads back back since we couldn't complete the require
             const.autoload_without_deep_cover(entry.name, entry.interceptor_path)
           end
@@ -66,7 +74,14 @@ module DeepCover
         # Module's constants are shared with Object. But if you set autoloads directly on Module, they
         # appear on multiple classes. So just skip, Object will take care of those.
         next if const == Module
-        next if const.frozen?
+
+        if const.frozen?
+          if const.constants.any? { |name| const.autoload?(name) }
+            warn_frozen_module(const)
+          end
+          next
+        end
+
         const.constants.each do |name|
           path = const.autoload?(name)
           next unless path
@@ -86,7 +101,10 @@ module DeepCover
           # Module's constants are shared with Object. But if you set autoloads directly on Module, they
           # appear on multiple classes. So just skip, Object will take care of those.
           next if const == Module
-          next if const.frozen?
+          if const.frozen?
+            warn_frozen_module(const)
+            next
+          end
           yield const, entry.name, entry.target_path
         end
       end
@@ -142,6 +160,20 @@ require #{path.to_s.inspect}
       new_file.close
 
       new_file.path
+    end
+
+    class << self
+      # Can be true, false, or a Symbol. The symbol will make every warning be displayed
+      attr_accessor :warned_for_frozen_module
+    end
+    self.warned_for_frozen_module = false
+
+    # Using frozen modules/classes is almost unheard of, but a warning makes things easier if someone does it
+    def warn_frozen_module(const)
+      return if self.class.warned_for_frozen_module == true
+      self.class.warned_for_frozen_module ||= true
+      warn "There is an autoload on a frozen module/class: #{const}, DeepCover cannot handle those, failure is probable. " \
+           "This warning won't be displayed again (even for different module/class)"
     end
   end
 end
