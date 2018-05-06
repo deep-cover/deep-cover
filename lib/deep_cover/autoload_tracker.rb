@@ -11,6 +11,7 @@ module DeepCover
       end
     end
 
+    attr_reader :autoloads_by_basename, :interceptor_files
     def initialize
       @autoloads_by_basename = {}
       @interceptor_files = []
@@ -57,6 +58,41 @@ module DeepCover
           end
         end
       end
+    end
+
+    # This is only used on MRI, so ObjectSpace is alright.
+    def initialize_autoloaded_paths(consts = ObjectSpace.each_object(Module), &do_autoload_block)
+      consts.each do |const|
+        # Module's constants are shared with Object. But if you set autoloads directly on Module, they
+        # appear on multiple classes. So just skip, Object will take care of those.
+        next if const == Module
+        next if const.frozen?
+        const.constants.each do |name|
+          path = const.autoload?(name)
+          next unless path
+          interceptor_path = setup_interceptor_for(const, name, path)
+          yield const, name, interceptor_path
+        end
+      end
+    end
+
+    # We need to remove the interceptor hooks, otherwise, the problem if manually requiring
+    # something that is autoloaded will cause issues.
+    def remove_interceptors(&do_autoload_block)
+      @autoloads_by_basename.each do |basename, entries|
+        entries.each do |entry|
+          const = entry.const
+          next unless const
+          # Module's constants are shared with Object. But if you set autoloads directly on Module, they
+          # appear on multiple classes. So just skip, Object will take care of those.
+          next if const == Module
+          next if const.frozen?
+          yield const, entry.name, entry.target_path
+        end
+      end
+
+      @autoloaded_paths = {}
+      @interceptor_files = []
     end
 
     protected

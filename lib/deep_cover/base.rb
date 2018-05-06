@@ -14,6 +14,7 @@ module DeepCover
       else
         require_relative 'core_ext/autoload_overrides'
         AutoloadOverride.active = true
+        autoload_tracker.initialize_autoloaded_paths { |mod, name, path| mod.autoload_without_deep_cover(name, path) }
       end
       require_relative 'core_ext/require_overrides'
       RequireOverride.active = true
@@ -24,7 +25,10 @@ module DeepCover
 
     def stop
       require_relative 'core_ext/require_overrides'
-      AutoloadOverride.active = false if defined? AutoloadOverride
+      if defined? AutoloadOverride
+        AutoloadOverride.active = false
+        autoload_tracker.remove_interceptors { |mod, name, path| mod.autoload_without_deep_cover(name, path) }
+      end
       RequireOverride.active = false
       @started = false
     end
