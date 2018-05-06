@@ -53,7 +53,10 @@ module DeepCover
       @@interceptor_files ||= []
       new_file = Tempfile.new([File.basename(path), '.rb'])
       @@interceptor_files << new_file
-      new_file.write("# Intermediary file for ruby's autoload made by deepcover\nrequire #{path.to_s.inspect}")
+      new_file.write(<<-RUBY)
+# Intermediary file for ruby's autoload made by deepcover
+require #{path.to_s.inspect}
+      RUBY
       new_file.close
 
       new_file.path
