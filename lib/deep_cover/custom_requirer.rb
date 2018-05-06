@@ -50,6 +50,10 @@ module DeepCover
       def exist?(full_path)
         File.exist?(full_path)
       end
+
+      def within_lookup?(full_path)
+        true
+      end
     end
 
     attr_reader :load_paths, :loaded_features, :filter
@@ -57,8 +61,9 @@ module DeepCover
       @load_paths = load_paths
       lookup_paths ||= Dir.getwd
       lookup_paths = Array(lookup_paths)
+      @every_load_paths = EveryLoadPaths.new(load_paths)
       if lookup_paths.include?('/')
-        @load_paths_subset = EveryLoadPaths.new(load_paths)
+        @load_paths_subset = @every_load_paths
       else
         @load_paths_subset = LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths)
       end
@@ -82,21 +87,26 @@ module DeepCover
       end
 
       abs_path = File.absolute_path(path)
-
       path = abs_path if path.start_with?('./', '../')
+
+      if DeepCover.autoload_tracker.possible_autoload_target?(path)
+        effective_load_paths_set = @every_load_paths
+      else
+        effective_load_paths_set = @load_paths_subset
+      end
 
       if path == abs_path
         extensions_to_try.each do |ext|
           path_with_ext = path + ext
-          return path_with_ext if @load_paths_subset.exist?(path_with_ext)
+          return path_with_ext if effective_load_paths_set.exist?(path_with_ext)
         end
       else
         extensions_to_try.each do |ext|
           path_with_ext = path + ext
-          @load_paths_subset.load_paths.each do |load_path|
+          effective_load_paths_set.load_paths.each do |load_path|
             possible_path = File.absolute_path(path_with_ext, load_path)
 
-            next unless @load_paths_subset.exist?(possible_path)
+            next unless effective_load_paths_set.exist?(possible_path)
             # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
             # https://bugs.ruby-lang.org/issues/10222
             return File.realpath(possible_path) if RUBY_VERSION >= '2.5'
@@ -128,13 +138,16 @@ module DeepCover
 
       return yield(:not_found) unless found_path
       return false if @loaded_features.include?(found_path)
-      return yield(:not_supported) if found_path.end_with?('.so')
       return false if @paths_being_required.include?(found_path)
-      return yield(:skipped) if filter && filter.call(found_path)
+      DeepCover.autoload_tracker.wrap_require(path, found_path) do
+        return yield(:not_in_covered_paths) unless @load_paths_subset.within_lookup?(found_path)
+        return yield(:not_supported) if found_path.end_with?('.so')
+        return yield(:skipped) if filter && filter.call(found_path)
 
-      cover_and_execute(found_path) { |reason| return yield(reason) }
+        cover_and_execute(found_path) { |reason| return yield(reason) }
 
-      @loaded_features << found_path
+        @loaded_features << found_path
+      end
       true
     end
 

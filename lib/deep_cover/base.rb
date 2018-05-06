@@ -62,7 +62,7 @@ module DeepCover
 
     def reset
       stop if running?
-      @coverage = @custom_requirer = nil
+      @coverage = @custom_requirer = @autoload_tracker = nil
       config.reset
       self
     end
@@ -73,6 +73,10 @@ module DeepCover
 
     def custom_requirer
       @custom_requirer ||= CustomRequirer.new(lookup_paths: config.paths)
+    end
+
+    def autoload_tracker
+      @autoload_tracker ||= AutoloadTracker.new
     end
 
     private

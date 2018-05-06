@@ -1,0 +1,95 @@
+# frozen_string_literal: true
+
+require 'weakref'
+
+module DeepCover
+  class AutoloadTracker
+    AutoloadEntry = Struct.new(:weak_const, :name, :target_path, :interceptor_path) do
+      def const
+        # If the ref is dead, will return nil, otherwise the target
+        WeakRef.class_variable_get(:@@__map)[weak_const]
+      end
+    end
+
+    def initialize
+      @autoloads_by_basename = {}
+    end
+
+    def add(const, name, path, interceptor_path)
+      entry = AutoloadEntry.new(WeakRef.new(const), name, path, interceptor_path)
+
+      basename = basename_without_extension(path)
+
+      @autoloads_by_basename[basename] ||= []
+      @autoloads_by_basename[basename] << entry
+    end
+
+    def possible_autoload_target?(requested_path)
+      basename = basename_without_extension(requested_path)
+      autoloads = @autoloads_by_basename[basename]
+      autoloads && !autoloads.empty?
+    end
+
+    def wrap_require(requested_path, absolute_path_found, &block)
+      entries = entries_for_target(requested_path, absolute_path_found)
+
+      begin
+        entries.each do |entry|
+          const = entry.const
+          next unless const
+          # We set the autoload to a file that is already loaded, this makes ruby happy
+          const.autoload_without_deep_cover(entry.name, $LOADED_FEATURES.first)
+        end
+
+        return_value = yield
+        reached_end = true
+        return_value
+      ensure
+        if !reached_end
+          entries.each do |entry|
+            const = entry.const
+            next unless const
+            # Putting the autoloads back back since we couldn't complete the require
+            const.autoload_without_deep_cover(entry.name, entry.interceptor_path)
+          end
+        end
+      end
+    end
+
+    protected
+
+    def entries_for_target(requested_path, absolute_path_found)
+      basename = basename_without_extension(requested_path)
+      autoloads = @autoloads_by_basename[basename] || []
+
+      autoloads.select { |entry| entry_is_target?(entry, requested_path, absolute_path_found) }
+    end
+
+    def entry_is_target?(entry, requested_path, absolute_path_found)
+      return true if entry.target_path == requested_path
+      target_path_rb = with_rb_extension(entry.target_path)
+      return true if target_path_rb == requested_path
+
+      # Even though this is not efficient, it's safer to resolve entries' target_path each time
+      # instead of storing the result, in case subsequent changes to $LOAD_PATH gives different results
+      entry_absolute_path = DeepCover.custom_requirer.resolve_path(entry.target_path)
+      return true if entry_absolute_path == absolute_path_found
+      false
+    end
+
+    def basename_without_extension(path)
+      new_path = File.basename(path)
+      new_path = new_path[0...-3] unless needs_extension?(new_path)
+      new_path
+    end
+
+    def with_rb_extension(path)
+      path += '.rb' unless needs_extension?(path)
+      path
+    end
+
+    def needs_extension?(path)
+      !path.end_with?('.rb', '.so')
+    end
+  end
+end
