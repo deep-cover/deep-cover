@@ -2,7 +2,7 @@
 
 module DeepCover
   module Load
-    AUTOLOAD = %i[analyser auto_run config
+    AUTOLOAD = %i[analyser autoload_tracker auto_run config
                   coverage covered_code custom_requirer
                   tracker_hits_per_path tracker_storage_per_path
                   flag_comment_associator memoize module_override node

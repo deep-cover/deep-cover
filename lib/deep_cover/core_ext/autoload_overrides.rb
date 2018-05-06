@@ -67,6 +67,7 @@ require #{path.to_s.inspect}
     def autoload(name, path)
       mod = binding.of_caller(1).eval('Module.nesting').first || Object
       interceptor_path = AutoloadInterceptor.autoload_interceptor_for(path)
+      DeepCover.autoload_tracker.add(mod, name, path, interceptor_path)
       mod.autoload_without_deep_cover(name, interceptor_path)
     end
 
@@ -77,6 +78,7 @@ require #{path.to_s.inspect}
   module ModuleAutoloadOverride
     def autoload(name, path)
       interceptor_path = AutoloadInterceptor.autoload_interceptor_for(path)
+      DeepCover.autoload_tracker.add(self, name, path, interceptor_path)
       autoload_without_deep_cover(name, interceptor_path)
     end
 
