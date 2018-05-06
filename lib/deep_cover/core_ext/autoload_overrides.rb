@@ -47,27 +47,10 @@ require 'binding_of_caller'
 require 'tempfile'
 
 module DeepCover
-  module AutoloadInterceptor
-    def self.autoload_interceptor_for(path)
-      # Need to store all the tempfiles so that they are not GCed, which would delete the files themselves.
-      @@interceptor_files ||= []
-      new_file = Tempfile.new([File.basename(path), '.rb'])
-      @@interceptor_files << new_file
-      new_file.write(<<-RUBY)
-# Intermediary file for ruby's autoload made by deepcover
-require #{path.to_s.inspect}
-      RUBY
-      new_file.close
-
-      new_file.path
-    end
-  end
-
   module KernelAutoloadOverride
     def autoload(name, path)
       mod = binding.of_caller(1).eval('Module.nesting').first || Object
-      interceptor_path = AutoloadInterceptor.autoload_interceptor_for(path)
-      DeepCover.autoload_tracker.add(mod, name, path, interceptor_path)
+      interceptor_path = DeepCover.autoload_tracker.setup_interceptor_for(mod, name, path)
       mod.autoload_without_deep_cover(name, interceptor_path)
     end
 
@@ -77,8 +60,7 @@ require #{path.to_s.inspect}
 
   module ModuleAutoloadOverride
     def autoload(name, path)
-      interceptor_path = AutoloadInterceptor.autoload_interceptor_for(path)
-      DeepCover.autoload_tracker.add(self, name, path, interceptor_path)
+      interceptor_path = DeepCover.autoload_tracker.setup_interceptor_for(self, name, path)
       autoload_without_deep_cover(name, interceptor_path)
     end
 

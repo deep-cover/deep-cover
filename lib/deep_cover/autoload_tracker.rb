@@ -13,15 +13,18 @@ module DeepCover
 
     def initialize
       @autoloads_by_basename = {}
+      @interceptor_files = []
     end
 
-    def add(const, name, path, interceptor_path)
+    def setup_interceptor_for(const, name, path)
+      interceptor_path = autoload_interceptor_for(path)
       entry = AutoloadEntry.new(WeakRef.new(const), name, path, interceptor_path)
 
       basename = basename_without_extension(path)
 
       @autoloads_by_basename[basename] ||= []
       @autoloads_by_basename[basename] << entry
+      interceptor_path
     end
 
     def possible_autoload_target?(requested_path)
@@ -90,6 +93,19 @@ module DeepCover
 
     def needs_extension?(path)
       !path.end_with?('.rb', '.so')
+    end
+
+    def autoload_interceptor_for(path)
+      new_file = Tempfile.new([File.basename(path), '.rb'])
+      # Need to store all the tempfiles so that they are not GCed, which would delete the files themselves.
+      @interceptor_files << new_file
+      new_file.write(<<-RUBY)
+# Intermediary file for ruby's autoload made by deep-cover
+require #{path.to_s.inspect}
+      RUBY
+      new_file.close
+
+      new_file.path
     end
   end
 end
