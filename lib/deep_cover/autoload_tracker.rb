@@ -5,9 +5,11 @@ require 'weakref'
 module DeepCover
   class AutoloadTracker
     AutoloadEntry = Struct.new(:weak_const, :name, :target_path, :interceptor_path) do
+      # If the ref is dead, will return nil, otherwise the target
       def const
-        # If the ref is dead, will return nil, otherwise the target
-        WeakRef.class_variable_get(:@@__map)[weak_const]
+        weak_const.__getobj__
+      rescue RefError
+        nil
       end
     end
 
