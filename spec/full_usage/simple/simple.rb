@@ -30,8 +30,8 @@ begin
   end
 
   expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb root_module_autoloaded.rb
-                               nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
-
+                               nested_module_autoloaded.rb root_module_autoload_manually_required.rb
+                               implicit_autoload_from_included_module.rb kernel_autoload_from_included_module.rb)
   expected_covered_files = expected_executed_files
   if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
     # Autoload isn't covered by DeepCover for JRuby
@@ -66,7 +66,17 @@ begin
   cov.start if cov
 
   module TheParentModule
-    # used for nested autoloads
+    def setup_implicit_autoload_from_included_module
+      autoload :ImplicitAutoloadFromIncludedModule, 'implicit_autoload_from_included_module'
+    end
+
+    def setup_kernel_autoload_from_included_module
+      Kernel.autoload :KernelAutoloadFromIncludedModule, 'kernel_autoload_from_included_module'
+    end
+  end
+
+  class TheParentClass
+    include TheParentModule
   end
 
   test_require('beside_simple')
@@ -81,10 +91,17 @@ begin
   autoload :RootModuleAutoloadManuallyRequired, 'root_module_autoload_manually_required'
   require 'root_module_autoload_manually_required'
 
+  TheParentClass.new.setup_implicit_autoload_from_included_module
+  TheParentModule::ImplicitAutoloadFromIncludedModule
+
+  TheParentClass.new.setup_kernel_autoload_from_included_module
+  TheParentModule::KernelAutoloadFromIncludedModule
+
+
+
   if $executed_files != expected_executed_files
     fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files.inspect}\nGot #{$executed_files.inspect}"
   end
-
 
   if cov
     covered = DeepCover.coverage.covered_codes.map(&:path).map(&:basename).map(&:to_s)
@@ -92,7 +109,6 @@ begin
       fail_test("Didn't cover all files.\nExpected: #{expected_covered_files.inspect}\nGot: #{covered.inspect}")
     end
   end
-
 
 
   begin
