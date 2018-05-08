@@ -29,15 +29,6 @@ begin
     test_require(require_path, false, 'repeated ') if expected_value == true
   end
 
-  # Load deep_cover
-  $LOAD_PATH << File.absolute_path('../../../lib', absolute_dir)
-  cov = if ARGV.delete('takeover')
-    require 'deep_cover/builtin_takeover'
-    Coverage
-  else
-    require 'deep_cover'
-    DeepCover
-  end
   expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb root_module_autoloaded.rb
                                nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
 
@@ -47,18 +38,32 @@ begin
     expected_covered_files -= %w(root_module_autoloaded.rb nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
   end
 
-  if ARGV.delete('uncovered')
-    # Treat all of these files as if they were not covered
-    # This tests what happens inside of the gems of a project being run
-    DeepCover.configure { paths './uncovered' }
+  if ARGV.delete('no_deep_cover')
     expected_covered_files = []
   else
-    DeepCover.configure { paths '.' }
+    # Load deep_cover
+    $LOAD_PATH << File.absolute_path('../../../lib', absolute_dir)
+    cov = if ARGV.delete('takeover')
+            require 'deep_cover/builtin_takeover'
+            Coverage
+          else
+            require 'deep_cover'
+            DeepCover
+          end
+
+    if ARGV.delete('uncovered')
+      # Treat all of these files as if they were not covered
+      # This tests what happens inside of the gems of a project being run
+      DeepCover.configure { paths './uncovered' }
+      expected_covered_files = []
+    else
+      DeepCover.configure { paths '.' }
+    end
   end
 
-  raise "Unsupported ARGV received: #{ARGV.inspect}" unless ARGV.empty?
+  raise "Unsupported / unused ARGV received: #{ARGV.inspect}" unless ARGV.empty?
 
-  cov.start
+  cov.start if cov
 
   module TheParentModule
     # used for nested autoloads
@@ -81,9 +86,11 @@ begin
   end
 
 
-  covered = DeepCover.coverage.covered_codes.map(&:path).map(&:basename).map(&:to_s)
-  if covered != expected_covered_files
-    fail_test("Didn't cover all executed files.\nExpected: #{expected_covered_files.inspect}\nGot: #{covered.inspect}")
+  if cov
+    covered = DeepCover.coverage.covered_codes.map(&:path).map(&:basename).map(&:to_s)
+    if covered != expected_covered_files
+      fail_test("Didn't cover all files.\nExpected: #{expected_covered_files.inspect}\nGot: #{covered.inspect}")
+    end
   end
 
 

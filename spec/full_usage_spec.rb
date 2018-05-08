@@ -11,6 +11,8 @@ RSpec.describe 'DeepCover usage' do
 
   it { %w(ruby simple/simple.rb takeover uncovered).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
 
+  it { %w(ruby simple/simple.rb no_deep_cover).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
+
   describe '', :slow do
     it do
       %w(ruby with_configure/test.rb).should run_successfully.from_dir('spec/full_usage').and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
