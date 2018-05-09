@@ -3,15 +3,12 @@
 require 'spec_helper'
 
 RSpec.describe 'DeepCover usage' do
-  it { %w(ruby simple/simple.rb).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
-
-  it { %w(ruby simple/simple.rb uncovered).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
-
-  it { %w(ruby simple/simple.rb takeover).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
-
-  it { %w(ruby simple/simple.rb takeover uncovered).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
-
-  it { %w(ruby simple/simple.rb no_deep_cover).should run_successfully.from_dir('spec/full_usage').and_output('Done') }
+  ['', 'uncovered', 'takeover', 'takeover uncovered', 'no_deep_cover'].each do |args|
+    command = "ruby simple/simple.rb #{args}"
+    it "`#{command}`" do
+      command.split.should run_successfully.from_dir('spec/full_usage').and_output('Done')
+    end
+  end
 
   describe '', :slow do
     it do
