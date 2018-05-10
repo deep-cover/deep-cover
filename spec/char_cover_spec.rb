@@ -49,7 +49,7 @@ RSpec::Matchers.define :have_correct_char_coverage do |filename, lineno|
 end
 
 RSpec.describe 'char cover' do
-  each_code_examples('./spec/char_cover/*.rb', name: 'branch') do |fn, lines, lineno|
+  each_code_examples('./spec/char_cover/*.rb', name: 'char') do |fn, lines, lineno|
     lines.should have_correct_char_coverage(fn, lineno)
   end
 
