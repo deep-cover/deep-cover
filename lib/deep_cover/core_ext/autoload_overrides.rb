@@ -48,13 +48,17 @@
 #
 # Some situations where Module.nesting of the caller is different from self in Kernel#autoload:
 # * When in the top-level: (self: main) vs (Module.nesting: nil, which we default to Object)
-# * When called from a method of the module:
+# * When called from a method defined on a module that is included:
 #     module A
 #       def begin_autoload
+#         # `Kernel.autoload` would have the same result
 #         autoload :A1, 'hello'
 #       end
 #     end
-#   Calling #begin_autoload on an instance of a class `B` that `include A` results in:
+#     class B
+#       include A
+#     end
+#   Calling `B.new.begin_autoload` is equivalent to:
 #     A.autoload :A1, 'hello'
 #   NOT this:
 #     B.autoload :A1, 'hello'
