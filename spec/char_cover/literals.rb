@@ -90,7 +90,7 @@
 #>    -      - xxxxx- x
     [1, *raise, 3] rescue nil
 #>    - x     - x
-### Hash (Ruby 2.4-)
+### Hash (Ruby <2.5)
     {:a => 1, :b => 2}
     {a: 1, b: 2}
     {a: 1, **{b: 2}}

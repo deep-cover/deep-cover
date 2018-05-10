@@ -50,7 +50,7 @@
     raise TypeError, 'hello' rescue nil
     raise(TypeError, 'hello') rescue nil
 
-#### With illegal syntax (Ruby 2.4-)
+#### With illegal syntax (Ruby <2.5)
     raise = 1
     raise (TypeError, 'hello') rescue nil
 
