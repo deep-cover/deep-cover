@@ -1,5 +1,5 @@
 ### Without rescue
-#### With raise
+#### With raise (Ruby <2.6)
 
     begin
       raise
@@ -9,7 +9,7 @@
 #>X
     end rescue nil
 
-#### With raise in else
+#### With raise in else (Ruby <2.6)
 
     begin
       "here"
@@ -19,7 +19,7 @@
 #>X
     end
 
-#### Without raise
+#### Without raise (Ruby <2.6)
 
     begin
       "here"
@@ -65,13 +65,15 @@
     end
 
 ### Empty parts
-#### With empty begin
+#### With empty begin without rescue (Ruby <2.6)
     begin
 
     else
       "here"
     end
 
+
+#### With empty begin with rescue
     begin
 
     rescue
