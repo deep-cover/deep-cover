@@ -11,6 +11,12 @@ module DeepCover
     next if RUBY_VERSION < '2.5'
     Execution = Struct.new(:code, :ruby_result, :dc_result, :raw_dc_result)
 
+    def run_dc_ruby25_like_branch(**args)
+      covered_code = DeepCover::CoveredCode.new(**args)
+      Tools.execute_sample(covered_code)
+      DeepCover::Analyser::Ruby25LikeBranch.new(covered_code).results
+    end
+
     # Mutations are applied automatically to the received code:
     #   A test will be made with and then without empty lines
     #   A test will be made with `if` replaced by `unless` (except if there is a elsif)
@@ -76,9 +82,7 @@ module DeepCover
         ruby_result = ::Coverage.result.values.first[:branches]
         $LOADED_FEATURES.delete(f.path)
 
-        covered_code = DeepCover::CoveredCode.new(source: ruby_code, path: f.path)
-        Tools.execute_sample(covered_code)
-        raw_dc_result = DeepCover::Analyser::Ruby25LikeBranch.new(covered_code).results
+        raw_dc_result = run_dc_ruby25_like_branch(source: ruby_code, path: f.path)
 
         ruby_result = normalize_result(ruby_result)
         dc_result = normalize_result(raw_dc_result)
@@ -227,14 +231,8 @@ module DeepCover
       it { code.should have_similar_result_to_ruby }
     end
 
-    def run_dc_ruby25_like_branch(ruby_code)
-      covered_code = DeepCover::CoveredCode.new(source: ruby_code)
-      Tools.execute_sample(covered_code)
-      DeepCover::Analyser::Ruby25LikeBranch.new(covered_code).results
-    end
-
     it "`123 && 45` gives correct results for &&" do
-      key, branches = run_dc_ruby25_like_branch("123 && 45").first
+      key, branches = run_dc_ruby25_like_branch(source: "123 && 45").first
       key[2..-1].should == [1, 0, 1, 9]
 
       then_branch, then_hits = branches.detect{|k, v| k.first == :then }
@@ -247,7 +245,7 @@ module DeepCover
     end
 
     it "`false && 45` gives correct results for &&" do
-      key, branches = run_dc_ruby25_like_branch("false && 45").first
+      key, branches = run_dc_ruby25_like_branch(source: "false && 45").first
       key[2..-1].should == [1, 0, 1, 11]
 
       then_branch, then_hits = branches.detect{|k, v| k.first == :then }
@@ -260,7 +258,7 @@ module DeepCover
     end
 
     it "`123 || 45` gives correct results for ||" do
-      key, branches = run_dc_ruby25_like_branch("123 || 45").first
+      key, branches = run_dc_ruby25_like_branch(source: "123 || 45").first
       key[2..-1].should == [1, 0, 1, 9]
 
       then_branch, then_hits = branches.detect{|k, v| k.first == :then }
@@ -273,7 +271,7 @@ module DeepCover
     end
 
     it "`false || 45` gives correct results for ||" do
-      key, branches = run_dc_ruby25_like_branch("false || 45").first
+      key, branches = run_dc_ruby25_like_branch(source: "false || 45").first
       key[2..-1].should == [1, 0, 1, 11]
 
       then_branch, then_hits = branches.detect{|k, v| k.first == :then }
