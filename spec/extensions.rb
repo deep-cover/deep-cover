@@ -12,15 +12,16 @@ class RSpec::Core::ExampleGroup
         example_groups.each do |section, examples|
           context(section || '(General)') do
             examples.each do |title, (lines, lineno)|
-              msg = case [section, title].join
+              description = [section, title].join.downcase
+              msg = case description
                     when /\(pending/i then :pending
                     when /\(skip/i then next
                     when /\(#{name}_pending/i then :pending
-                    when /\(Ruby 2\.(\d)\+/i
+                    when /\(ruby 2\.(\d)\+/i
                       :skip if RUBY_VERSION < "2.#{Regexp.last_match(1)}.0"
-                    when /\(Ruby 2\.(\d)\-/i
+                    when /\(ruby 2\.(\d)\-/i
                       :skip if RUBY_VERSION > "2.#{Regexp.last_match(1)}.0"
-                    when /\(!Jruby/i
+                    when /\(!jruby/i
                       :skip if RUBY_PLATFORM == 'java'
                     end
               if [section, title].join =~ /\(tag: (\w+)/
