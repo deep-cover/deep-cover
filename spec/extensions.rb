@@ -23,6 +23,11 @@ class RSpec::Core::ExampleGroup
                       :skip if RUBY_VERSION > "2.#{Regexp.last_match(1)}.0"
                     when /\(!jruby/i
                       :skip if RUBY_PLATFORM == 'java'
+                    when /\(#/
+                    when /\(tag/
+                    when /\(\s*\)/
+                    when /\(/
+                      raise "unexpected '(pattern' in section/title: #{description}. Use (# blabla) if you want it ignored."
                     end
               if [section, title].join =~ /\(tag: (\w+)/
                 tag = Regexp.last_match(1).to_sym

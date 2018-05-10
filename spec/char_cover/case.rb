@@ -227,7 +227,7 @@
 #>X
     end
 
-### When with empty then (from rdoc-5.0.0)
+### When with empty then (# from rdoc-5.0.0)
     case 'url';when /^#/ then;end
 
 #### Matrix lib (skip)

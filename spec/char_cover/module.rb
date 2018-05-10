@@ -23,7 +23,7 @@
     end.to_s rescue nil
 #>  xxxxxxxx
 
-#### Invalid (longer) path
+#### Invalid (# longer) path
     module String::Foo::Bar::A
 #>  xxxxxx            xxxxxxxx
     end.to_s rescue nil
@@ -63,7 +63,7 @@
     end.to_s rescue nil
 #>  ---xxxxx
 
-#### Invalid (longer) path
+#### Invalid (# longer) path
     class String::Foo::Bar::M
 #>  xxxxx            xxxxxxxx
     end.to_s rescue nil
