@@ -69,12 +69,12 @@ module DeepCover
 
     class Csend < Node
       include Branch
-      has_tracker :conditional
+      has_tracker :not_nil
       has_child receiver: Node,
-                rewrite: '(%{local}=%{node};%{conditional_tracker} if %{local} != nil;%{local})'
+                rewrite: '(%{local}=%{node};%{not_nil_tracker} if %{local} != nil;%{local})'
 
       has_child actual_send: {safe_send: Send},
-                flow_entry_count: :conditional_tracker_hits
+                flow_entry_count: :not_nil_tracker_hits
 
       def initialize(base_node, base_children: base_node.children, **) # rubocop:disable Naming/UncommunicativeMethodParamName [#5436]
         send_without_receiver = base_node.updated(:safe_send, [nil, *base_node.children.drop(1)])
