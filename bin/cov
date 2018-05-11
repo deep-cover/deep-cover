@@ -9,6 +9,7 @@ module DeepCover
   example = ARGV[0] || 'simple_if'
   fn = "./spec/samples/#{example}.rb"
   fn = "./spec/char_cover/#{example}.rb" unless File.exist?(fn)
+  fn = example unless File.exist?(fn)
   if File.exist?(fn)
     fn = File.absolute_path(fn)
     source = File.read(fn)
