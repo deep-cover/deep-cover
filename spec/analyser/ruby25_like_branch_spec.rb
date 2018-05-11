@@ -191,6 +191,8 @@ module DeepCover
       asd = nil
       asd&.to_i
     ###
+      nil&.to_i&.to_i
+    ###
       a = 1
       while a < 10
         a += 1

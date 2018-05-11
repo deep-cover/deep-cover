@@ -21,11 +21,6 @@ module DeepCover
       include WithBlock
     end
 
-    class CsendWithBlock < Csend
-      include WithBlock
-      refine_child actual_send: {safe_send: SendWithBlock}
-    end
-
     class SuperWithBlock < Node
       include WithBlock
       has_extra_children arguments: Node
@@ -34,9 +29,7 @@ module DeepCover
     class Block < Node
       check_completion
       has_tracker :body
-      has_child call: {send: SendWithBlock, csend: CsendWithBlock,
-                       zsuper: SuperWithBlock, super: SuperWithBlock,
-}
+      has_child call: {send: SendWithBlock, zsuper: SuperWithBlock, super: SuperWithBlock, csend: Csend}
       has_child args: Args
       has_child body: Node,
                 can_be_empty: -> { base_node.loc.end.begin },
@@ -47,6 +40,15 @@ module DeepCover
 
       def children_nodes_in_flow_order
         [call, args] # Similarly to a def, the body is actually not part of the flow of this node...
+      end
+
+      alias_method :rewrite_for_completion, :rewrite
+      def rewrite
+        if call.is_a?(Csend)
+          rewrite_for_completion.gsub('%{node}', Csend::REWRITE_SUFFIX)
+        else
+          rewrite_for_completion
+        end
       end
     end
 

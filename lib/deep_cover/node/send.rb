@@ -67,13 +67,51 @@ module DeepCover
       check_completion
     end
 
+    class CsendInnerSend < SendBase
+      has_tracker :completion
+      include ExecutedAfterChildren
+
+      def has_block?
+        parent.parent.is_a?(Block)
+      end
+
+      def rewrite
+        # All the rest of the rewriting logic is in Csend
+        '%{node};%{completion_tracker};' unless has_block?
+      end
+
+      def flow_completion_count
+        return parent.parent.flow_completion_count if has_block?
+        completion_tracker_hits
+      end
+
+      def loc_hash
+        # This is only a partial Send, the receiver param and the dot are actually handled by the parent Csend.
+        h = super.dup
+        h[:expression] = h[:expression].with(begin_pos: h[:selector_begin].begin_pos)
+        h
+      end
+    end
+
     class Csend < Node
+      # The overall rewriting goal is this:
+      #    temp = *receiver*;
+      #    if nil != temp
+      #      TRACK_my_NOT_NIL
+      #      temp = temp&.*actual_send*{block}
+      #      TRACK_actual_send_COMPLETION
+      #      t
+      #    else
+      #      nil
+      #    end
+      # This is split across the children and the CsendInnerSend
       include Branch
       has_tracker :not_nil
       has_child receiver: Node,
-                rewrite: '(%{local}=%{node};%{not_nil_tracker} if %{local} != nil;%{local})'
+                rewrite: '(%{local}=%{node};if nil != %{local};%{not_nil_tracker};%{local}=%{local}'
+      REWRITE_SUFFIX = '%{node};%{local};else;nil;end)'
 
-      has_child actual_send: {safe_send: Send},
+      has_child actual_send: {safe_send: CsendInnerSend},
                 flow_entry_count: :not_nil_tracker_hits
 
       def initialize(base_node, base_children: base_node.children, **) # rubocop:disable Naming/UncommunicativeMethodParamName [#5436]
@@ -83,6 +121,14 @@ module DeepCover
       end
 
       executed_loc_keys :dot
+
+      def has_block?
+        parent.is_a?(Block)
+      end
+
+      def rewrite
+        REWRITE_SUFFIX unless has_block?
+      end
 
       def execution_count
         receiver.flow_completion_count
