@@ -153,8 +153,11 @@ module DeepCover
       if source_range_or_node.is_a?(Node)
         node = source_range_or_node
         source_range = node.expression
-        if node.is_a?(Node::If) && node.style == :elsif && (node.true_branch.is_a?(Node::EmptyBody) || node.deepest_elsif_node.loc_hash[:else].nil?)
-          source_range = source_range.wrap_rwhitespace
+        if node.is_a?(Node::If) && node.style == :elsif
+          deepest_if = node.deepest_elsif_node || node
+          if deepest_if.false_branch.is_a?(Node::EmptyBody)
+            source_range = source_range.wrap_rwhitespace_and_comments
+          end
         end
       else
         source_range = source_range_or_node
