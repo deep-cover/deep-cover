@@ -229,8 +229,10 @@ module DeepCover
       end while a < 10
     RUBY
 
-    cases.split("###\n").each do |code|
-      it { code.should have_similar_result_to_ruby }
+    cases.split("###\n").each_with_index do |code, i|
+      it "sample ##{i} (0-indexed)" do
+        code.should have_similar_result_to_ruby
+      end
     end
 
     it "`123 && 45` gives correct results for &&" do
