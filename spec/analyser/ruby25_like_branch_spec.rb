@@ -78,7 +78,7 @@ module DeepCover
         f.close
 
         ::Coverage.start(branches: true)
-        Tools.execute_sample -> { require f.path }
+        Tools.execute_sample -> { require f.path }, source: ruby_code
         ruby_result = ::Coverage.result.values.first[:branches]
         $LOADED_FEATURES.delete(f.path)
 
