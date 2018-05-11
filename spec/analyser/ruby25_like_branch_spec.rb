@@ -22,6 +22,7 @@ module DeepCover
     #   A test will be made with `if` replaced by `unless` (except if there is a elsif)
     #   A test will be made with `while` replaced by `until !(...)`
     #   A test will be made with every line containing only a number removed
+    #   A test will be made with every line containing only a number replaced by a comment
     #   A test will be made with every line containing only a number with a second line before (DeepCover)
     #   Every mix of the above rules will be tested.
     matcher :have_similar_result_to_ruby do
@@ -30,6 +31,7 @@ module DeepCover
         ruby_code = ruby_code.strip_heredoc
         ruby_codes = [ruby_code.rstrip]
         extra_ruby_codes = ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*$)/, '') }
+        extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*)$/, '  # Comment!') })
         extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*)$/, "\\1DeepCover\n\\1\\2") })
         ruby_codes.concat(extra_ruby_codes)
         ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bif\b/, 'unless') }) unless ruby_code[/\belsif\b/]
@@ -151,6 +153,16 @@ module DeepCover
         88
       else
         99
+      end
+    ###
+      if DeepCover
+        66
+      elsif DeepCover::Node
+        77
+      elsif DeepCover::Analyser
+        88
+      else
+
       end
     ###
       a = 123 if DeepCover
