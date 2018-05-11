@@ -25,6 +25,7 @@
 ### Class
     @@foo = 1
     dummy_method @@foo
+    self.class.remove_class_variable(:@@foo)
 
 #### Raise
     (@@bar = raise) rescue nil

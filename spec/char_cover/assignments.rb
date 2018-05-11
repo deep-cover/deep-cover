@@ -69,10 +69,12 @@
     (AND_EQUAL &&= 42) rescue nil
 #>  -          xxxxxx-
     AND_EQUAL = true; AND_EQUAL &&= 42
+    self.class.send(:remove_const, :AND_EQUAL)
     ::AND_EQUAL2 = true; ::AND_EQUAL2 &&= 42
     (String::AND_EQUAL3 &&= 42) rescue nil
 #>  -                   xxxxxx-
     String::AND_EQUAL3 = true; String::AND_EQUAL3 &&= 42
+    String.send(:remove_const, :AND_EQUAL3)
     String::AND_EQUAL5 = true; (String::AND_EQUAL5 &&= raise; 42) rescue nil
 #>                           - -                   xxx      - xx-
     (Nope::AND_EQUAL6 &&= 42) rescue nil
