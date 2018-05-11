@@ -33,7 +33,7 @@ module DeepCover
         extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*)$/, "\\1DeepCover\n\\1\\2") })
         ruby_codes.concat(extra_ruby_codes)
         ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bif\b/, 'unless') }) unless ruby_code[/\belsif\b/]
-        ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bwhile(.*)\b/, 'until !(\1)') })
+        ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bwhile\b(.*)/, 'until !(\1)') })
 
         ruby_codes += ruby_codes.map { |c| c.split("\n").select(&:present?).join("\n") }
         ruby_codes.uniq!
