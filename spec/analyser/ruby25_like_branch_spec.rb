@@ -30,12 +30,14 @@ module DeepCover
         @executions = []
         ruby_code = ruby_code.strip_heredoc
         ruby_codes = [ruby_code.rstrip]
-        extra_ruby_codes = ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*$)/, '') }
-        extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*)$/, '  # Comment!') })
-        extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*)$/, "\\1DeepCover\n\\1\\2") })
-        ruby_codes.concat(extra_ruby_codes)
-        ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bif\b/, 'unless') }) unless ruby_code[/\belsif\b/]
-        ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bwhile\b(.*)/, 'until !(\1)') })
+        unless ruby_code.include?('assert')
+          extra_ruby_codes = ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*$)/, '') }
+          extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*)$/, '  # Comment!') })
+          extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*)$/, "\\1DeepCover\n\\1\\2") })
+          ruby_codes.concat(extra_ruby_codes)
+          ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bif\b/, 'unless') }) unless ruby_code[/\belsif\b/]
+          ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bwhile\b(.*)/, 'until !(\1)') })
+        end
 
         ruby_codes += ruby_codes.map { |c| c.split("\n").select(&:present?).join("\n") }
         ruby_codes.uniq!
