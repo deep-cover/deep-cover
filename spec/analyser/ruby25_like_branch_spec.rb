@@ -49,8 +49,20 @@ module DeepCover
       end
 
       failure_message do
-        messages = (@different_executions + @non_uniq_index_executions).uniq.map do |execution|
+        bad_executions = (@different_executions + @non_uniq_index_executions).uniq
+
+        if @executions.size == bad_executions.size
+          every_mutation_bad = true
+          @different_executions.select! { |e| e == @executions.first }
+          @non_uniq_index_executions.select! { |e| e == @executions.first }
+          bad_executions = (@different_executions + @non_uniq_index_executions).uniq
+        end
+
+        messages = bad_executions.map do |execution|
           msg = []
+          if every_mutation_bad
+            msg << 'Every mutation is bad. Displaying problem only for original sample:'
+          end
           msg << 'For ruby code:'
           msg << execution.code.rstrip.indent(4)
 
