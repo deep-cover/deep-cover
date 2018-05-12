@@ -24,6 +24,8 @@ module DeepCover
     #   A test will be made with every line containing only a number removed
     #   A test will be made with every line containing only a number replaced by a comment
     #   A test will be made with every line containing only a number with a second line before (DeepCover)
+    #   A test will be made with every semi-colon (;) replaced by 2 semi-colon
+    #   A test will be made with every semi-colon (;) wrapped in a space
     #   Every mix of the above rules will be tested.
     matcher :have_similar_result_to_ruby do |ignore_shortcircuit = false|
       match do |ruby_code|
@@ -36,6 +38,11 @@ module DeepCover
           extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*)$/, '  # Comment!') })
           extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*)$/, "\\1DeepCover\n\\1\\2") })
           ruby_codes.concat(extra_ruby_codes)
+
+          extra_ruby_codes = ruby_codes.map { |c| c.gsub(';', ';;') }
+          extra_ruby_codes.concat(ruby_codes.map { |c| c.gsub(';', ' ; ') })
+          ruby_codes.concat(extra_ruby_codes)
+
           ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bif\b/, 'unless') }) unless ruby_code[/\belsif\b/]
           ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bwhile\b(.*)/, 'until !(\1)') })
         end
@@ -131,6 +138,14 @@ module DeepCover
     # The list of cases to test, separated by ###
     # Mutations are applied to these test cases, see doc of the #have_similar_result_to_ruby matcher for details
     cases = <<-RUBY
+      if DeepCover then end
+    ###
+      if DeepCover;end
+    ###
+      if DeepCover;else end
+    ###
+      if DeepCover;else;end
+    ###
       if DeepCover
         66
       end

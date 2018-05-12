@@ -75,11 +75,24 @@ module DeepCover
       if node.style == :ternary
         fallback_locs = [nil, nil]
       else
-        end_node = node.root_if_node.loc_hash[:end]
-        fallback_locs = [node.loc_hash[:else] || end_node, end_node]
+        else_loc = node.loc_hash[:else]
+
+        first_clause_fallback = node.loc_hash[:begin]
+        if first_clause_fallback
+          first_clause_fallback = first_clause_fallback.wrap_rwhitespace_and_comments.end
+        elsif else_loc
+          first_clause_fallback = else_loc.begin
+        end
+
+        if else_loc
+          second_clause_fallback = else_loc.wrap_rwhitespace_and_comments.end
+        end
+        end_loc = node.root_if_node.loc_hash[:end]
+        end_loc = end_loc.begin if end_loc
+
+        fallback_locs = [first_clause_fallback || end_loc, second_clause_fallback || end_loc]
       end
       # loc can be nil if the clause can't be empty, such as ternary and modifer if/unless
-      fallback_locs.map! { |loc| loc.begin if loc }
 
       if key == :unless
         sub_keys.reverse!
