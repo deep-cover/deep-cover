@@ -53,7 +53,19 @@ module DeepCover
       fallbacks << node.loc_hash[:end]
       fallbacks.map!(&:begin)
 
-      clauses_infos = infos_for_branches(node, node.branches, sub_keys, fallbacks)
+      branches = node.whens.map do |when_node|
+        next when_node.body if when_node.body.is_a?(Node::EmptyBody)
+
+        start_at = when_node.loc_hash[:begin]
+        start_at = start_at.wrap_rwhitespace_and_comments.end if start_at
+        start_at ||= when_node.body.expression.begin
+
+        end_at = when_node.body.expression.end
+        start_at.with(end_pos: end_at.end_pos)
+      end
+
+      branches << node.else
+      clauses_infos = infos_for_branches(node, branches, sub_keys, fallbacks, execution_counts: node.branches.map(&:execution_count))
 
       [cond_info, clauses_infos]
     end
