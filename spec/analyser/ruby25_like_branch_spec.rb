@@ -270,60 +270,60 @@ module DeepCover
       end
     end
 
-    it "`123 && 45` gives correct results for &&" do
-      key, branches = run_dc_ruby25_like_branch(source: "123 && 45").first
+    it '`123 && 45` gives correct results for &&' do
+      key, branches = run_dc_ruby25_like_branch(source: '123 && 45').first
       key[2..-1].should == [1, 0, 1, 9]
 
-      then_branch, then_hits = branches.detect{|k, v| k.first == :then }
+      then_branch, then_hits = branches.detect { |k, v| k.first == :then }
       then_hits.should == 1
       then_branch[2..-1].should == [1, 7, 1, 9]
 
-      else_branch, else_hits = branches.detect{|k, v| k.first == :else }
+      else_branch, else_hits = branches.detect { |k, v| k.first == :else }
       else_hits.should == 0
       else_branch[2..-1].should == [1, 0, 1, 9]
     end
 
-    it "`false && 45` gives correct results for &&" do
-      key, branches = run_dc_ruby25_like_branch(source: "false && 45").first
+    it '`false && 45` gives correct results for &&' do
+      key, branches = run_dc_ruby25_like_branch(source: 'false && 45').first
       key[2..-1].should == [1, 0, 1, 11]
 
-      then_branch, then_hits = branches.detect{|k, v| k.first == :then }
+      then_branch, then_hits = branches.detect { |k, v| k.first == :then }
       then_hits.should == 0
       then_branch[2..-1].should == [1, 9, 1, 11]
 
-      else_branch, else_hits = branches.detect{|k, v| k.first == :else }
+      else_branch, else_hits = branches.detect { |k, v| k.first == :else }
       else_hits.should == 1
       else_branch[2..-1].should == [1, 0, 1, 11]
     end
 
-    it "`123 || 45` gives correct results for ||" do
-      key, branches = run_dc_ruby25_like_branch(source: "123 || 45").first
+    it '`123 || 45` gives correct results for ||' do
+      key, branches = run_dc_ruby25_like_branch(source: '123 || 45').first
       key[2..-1].should == [1, 0, 1, 9]
 
-      then_branch, then_hits = branches.detect{|k, v| k.first == :then }
+      then_branch, then_hits = branches.detect { |k, v| k.first == :then }
       then_hits.should == 1
       then_branch[2..-1].should == [1, 0, 1, 9]
 
-      else_branch, else_hits = branches.detect{|k, v| k.first == :else }
+      else_branch, else_hits = branches.detect { |k, v| k.first == :else }
       else_hits.should == 0
       else_branch[2..-1].should == [1, 7, 1, 9]
     end
 
-    it "`false || 45` gives correct results for ||" do
-      key, branches = run_dc_ruby25_like_branch(source: "false || 45").first
+    it '`false || 45` gives correct results for ||' do
+      key, branches = run_dc_ruby25_like_branch(source: 'false || 45').first
       key[2..-1].should == [1, 0, 1, 11]
 
-      then_branch, then_hits = branches.detect{|k, v| k.first == :then }
+      then_branch, then_hits = branches.detect { |k, v| k.first == :then }
       then_hits.should == 0
       then_branch[2..-1].should == [1, 0, 1, 11]
 
-      else_branch, else_hits = branches.detect{|k, v| k.first == :else }
+      else_branch, else_hits = branches.detect { |k, v| k.first == :else }
       else_hits.should == 1
       else_branch[2..-1].should == [1, 9, 1, 11]
     end
 
     each_code_examples('./spec/char_cover/*.rb', name: 'branch_like_25') do |fn, lines, lineno|
-      skip if lines.any?{|line| line.include?('current_ast') }
+      skip if lines.any? { |line| line.include?('current_ast') }
       lines.join.should have_similar_result_to_ruby(ignore_shortcircuit: true)
     end
   end
