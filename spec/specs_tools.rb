@@ -20,6 +20,18 @@ def dummy_method(*args)
   args.first
 end
 
+# Ruby sometimes remove code when literals present
+# Possibly removing entire conditions if the literal makes it obvious it won't run
+def falsx
+  false
+end
+
+# Ruby sometimes remove code when literals present
+# Possibly removing entire conditions if the literal makes it obvious it won't run
+def trux
+  true
+end
+
 def current_ast
   DeepCover::Specs.current_ast
 end

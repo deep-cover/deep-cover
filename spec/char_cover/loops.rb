@@ -47,7 +47,7 @@
 ### While loop
     i = 0
     while i < 5
-      "here"
+      b = i
       i += 1
     end
 
@@ -109,7 +109,7 @@
 ### Until loop
     i = 0
     until i >= 5
-      "here"
+      b = i
       i += 1
     end
 

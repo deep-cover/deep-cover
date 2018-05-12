@@ -1,9 +1,9 @@
 ### One-liner
-    a = 42 if false; assert a == nil
+    a = 42 if falsx; assert a == nil
 #>  x x xx         -
-    b = 42 if true; assert b == 42
-    c = 42 unless false; assert c == 42
-    d = 42 unless true; assert d == nil
+    b = 42 if trux; assert b == 42
+    c = 42 unless falsx; assert c == 42
+    d = 42 unless trux; assert d == nil
 #>  x x xx            -
 
 #### With raises
@@ -13,26 +13,26 @@
     (42 if raise) rescue nil
 #>  -xx xx      -
 
-    (raise if true) rescue nil
+    (raise if trux) rescue nil
 
 ### Full form
-    if false
+    if falsx
       42
 #>X
     end
 #>  ---
 
-    if true
+    if trux
       42
     end
 #>  ---
 
-    unless false
+    unless falsx
       42
     end
 #>  ---
 
-    unless true
+    unless trux
       42
 #>X
     end
@@ -40,7 +40,7 @@
 
 #### With else
 
-    if true
+    if trux
       42
     else
 #>X
@@ -49,7 +49,7 @@
     end
 #>  ---
 
-    if false
+    if falsx
       42
 #>X
     else
@@ -57,7 +57,7 @@
     end
 #>  ---
 
-    unless false
+    unless falsx
       42
     else
 #>X
@@ -66,7 +66,7 @@
     end
 #>  ---
 
-    unless true
+    unless trux
       42
 #>X
     else
@@ -75,15 +75,15 @@
 #>  ---
 
 #### With elsif
-    if false
+    if falsx
       :a
 #>X
-    elsif false
+    elsif falsx
       :b
 #>X
-    elsif true
+    elsif trux
       :c
-    elsif :whatever
+    elsif falsx
 #>X
       :d
 #>X
@@ -108,10 +108,10 @@
 #>  ----
 
 #### With elsif
-    if false
-    elsif false
-    elsif true
-    elsif :whatever
+    if falsx
+    elsif falsx
+    elsif trux
+    elsif falsx
 #>X
     else
 #>X
@@ -119,7 +119,7 @@
 #>  ---
 ### Ternary operator form
 #### Simple
-    x = false ? 1 : 2; assert(x == 2)
+    x = falsx ? 1 : 2; assert(x == 2)
 #>              x    -       -      -
-    x = true ? 1 : 2; assert(x == 1)
+    x = trux ? 1 : 2; assert(x == 1)
 #>               x x-       -      -
