@@ -134,7 +134,7 @@ module DeepCover
 
     private
 
-    def infos_for_branch(node, branch, key, fallback_loc)
+    def infos_for_branch(node, branch, key, fallback_loc, execution_count: nil)
       if !branch.is_a?(Node::EmptyBody)
         loc = branch
       elsif branch.expression && (key != :else || node.loc_hash[:else])
@@ -145,12 +145,14 @@ module DeepCover
       else
         loc = node
       end
-      [[key, *node_loc_infos(loc)], branch.execution_count]
+
+      execution_count ||= branch.execution_count
+      [[key, *node_loc_infos(loc)], execution_count]
     end
 
-    def infos_for_branches(node, branches, keys, fallback_locs)
+    def infos_for_branches(node, branches, keys, fallback_locs, execution_counts: [])
       branches_infos = branches.map.with_index do |branch, i|
-        infos_for_branch(node, branch, keys[i], fallback_locs[i])
+        infos_for_branch(node, branch, keys[i], fallback_locs[i], execution_count: execution_counts[i])
       end
       branches_infos.to_h
     end
