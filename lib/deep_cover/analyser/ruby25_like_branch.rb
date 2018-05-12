@@ -149,12 +149,15 @@ module DeepCover
     def infos_for_branch(node, branch, key, fallback_loc, execution_count: nil)
       if !branch.is_a?(Node::EmptyBody)
         loc = branch
-      elsif branch.expression && (key != :else || node.loc_hash[:else])
-        # There is a clause, but it is empty
-        # We create a `else` in `case` when there are none, so this special casing is needed for it.
-        # Ruby25 returns the char before the next keyword
+      elsif node.is_a?(Node::Case) && key == :else && node.loc_hash[:else].nil?
+        # We manually insert a `else` for Case when there isn't one
+        # The normal behavior of ruby25's branch coverage when there is no else is to return the loc of the node
+        loc = node
+      elsif branch.expression
+        # There is clause, but it is empty
         loc = fallback_loc
       else
+        # There is no clause
         loc = node
       end
 
