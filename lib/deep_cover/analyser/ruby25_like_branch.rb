@@ -113,13 +113,11 @@ module DeepCover
         else
           body = node.body.loc_hash[:end].begin
         end
+      elsif node.body.is_a?(Node::Begin) && node.body.expressions.present?
+        end_pos = node.body.expressions.last.expression.end_pos
+        body = node.body.expressions.first.expression.with(end_pos: end_pos)
       else
-        if node.body.is_a?(Node::Begin) && node.body.expressions.present?
-          end_pos = node.body.expressions.last.expression.end_pos
-          body = node.body.expressions.first.expression.with(end_pos: end_pos)
-        else
-          body = node.body
-        end
+        body = node.body
       end
 
       [base_info, {[:body, *node_loc_infos(body)] => node.body.execution_count}]
