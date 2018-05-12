@@ -25,8 +25,9 @@ module DeepCover
     #   A test will be made with every line containing only a number replaced by a comment
     #   A test will be made with every line containing only a number with a second line before (DeepCover)
     #   Every mix of the above rules will be tested.
-    matcher :have_similar_result_to_ruby do
+    matcher :have_similar_result_to_ruby do |ignore_shortcircuit = false|
       match do |ruby_code|
+        @ignore_shortcircuit = ignore_shortcircuit
         @executions = []
         ruby_code = ruby_code.strip_heredoc
         ruby_codes = [ruby_code.rstrip]
@@ -106,6 +107,9 @@ module DeepCover
       end
 
       def normalize_result(result)
+        if @ignore_shortcircuit
+          result = result.reject { |key, sub_hash| [:'&&', :'||'].include?(key[0]) }
+        end
         result.map do |key, sub_hash|
           key = key.values_at(0, 2..-1)
           sub_hash = sub_hash.map do |sub_key, nb_hits|
@@ -316,6 +320,11 @@ module DeepCover
       else_branch, else_hits = branches.detect{|k, v| k.first == :else }
       else_hits.should == 1
       else_branch[2..-1].should == [1, 9, 1, 11]
+    end
+
+    each_code_examples('./spec/char_cover/*.rb', name: 'branch_like_25') do |fn, lines, lineno|
+      skip if lines.any?{|line| line.include?('current_ast') }
+      lines.join.should have_similar_result_to_ruby(ignore_shortcircuit: true)
     end
   end
 end
