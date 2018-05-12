@@ -50,8 +50,16 @@ module DeepCover
 
       sub_keys = [:when] * (node.branches.size - 1) + [:else]
       empty_fallbacks = node.whens.map { |w| (w.loc_hash[:begin] || w.loc_hash[:expression]).wrap_rwhitespace_and_comments.end }
-      empty_fallbacks << node.loc_hash[:end]
       empty_fallbacks.map!(&:begin)
+
+      if node.loc_hash[:else]
+        empty_fallbacks << node.loc_hash[:end].begin
+      else
+        # DeepCover manually inserts a `else` for Case when there isn't one for tracker purposes.
+        # The normal behavior of ruby25's branch coverage when there is no else is to return the loc of the node
+        # So we sent that fallback.
+        empty_fallbacks << node.expression
+      end
 
       branches = node.whens.map do |when_node|
         next when_node.body if when_node.body.is_a?(Node::EmptyBody)
@@ -149,10 +157,6 @@ module DeepCover
     def infos_for_branch(node, branch, key, empty_fallback_loc, execution_count: nil)
       if !branch.is_a?(Node::EmptyBody)
         loc = branch
-      elsif node.is_a?(Node::Case) && key == :else && node.loc_hash[:else].nil?
-        # We manually insert a `else` for Case when there isn't one
-        # The normal behavior of ruby25's branch coverage when there is no else is to return the loc of the node
-        loc = node
       elsif branch.expression
         # There is clause, but it is empty
         loc = empty_fallback_loc
