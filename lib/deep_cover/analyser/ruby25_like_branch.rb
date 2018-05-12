@@ -49,9 +49,9 @@ module DeepCover
       cond_info = [:case, *node_loc_infos(node)]
 
       sub_keys = [:when] * (node.branches.size - 1) + [:else]
-      fallbacks = node.whens.map { |w| (w.loc_hash[:begin] || w.loc_hash[:expression]).wrap_rwhitespace_and_comments.end }
-      fallbacks << node.loc_hash[:end]
-      fallbacks.map!(&:begin)
+      empty_fallbacks = node.whens.map { |w| (w.loc_hash[:begin] || w.loc_hash[:expression]).wrap_rwhitespace_and_comments.end }
+      empty_fallbacks << node.loc_hash[:end]
+      empty_fallbacks.map!(&:begin)
 
       branches = node.whens.map do |when_node|
         next when_node.body if when_node.body.is_a?(Node::EmptyBody)
@@ -65,7 +65,7 @@ module DeepCover
       end
 
       branches << node.else
-      clauses_infos = infos_for_branches(node, branches, sub_keys, fallbacks, execution_counts: node.branches.map(&:execution_count))
+      clauses_infos = infos_for_branches(node, branches, sub_keys, empty_fallbacks, execution_counts: node.branches.map(&:execution_count))
 
       [cond_info, clauses_infos]
     end
@@ -85,7 +85,7 @@ module DeepCover
 
       sub_keys = [:then, :else]
       if node.style == :ternary
-        fallback_locs = [nil, nil]
+        empty_fallback_locs = [nil, nil]
       else
         else_loc = node.loc_hash[:else]
 
@@ -102,16 +102,16 @@ module DeepCover
         end_loc = node.root_if_node.loc_hash[:end]
         end_loc = end_loc.begin if end_loc
 
-        fallback_locs = [first_clause_fallback || end_loc, second_clause_fallback || end_loc]
+        empty_fallback_locs = [first_clause_fallback || end_loc, second_clause_fallback || end_loc]
       end
       # loc can be nil if the clause can't be empty, such as ternary and modifer if/unless
 
       if key == :unless
         sub_keys.reverse!
-        fallback_locs.reverse!
+        empty_fallback_locs.reverse!
       end
 
-      clauses_infos = infos_for_branches(node, node.branches, sub_keys, fallback_locs)
+      clauses_infos = infos_for_branches(node, node.branches, sub_keys, empty_fallback_locs)
       [cond_info, clauses_infos]
     end
 
@@ -146,7 +146,7 @@ module DeepCover
 
     private
 
-    def infos_for_branch(node, branch, key, fallback_loc, execution_count: nil)
+    def infos_for_branch(node, branch, key, empty_fallback_loc, execution_count: nil)
       if !branch.is_a?(Node::EmptyBody)
         loc = branch
       elsif node.is_a?(Node::Case) && key == :else && node.loc_hash[:else].nil?
@@ -155,7 +155,7 @@ module DeepCover
         loc = node
       elsif branch.expression
         # There is clause, but it is empty
-        loc = fallback_loc
+        loc = empty_fallback_loc
       else
         # There is no clause
         loc = node
@@ -165,9 +165,9 @@ module DeepCover
       [[key, *node_loc_infos(loc)], execution_count]
     end
 
-    def infos_for_branches(node, branches, keys, fallback_locs, execution_counts: [])
+    def infos_for_branches(node, branches, keys, empty_fallback_locs, execution_counts: [])
       branches_infos = branches.map.with_index do |branch, i|
-        infos_for_branch(node, branch, keys[i], fallback_locs[i], execution_count: execution_counts[i])
+        infos_for_branch(node, branch, keys[i], empty_fallback_locs[i], execution_count: execution_counts[i])
       end
       branches_infos.to_h
     end
