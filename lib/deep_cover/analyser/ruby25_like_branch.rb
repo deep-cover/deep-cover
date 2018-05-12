@@ -49,8 +49,7 @@ module DeepCover
       cond_info = [:case, *node_loc_infos(node)]
 
       sub_keys = [:when] * (node.branches.size - 1) + [:else]
-      fallbacks = node.whens[1..-1].map { |w| w.loc_hash[:keyword] }
-      fallbacks << (node.loc_hash[:else] || node.loc_hash[:end])
+      fallbacks = node.whens.map { |w| (w.loc_hash[:begin] || w.loc_hash[:expression]).wrap_rwhitespace_and_comments.end }
       fallbacks << node.loc_hash[:end]
       fallbacks.map!(&:begin)
 
