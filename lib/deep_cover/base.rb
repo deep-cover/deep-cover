@@ -18,6 +18,7 @@ module DeepCover
       require_relative 'core_ext/require_overrides'
       RequireOverride.active = true
       config # actualize configuration
+      @custom_requirer = nil
       @started = true
     end
 
