@@ -4,13 +4,32 @@
 
 module DeepCover
   module CoverageReplacement
+    OLD_COVERAGE_SENTINEL = Object.new
+    ALL_COVERAGES = {lines: true, branches: true, methods: true}.freeze
+
     class << self
       def running?
         DeepCover.running?
       end
 
-      def start
-        return if running?
+      def start(targets = OLD_COVERAGE_SENTINEL)
+        if targets == OLD_COVERAGE_SENTINEL
+          # Do nothing
+        elsif targets == :all
+          targets = ALL_COVERAGES
+        else
+          targets = targets.to_hash.slice(*ALL_COVERAGES.keys).select { |_, v| v }
+          targets = targets.map { |k, v| [k, !!v] }.to_h
+          raise 'no measuring target is specified' if targets.empty?
+        end
+
+        if DeepCover.running?
+          raise 'cannot change the measuring target during coverage measurement' if @started_args != targets
+          return
+        end
+
+        @started_args = targets
+
         DeepCover.start
         nil
       end
@@ -23,9 +42,19 @@ module DeepCover
 
       def peek_result
         raise 'coverage measurement is not enabled' unless running?
-        DeepCover.coverage.covered_codes.map do |covered_code|
-          [covered_code.path.to_s, covered_code.line_coverage(allow_partial: false)]
-        end.to_h
+        if @started_targets == OLD_COVERAGE_SENTINEL
+          DeepCover.coverage.covered_codes.map do |covered_code|
+            [covered_code.path.to_s, covered_code.line_coverage(allow_partial: false)]
+          end.to_h
+        else
+          DeepCover.coverage.covered_codes.map do |covered_code|
+            cov = {}
+            cov[:branches] = DeepCover::Analyser::Ruby25LikeBranch.new(covered_code).results if @started_args[:branches]
+            cov[:lines] = covered_code.line_coverage(allow_partial: false) if @started_args[:lines]
+            cov[:methods] = {} if @started_args[:methods]
+            [covered_code.path.to_s, cov]
+          end.to_h
+        end
       end
     end
   end
