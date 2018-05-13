@@ -89,7 +89,9 @@ module DeepCover
 
     def handle_if(node)
       key = node.style == :unless ? :unless : :if
-      cond_info = [key, *node_loc_infos(node)]
+
+      node_range = extend_elsif_range(node)
+      cond_info = [key, *node_loc_infos(node_range)]
 
       sub_keys = [:then, :else]
       if node.style == :ternary
@@ -119,7 +121,11 @@ module DeepCover
         empty_fallback_locs.reverse!
       end
 
-      clauses_infos = infos_for_branches(node, node.branches, sub_keys, empty_fallback_locs)
+      branches = node.branches
+      execution_counts = branches.map(&:execution_count)
+      branches[1] = extend_elsif_range(branches[1])
+
+      clauses_infos = infos_for_branches(node_range, branches, sub_keys, empty_fallback_locs, execution_counts: execution_counts)
       [cond_info, clauses_infos]
     end
 
@@ -176,21 +182,24 @@ module DeepCover
       branches_infos.to_h
     end
 
-    def node_loc_infos(source_range_or_node)
-      if source_range_or_node.is_a?(Node)
-        node = source_range_or_node
-        source_range = node.expression
-        if node.is_a?(Node::If) && node.style == :elsif
-          deepest_if = node.deepest_elsif_node || node
-          if deepest_if.false_branch.is_a?(Node::EmptyBody)
-            source_range = source_range.wrap_rwhitespace_and_comments
-          end
-        end
-      else
-        source_range = source_range_or_node
+    def node_loc_infos(source_range)
+      if source_range.is_a?(Node)
+        source_range = source_range.expression
       end
       @loc_index += 1
       [@loc_index, source_range.line, source_range.column, source_range.last_line, source_range.last_column]
+    end
+
+    # If the actual else clause (final one) of an if...elsif...end is empty, then Ruby makes the
+    # node reach the `end` in its branch coverage output
+    def extend_elsif_range(node)
+      if node.is_a?(Node::If) && node.style == :elsif
+        deepest_if = node.deepest_elsif_node || node
+        if deepest_if.false_branch.is_a?(Node::EmptyBody)
+          return node.expression.with(end_pos: node.root_if_node.loc_hash[:end].begin_pos)
+        end
+      end
+      node
     end
   end
 end
