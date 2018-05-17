@@ -20,7 +20,6 @@ module DeepCover
       DeepCover.autoload :VERSION, 'deep_cover/version'
       Object.autoload :Term, 'term/ansicolor'
       Object.autoload :Terminal, 'terminal-table'
-      Object.autoload :Bundler, 'bundler'
       Object.autoload :YAML, 'yaml'
       Object.autoload :Forwardable, 'forwardable'
     end
