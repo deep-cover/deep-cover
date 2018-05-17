@@ -112,6 +112,7 @@ module DeepCover
 
       def patch_gemfile
         gemfile = @dest_root.join('Gemfile')
+        require 'bundler'
         deps = Bundler::Definition.build(gemfile, nil, nil).dependencies
 
         return if deps.find { |e| e.name == 'deep-cover' }
