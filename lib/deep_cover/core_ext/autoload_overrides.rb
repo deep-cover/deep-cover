@@ -67,6 +67,8 @@ require 'binding_of_caller'
 require 'tempfile'
 
 module DeepCover
+  load_all
+
   module KernelAutoloadOverride
     def autoload(name, path)
       mod = binding.of_caller(1).eval('Module.nesting').first || Object
