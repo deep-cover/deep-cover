@@ -136,10 +136,10 @@ module DeepCover
 
       found_path = resolve_path(path)
 
-      return yield(:not_found) unless found_path
-      return false if @loaded_features.include?(found_path)
-      return false if @paths_being_required.include?(found_path)
       DeepCover.autoload_tracker.wrap_require(path, found_path) do
+        return yield(:not_found) unless found_path
+        return false if @loaded_features.include?(found_path)
+        return false if @paths_being_required.include?(found_path)
         return yield(:not_in_covered_paths) unless @load_paths_subset.within_lookup?(found_path)
         return yield(:not_supported) if found_path.end_with?('.so')
         return yield(:skipped) if filter && filter.call(found_path)

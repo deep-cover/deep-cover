@@ -4,7 +4,7 @@
 #
 # We create a temporary file that gets set as path for autoloads. The file then does a require of the
 # autoloaded file. We also keep track of autoloaded constants and files and change the autoload's target when
-# those files get required.
+# those files get required (or when we guess they are being).
 #
 # Doing it this way solves:
 #
@@ -27,6 +27,20 @@
 #
 #   To solve this, every require, we check if it is for a file that is is meant to autoload a constant, and if so,
 #   we remove that autoload.
+#
+# * To make matter more complicated, when loading gems without bundle's setup, the $LOAD_PATH is filled by RubyGems
+#   as part of a monkey-patch of Kernel#require. Because of this, we can't always find the file that will be required,
+#   even though a file will indeed be required.
+#
+#   However, if nothing is done, the autoload can cause problems on that built-in require (as explained in a previous
+#   point). So when we don't find the target, we check if it's a require that will go through the $LOAD_PATH,
+#   meaning that require's parameter is not an absolute path, and isn't relative to the current directory (so doesn't
+#   start with './' or '../').
+#
+#   When a require does go through $LOAD_PATH, we do a best effort to deactivate the autoloads that seem to match
+#   to match this require by comparing the required path (as it is received) to all the autoload path we have, and
+#   deactivating those that match. This is only an issue when there is an autoload made which will load a different
+#   gem. This is pretty rare (but deep-cover does it...)
 #
 # * All of this changing autoloads means that for modules/classes that are frozen, we can't handle the situation, since
 #   we can't change the autoload stuff.
