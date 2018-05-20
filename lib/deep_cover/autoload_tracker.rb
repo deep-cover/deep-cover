@@ -121,7 +121,19 @@ module DeepCover
       basename = basename_without_extension(requested_path)
       autoloads = @autoloads_by_basename[basename] || []
 
-      autoloads.select { |entry| entry_is_target?(entry, requested_path, absolute_path_found) }
+      if absolute_path_found
+        autoloads.select { |entry| entry_is_target?(entry, requested_path, absolute_path_found) }
+      elsif requested_path == File.absolute_path(requested_path)
+        []
+      elsif requested_path.start_with?('./', '../')
+        []
+      else
+        # We didn't find a path that goes through the $LOAD_PATH
+        # It's possible that RubyGems will actually add the $LOAD_PATH and require an actual file
+        # So we must make a best-guest for possible matches
+        requested_path_to_compare = without_extension(requested_path)
+        autoloads.select { |entry| requested_path_to_compare == without_extension(entry.target_path) }
+      end
     end
 
     def entry_is_target?(entry, requested_path, absolute_path_found)
@@ -137,13 +149,16 @@ module DeepCover
     end
 
     def basename_without_extension(path)
-      new_path = File.basename(path)
-      new_path = new_path[0...-3] unless needs_extension?(new_path)
-      new_path
+      without_extension(File.basename(path))
     end
 
     def with_rb_extension(path)
       path += '.rb' unless needs_extension?(path)
+      path
+    end
+
+    def without_extension(path)
+      path = path[0...-3] unless needs_extension?(path)
       path
     end
 
