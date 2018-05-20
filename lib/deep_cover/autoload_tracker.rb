@@ -13,10 +13,10 @@ module DeepCover
       end
     end
 
-    attr_reader :autoloads_by_basename, :interceptor_files
+    attr_reader :autoloads_by_basename, :interceptor_files_by_path
     def initialize
       @autoloads_by_basename = {}
-      @interceptor_files = []
+      @interceptor_files_by_path = {}
     end
 
     def setup_interceptor_for(const, name, path)
@@ -112,7 +112,7 @@ module DeepCover
       end
 
       @autoloaded_paths = {}
-      @interceptor_files = []
+      @interceptor_files_by_path = {}
     end
 
     protected
@@ -167,9 +167,15 @@ module DeepCover
     end
 
     def autoload_interceptor_for(path)
+      existing_files = @interceptor_files_by_path[path] || []
+      reusable_file = existing_files.detect { |f| !$LOADED_FEATURES.include?(f.path) }
+      return reusable_file.path if reusable_file
+
       new_file = Tempfile.new([File.basename(path), '.rb'])
       # Need to store all the tempfiles so that they are not GCed, which would delete the files themselves.
-      @interceptor_files << new_file
+      # Keeping them by path allows us to reuse them.
+      @interceptor_files_by_path[path] ||= []
+      @interceptor_files_by_path[path] << new_file
       new_file.write(<<-RUBY)
 # Intermediary file for ruby's autoload made by deep-cover
 require #{path.to_s.inspect}

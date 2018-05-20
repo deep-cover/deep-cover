@@ -18,6 +18,26 @@ module DeepCover
       end
     end
 
+    context 'setup_interceptor_for' do
+      it "reuses an interceptor for same path if it wasn't required yet" do
+        modules.each do |mod|
+          tracker.setup_interceptor_for(mod, :A, 'hello')
+        end
+
+        tracker.interceptor_files_by_path.keys.should == ['hello']
+        tracker.interceptor_files_by_path['hello'].size.should == 1
+      end
+
+      it "doesn't reuse an interceptor for same path if it was required" do
+        path = tracker.setup_interceptor_for(modules[0], :A, 'hello')
+        $LOADED_FEATURES << path
+        tracker.setup_interceptor_for(modules[1], :A, 'hello')
+
+        tracker.interceptor_files_by_path.keys.should == ['hello']
+        tracker.interceptor_files_by_path['hello'].size.should == 2
+      end
+    end
+
     context 'initialize_autoloaded_paths' do
       def do_initialize_autoloaded_path
         tracker.initialize_autoloaded_paths(modules, &autoload_block)
@@ -27,7 +47,7 @@ module DeepCover
         do_initialize_autoloaded_path
 
         tracker.autoloads_by_basename.should be_empty
-        tracker.interceptor_files.should be_empty
+        tracker.interceptor_files_by_path.should be_empty
         autoload_calls_modules.should be_empty
         autoload_calls_names.should be_empty
         autoload_calls_paths.should be_empty
@@ -40,7 +60,7 @@ module DeepCover
 
         tracker.autoloads_by_basename.keys.should == ['hello']
         tracker.autoloads_by_basename['hello'].size.should == 1
-        tracker.interceptor_files.size.should == 1
+        tracker.interceptor_files_by_path.size.should == 1
         autoload_calls_modules.should == [modules.first]
         autoload_calls_names.should == [:A]
         autoload_calls_paths.size.should == 1
@@ -56,7 +76,7 @@ module DeepCover
         AutoloadTracker.warned_for_frozen_module = false
 
         tracker.autoloads_by_basename.should be_empty
-        tracker.interceptor_files.should be_empty
+        tracker.interceptor_files_by_path.should be_empty
         autoload_calls_modules.should be_empty
         autoload_calls_names.should be_empty
         autoload_calls_paths.should be_empty
