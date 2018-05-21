@@ -144,7 +144,7 @@ To make it easier to transition for projects already using the builtin `Coverage
 
 Add to your Gemfile `gem 'deep-cover'`, then run `bundle`.
 
-Before you require `coverage` or `simplecov`, do a `require 'deep-cover/builtin_takeover'`.
+Before you require `coverage` or `simplecov`, do a `require 'deep_cover/builtin_takeover'`.
 
 For example, the `test/test_helper.rb` file for `simplecov` users will look like
 
