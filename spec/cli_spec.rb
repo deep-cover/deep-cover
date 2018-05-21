@@ -70,7 +70,6 @@ module DeepCover
       end
 
       describe 'for a rails app' do
-        let(:expected_errors) { /^(Running via Spring preloader in process \d+\n)?$/ }
         let(:options) { 'bundle exec rake' } # Bypass Spring
         let(:path) { 'simple_rails42_app' }
         it do

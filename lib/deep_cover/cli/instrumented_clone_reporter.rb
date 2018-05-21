@@ -154,7 +154,7 @@ module DeepCover
 
       def process
         Bundler.with_clean_env do
-          system("cd #{@main_path} && #{@options[:command]}")
+          system({'DISABLE_SPRING' => 'true'}, "cd #{@main_path} && #{@options[:command]}")
         end
       end
 
