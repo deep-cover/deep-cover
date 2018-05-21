@@ -2,6 +2,9 @@
 
 require 'weakref'
 
+# TODO: if a constant is removed, AutoloadEntries should be removed
+# TODO: once the autoload has triggered, maybe we should remove then entry?
+
 module DeepCover
   class AutoloadTracker
     AutoloadEntry = Struct.new(:weak_const, :name, :target_path, :interceptor_path) do
