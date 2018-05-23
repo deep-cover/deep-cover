@@ -554,14 +554,14 @@ module DeepCover
         add_load_path 'one/root/sub'
         add_load_path 'two'
       end
-      {'relative — from above the root' => 'outside',
-       'relative — not related to root' => 'also_outside',
-       'absolute - not inside root' => '../outside.rb',
-       'absolute - not existing' => './not_existing',
-      }.each do |kind, path|
+      {'relative — from above the root' => ['outside', :not_in_covered_paths],
+       'relative — not related to root' => ['also_outside', :not_in_covered_paths],
+       'absolute - not inside root' => ['../outside.rb', :not_in_covered_paths],
+       'absolute - not existing' => ['./not_existing', :not_found],
+      }.each do |kind, (path, result)|
         describe "for a file outside of it (#{kind})" do
           it 'requires fallback' do
-            custom_require_or_reason(format(path, root: root)).should == :not_found
+            custom_require_or_reason(format(path, root: root)).should == result
           end
         end
       end
