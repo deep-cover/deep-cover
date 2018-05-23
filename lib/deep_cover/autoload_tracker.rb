@@ -54,10 +54,9 @@ module DeepCover
           const.autoload_without_deep_cover(entry.name, $LOADED_FEATURES.first)
         end
 
-        return_value = yield
-        reached_end = true
-        return_value
+        yield
       ensure
+        entries = entries_for_target(requested_path, absolute_path_found)
         entries.each do |entry|
           const = entry.const
           next unless const
