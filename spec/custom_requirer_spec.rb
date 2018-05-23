@@ -123,6 +123,10 @@ module DeepCover
       Pathname.new(@root).realpath.to_s
     end
 
+    def prepend_load_path(path)
+      requirer.load_paths.insert(0, from_root(path))
+    end
+
     def add_load_path(path)
       requirer.load_paths << from_root(path)
     end
@@ -496,6 +500,19 @@ module DeepCover
         'two/test'.should actually_require('one/two/test.rb')
         # Verify that the .so could be found
         'two/test.so'.should actually_require(:file_extension_is_so)
+      end
+
+      it "doesn't require if a LOAD_PATH + required path already matches a LOADED_FEATURES" do
+        file_tree %w(one/two/test.rb
+                     then/two/test.rb
+                     again/two/test.rb
+                     )
+
+        add_load_path 'then'
+        'two/test'.should actually_require('then/two/test.rb')
+        prepend_load_path 'one'
+        add_load_path 'again'
+        'two/test'.should actually_require(false)
       end
 
       it 'outputs some diagnostics if DeepCover creates a syntax error', exclude: :JRuby do
