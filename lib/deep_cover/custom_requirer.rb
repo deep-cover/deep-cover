@@ -173,6 +173,11 @@ module DeepCover
       true
     end
 
+    def is_being_required?(path)
+      found_path = resolve_path(path)
+      @paths_being_required.include?(found_path)
+    end
+
     protected
 
     def cover_and_execute(path, &fallback_block)

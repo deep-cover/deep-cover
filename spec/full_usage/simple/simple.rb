@@ -31,7 +31,8 @@ begin
 
   expected_executed_files = %w(beside_simple.rb relative_beside_simple.rb deeper.rb root_module_autoloaded.rb
                                nested_module_autoloaded.rb root_module_autoload_manually_required.rb
-                               implicit_autoload_from_included_module.rb kernel_autoload_from_included_module.rb)
+                               implicit_autoload_from_included_module.rb kernel_autoload_from_included_module.rb
+                               define_here_but_requires_autoloader.rb autoload_here_but_required_by_definer.rb)
   expected_covered_files = expected_executed_files
   if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
     # Autoload isn't covered by DeepCover for JRuby
@@ -97,6 +98,7 @@ begin
   TheParentClass.new.setup_kernel_autoload_from_included_module
   TheParentModule::KernelAutoloadFromIncludedModule
 
+  require 'define_here_but_requires_autoloader'
 
 
   if $executed_files != expected_executed_files

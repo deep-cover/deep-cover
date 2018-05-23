@@ -23,7 +23,13 @@ module DeepCover
     end
 
     def autoload_path_for(const, name, path)
-      setup_interceptor_for(const, name, path)
+      interceptor_path = setup_interceptor_for(const, name, path)
+
+      if DeepCover.custom_requirer.is_being_required?(path)
+        $LOADED_FEATURES.first
+      else
+        interceptor_path
+      end
     end
 
     def possible_autoload_target?(requested_path)
