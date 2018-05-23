@@ -93,10 +93,18 @@ module DeepCover
 
       if path == abs_path
         paths_with_ext.each do |path_with_ext|
+          return path_with_ext if @loaded_features.include?(path_with_ext)
+        end
+
+        paths_with_ext.each do |path_with_ext|
           return path_with_ext if File.exist?(path_with_ext)
         end
       else
         possible_paths = paths_with_load_paths(paths_with_ext)
+        possible_paths.each do |possible_path|
+          return possible_path if @loaded_features.include?(possible_path)
+        end
+
         possible_paths.each do |possible_path|
           next unless File.exist?(possible_path)
           # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
