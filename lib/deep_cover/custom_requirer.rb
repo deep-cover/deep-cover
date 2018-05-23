@@ -138,15 +138,22 @@ module DeepCover
 
       DeepCover.autoload_tracker.wrap_require(path, found_path) do
         return yield(:not_found) unless found_path
+
         return false if @loaded_features.include?(found_path)
         return false if @paths_being_required.include?(found_path)
-        return yield(:not_in_covered_paths) unless @load_paths_subset.within_lookup?(found_path)
-        return yield(:not_supported) if found_path.end_with?('.so')
-        return yield(:skipped) if filter && filter.call(found_path)
 
-        cover_and_execute(found_path) { |reason| return yield(reason) }
+        begin
+          @paths_being_required.add(found_path)
+          return yield(:not_in_covered_paths) unless @load_paths_subset.within_lookup?(found_path)
+          return yield(:not_supported) if found_path.end_with?('.so')
+          return yield(:skipped) if filter && filter.call(found_path)
 
-        @loaded_features << found_path
+          cover_and_execute(found_path) { |reason| return yield(reason) }
+
+          @loaded_features << found_path
+        ensure
+          @paths_being_required.delete(found_path)
+        end
       end
       true
     end
@@ -187,7 +194,6 @@ module DeepCover
         raise "The fallback_block is supposed to either return or break, but didn't do either"
       end
       begin
-        @paths_being_required.add(path)
         covered_code.execute_code
       rescue ::SyntaxError => e
         warn ["DeepCover is getting confused with the file #{path} and it won't be instrumented.",
@@ -196,8 +202,6 @@ module DeepCover
              ].join("\n")
         yield(:cover_failed)
         raise "The fallback_block is supposed to either return or break, but didn't do either"
-      ensure
-        @paths_being_required.delete(path)
       end
       covered_code
     end
