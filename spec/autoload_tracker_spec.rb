@@ -21,7 +21,7 @@ module DeepCover
     context 'setup_interceptor_for' do
       it "reuses an interceptor for same path if it wasn't required yet" do
         modules.each do |mod|
-          tracker.setup_interceptor_for(mod, :A, 'hello')
+          tracker.send(:setup_interceptor_for, mod, :A, 'hello')
         end
 
         tracker.interceptor_files_by_path.keys.should == ['hello']
@@ -29,9 +29,9 @@ module DeepCover
       end
 
       it "doesn't reuse an interceptor for same path if it was required" do
-        path = tracker.setup_interceptor_for(modules[0], :A, 'hello')
+        path = tracker.send(:setup_interceptor_for, modules[0], :A, 'hello')
         $LOADED_FEATURES << path
-        tracker.setup_interceptor_for(modules[1], :A, 'hello')
+        tracker.send(:setup_interceptor_for, modules[1], :A, 'hello')
 
         tracker.interceptor_files_by_path.keys.should == ['hello']
         tracker.interceptor_files_by_path['hello'].size.should == 2
@@ -98,7 +98,7 @@ module DeepCover
 
     context 'remove_interceptors' do
       it 'gets rid of the interceptor for the existing autoloads' do
-        interceptor_path = tracker.setup_interceptor_for(modules.first, :A, 'hello')
+        interceptor_path = tracker.send(:setup_interceptor_for, modules.first, :A, 'hello')
         modules.first.autoload :A, interceptor_path
 
         tracker.remove_interceptors(&autoload_block)
@@ -110,7 +110,7 @@ module DeepCover
       end
 
       it 'ignores frozen modules' do
-        interceptor_path = tracker.setup_interceptor_for(modules.first, :A, 'hello')
+        interceptor_path = tracker.send(:setup_interceptor_for, modules.first, :A, 'hello')
         modules.first.autoload :A, interceptor_path
         modules.first.freeze
 

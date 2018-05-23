@@ -22,15 +22,8 @@ module DeepCover
       @interceptor_files_by_path = {}
     end
 
-    def setup_interceptor_for(const, name, path)
-      interceptor_path = autoload_interceptor_for(path)
-      entry = AutoloadEntry.new(WeakRef.new(const), name, path, interceptor_path)
-
-      basename = basename_without_extension(path)
-
-      @autoloads_by_basename[basename] ||= []
-      @autoloads_by_basename[basename] << entry
-      interceptor_path
+    def autoload_path_for(const, name, path)
+      setup_interceptor_for(const, name, path)
     end
 
     def possible_autoload_target?(requested_path)
@@ -116,6 +109,17 @@ module DeepCover
     end
 
     protected
+
+    def setup_interceptor_for(const, name, path)
+      interceptor_path = autoload_interceptor_for(path)
+      entry = AutoloadEntry.new(WeakRef.new(const), name, path, interceptor_path)
+
+      basename = basename_without_extension(path)
+
+      @autoloads_by_basename[basename] ||= []
+      @autoloads_by_basename[basename] << entry
+      interceptor_path
+    end
 
     def entries_for_target(requested_path, absolute_path_found)
       basename = basename_without_extension(requested_path)
