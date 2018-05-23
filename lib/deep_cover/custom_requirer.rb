@@ -89,14 +89,14 @@ module DeepCover
       abs_path = File.absolute_path(path)
       path = abs_path if path.start_with?('./', '../')
 
+      paths_with_ext = extensions_to_try.map { |ext| path + ext }
+
       if path == abs_path
-        extensions_to_try.each do |ext|
-          path_with_ext = path + ext
+        paths_with_ext.each do |path_with_ext|
           return path_with_ext if File.exist?(path_with_ext)
         end
       else
-        extensions_to_try.each do |ext|
-          path_with_ext = path + ext
+        paths_with_ext.each do |path_with_ext|
           @load_paths.each do |load_path|
             possible_path = File.absolute_path(path_with_ext, load_path)
 
