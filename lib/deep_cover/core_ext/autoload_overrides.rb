@@ -86,8 +86,8 @@ module DeepCover
   module KernelAutoloadOverride
     def autoload(name, path)
       mod = binding.of_caller(1).eval('Module.nesting').first || Object
-      interceptor_path = DeepCover.autoload_tracker.setup_interceptor_for(mod, name, path)
-      mod.autoload_without_deep_cover(name, interceptor_path)
+      autoload_path = DeepCover.autoload_tracker.autoload_path_for(mod, name, path)
+      mod.autoload_without_deep_cover(name, autoload_path)
     end
 
     extend ModuleOverride
@@ -96,8 +96,8 @@ module DeepCover
 
   module ModuleAutoloadOverride
     def autoload(name, path)
-      interceptor_path = DeepCover.autoload_tracker.setup_interceptor_for(self, name, path)
-      autoload_without_deep_cover(name, interceptor_path)
+      autoload_path = DeepCover.autoload_tracker.autoload_path_for(self, name, path)
+      autoload_without_deep_cover(name, autoload_path)
     end
 
     extend ModuleOverride
