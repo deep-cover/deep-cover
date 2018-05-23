@@ -96,16 +96,13 @@ module DeepCover
           return path_with_ext if File.exist?(path_with_ext)
         end
       else
-        paths_with_ext.each do |path_with_ext|
-          @load_paths.each do |load_path|
-            possible_path = File.absolute_path(path_with_ext, load_path)
-
-            next unless File.exist?(possible_path)
-            # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
-            # https://bugs.ruby-lang.org/issues/10222
-            return File.realpath(possible_path) if RUBY_VERSION >= '2.5'
-            return possible_path
-          end
+        possible_paths = paths_with_load_paths(paths_with_ext)
+        possible_paths.each do |possible_path|
+          next unless File.exist?(possible_path)
+          # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
+          # https://bugs.ruby-lang.org/issues/10222
+          return File.realpath(possible_path) if RUBY_VERSION >= '2.5'
+          return possible_path
         end
       end
       nil
@@ -179,6 +176,14 @@ module DeepCover
     end
 
     protected
+
+    def paths_with_load_paths(paths)
+      paths.flat_map do |path|
+        @load_paths.map do |load_path|
+          File.absolute_path(path, load_path)
+        end
+      end
+    end
 
     def cover_and_execute(path, &fallback_block)
       begin
