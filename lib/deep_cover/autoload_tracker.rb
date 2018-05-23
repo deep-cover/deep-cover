@@ -58,17 +58,15 @@ module DeepCover
         reached_end = true
         return_value
       ensure
-        if !reached_end
-          entries.each do |entry|
-            const = entry.const
-            next unless const
-            if const.frozen?
-              warn_frozen_module(const)
-              next
-            end
-            # Putting the autoloads back back since we couldn't complete the require
-            const.autoload_without_deep_cover(entry.name, entry.interceptor_path)
+        entries.each do |entry|
+          const = entry.const
+          next unless const
+          if const.frozen?
+            warn_frozen_module(const)
+            next
           end
+          # Putting the autoloads back back since we couldn't complete the require
+          const.autoload_without_deep_cover(entry.name, entry.interceptor_path)
         end
       end
     end
