@@ -131,8 +131,6 @@ module DeepCover
     def require(path, &fallback_block)
       path = path.to_s
 
-      return false if @loaded_features.include?(path)
-
       found_path = resolve_path(path)
 
       DeepCover.autoload_tracker.wrap_require(path, found_path) do
