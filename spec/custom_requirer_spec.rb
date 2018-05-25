@@ -492,7 +492,6 @@ module DeepCover
         'two/test.so'.should actually_require(:file_extension_is_so)
       end
 
-      # Makes sense, we load rb so much more frequently, this reduces disk access
       it 'prefers .rb files of a later LOAD_PATH over previous .so files' do
         file_tree %w(one/two/test.so
                      then/two/test.rb
