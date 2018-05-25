@@ -350,44 +350,47 @@ module DeepCover
         from_root('one/two/test.rb').should actually_require(:not_found)
       end
 
-      it 'returns false when the path is already being required' do
-        begin
-          first_path = from_root('first.rb')
-          second_path = from_root('second.rb')
-          results = $recurse_require_spec_test = {require_executions: [],
-                                                  return_values_in_first: [],
-                                                  return_values_in_second: [],
-                                                  nb_requires: 0,
-                                                  require_method: method(:custom_require_or_reason),
-                                                 }
+      {custom_require_or_reason: 'custom_requirer', require: 'ruby require'}.each do |method_name, context_name|
+        it "(#{context_name}) returns false when the path is already being required" do
+          begin
+            first_path = from_root('first.rb')
+            second_path = from_root('second.rb')
 
-          File.write(first_path, <<-RUBY)
-            if $recurse_require_spec_test[:nb_requires] < 5
-              $recurse_require_spec_test[:nb_requires] += 1
-              $recurse_require_spec_test[:require_executions] << 'first'
-              require_method = $recurse_require_spec_test[:require_method]
-              $recurse_require_spec_test[:return_values_in_first] << require_method.call(#{second_path.inspect})
-            end
-          RUBY
+            results = $recurse_require_spec_test = {require_executions: [],
+                                                    return_values_in_first: [],
+                                                    return_values_in_second: [],
+                                                    nb_requires: 0,
+                                                    require_method: method(method_name),
+                                                   }
 
-          File.write(second_path, <<-RUBY)
-            if $recurse_require_spec_test[:nb_requires] < 5
-              $recurse_require_spec_test[:nb_requires] += 1
-              $recurse_require_spec_test[:require_executions] << 'second'
-              require_method = $recurse_require_spec_test[:require_method]
-              $recurse_require_spec_test[:return_values_in_second] << require_method.call(#{first_path.inspect})
-            end
-          RUBY
+            File.write(first_path, <<-RUBY)
+              if $recurse_require_spec_test[:nb_requires] < 5
+                $recurse_require_spec_test[:nb_requires] += 1
+                $recurse_require_spec_test[:require_executions] << 'first'
+                require_method = $recurse_require_spec_test[:require_method]
+                $recurse_require_spec_test[:return_values_in_first] << require_method.call(#{second_path.inspect})
+              end
+            RUBY
 
-          ret_val = custom_require_or_reason(first_path)
+            File.write(second_path, <<-RUBY)
+              if $recurse_require_spec_test[:nb_requires] < 5
+                $recurse_require_spec_test[:nb_requires] += 1
+                $recurse_require_spec_test[:require_executions] << 'second'
+                require_method = $recurse_require_spec_test[:require_method]
+                $recurse_require_spec_test[:return_values_in_second] << require_method.call(#{first_path.inspect})
+              end
+            RUBY
 
-          ret_val.should == true
-          results[:require_executions].should == ['first', 'second']
-          results[:return_values_in_first].should == [true]
-          results[:return_values_in_second].should == [false]
-          results[:nb_requires].should == 2
-        ensure
-          $recurse_require_spec_test = nil
+            ret_val = send(method_name, first_path)
+
+            ret_val.should == true
+            results[:require_executions].should == ['first', 'second']
+            results[:return_values_in_first].should == [true]
+            results[:return_values_in_second].should == [false]
+            results[:nb_requires].should == 2
+          ensure
+            $recurse_require_spec_test = nil
+          end
         end
       end
 
