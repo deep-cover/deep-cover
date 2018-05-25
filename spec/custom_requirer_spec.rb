@@ -329,31 +329,31 @@ module DeepCover
       it 'accepts an absolute .rb file with absolute path without .rb' do
         file_tree %w(one/two/test.rb)
 
-        File.join(root, 'one/two/test').should actually_require('one/two/test.rb')
+        from_root('one/two/test').should actually_require('one/two/test.rb')
       end
 
       it 'accepts an absolute .rb file with absolute path with .rb' do
         file_tree %w(one/two/test.rb)
 
-        File.join(root, 'one/two/test.rb').should actually_require('one/two/test.rb')
+        from_root('one/two/test.rb').should actually_require('one/two/test.rb')
       end
 
       it 'ignores an absolute not .rb file with absolute path without .rb' do
         file_tree %w(one/two/test)
 
-        File.join(root, 'one/two/test').should actually_require(:not_found)
+        from_root('one/two/test').should actually_require(:not_found)
       end
 
       it 'ignores an absolute not .rb file with absolute path with .rb' do
         file_tree %w(one/two/test)
 
-        File.join(root, 'one/two/test.rb').should actually_require(:not_found)
+        from_root('one/two/test.rb').should actually_require(:not_found)
       end
 
       it 'returns false when the path is already being required' do
         begin
-          first_path = File.join(root, 'first.rb')
-          second_path = File.join(root, 'second.rb')
+          first_path = from_root('first.rb')
+          second_path = from_root('second.rb')
           results = $recurse_require_spec_test = {require_executions: [],
                                                   return_values_in_first: [],
                                                   return_values_in_second: [],
@@ -439,7 +439,7 @@ module DeepCover
 
         FileUtils.ln_s from_root('one'), from_root('sym_one')
 
-        @root = File.join(root, 'sym_one')
+        @root = from_root('sym_one')
         Dir.chdir(@root)
 
         # expected_loaded_feature will get joined to the @root, which is already on one through a symlink.
