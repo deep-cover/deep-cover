@@ -133,11 +133,14 @@ module DeepCover
 
       found_path = resolve_path(path)
 
-      DeepCover.autoload_tracker.wrap_require(path, found_path) do
-        return yield(:not_found) unless found_path
-
+      if found_path
         return false if @loaded_features.include?(found_path)
         return false if @paths_being_required.include?(found_path)
+      end
+
+      DeepCover.autoload_tracker.wrap_require(path, found_path) do
+        # Either a problem with resolve_path, or a gem that will be added to the load_path by RubyGems
+        return yield(:not_found) unless found_path
 
         begin
           @paths_being_required.add(found_path)
