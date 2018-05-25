@@ -91,11 +91,13 @@ module DeepCover
 
       paths_with_ext = extensions_to_try.map { |ext| path + ext }
 
-      if path == abs_path
-        paths_with_ext.each do |path_with_ext|
-          return path_with_ext if @loaded_features.include?(path_with_ext)
-        end
+      # Doing this check in every case instead of only for absolute_path because ruby has some
+      # built-in $LOADED_FEATURES which aren't an absolute path. Ex: enumerator.so, thread.rb
+      paths_with_ext.each do |path_with_ext|
+        return path_with_ext if @loaded_features.include?(path_with_ext)
+      end
 
+      if path == abs_path
         paths_with_ext.each do |path_with_ext|
           return path_with_ext if File.exist?(path_with_ext)
         end
