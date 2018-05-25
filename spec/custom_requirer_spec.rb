@@ -517,6 +517,21 @@ module DeepCover
         'two/test.so'.should actually_require(:file_extension_is_so)
       end
 
+      # a built-in feature is basically just a single file-name (not an absolute path)
+      it 'handles ruby built-ins LOADED_FEATURES' do
+        requirer.loaded_features << 'somewhere.rb'
+        'somewhere'.should actually_require(false)
+      end
+
+      it 'ruby built-ins LOADED_FEATURES hide other matching file from the load_path' do
+        file_tree %w(one/somewhere.rb
+                     )
+
+        add_load_path 'one'
+        requirer.loaded_features << 'somewhere.rb'
+        'somewhere'.should actually_require(false)
+      end
+
       it "doesn't require if a LOAD_PATH + required path already matches a LOADED_FEATURES" do
         file_tree %w(one/two/test.rb
                      then/two/test.rb
