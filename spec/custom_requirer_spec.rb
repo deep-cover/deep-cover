@@ -143,6 +143,19 @@ module DeepCover
       requirer.require(path) { |reason| reason }
     end
 
+    def with_ruby_globals_of_custom_requirer
+      # Test ruby require
+
+      tmp_load_path = $LOAD_PATH.dup
+      $LOAD_PATH[0..-1] = requirer.load_paths
+      tmp_loaded_features = $LOADED_FEATURES.dup
+      $LOADED_FEATURES[0..-1] = requirer.loaded_features
+      yield
+    ensure
+      $LOAD_PATH[0..-1] = tmp_load_path
+      $LOADED_FEATURES[0..-1] = tmp_loaded_features
+    end
+
     describe '#require' do
       # TOMA: Pretty much all of those case could be repeated as-is, except for adding a .rb to the require's path.
       #       A lot of these tests could be make for #load also, minus the loaded_features check. What do you think?
@@ -516,6 +529,53 @@ module DeepCover
         prepend_load_path 'one'
         add_load_path 'again'
         'two/test'.should actually_require(false)
+      end
+
+      {custom_require_or_reason: 'custom_requirer', require: 'ruby require'}.each do |method_name, context_name|
+        it "(#{context_name}) still requires if a later LOAD_PATH + required path is already being loaded" do
+          file_tree %w(one/
+                       second/
+                      )
+          add_load_path 'one'
+
+          begin
+            first_path = from_root('one/file.rb')
+            second_path = from_root('second/file.rb')
+
+            if method_name == :custom_require_or_reason
+              load_paths = requirer.load_paths
+            elsif method_name == :require
+              load_paths = $LOAD_PATH
+            end
+
+            results = $recurse_require_spec_test = {require_executions: [],
+                                                    return_values_in_first: [],
+                                                    require_method: method(method_name),
+                                                    load_paths: load_paths,
+                                                   }
+
+            File.write(first_path, <<-RUBY)
+              $recurse_require_spec_test[:require_executions] << 'first'
+              $recurse_require_spec_test[:load_paths].insert(0, #{from_root('second').inspect})
+              require_method = $recurse_require_spec_test[:require_method]
+              $recurse_require_spec_test[:return_values_in_first] << require_method.call('file')
+            RUBY
+
+            File.write(second_path, <<-RUBY)
+              $recurse_require_spec_test[:require_executions] << 'second'
+            RUBY
+
+            ret_val = with_ruby_globals_of_custom_requirer do
+              send(method_name, 'file')
+            end
+
+            ret_val.should == true
+            results[:require_executions].should == ['first', 'second']
+            results[:return_values_in_first].should == [true]
+          ensure
+            $recurse_require_spec_test = nil
+          end
+        end
       end
 
       it 'outputs some diagnostics if DeepCover creates a syntax error', exclude: :JRuby do
