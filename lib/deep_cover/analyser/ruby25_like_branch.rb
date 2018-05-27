@@ -30,13 +30,8 @@ module DeepCover
         @loc_index = 0
       end
 
-      def node=(value)
-        @delegate_sd_obj = value
-      end
-
-      def node
-        @delegate_sd_obj
-      end
+      alias_method :node=, :__setobj__
+      alias_method :node, :__getobj__
 
       def branch_coverage(node)
         self.node = node
