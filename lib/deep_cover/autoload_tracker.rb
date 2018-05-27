@@ -8,7 +8,7 @@ module DeepCover
   class AutoloadTracker
     AutoloadEntry = Struct.new(:weak_mod, :name, :target_path, :interceptor_path) do
       # If the ref is dead, will return nil, otherwise the target
-      def mod
+      def mod_if_available
         weak_mod.__getobj__
       rescue RefError
         nil
@@ -42,7 +42,7 @@ module DeepCover
 
       begin
         entries.each do |entry|
-          mod = entry.mod
+          mod = entry.mod_if_available
           next unless mod
           if mod.frozen?
             warn_frozen_module(mod)
@@ -56,7 +56,7 @@ module DeepCover
       ensure
         entries = entries_for_target(requested_path, absolute_path_found)
         entries.each do |entry|
-          mod = entry.mod
+          mod = entry.mod_if_available
           next unless mod
           if mod.frozen?
             warn_frozen_module(mod)
@@ -96,7 +96,7 @@ module DeepCover
     def remove_interceptors(&do_autoload_block)
       @autoloads_by_basename.each do |basename, entries|
         entries.each do |entry|
-          mod = entry.mod
+          mod = entry.mod_if_available
           next unless mod
           # Module's constants are shared with Object. But if you set autoloads directly on Module, they
           # appear on multiple classes. So just skip, Object will take care of those.
