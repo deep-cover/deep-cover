@@ -7,10 +7,18 @@ require 'weakref'
 module DeepCover
   class AutoloadTracker
     AutoloadEntry = Struct.new(:weak_mod, :name, :target_path, :interceptor_path) do
-      # If the ref is dead, will return nil, otherwise the target
+      # If the ref is dead, will return nil
+      # If the target is frozen, will warn and return nil
+      # Otherwise return the target
       def mod_if_available
-        weak_mod.__getobj__
-      rescue RefError
+        mod = weak_mod.__getobj__
+        if mod.frozen?
+          AutoloadTracker.warn_frozen_module(mod)
+          nil
+        else
+          mod
+        end
+      rescue WeakRef::RefError
         nil
       end
     end
@@ -44,10 +52,6 @@ module DeepCover
         entries.each do |entry|
           mod = entry.mod_if_available
           next unless mod
-          if mod.frozen?
-            warn_frozen_module(mod)
-            next
-          end
           # We set the autoload to a file that is already loaded, this makes ruby happy
           mod.autoload_without_deep_cover(entry.name, $LOADED_FEATURES.first)
         end
@@ -58,10 +62,6 @@ module DeepCover
         entries.each do |entry|
           mod = entry.mod_if_available
           next unless mod
-          if mod.frozen?
-            warn_frozen_module(mod)
-            next
-          end
           # Putting the autoloads back back since we couldn't complete the require
           mod.autoload_without_deep_cover(entry.name, entry.interceptor_path)
         end
@@ -77,7 +77,7 @@ module DeepCover
 
         if mod.frozen?
           if mod.constants.any? { |name| mod.autoload?(name) }
-            warn_frozen_module(mod)
+            self.class.warn_frozen_module(mod)
           end
           next
         end
@@ -101,10 +101,6 @@ module DeepCover
           # Module's constants are shared with Object. But if you set autoloads directly on Module, they
           # appear on multiple classes. So just skip, Object will take care of those.
           next if mod == Module
-          if mod.frozen?
-            warn_frozen_module(mod)
-            next
-          end
           yield mod, entry.name, entry.target_path
         end
       end
@@ -201,9 +197,9 @@ require #{path.to_s.inspect}
     self.warned_for_frozen_module = false
 
     # Using frozen modules/classes is almost unheard of, but a warning makes things easier if someone does it
-    def warn_frozen_module(mod)
-      return if self.class.warned_for_frozen_module == true
-      self.class.warned_for_frozen_module ||= true
+    def self.warn_frozen_module(mod)
+      return if warned_for_frozen_module == true
+      self.warned_for_frozen_module ||= true
       warn "There is an autoload on a frozen module/class: #{mod}, DeepCover cannot handle those, failure is probable. " \
            "This warning won't be displayed again (even for different module/class)"
     end
