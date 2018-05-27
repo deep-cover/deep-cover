@@ -162,17 +162,17 @@ module DeepCover
     end
 
     def with_rb_extension(path)
-      path += '.rb' unless needs_extension?(path)
+      path += '.rb' unless has_supported_extension?(path)
       path
     end
 
     def without_extension(path)
-      path = path[0...-3] unless needs_extension?(path)
+      path = path[0...-3] if has_supported_extension?(path)
       path
     end
 
-    def needs_extension?(path)
-      !path.end_with?('.rb', '.so')
+    def has_supported_extension?(path)
+      path.end_with?('.rb', '.so')
     end
 
     def autoload_interceptor_for(path)
