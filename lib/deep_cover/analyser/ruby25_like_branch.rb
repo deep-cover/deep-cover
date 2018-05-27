@@ -203,9 +203,8 @@ module DeepCover
       end
 
       def node_loc_infos(source_range = node)
-        if source_range.is_a?(Node)
-          source_range = source_range.expression
-        end
+        source_range = source_range.expression if source_range.is_a?(Node)
+
         @loc_index += 1
         [@loc_index, source_range.line, source_range.column, source_range.last_line, source_range.last_column]
       end
