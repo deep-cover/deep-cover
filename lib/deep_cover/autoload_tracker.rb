@@ -109,6 +109,20 @@ module DeepCover
       @interceptor_files_by_path = {}
     end
 
+    class << self
+      # Can be true, false, or a Symbol. The symbol will make every warning be displayed
+      attr_accessor :warned_for_frozen_module
+    end
+    self.warned_for_frozen_module = false
+
+    # Using frozen modules/classes is almost unheard of, but a warning makes things easier if someone does it
+    def self.warn_frozen_module(mod)
+      return if warned_for_frozen_module == true
+      self.warned_for_frozen_module ||= true
+      warn "There is an autoload on a frozen module/class: #{mod}, DeepCover cannot handle those, failure is probable. " \
+           "This warning won't be displayed again (even for different module/class)"
+    end
+
     protected
 
     def setup_interceptor_for(mod, name, path)
@@ -188,20 +202,6 @@ require #{path.to_s.inspect}
       new_file.close
 
       new_file.path
-    end
-
-    class << self
-      # Can be true, false, or a Symbol. The symbol will make every warning be displayed
-      attr_accessor :warned_for_frozen_module
-    end
-    self.warned_for_frozen_module = false
-
-    # Using frozen modules/classes is almost unheard of, but a warning makes things easier if someone does it
-    def self.warn_frozen_module(mod)
-      return if warned_for_frozen_module == true
-      self.warned_for_frozen_module ||= true
-      warn "There is an autoload on a frozen module/class: #{mod}, DeepCover cannot handle those, failure is probable. " \
-           "This warning won't be displayed again (even for different module/class)"
     end
   end
 end
