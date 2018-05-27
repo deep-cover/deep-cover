@@ -6,10 +6,10 @@ require 'weakref'
 
 module DeepCover
   class AutoloadTracker
-    AutoloadEntry = Struct.new(:weak_const, :name, :target_path, :interceptor_path) do
+    AutoloadEntry = Struct.new(:weak_mod, :name, :target_path, :interceptor_path) do
       # If the ref is dead, will return nil, otherwise the target
-      def const
-        weak_const.__getobj__
+      def mod
+        weak_mod.__getobj__
       rescue RefError
         nil
       end
@@ -21,8 +21,8 @@ module DeepCover
       @interceptor_files_by_path = {}
     end
 
-    def autoload_path_for(const, name, path)
-      interceptor_path = setup_interceptor_for(const, name, path)
+    def autoload_path_for(mod, name, path)
+      interceptor_path = setup_interceptor_for(mod, name, path)
 
       if DeepCover.custom_requirer.is_being_required?(path)
         $LOADED_FEATURES.first
@@ -42,51 +42,51 @@ module DeepCover
 
       begin
         entries.each do |entry|
-          const = entry.const
-          next unless const
-          if const.frozen?
-            warn_frozen_module(const)
+          mod = entry.mod
+          next unless mod
+          if mod.frozen?
+            warn_frozen_module(mod)
             next
           end
           # We set the autoload to a file that is already loaded, this makes ruby happy
-          const.autoload_without_deep_cover(entry.name, $LOADED_FEATURES.first)
+          mod.autoload_without_deep_cover(entry.name, $LOADED_FEATURES.first)
         end
 
         yield
       ensure
         entries = entries_for_target(requested_path, absolute_path_found)
         entries.each do |entry|
-          const = entry.const
-          next unless const
-          if const.frozen?
-            warn_frozen_module(const)
+          mod = entry.mod
+          next unless mod
+          if mod.frozen?
+            warn_frozen_module(mod)
             next
           end
           # Putting the autoloads back back since we couldn't complete the require
-          const.autoload_without_deep_cover(entry.name, entry.interceptor_path)
+          mod.autoload_without_deep_cover(entry.name, entry.interceptor_path)
         end
       end
     end
 
     # This is only used on MRI, so ObjectSpace is alright.
-    def initialize_autoloaded_paths(consts = ObjectSpace.each_object(Module), &do_autoload_block)
-      consts.each do |const|
+    def initialize_autoloaded_paths(mods = ObjectSpace.each_object(Module), &do_autoload_block)
+      mods.each do |mod|
         # Module's constants are shared with Object. But if you set autoloads directly on Module, they
         # appear on multiple classes. So just skip, Object will take care of those.
-        next if const == Module
+        next if mod == Module
 
-        if const.frozen?
-          if const.constants.any? { |name| const.autoload?(name) }
-            warn_frozen_module(const)
+        if mod.frozen?
+          if mod.constants.any? { |name| mod.autoload?(name) }
+            warn_frozen_module(mod)
           end
           next
         end
 
-        const.constants.each do |name|
-          path = const.autoload?(name)
+        mod.constants.each do |name|
+          path = mod.autoload?(name)
           next unless path
-          interceptor_path = setup_interceptor_for(const, name, path)
-          yield const, name, interceptor_path
+          interceptor_path = setup_interceptor_for(mod, name, path)
+          yield mod, name, interceptor_path
         end
       end
     end
@@ -96,16 +96,16 @@ module DeepCover
     def remove_interceptors(&do_autoload_block)
       @autoloads_by_basename.each do |basename, entries|
         entries.each do |entry|
-          const = entry.const
-          next unless const
+          mod = entry.mod
+          next unless mod
           # Module's constants are shared with Object. But if you set autoloads directly on Module, they
           # appear on multiple classes. So just skip, Object will take care of those.
-          next if const == Module
-          if const.frozen?
-            warn_frozen_module(const)
+          next if mod == Module
+          if mod.frozen?
+            warn_frozen_module(mod)
             next
           end
-          yield const, entry.name, entry.target_path
+          yield mod, entry.name, entry.target_path
         end
       end
 
@@ -115,9 +115,9 @@ module DeepCover
 
     protected
 
-    def setup_interceptor_for(const, name, path)
+    def setup_interceptor_for(mod, name, path)
       interceptor_path = autoload_interceptor_for(path)
-      entry = AutoloadEntry.new(WeakRef.new(const), name, path, interceptor_path)
+      entry = AutoloadEntry.new(WeakRef.new(mod), name, path, interceptor_path)
 
       basename = basename_without_extension(path)
 
@@ -201,10 +201,10 @@ require #{path.to_s.inspect}
     self.warned_for_frozen_module = false
 
     # Using frozen modules/classes is almost unheard of, but a warning makes things easier if someone does it
-    def warn_frozen_module(const)
+    def warn_frozen_module(mod)
       return if self.class.warned_for_frozen_module == true
       self.class.warned_for_frozen_module ||= true
-      warn "There is an autoload on a frozen module/class: #{const}, DeepCover cannot handle those, failure is probable. " \
+      warn "There is an autoload on a frozen module/class: #{mod}, DeepCover cannot handle those, failure is probable. " \
            "This warning won't be displayed again (even for different module/class)"
     end
   end
