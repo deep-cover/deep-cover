@@ -33,7 +33,7 @@ module DeepCover
       interceptor_path = setup_interceptor_for(mod, name, path)
 
       if DeepCover.custom_requirer.is_being_required?(path)
-        $LOADED_FEATURES.first
+        already_loaded_feature
       else
         interceptor_path
       end
@@ -52,8 +52,7 @@ module DeepCover
         entries.each do |entry|
           mod = entry.mod_if_available
           next unless mod
-          # We set the autoload to a file that is already loaded, this makes ruby happy
-          mod.autoload_without_deep_cover(entry.name, $LOADED_FEATURES.first)
+          mod.autoload_without_deep_cover(entry.name, already_loaded_feature)
         end
 
         yield
@@ -183,6 +182,16 @@ module DeepCover
 
     def has_supported_extension?(path)
       path.end_with?('.rb', '.so')
+    end
+
+    # It is not possible to simply remove an autoload. So, instead, we must change the
+    # autoload to an already loaded path.
+    # The autoload will be set back to what it was once the require returns. This is
+    # needed in case that required path wasn't the one that fulfilled the autoload, or
+    # if the constant and $LOADED_FEATURES gets removed, since in that situation,
+    # the autoload is supposed to be active again.
+    def already_loaded_feature
+      $LOADED_FEATURES.first
     end
 
     def autoload_interceptor_for(path)
