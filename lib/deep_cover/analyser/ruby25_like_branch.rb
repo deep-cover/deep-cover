@@ -24,6 +24,8 @@ module DeepCover
       end.to_h
     end
 
+    # This is the class doing the work. Since everything is about the node, the class delegates
+    # missing methods to the node, simplifying the code.
     class NodeCoverageExtrator < SimpleDelegator
       def initialize(node = nil)
         self.node = node
