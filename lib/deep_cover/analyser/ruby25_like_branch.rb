@@ -167,7 +167,7 @@ module DeepCover
       # node reach the `end` in its branch coverage output
       def extend_elsif_range(possible_elsif = node)
         return possible_elsif unless possible_elsif.is_a?(Node::If) && possible_elsif.style == :elsif
-        deepest_if = possible_elsif.deepest_elsif_node || possible_elsif
+        deepest_if = possible_elsif.deepest_elsif_node
         if deepest_if.false_branch.is_a?(Node::EmptyBody)
           return possible_elsif.expression.with(end_pos: possible_elsif.root_if_node.loc_hash[:end].begin_pos)
         end
