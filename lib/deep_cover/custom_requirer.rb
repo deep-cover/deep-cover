@@ -130,7 +130,7 @@ module DeepCover
     #  - :skipped if the filter block returned `true`
     # Exceptions raised by the required code bubble up as normal, except for
     # SyntaxError, which is turned into a :cover_failed which calls the fallback_block.
-    def require(path, &fallback_block)
+    def require(path) # &fallback_block
       path = path.to_s
 
       found_path = resolve_path(path)
@@ -165,7 +165,7 @@ module DeepCover
     # Note, this doesn't support the `wrap` parameter that ruby's #load has.
     # Same return/throw as CustomRequirer#require, except:
     # Cannot return false since #load doesn't care about a file already being executed.
-    def load(path, &fallback_block)
+    def load(path) # &fallback_block
       found_path = resolve_path(path, nil)
 
       if found_path.nil?
@@ -196,7 +196,7 @@ module DeepCover
       end
     end
 
-    def cover_and_execute(path, &fallback_block)
+    def cover_and_execute(path) # &fallback_block
       begin
         covered_code = DeepCover.coverage.covered_code(path)
       rescue Parser::SyntaxError => e

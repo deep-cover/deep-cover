@@ -45,7 +45,7 @@ module DeepCover
       autoloads && !autoloads.empty?
     end
 
-    def wrap_require(requested_path, absolute_path_found, &block)
+    def wrap_require(requested_path, absolute_path_found) # &block
       entries = entries_for_target(requested_path, absolute_path_found)
 
       begin
@@ -68,7 +68,7 @@ module DeepCover
     end
 
     # This is only used on MRI, so ObjectSpace is alright.
-    def initialize_autoloaded_paths(mods = ObjectSpace.each_object(Module), &do_autoload_block)
+    def initialize_autoloaded_paths(mods = ObjectSpace.each_object(Module)) # &do_autoload_block
       mods.each do |mod|
         # Module's constants are shared with Object. But if you set autoloads directly on Module, they
         # appear on multiple classes. So just skip, Object will take care of those.
@@ -92,7 +92,7 @@ module DeepCover
 
     # We need to remove the interceptor hooks, otherwise, the problem if manually requiring
     # something that is autoloaded will cause issues.
-    def remove_interceptors(&do_autoload_block)
+    def remove_interceptors # &do_autoload_block
       @autoloads_by_basename.each do |basename, entries|
         entries.each do |entry|
           mod = entry.mod_if_available
