@@ -198,8 +198,8 @@ module DeepCover
         branches_infos.to_h
       end
 
-      def node_loc_infos(source_range = node)
-        source_range = source_range.expression if source_range.is_a?(Node)
+      def node_loc_infos(node_or_range = node)
+        source_range = node_or_range.is_a?(Node) ? node_or_range.expression : node_or_range
 
         @loc_index += 1
         [@loc_index, source_range.line, source_range.column, source_range.last_line, source_range.last_column]
