@@ -17,7 +17,7 @@ module DeepCover
       AUTOLOAD.each do |module_name|
         DeepCover.autoload(Tools::Camelize.camelize(module_name), "#{__dir__}/#{module_name}")
       end
-      DeepCover.autoload :VERSION, 'deep_cover/version'
+      DeepCover.autoload :VERSION, "#{__dir__}/version"
       Object.autoload :Term, 'term/ansicolor'
       Object.autoload :Terminal, 'terminal-table'
       Object.autoload :YAML, 'yaml'
