@@ -45,7 +45,7 @@ module DeepCover
           ruby_codes.concat(ruby_codes.map { |c| c.gsub(/\bwhile\b(.*)/, 'until !(\1)') })
         end
 
-        ruby_codes += ruby_codes.map { |c| c.split("\n").select(&:present?).join("\n") }
+        ruby_codes += ruby_codes.map { |c| c.split("\n").select(&Tools.method(:present?)).join("\n") }
         ruby_codes.uniq!
 
         ruby_codes.each(&method(:execute))
