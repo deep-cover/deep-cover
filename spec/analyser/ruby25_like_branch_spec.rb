@@ -3,7 +3,6 @@
 require 'spec_helper'
 require 'tempfile'
 require 'coverage'
-require 'active_support/core_ext/string/strip'
 
 module DeepCover
   RSpec.describe Analyser::Ruby25LikeBranch do
@@ -30,7 +29,7 @@ module DeepCover
       match do |ruby_code|
         @ignore_shortcircuit = ignore_shortcircuit
         @executions = []
-        ruby_code = ruby_code.strip_heredoc
+        ruby_code = Tools.strip_heredoc(ruby_code)
         ruby_codes = [ruby_code.rstrip]
         unless ruby_code.include?('assert')
           extra_ruby_codes = ruby_codes.map { |c| c.gsub(/^(\s*)(\d+\s*$)/, '') }
@@ -76,7 +75,7 @@ module DeepCover
           msg << Tools.indent_string(execution.code.rstrip, 4)
 
           if @different_executions.include?(execution)
-            msg << <<-MSG.strip_heredoc
+            msg << Tools.strip_heredoc(<<-MSG)
               Expected something like:
                   #{execution.ruby_result.sort.to_h}
               but deep-dover generated something like:
