@@ -20,14 +20,16 @@ def dummy_method(*args)
   args.first
 end
 
-# Ruby sometimes remove code when literals present
+# Ruby sometimes remove code when literals are present
 # Possibly removing entire conditions if the literal makes it obvious it won't run
+# or just removing a single literal
 def falsx
   false
 end
 
-# Ruby sometimes remove code when literals present
+# Ruby sometimes remove code when literals are present
 # Possibly removing entire conditions if the literal makes it obvious it won't run
+# or just removing a single literal
 def trux
   true
 end
