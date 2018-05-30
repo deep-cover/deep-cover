@@ -144,6 +144,21 @@ module DeepCover
           require sample_require_path
           ensure_coverage_data(cov_module, branches: true, lines: true, methods: false)
         end
+
+        it 'result has every coverage if started with no arg' do
+          cov_module.start
+          require sample_require_path
+
+          peeked = cov_module.peek_result
+          result = cov_module.result
+          peeked.should == result
+
+          result.should be_a Hash
+          file_result = result[sample_require_path]
+          file_result.should be_a Array
+
+          file_result.should_not be_empty
+        end
       end
     end
   end
