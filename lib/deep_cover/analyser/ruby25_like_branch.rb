@@ -147,13 +147,13 @@ module DeepCover
         key = loc_hash[:keyword].source.to_sym
         base_info = [key, *node_loc_infos]
         body_node = if node.is_a?(Node::WhilePost) || node.is_a?(Node::UntilPost)
-                      if body.instructions.present?
+                      if !body.instructions.empty?
                         end_pos = body.instructions.last.expression.end_pos
                         body.instructions.first.expression.with(end_pos: end_pos)
                       else
                         body.loc_hash[:end].begin
                       end
-                    elsif body.is_a?(Node::Begin) && node.body.expressions.present?
+                    elsif body.is_a?(Node::Begin) && !node.body.expressions.empty?
                       end_pos = body.expressions.last.expression.end_pos
                       body.expressions.first.expression.with(end_pos: end_pos)
                     else
