@@ -23,8 +23,9 @@ module DeepCover
       source = to_execute.covered_source if to_execute.is_a?(CoveredCode)
       raise unless source
 
-      inner_msg = "#{e.class.name}: #{e.message}"
-      msg = "Exception when executing the sample:\n#{inner_msg.indent(4)}\n*Code follows*\n#{source}"
+      inner_msg = Tools.indent_string("#{e.class.name}: #{e.message}", 4)
+      source = Tools.indent_string(source, 4)
+      msg = "Exception when executing the sample:\n#{inner_msg}\n*Code follows*\n#{source}"
       new_exc = ExceptionInSample.new(msg)
       new_exc.set_backtrace(e.backtrace)
       raise new_exc

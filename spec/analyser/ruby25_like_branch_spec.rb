@@ -3,7 +3,6 @@
 require 'spec_helper'
 require 'tempfile'
 require 'coverage'
-require 'active_support/core_ext/string/indent'
 require 'active_support/core_ext/string/strip'
 
 module DeepCover
@@ -74,7 +73,7 @@ module DeepCover
             msg << 'Every mutation is bad. Displaying problem only for original sample:'
           end
           msg << 'For ruby code:'
-          msg << execution.code.rstrip.indent(4)
+          msg << Tools.indent_string(execution.code.rstrip, 4)
 
           if @different_executions.include?(execution)
             msg << <<-MSG.strip_heredoc
