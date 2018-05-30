@@ -15,7 +15,7 @@ module DeepCover
       inserts.each do |exp_limit, size|
         # Line index starts at 1, so array index returns the next line
         comment_line = generated_lines[exp_limit.line]
-        next unless comment_line.present?
+        next if Tools.blank?(comment_line)
         next unless comment_line.start_with?('#>')
         next if comment_line.start_with?('#>X')
         next unless comment_line.size >= exp_limit.column
