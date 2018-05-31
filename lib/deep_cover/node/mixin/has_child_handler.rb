@@ -8,7 +8,7 @@ module DeepCover
       end
 
       def call_child_handler(template, child, child_name = nil)
-        child_name ||= self.class.child_index_to_name(child.index, children.size)
+        child_name ||= self.child_index_to_name(child.index)
         method_name = format(template, name: child_name)
         if respond_to?(method_name)
           args = [child, child_name]

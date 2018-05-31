@@ -21,6 +21,10 @@ module DeepCover
         end
       end
 
+      def child_index_to_name(index)
+        self.class.child_index_to_name(index, children.size)
+      end
+
       module ClassMethods
         def has_child(rest_: false, refine_: false, **args)
           raise "Needs exactly one custom named argument, got #{args.size}" if args.size != 1
