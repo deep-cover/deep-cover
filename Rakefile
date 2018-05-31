@@ -5,7 +5,7 @@ require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
 RuboCop::RakeTask.new(:rubocop) do |t|
-  t.options = ['-a']
+  t.options = ['-a'] unless ENV['TRAVIS']
 end
 
 RSpec::Core::RakeTask.new(:spec).tap { |task| task.pattern = 'spec/*_spec.rb, spec/*/*_spec.rb' }
