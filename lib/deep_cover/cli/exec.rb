@@ -17,7 +17,8 @@ module DeepCover
         require 'yaml'
         require_relative '../backports'
         env_var = {'DEEP_COVER' => 't',
-                   'DEEP_COVER_OPTIONS' => YAML.dump(@options.slice(*DEFAULTS.keys))}
+                   'DEEP_COVER_OPTIONS' => YAML.dump(@options.slice(*DEFAULTS.keys)),
+                  }
 
         system(env_var, *@argv)
       end
