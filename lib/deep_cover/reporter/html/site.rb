@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module DeepCover
+  require 'sass'
   require_relative 'base'
   require_relative 'index'
   require_relative 'source'
@@ -28,9 +29,8 @@ module DeepCover
       end
 
       def compile_stylesheet(source, dest)
-        Bundler.with_clean_env do
-          `sass #{source} #{dest}`
-        end
+        css = Sass::Engine.for_file(source, style: :expanded).to_css
+        File.write(dest, css)
       end
 
       def render_index

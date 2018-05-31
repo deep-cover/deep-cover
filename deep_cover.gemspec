@@ -40,6 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'with_progress'
 
   # Reporters
+  spec.add_runtime_dependency 'sass'
   spec.add_runtime_dependency 'terminal-table'
 
   # While in 0.x
