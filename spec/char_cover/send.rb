@@ -64,6 +64,11 @@
     raise&.to_s
 #>       xxxxxx
 
+#### Inside of a block
+    1.times do
+      123&.to_s
+    end
+
 ### odd error case
     def dummy_method2(*)
       dummy_method 42

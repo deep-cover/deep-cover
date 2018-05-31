@@ -72,7 +72,7 @@ module DeepCover
       include ExecutedAfterChildren
 
       def has_block?
-        parent.parent.is_a?(Block)
+        parent.has_block?
       end
 
       def rewrite
@@ -123,7 +123,7 @@ module DeepCover
       executed_loc_keys :dot
 
       def has_block?
-        parent.is_a?(Block)
+        parent.is_a?(Block) && parent.child_index_to_name(index) == :call
       end
 
       def rewrite
