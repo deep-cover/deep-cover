@@ -14,14 +14,12 @@ module DeepCover
       end
 
       def run
-        require 'bundler'
-        require 'bundler/cli'
-        require 'bundler/cli/exec'
         require 'yaml'
         require_relative '../backports'
-        ENV['DEEP_COVER'] = 't'
-        ENV['DEEP_COVER_OPTIONS'] = YAML.dump(@options.slice(*DEFAULTS.keys))
-        Bundler::CLI::Exec.new(Option.new, @argv).run
+        env_var = {'DEEP_COVER' => 't',
+                   'DEEP_COVER_OPTIONS' => YAML.dump(@options.slice(*DEFAULTS.keys))}
+
+        system(env_var, *@argv)
       end
     end
   end
