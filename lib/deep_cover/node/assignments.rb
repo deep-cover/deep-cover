@@ -74,6 +74,9 @@ module DeepCover
         include BackwardsStrategy
       end
 
+      # We can't rewrite `self.bar` within a multiple assignment in the
+      # case that `bar=` is private, so remain conservative and don't add
+      # trackers.
       class SelfReceiver < BackwardsNode
         executed_loc_keys :expression
       end
