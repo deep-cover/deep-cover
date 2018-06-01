@@ -37,6 +37,18 @@ module DeepCover
                                                     **@options)
     end
 
+    def covered_code_or_warn(path, **options)
+      covered_code(path, **options)
+    rescue Parser::SyntaxError => e
+      if e.message =~ /contains escape sequences incompatible with UTF-8/
+        warn "Can't cover #{path} because of incompatible encoding (see issue #9)"
+      else
+        warn "The file #{path} can't be instrumented"
+      end
+      nil
+    end
+
+
     def each
       return to_enum unless block_given?
       @tracker_storage_per_path.each_key do |path|

@@ -197,17 +197,12 @@ module DeepCover
     end
 
     def cover_and_execute(path) # &fallback_block
-      begin
-        covered_code = DeepCover.coverage.covered_code(path)
-      rescue Parser::SyntaxError => e
-        if e.message =~ /contains escape sequences incompatible with UTF-8/
-          warn "Can't cover #{path} because of incompatible encoding (see issue #9)"
-        else
-          warn "The file #{path} can't be instrumented"
-        end
+      covered_code = DeepCover.coverage.covered_code_or_warn(path)
+      if covered_code.nil?
         yield(:cover_failed)
         raise "The fallback_block is supposed to either return or break, but didn't do either"
       end
+
       begin
         covered_code.execute_code
       rescue ::SyntaxError => e
