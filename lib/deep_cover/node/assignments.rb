@@ -55,7 +55,20 @@ module DeepCover
       end
     end
 
-    # a, b = ...
+    # Some multiple assignments are the only cases where Ruby
+    # syntax rules won't allow us to insert tracking code
+    # where we'd like it to be run.
+    #
+    # For example:
+    #
+    #   method.a, b, method_2.c = [...]
+    #
+    # We'd like to add a tracker after the call to `a=` and
+    # before the assignment to b and the call to `method_2`.
+    #
+    # We can't really do this with simple insertions, so
+    # we temporarily of strategy for BackwardsStrategy
+    #
     class Masgn < Node
       class BackwardsNode < Node
         include BackwardsStrategy
