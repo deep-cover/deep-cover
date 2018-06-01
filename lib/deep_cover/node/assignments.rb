@@ -86,8 +86,7 @@ module DeepCover
         has_tracker :entry
         has_child actual_receiver: Node
         def rewrite
-          # The local=local is to avoid Ruby warning about "Possible use of value in void context"
-          '(%{local} = (%{node});%{entry_tracker}; %{local}=%{local})'
+          '(%{entry_tracker};%{node})'
         end
         alias_method :flow_entry_count, :entry_tracker_hits
       end
@@ -117,6 +116,10 @@ module DeepCover
               selector_end: nil, # ,
             }
           end
+        end
+
+        def execution_count
+          receiver.flow_completion_count
         end
       end
 

@@ -93,6 +93,13 @@
     a, (b, c, (d, *e)) = 1
     MULTIPLE, String::MULTIPLE_SCOPED, ::MULTIPLE_GLOBAL = 1
 
+### Multiple with raise
+
+    a, dummy_method.foo, c = 1 rescue nil
+#>   -                 - x
+    a, raise.foo, c = 1
+#>   -      xxxx- x
+
 #### Empty splat
 
     a, b, * = nil
@@ -122,12 +129,12 @@
     end
 #>  ---
 
-#### self setters approximation. answers are overly conservative.
+#### self setters approximation. answers can be overly conservative.
 
     o = Object.new; class << o; def foo=(x); end; end
     o.instance_eval do
       (a, self.foo, raise.bar, c = 1) rescue nil
-#>    -x- xxxxxxxx- xxxxxxxxx- x    -
+#>    - -         -      xxxx- x    -
       (a, self.foo, self.nope, c = 1) rescue nil
 #>    -x- xxxxxxxx- xxxxxxxxx- x    -
     end
