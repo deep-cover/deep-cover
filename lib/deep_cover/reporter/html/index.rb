@@ -30,6 +30,7 @@ module DeepCover
 
       def columns
         _covered_code, analyser_map = analysis.analyser_map.first
+        analyser_map ||= []
         columns = analyser_map.flat_map do |type, analyser|
           [{
              value: type,
