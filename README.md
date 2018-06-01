@@ -82,7 +82,7 @@ First we present the official way. There are also quick and dirty ways to try `d
 
 For a standalone project (Rails app), add `deep-cover` to your Gemfile:
 
-    gem 'deep-cover', '~> 0.4', group: :test
+    gem 'deep-cover', '~> 0.4', group: :test, require: false
 
 Then run `bundle`
 
@@ -142,7 +142,7 @@ It also uses our builtin HTML reporter. Check the produced `coverage/index.html`
 
 To make it easier to transition for projects already using the builtin `Coverage` library (or indirectly those using `SimpleCov`), there is a way to overwrite the `Coverage` library using `deep-cover`'s extended coverage.
 
-Add to your Gemfile `gem 'deep-cover'`, then run `bundle`.
+Add to your Gemfile `gem 'deep-cover', require: false`, then run `bundle`.
 
 Before you require `coverage` or `simplecov`, do a `require 'deep_cover/builtin_takeover'`.
 
