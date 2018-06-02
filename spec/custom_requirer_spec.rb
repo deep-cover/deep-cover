@@ -5,7 +5,7 @@ require 'spec_helper'
 module DeepCover
   RSpec.describe CustomRequirer do
     let(:lookup_paths) { ['/'] }
-    let(:requirer) { CustomRequirer.new(load_paths: [], loaded_features: [], lookup_paths: lookup_paths) }
+    let(:requirer) { CustomRequirer.new(load_paths: [], loaded_features: []) }
     before(:each) { $last_test_tree_file_executed = nil }
     around(:each) do |ex|
       begin
@@ -19,6 +19,17 @@ module DeepCover
         Dir.chdir(current_pwd)
         FileUtils.remove_entry dir
       end
+    end
+
+    before(:each) do
+      lp = lookup_paths
+      DeepCover.configure do
+        paths(lp)
+      end
+    end
+
+    after(:each) do
+      DeepCover.reset
     end
 
     matcher :actually_require do |expected_executed_file, **options|
@@ -610,7 +621,7 @@ module DeepCover
       describe 'when filtering' do
         let(:calls) { [] }
         let(:requirer) do
-          CustomRequirer.new(load_paths: [], loaded_features: [], lookup_paths: ['/']) do |path|
+          CustomRequirer.new(load_paths: [], loaded_features: []) do |path|
             calls << path
             answer
           end

@@ -2,72 +2,9 @@
 
 module DeepCover
   class CustomRequirer
-    class LoadPathsSubset
-      def initialize(load_paths:, lookup_paths:)
-        @original_load_paths = load_paths
-        @cached_load_paths_subset = []
-        @cached_load_paths_hash = nil
-        @lookup_paths = lookup_paths.map { |p| File.expand_path(p) }
-      end
-
-      def load_paths
-        if @cached_load_paths_hash != (h = @original_load_paths.hash)
-          @cached_load_paths_subset = compute_subset
-          @cached_load_paths_hash = h
-        end
-        @cached_load_paths_subset
-      end
-
-      # E.g.  '/a/b/' => true if a lookup path is '/a/b/c/', because '/a/b/' + 'c/ok' is within lookup.
-      def potentially_within_lookup?(full_dir_path)
-        @lookup_paths.any? { |p| p.start_with? full_dir_path }
-      end
-
-      # E.g.  '/a/b' => true when a lookup path is '/a/'
-      def within_lookup?(full_path)
-        @lookup_paths.any? { |p| full_path.start_with?(p) }
-      end
-
-      def exist?(full_path)
-        within_lookup?(full_path) && File.exist?(full_path)
-      end
-
-      private
-
-      def compute_subset
-        @original_load_paths.map { |p| File.expand_path(p) }
-                            .select { |p| within_lookup?(p) || potentially_within_lookup?(p) }
-                            .freeze
-      end
-    end
-
-    class EveryLoadPaths
-      attr_reader :load_paths
-      def initialize(load_paths)
-        @load_paths = load_paths
-      end
-
-      def exist?(full_path)
-        File.exist?(full_path)
-      end
-
-      def within_lookup?(full_path)
-        true
-      end
-    end
-
     attr_reader :load_paths, :loaded_features, :filter
-    def initialize(load_paths: $LOAD_PATH, loaded_features: $LOADED_FEATURES, lookup_paths: nil, &filter)
+    def initialize(load_paths: $LOAD_PATH, loaded_features: $LOADED_FEATURES, &filter)
       @load_paths = load_paths
-      lookup_paths ||= Dir.getwd
-      lookup_paths = Array(lookup_paths)
-
-      if lookup_paths.include?('/')
-        @load_paths_subset = EveryLoadPaths.new(load_paths)
-      else
-        @load_paths_subset = LoadPathsSubset.new(load_paths: load_paths, lookup_paths: lookup_paths)
-      end
-
       @loaded_features = loaded_features
       @filter = filter
       @paths_being_required = Set.new
@@ -146,7 +83,7 @@ module DeepCover
 
         begin
           @paths_being_required.add(found_path)
-          return yield(:not_in_covered_paths) unless @load_paths_subset.within_lookup?(found_path)
+          return yield(:not_in_covered_paths) unless DeepCover.within_lookup_paths?(found_path)
           return yield(:not_supported) if found_path.end_with?('.so')
           return yield(:skipped) if filter && filter.call(found_path)
 

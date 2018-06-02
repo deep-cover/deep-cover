@@ -19,7 +19,7 @@ module DeepCover
       require_relative 'core_ext/require_overrides'
       RequireOverride.active = true
       config # actualize configuration
-      @custom_requirer = nil
+      @lookup_paths = nil
       @started = true
     end
 
@@ -57,7 +57,7 @@ module DeepCover
       case what
       when :paths
         warn "Changing DeepCover's paths after starting coverage is highly discouraged" if running?
-        @custom_requirer = nil
+        @lookup_paths = nil
       when :tracker_global
         raise NotImplementedError, "Changing DeepCover's tracker global after starting coverage is not supported" if running?
         @coverage = nil
@@ -66,7 +66,7 @@ module DeepCover
 
     def reset
       stop if running?
-      @coverage = @custom_requirer = @autoload_tracker = nil
+      @coverage = @custom_requirer = @autoload_tracker = @lookup_paths = nil
       config.reset
       self
     end
@@ -75,8 +75,20 @@ module DeepCover
       @coverage ||= Coverage.new(tracker_global: config.tracker_global)
     end
 
+    def lookup_paths
+      return @lookup_paths if @lookup_paths
+      lookup_paths = config.paths || Dir.getwd
+      lookup_paths = Array(lookup_paths).map { |p| File.expand_path(p) }
+      lookup_paths = ['/'] if lookup_paths.include?('/')
+      @lookup_paths = lookup_paths
+    end
+
+    def within_lookup_paths?(path)
+      lookup_paths.any? { |lookup_path| path.start_with?(lookup_path) }
+    end
+
     def custom_requirer
-      @custom_requirer ||= CustomRequirer.new(lookup_paths: config.paths)
+      @custom_requirer ||= CustomRequirer.new
     end
 
     def autoload_tracker
