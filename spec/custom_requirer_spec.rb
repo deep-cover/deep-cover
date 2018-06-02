@@ -161,7 +161,7 @@ module DeepCover
       File.absolute_path(path, root)
     end
 
-    def execute_custom_requirer_or_reason(path, method:)
+    def execute_custom_requirer_or_reason(path, method: execute_method_name)
       requirer.send(method, path) { |reason| reason }
     end
 
