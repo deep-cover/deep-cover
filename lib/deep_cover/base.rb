@@ -9,27 +9,33 @@ module DeepCover
     def start
       return if running?
       if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-        # Autoloaded files are not supported on jruby. We need to use binding_of_caller
-        # And that appears to be unavailable in jruby.
+        # Autoload is not supported in JRuby. We currently need to use binding_of_caller
+        # and that is not available in JRuby. An extension may be able to replace this requirement.
+        # require_relative 'core_ext/autoload_overrides'
+        # AutoloadOverride.active = true
+        require_relative 'core_ext/require_overrides'
+        RequireOverride.active = true
+      elsif RUBY_VERSION >= '2.3.0'
+        require_relative 'core_ext/instruction_sequence_load_iseq'
       else
         require_relative 'core_ext/autoload_overrides'
-        AutoloadOverride.active = true
+        require_relative 'core_ext/require_overrides'
+        AutoloadOverride.active = RequireOverride.active = true
         autoload_tracker.initialize_autoloaded_paths { |mod, name, path| mod.autoload_without_deep_cover(name, path) }
       end
-      require_relative 'core_ext/require_overrides'
-      RequireOverride.active = true
+
       config # actualize configuration
       @lookup_paths = nil
       @started = true
     end
 
     def stop
-      require_relative 'core_ext/require_overrides'
       if defined? AutoloadOverride
         AutoloadOverride.active = false
         autoload_tracker.remove_interceptors { |mod, name, path| mod.autoload_without_deep_cover(name, path) }
       end
-      RequireOverride.active = false
+      RequireOverride.active = false if defined? RequireOverride
+
       @started = false
     end
 

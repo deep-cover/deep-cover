@@ -99,6 +99,16 @@ module DeepCover
       rewriter.process
     end
 
+    def compile
+      RubyVM::InstructionSequence.compile(covered_source, path.to_s, path.to_s)
+    end
+
+    def compile_or_warn
+      warn_instead_of_syntax_error do
+        compile
+      end
+    end
+
     def freeze
       unless frozen? # Guard against reentrance
         super
