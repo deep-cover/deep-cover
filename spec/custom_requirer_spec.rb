@@ -148,8 +148,12 @@ module DeepCover
       File.absolute_path(path, root)
     end
 
+    def execute_custom_requirer_or_reason(path, method:)
+      requirer.send(method, path) { |reason| reason }
+    end
+
     def custom_require_or_reason(path)
-      requirer.require(path) { |reason| reason }
+      execute_custom_requirer_or_reason(path, method: :require)
     end
 
     def with_ruby_globals_of_custom_requirer
