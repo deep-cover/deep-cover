@@ -178,21 +178,22 @@ module DeepCover
       $LOADED_FEATURES[0..-1] = tmp_loaded_features
     end
 
-    describe '#require' do
-      # TOMA: Pretty much all of those case could be repeated as-is, except for adding a .rb to the require's path.
-      #       A lot of these tests could be make for #load also, minus the loaded_features check. What do you think?
-      #       In the case of #load, the tests could again be repeated as it (with/without .rb), except now, the without
-      #           .rb should just always fail unless a file matches it.
-      #       In every test, I have a few extra directories/files, is that dumb?
-      #
-      #
+    shared_examples 'resolve_path' do |method_name:, default_extension: nil|
+      let(:execute_method_name) { method_name }
+
+      define_method :with_extension do |path|
+        next path if default_extension.nil?
+        next path if path.end_with?(default_extension)
+        "#{path}#{default_extension}"
+      end
+
       it 'handles a ./path relatively to current work dir' do
         file_tree %w(pwd:one/two/
                      one/two/test.rb
                      one/two/three/test.rb
                     )
 
-        './test'.should actually_require('one/two/test.rb')
+        with_extension('./test').should actually_execute('one/two/test.rb')
       end
 
       it 'handles a Pathname instance' do
@@ -201,7 +202,7 @@ module DeepCover
                      one/two/three/test.rb
                     )
 
-        Pathname('./test').should actually_require('one/two/test.rb')
+        Pathname(with_extension('./test')).should actually_execute('one/two/test.rb')
       end
 
       it 'a ./path ignores the load_path' do
@@ -210,8 +211,9 @@ module DeepCover
                     )
 
         add_load_path 'one/two'
-        './test'.should actually_require(:not_found)
+        with_extension('./test').should actually_execute(:not_found)
       end
+
 
       it 'handles a ../path relatively to current work dir' do
         file_tree %w(pwd:one/two/
@@ -220,7 +222,7 @@ module DeepCover
                      one/two/three/test.rb
                     )
 
-        '../test'.should actually_require('one/test.rb')
+        with_extension('../test').should actually_execute('one/test.rb')
       end
 
       it 'a ../path ignores the load_path' do
@@ -229,7 +231,7 @@ module DeepCover
                     )
         add_load_path 'one/two/three'
 
-        '../test'.should actually_require(:not_found)
+        with_extension('../test').should actually_execute(:not_found)
       end
 
       it 'a /../ in a path after a name will go to the parent' do
@@ -239,7 +241,7 @@ module DeepCover
                     )
         add_load_path 'one'
 
-        'two/../test'.should actually_require('one/test.rb')
+        with_extension('two/../test').should actually_execute('one/test.rb')
       end
 
       it 'a /./ in a path after a name will be ignored ' do
@@ -249,7 +251,7 @@ module DeepCover
                     )
         add_load_path 'one'
 
-        'two/./test'.should actually_require('one/two/test.rb')
+        with_extension('two/./test').should actually_execute('one/two/test.rb')
       end
 
       it 'Can go to parent of load_path with multiple /../' do
@@ -259,7 +261,7 @@ module DeepCover
                     )
         add_load_path 'one/two'
 
-        'three/../../test'.should actually_require('one/test.rb')
+        with_extension('three/../../test').should actually_execute('one/test.rb')
       end
 
       it 'finds files with directories in the required path' do
@@ -269,7 +271,7 @@ module DeepCover
                     )
         add_load_path 'one'
 
-        'two/three/test'.should actually_require('one/two/three/test.rb')
+        with_extension('two/three/test').should actually_execute('one/two/three/test.rb')
       end
 
       it 'uses the matching file from the the first matching load_path' do
@@ -281,10 +283,9 @@ module DeepCover
         add_load_path 'one/two'
         add_load_path 'one/two/three'
 
-        'test'.should actually_require('one/test.rb')
+        with_extension('test').should actually_execute('one/test.rb')
       end
 
-      # TOMA: Is that a useless test?
       it "doesn't use a wrong file form the matching directly" do
         file_tree %w(one/test.rb
                      one/two/abc.rb
@@ -294,8 +295,20 @@ module DeepCover
                     )
         add_load_path 'one/two'
 
-        'test'.should actually_require('one/two/test.rb')
+        with_extension('test').should actually_execute('one/two/test.rb')
       end
+
+      it "doesn't find from parent or subdir of the load_path" do
+        file_tree %w(one/test.rb
+                     one/two/three/test.rb
+                    )
+        add_load_path 'one/two'
+
+        with_extension('test').should actually_execute(:not_found)
+      end
+    end
+    describe '#require' do
+      it_behaves_like 'resolve_path', method_name: :require
 
       it "doesn't execute a file that was already required" do
         file_tree %w(one/test.rb
@@ -320,15 +333,6 @@ module DeepCover
 
         add_load_path 'one'
         'two/test'.should actually_require(false)
-      end
-
-      it "doesn't find from parent or subdir of the load_path" do
-        file_tree %w(one/test.rb
-                     one/two/three/test.rb
-                    )
-        add_load_path 'one/two'
-
-        'test'.should actually_require(:not_found)
       end
 
       it 'regular path ignores current work dir' do
