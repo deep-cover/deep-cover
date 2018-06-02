@@ -28,9 +28,7 @@ module DeepCover
       end
     end
 
-    after(:each) do
-      DeepCover.reset
-    end
+    after(:each) { DeepCover.reset }
 
     matcher :actually_require do |expected_executed_file, **options|
       match do |require_path|
