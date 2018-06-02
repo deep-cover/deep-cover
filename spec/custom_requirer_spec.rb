@@ -310,6 +310,43 @@ module DeepCover
 
         with_extension('test').should actually_execute(:not_found)
       end
+
+      describe 'when given a lookup root' do
+        let(:lookup_paths) { ["#{root}/other", "#{root}/one/root"] }
+        let(:calls) { [] }
+        before do
+          file_tree %w(pwd:one/root/
+                     one/outside.rb
+                     one/root/test.rb
+                     one/root/sub/other.rb
+                     two/also_outside.rb
+                    )
+          add_load_path 'one'
+          add_load_path 'one/root'
+          add_load_path 'one/root/sub'
+          add_load_path 'two'
+        end
+        {'relative — from above the root' => ['outside', :not_in_covered_paths],
+         'relative — not related to root' => ['also_outside', :not_in_covered_paths],
+         'absolute - not inside root' => ['../outside.rb', :not_in_covered_paths],
+         'absolute - not existing' => ['./not_existing', :not_found],
+        }.each do |kind, (path, result)|
+          describe "for a file outside of it (#{kind})" do
+            it 'requires fallback' do
+              execute_custom_requirer_or_reason(format(with_extension(path), root: root)).should == result
+            end
+          end
+        end
+        {'relative — from the root' => 'test',
+         'relative — from inside the root' => 'other',
+         'relative — from above the root' => 'root/sub/other',
+         'absolute' => './test',
+        }.each do |kind, path|
+          describe "for a file inside of it (#{kind})" do
+            it { execute_custom_requirer_or_reason(with_extension(path)).should == true }
+          end
+        end
+      end
     end
 
     describe '#load' do
@@ -695,43 +732,6 @@ module DeepCover
         describe 'returns false' do
           let(:answer) { false }
           it { custom_require_or_reason('test').should == true }
-        end
-      end
-    end
-
-    describe 'when given a lookup root' do
-      let(:lookup_paths) { ["#{root}/other", "#{root}/one/root"] }
-      let(:calls) { [] }
-      before do
-        file_tree %w(pwd:one/root/
-                     one/outside.rb
-                     one/root/test.rb
-                     one/root/sub/other.rb
-                     two/also_outside.rb
-                    )
-        add_load_path 'one'
-        add_load_path 'one/root'
-        add_load_path 'one/root/sub'
-        add_load_path 'two'
-      end
-      {'relative — from above the root' => ['outside', :not_in_covered_paths],
-       'relative — not related to root' => ['also_outside', :not_in_covered_paths],
-       'absolute - not inside root' => ['../outside.rb', :not_in_covered_paths],
-       'absolute - not existing' => ['./not_existing', :not_found],
-      }.each do |kind, (path, result)|
-        describe "for a file outside of it (#{kind})" do
-          it 'requires fallback' do
-            custom_require_or_reason(format(path, root: root)).should == result
-          end
-        end
-      end
-      {'relative — from the root' => 'test',
-       'relative — from inside the root' => 'other',
-       'relative — from above the root' => 'root/sub/other',
-       'absolute' => './test',
-      }.each do |kind, path|
-        describe "for a file inside of it (#{kind})" do
-          it { custom_require_or_reason(path).should == true }
         end
       end
     end

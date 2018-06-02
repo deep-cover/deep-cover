@@ -113,6 +113,7 @@ module DeepCover
       end
 
       return yield(:not_found) unless found_path
+      return yield(:not_in_covered_paths) unless DeepCover.within_lookup_paths?(found_path)
 
       cover_and_execute(found_path) { |reason| return yield(reason) }
 
