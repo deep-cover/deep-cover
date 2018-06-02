@@ -9,12 +9,12 @@ module DeepCover
       each_node do |node|
         next unless (runs = node_runs(node))
         node.executed_locs.each do |loc|
-          lineno = loc.line - 1
+          line_index = loc.line - 1
           if disallow_partial
-            line_hits[lineno] = 0 if runs == 0
-            next if line_hits[lineno] == 0
+            line_hits[line_index] = 0 if runs == 0
+            next if line_hits[line_index] == 0
           end
-          line_hits[lineno] = [line_hits[lineno] || 0, runs].max
+          line_hits[line_index] = [line_hits[line_index] || 0, runs].max
         end
       end
 
