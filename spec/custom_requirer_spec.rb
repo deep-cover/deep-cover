@@ -316,11 +316,11 @@ module DeepCover
         let(:calls) { [] }
         before do
           file_tree %w(pwd:one/root/
-                     one/outside.rb
-                     one/root/test.rb
-                     one/root/sub/other.rb
-                     two/also_outside.rb
-                    )
+                       one/outside.rb
+                       one/root/test.rb
+                       one/root/sub/other.rb
+                       two/also_outside.rb
+                      )
           add_load_path 'one'
           add_load_path 'one/root'
           add_load_path 'one/root/sub'
