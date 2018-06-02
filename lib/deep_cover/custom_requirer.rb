@@ -203,16 +203,12 @@ module DeepCover
         raise "The fallback_block is supposed to either return or break, but didn't do either"
       end
 
-      begin
-        covered_code.execute_code
-      rescue ::SyntaxError => e
-        warn ["DeepCover is getting confused with the file #{path} and it won't be instrumented.",
-              'Please report this error and provide the source code around the following:',
-              e,
-             ].join("\n")
+      success = covered_code.execute_code_or_warn
+      unless success
         yield(:cover_failed)
         raise "The fallback_block is supposed to either return or break, but didn't do either"
       end
+
       covered_code
     end
   end

@@ -44,6 +44,12 @@ module DeepCover
       self
     end
 
+    def execute_code_or_warn(*args)
+      warn_instead_of_syntax_error do
+        execute_code(*args)
+      end
+    end
+
     def cover
       global[nb] ||= Array.new(@tracker_count, 0)
     end
@@ -105,6 +111,17 @@ module DeepCover
       %{#<DeepCover::CoveredCode "#{path}">}
     end
     alias_method :to_s, :inspect
+
+    def warn_instead_of_syntax_error # &block
+      yield
+    rescue ::SyntaxError => e
+      warn Tools.strip_heredoc(<<-MSG)
+          DeepCover is getting confused with the file #{path} and it won't be instrumented.
+          Please report this error and provide the source code around the following lines:
+          #{e}
+      MSG
+      nil
+    end
 
     private
 
