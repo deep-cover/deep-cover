@@ -46,7 +46,7 @@ These examples are direct outputs from our HTML reporter:
 Feature            | MRI        | DeepCover
 -------------------|:----------:|:--------:
 Line coverage      |  partial   |  ✓
-Statement coverage |  no        |  ✓
+Node coverage      |  no        |  ✓
 Branch coverage    |  partial   |  ✓
 Method coverage    |  ✓         |  ~
 Slowdown           |  < 1%      |  ~20%
@@ -54,7 +54,7 @@ Platform support   |  Ruby 2.5+ |  Ruby 2.1+, JRuby
 
 **Line coverage**: MRI doesn't cover some lines (e.g. `when some_value`).
 
-**Statement coverage**: MRI provides no way to tell which parts of any line is evaluated. DeepCover covers everything.
+**Node coverage**: MRI provides no way to tell which parts of any line is evaluated. DeepCover covers everything.
 
 **Method coverage**: MRI considers every method defined, including methods defined on objects or via `define_method`, `class_eval`, etc. For Istanbul output, DeepCover has a different approach and covers all `def` and all blocks.
 

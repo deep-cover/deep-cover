@@ -76,7 +76,7 @@ module DeepCover
       end
 
       def show_char_coverage
-        output { "\nChar coverage:\n" }
+        output { "\nNode coverage:\n" }
 
         output { format_char_cover(covered_code, show_whitespace: !!ENV['W'], **options) }
       end
