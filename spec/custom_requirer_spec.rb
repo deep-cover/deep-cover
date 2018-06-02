@@ -135,6 +135,10 @@ module DeepCover
       actually_execute(expected_executed_file, method: :require, **options)
     end
 
+    # Use as a matcher, this is a curried alias for actually_execute
+    def actually_load(expected_executed_file, **options)
+      actually_execute(expected_executed_file, method: :load, **options)
+    end
 
     # This cannot be a `let` because we want to be able to change it
     def root
@@ -307,6 +311,42 @@ module DeepCover
         with_extension('test').should actually_execute(:not_found)
       end
     end
+
+    describe '#load' do
+      it_behaves_like 'resolve_path', method_name: :load, default_extension: '.rb'
+
+      it 'fallbacks to checking relative to current work dir' do
+        file_tree %w(one/test.rb)
+        Dir.chdir(@root)
+        'one/test.rb'.should actually_load('one/test.rb')
+      end
+
+      it '$LOAD_PATH has priority over fallback to checking relative to current work dir' do
+        file_tree %w(one/test.rb
+                     test.rb
+                    )
+        add_load_path 'one'
+        Dir.chdir(@root)
+        'test.rb'.should actually_load('one/test.rb')
+      end
+
+      it 'ignores a file that would be found with .rb added' do
+        file_tree %w(one/test.rb)
+        add_load_path 'one'
+
+        'test'.should actually_load(:not_found)
+        'test.rb'.should actually_load('one/test.rb')
+      end
+
+      it "loads a file that doesn't have a .rb if it matches exactly" do
+        file_tree %w(one/test)
+        add_load_path 'one'
+
+        'test'.should actually_load('one/test')
+        'test.rb'.should actually_load(:not_found)
+      end
+    end
+
     describe '#require' do
       it_behaves_like 'resolve_path', method_name: :require
 

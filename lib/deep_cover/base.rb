@@ -13,14 +13,16 @@ module DeepCover
         # and that is not available in JRuby. An extension may be able to replace this requirement.
         # require_relative 'core_ext/autoload_overrides'
         # AutoloadOverride.active = true
+        require_relative 'core_ext/load_overrides'
         require_relative 'core_ext/require_overrides'
-        RequireOverride.active = true
+        LoadOverride.active = RequireOverride.active = true
       elsif RUBY_VERSION >= '2.3.0'
         require_relative 'core_ext/instruction_sequence_load_iseq'
       else
         require_relative 'core_ext/autoload_overrides'
+        require_relative 'core_ext/load_overrides'
         require_relative 'core_ext/require_overrides'
-        AutoloadOverride.active = RequireOverride.active = true
+        AutoloadOverride.active = LoadOverride.active = RequireOverride.active = true
         autoload_tracker.initialize_autoloaded_paths { |mod, name, path| mod.autoload_without_deep_cover(name, path) }
       end
 

@@ -142,7 +142,7 @@ module DeepCover
           FileUtils.mkdir_p(path)
         else
           FileUtils.mkdir_p(File.dirname(path))
-          content = <<-RUBY if tree_entry.end_with?('.rb')
+          content = <<-RUBY
             $last_test_tree_file_executed = #{tree_entry.inspect}
           RUBY
           File.write(path, content)

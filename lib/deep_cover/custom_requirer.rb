@@ -97,16 +97,17 @@ module DeepCover
       true
     end
 
-    ### Not currently used ###
     # Homemade #load to be able to instrument the code before it gets executed.
     # Note, this doesn't support the `wrap` parameter that ruby's #load has.
-    # Same return/throw as CustomRequirer#require, except:
-    # Cannot return false since #load doesn't care about a file already being executed.
+    # Same yield/return behavior as CustomRequirer#require, except that it
+    # cannot return false #load doesn't care about a file already being executed.
     def load(path) # &fallback_block
+      path = path.to_s
+
       found_path = resolve_path(path, nil)
 
       if found_path.nil?
-        # #load has a final fallback of always trying relative to current work directory of process
+        # #load has a final fallback of always trying relative to current work directory
         possible_path = File.absolute_path(path)
         found_path = possible_path if File.exist?(possible_path)
       end
