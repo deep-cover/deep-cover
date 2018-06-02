@@ -182,7 +182,7 @@ module DeepCover
       $LOADED_FEATURES[0..-1] = tmp_loaded_features
     end
 
-    shared_examples 'resolve_path' do |method_name:, default_extension: nil|
+    shared_examples '#load & #require' do |method_name:, default_extension: nil|
       let(:execute_method_name) { method_name }
 
       define_method :with_extension do |path|
@@ -350,7 +350,8 @@ module DeepCover
     end
 
     describe '#load' do
-      it_behaves_like 'resolve_path', method_name: :load, default_extension: '.rb'
+      include_examples '#load & #require', method_name: :load, default_extension: '.rb'
+
 
       it 'fallbacks to checking relative to current work dir' do
         file_tree %w(one/test.rb)
@@ -385,7 +386,7 @@ module DeepCover
     end
 
     describe '#require' do
-      it_behaves_like 'resolve_path', method_name: :require
+      include_examples '#load & #require', method_name: :require
 
       it "doesn't execute a file that was already required" do
         file_tree %w(one/test.rb
