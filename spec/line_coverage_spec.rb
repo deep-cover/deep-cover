@@ -10,7 +10,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
     answers = DeepCover::Specs.parse_cov_comments_answers(lines)
 
     errors = @our.zip(answers, lines).each_with_index.reject do |(cov, comment_answer, line), _i|
-      expected_result?(cov, line, comment_answer, strict: strict)
+      expected_result?(cov, line, comment_answer)
     end
     @errors = errors.map { |_, i| i + lineno }
     @errors.empty?
@@ -21,7 +21,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
     "Line coverage does not match in #{File.absolute_path(filename)} on lines #{@errors.join(', ')}\n#{result}"
   end
 
-  def expected_result?(cov, line, comment_answer, strict:)
+  define_method :expected_result? do |cov, line, comment_answer|
     return cov == 0 if comment_answer == DeepCover::Specs::NOT_EXECUTED
     return true if line.strip =~ /^#[ >]/
     return cov == nil || cov > 0 if comment_answer == DeepCover::Specs::FULLY_EXECUTED
