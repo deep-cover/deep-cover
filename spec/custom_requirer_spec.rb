@@ -30,16 +30,19 @@ module DeepCover
 
     after(:each) { DeepCover.reset }
 
-    matcher :actually_require do |expected_executed_file, **options|
+    matcher :actually_execute do |expected_executed_file, **options|
       match do |require_path|
         @result = {}
         @executed_file = {}
         @loaded_features = {}
+        @method_name = options[:method] || execute_method_name
+        raise 'Need option :method to be :require or :load' unless %w(require load).include?(@method_name.to_s)
+        @method_name = @method_name.to_sym
 
         set_expectations(expected_executed_file, options[:expected_loaded_feature])
 
-        run_ruby_require(require_path)
-        run_custom_require(require_path)
+        run_ruby(require_path)
+        run_custom_requirer(require_path)
 
         # At the moment, the only case of not_supported is when a .so file is found
         @result[:custom] = :file_extension_is_so if @result[:custom] == :not_supported
@@ -53,7 +56,7 @@ module DeepCover
 
       failure_message do |require_path|
         [
-          "Unexpected effects of `require #{require_path.inspect}`:",
+          "Unexpected effects of `#{@method_name} #{require_path.inspect}`:",
           'Return value:',
           build_output(@result),
           '',
@@ -80,14 +83,14 @@ module DeepCover
           raise
         end
         @loaded_features[:expected] = requirer.loaded_features.dup
-        if expected_executed_file.is_a?(String)
+        if @method_name == :require && expected_executed_file.is_a?(String)
           expected_loaded_feature ||= expected_executed_file
           @loaded_features[:expected] += [from_root(expected_loaded_feature)]
         end
       end
 
       # Must be run before run_custom_require
-      def run_ruby_require(require_path)
+      def run_ruby(require_path)
         $last_test_tree_file_executed = nil
         # Test ruby require
         begin
@@ -95,7 +98,7 @@ module DeepCover
           $LOAD_PATH[0..-1] = requirer.load_paths
           tmp_loaded_features = $LOADED_FEATURES.dup
           $LOADED_FEATURES[0..-1] = requirer.loaded_features
-          @result[:ruby] = require(require_path)
+          @result[:ruby] = send(@method_name, require_path)
         rescue LoadError => e
           if e.message[/file too short/]
             @result[:ruby] = :file_extension_is_so
@@ -110,9 +113,9 @@ module DeepCover
         @executed_file[:ruby] = $last_test_tree_file_executed
       end
 
-      def run_custom_require(require_path)
+      def run_custom_requirer(require_path)
         $last_test_tree_file_executed = nil
-        @result[:custom] = custom_require_or_reason(require_path)
+        @result[:custom] = execute_custom_requirer_or_reason(require_path, method: @method_name)
         @loaded_features[:custom] = requirer.loaded_features.dup
         @executed_file[:custom] = $last_test_tree_file_executed
       end
@@ -126,6 +129,12 @@ module DeepCover
         end.join("\n")
       end
     end
+
+    # Use as a matcher, this is a curried alias for actually_execute
+    def actually_require(expected_executed_file, **options)
+      actually_execute(expected_executed_file, method: :require, **options)
+    end
+
 
     # This cannot be a `let` because we want to be able to change it
     def root
