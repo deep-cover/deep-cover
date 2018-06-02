@@ -18,7 +18,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
   failure_message do |fn|
     lines = DeepCover::Tools.format(@our, source: lines.join)
     result = DeepCover::Tools.number_lines(lines, lineno: lineno, bad_linenos: @errors).join
-    "Line coverage does not match on lines #{@errors.join(', ')}\n#{result}"
+    "Line coverage does not match in #{File.absolute_path(filename)} on lines #{@errors.join(', ')}\n#{result}"
   end
 
   def expected_result?(cov, line, comment_answer, strict:)
