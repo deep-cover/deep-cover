@@ -24,6 +24,11 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
   define_method :expected_result? do |cov, line, comment_answer|
     return cov == 0 if comment_answer == DeepCover::Specs::NOT_EXECUTED
     return true if line.strip =~ /^#[ >]/
+
+    unless allow_partial
+      return cov == 0 if line =~ /# missed_empty_branch/
+    end
+
     return cov == nil || cov > 0 if comment_answer == DeepCover::Specs::FULLY_EXECUTED
 
     comment_answer = DeepCover::Specs.strip_when_unimportant(line, comment_answer)

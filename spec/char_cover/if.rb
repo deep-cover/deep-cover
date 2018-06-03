@@ -1,8 +1,8 @@
 ### One-liner
     a = 42 if falsx; assert a == nil
 #>  x x xx         -
-    b = 42 if trux; assert b == 42
-    c = 42 unless falsx; assert c == 42
+    b = 42 if trux; assert b == 42 # missed_empty_branch
+    c = 42 unless falsx; assert c == 42 # missed_empty_branch
     d = 42 unless trux; assert d == nil
 #>  x x xx            -
 
@@ -13,7 +13,7 @@
     (42 if raise) rescue nil
 #>  -xx xx      -
 
-    (raise if trux) rescue nil
+    (raise if trux) rescue nil # missed_empty_branch
 
 ### Full form
     if falsx
@@ -22,12 +22,12 @@
     end
 #>  ---
 
-    if trux
+    if trux # missed_empty_branch
       42
     end
 #>  ---
 
-    unless falsx
+    unless falsx # missed_empty_branch
       42
     end
 #>  ---
@@ -108,8 +108,8 @@
 #>  ----
 
 #### With elsif
-    if falsx
-    elsif falsx
+    if falsx # missed_empty_branch
+    elsif falsx # missed_empty_branch
     elsif trux
     elsif falsx
 #>X

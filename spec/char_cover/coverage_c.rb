@@ -2,7 +2,7 @@
 # There may be overlap with other sample files. Too bad
 
 ### Case with one-liner when
-    case 1
+    case 1 # missed_empty_branch
     when "hi"
       "not here"
 #>X

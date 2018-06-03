@@ -83,7 +83,7 @@ module DeepCover
     FULLY_EXECUTED = /^[ -]*$/
     NOT_EXECUTED = /^-*x[x-]*$/ # at least an 'x', maybe some -
 
-    UNIMPORTANT_CHARACTERS = /\s/
+    UNIMPORTANT_CHARACTERS = /\s|# missed_empty_branch/
 
     extend self
     attr_accessor :current_ast
@@ -110,9 +110,13 @@ module DeepCover
     end
 
     def strip_when_unimportant(code, data)
-      data.chars.reject.with_index do |char, i|
-        code[i] =~ UNIMPORTANT_CHARACTERS
-      end.join
+      chars = data.chars
+
+      matches = Tools.scan_match_datas(code, UNIMPORTANT_CHARACTERS)
+      matches.reverse.each do |match|
+        chars[match.begin(0)...match.end(0)] = []
+      end
+      chars.join
     end
 
     # Creates a tree of directories and files for testing.

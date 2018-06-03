@@ -1,7 +1,7 @@
 ### ||
     dummy_method(1 || 42)
 #>              -     xx-
-    dummy_method(nil || 42)
+    dummy_method(nil || 42) # missed_empty_branch
 
 #### Raising first
     dummy_method(raise || 42)
@@ -12,7 +12,7 @@
 #>  xxxxxxxxxxxx-            -
 
 ### &&
-    dummy_method(1 && 42)
+    dummy_method(1 && 42) # missed_empty_branch
     dummy_method(nil && 42)
 #>              -       xx-
 

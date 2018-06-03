@@ -59,5 +59,5 @@
 
     nil&.each{}.to_s
 #>       xxxx--
-    [42]&.each{|*|}.to_s
+    [42]&.each{|*|}.to_s # missed_empty_branch
 #>            -----

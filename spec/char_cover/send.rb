@@ -57,7 +57,7 @@
 ### &. (Ruby 2.3+)
     nil&.foo
 #>       xxx
-    42&.to_s
+    42&.to_s # missed_empty_branch
 #>
     0&.to_s&.to_i&.nonzero?&.foo(42)&.to_i.nil?
 #>                           xxx-xx-  xxxx
@@ -66,7 +66,7 @@
 
 #### Inside of a block
     1.times do
-      123&.to_s
+      123&.to_s # missed_empty_branch
     end
 
 ### odd error case

@@ -1,5 +1,5 @@
 ### Case without evaluated
-    case
+    case # missed_empty_branch
     when 1 == 0
       "not here"
 #>X
@@ -19,7 +19,7 @@
     end
 
 #### With raise in when condition
-    case
+    case # missed_empty_branch
     when 1 == 0
       "not here"
 #>X
@@ -34,7 +34,7 @@
     end
 
 #### with raise in when body
-    case
+    case # missed_empty_branch
     when 1 == 0
       "not here"
 #>X
@@ -49,7 +49,7 @@
     end
 
 #### with multi part when condition
-    case
+    case # missed_empty_branch
     when 1 == 0, 1 == 10
       "not here"
 #>X
@@ -63,7 +63,7 @@
     end
 
 #### with raise in multi part when condition
-    case
+    case # missed_empty_branch
     when 1 == 0, 1 == 10
       "not here"
 #>X
@@ -79,7 +79,7 @@
 
 
 ### Case with evaluated and else
-    case
+    case # missed_empty_branch
     when 1 == 0
       "not here"
 #>X

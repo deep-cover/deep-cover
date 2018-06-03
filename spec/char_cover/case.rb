@@ -1,5 +1,5 @@
 ### Case with evaluated
-    case 1
+    case 1 # missed_empty_branch
     when 0
       "not here"
 #>X
@@ -29,7 +29,7 @@
 #>  ---
 
 #### With raise in when condition
-    case 1
+    case 1 # missed_empty_branch
     when 0
       "not here"
 #>X
@@ -44,7 +44,7 @@
     end
 
 #### with raise in when body
-    case 1
+    case 1 # missed_empty_branch
     when 0
       "not here"
 #>X
@@ -59,7 +59,7 @@
     end
 
 #### with multi part when condition
-    case 1
+    case 1 # missed_empty_branch
     when 0, 10, 20
       "not here"
 #>X
@@ -73,7 +73,7 @@
     end
 
 #### with raise in multi part when condition
-    case 1
+    case 1 # missed_empty_branch
     when 0, 10, 20
       "not here"
 #>X
@@ -181,7 +181,7 @@
     end
 
 ### With empty when body
-    a = case 1
+    a = case 1 # missed_empty_branch
         when 1
 
         end
@@ -191,7 +191,7 @@
     obj = Object.new
     obj.define_singleton_method(:===) {|other| raise }
 
-    case 1
+    case 1 # missed_empty_branch
     when obj, 1
 #>          - x
       "not here"
@@ -228,7 +228,7 @@
     end
 
 ### When with empty then (# from rdoc-5.0.0)
-    case 'url';when /^#/ then;end
+    case 'url';when /^#/ then;end # missed_empty_branch
 
 #### Matrix lib (skip)
     case 42;when 0;+1;end
