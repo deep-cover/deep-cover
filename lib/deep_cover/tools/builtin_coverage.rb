@@ -6,10 +6,14 @@ module DeepCover
       require 'coverage'
       filename = File.absolute_path(File.expand_path(filename))
       ::Coverage.start
-      Tools.silence_warnings do
-        execute_sample -> { run_with_line_coverage(source, filename, lineno) }
+      begin
+        Tools.silence_warnings do
+          execute_sample -> { run_with_line_coverage(source, filename, lineno) }
+        end
+      ensure
+        result = ::Coverage.result
       end
-      unshift_coverage(::Coverage.result.fetch(filename), lineno)
+      unshift_coverage(result.fetch(filename), lineno)
     end
 
     if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'

@@ -100,8 +100,13 @@ module DeepCover
         f.close
 
         ::Coverage.start(branches: true)
-        Tools.execute_sample -> { require f.path }, source: ruby_code
-        ruby_result = ::Coverage.result.values.first[:branches]
+        begin
+          Tools.execute_sample -> { require f.path }, source: ruby_code
+        ensure
+          ruby_result = ::Coverage.result
+        end
+        ruby_result = ruby_result.values.first[:branches]
+
         $LOADED_FEATURES.delete(f.path)
 
         raw_dc_result = run_dc_ruby25_like_branch(source: ruby_code, path: f.path)
