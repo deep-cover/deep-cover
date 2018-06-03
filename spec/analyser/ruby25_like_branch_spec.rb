@@ -234,6 +234,13 @@ module DeepCover
       asd = nil
       asd&.to_i
     ###
+      asd = 123
+      [asd&.to_i ] # rubocop:disable # the space before the ] is part of the test
+      ###
+      asd = 123
+      asd&.to_i # this comment is part of the test
+      asd + 1
+    ###
       nil&.to_i&.to_i
     ###
       a = 1

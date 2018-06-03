@@ -85,10 +85,12 @@ module DeepCover
       end
 
       def handle_csend
-        cond_info = [:"&.", *node_loc_infos]
+        # csend wraps the comment but not the newlines
+        node_range = node.expression.wrap_rwhitespace_and_comments(whitespaces: /\A[ \t\r\f]+/)
+        cond_info = [:"&.", *node_loc_infos(node_range)]
         false_branch, true_branch = branches
-        [cond_info, {[:then, *node_loc_infos] => true_branch.execution_count,
-                     [:else, *node_loc_infos] => false_branch.execution_count,
+        [cond_info, {[:then, *node_loc_infos(node_range)] => true_branch.execution_count,
+                     [:else, *node_loc_infos(node_range)] => false_branch.execution_count,
                     },
         ]
       end
