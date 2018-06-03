@@ -4,9 +4,9 @@ require 'spec_helper'
 require 'tempfile'
 
 
-RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, strict: false|
+RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, allow_partial:|
   match do
-    @our = DeepCover::Tools.our_coverage(lines.join, filename, lineno, allow_partial: !strict)
+    @our = DeepCover::Tools.our_coverage(lines.join, filename, lineno, allow_partial: allow_partial)
     answers = DeepCover::Specs.parse_cov_comments_answers(lines)
 
     errors = @our.zip(answers, lines).each_with_index.reject do |(cov, comment_answer, line), _i|
@@ -29,7 +29,8 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
     comment_answer = DeepCover::Specs.strip_when_unimportant(line, comment_answer)
     line = DeepCover::Specs.strip_when_unimportant(line, line)
     comment_answer += ' ' * [line.size - comment_answer.size, 0].max
-    if strict
+
+    if [nil, false, :branch].include?(allow_partial)
       comment_answer.chars.zip(line.chars).each do |a, l|
         return cov == 0 if a == 'x' && l =~ /\S/
       end
@@ -52,7 +53,7 @@ end
 
 RSpec.describe 'line coverage' do
   each_code_examples('./spec/char_cover/*.rb', name: 'line') do |fn, lines, lineno|
-    should have_correct_line_coverage(fn, lines, lineno)
+    should have_correct_line_coverage(fn, lines, lineno, allow_partial: true)
   end
 
   it 'handles an empty file' do
@@ -64,6 +65,8 @@ end
 
 RSpec.describe 'strict line coverage' do
   each_code_examples('./spec/char_cover/*.rb', name: 'line_strict') do |fn, lines, lineno|
-    should have_correct_line_coverage(fn, lines, lineno, strict: true)
+    # Node, the examples may need to have `# missed_empty_branch` added at the end of lines that
+    # are marked as fully covered by the regular comments, but is a fork to a branch with an empty body
+    should have_correct_line_coverage(fn, lines, lineno, allow_partial: false)
   end
 end
