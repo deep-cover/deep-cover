@@ -44,7 +44,7 @@ RSpec::Matchers.define :have_correct_char_coverage do |filename, lineno|
   failure_message do |fn|
     formatted_lines = DeepCover::Tools.format_char_cover(@covered_code)
     formatted_lines = DeepCover::Tools.number_lines(formatted_lines, lineno: lineno, bad_linenos: @errors)
-    "Branch cover does not match on lines #{@errors.join(', ')}\n#{formatted_lines.join("\n")}"
+    "Char cover does not match in #{File.absolute_path(filename)} on lines #{@errors.join(', ')}\n#{formatted_lines.join("\n")}"
   end
 end
 
