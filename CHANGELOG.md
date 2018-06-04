@@ -1,5 +1,7 @@
 # Changelog
 
+* `#require` is much faster in MRI Ruby 2.1 and 2.2, resulting in much faster boot time for most applications when deep-cover is enabled.
+
 ## 0.6.1
 
 * Takeover now also considers branch coverage to generate the per-line output.  
