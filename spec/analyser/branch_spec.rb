@@ -18,7 +18,7 @@ module DeepCover
       Analyser::Branch.new(node, **options)
     end
     let(:results) { analyser.results }
-    let(:line_runs) { map(results) { |node| node.expression.line } }
+    let(:line_runs) { map(results) { |node| node.expression.line  rescue binding.pry } }
     let(:type_runs) { map(results, &:type) }
     let(:runs) { analyser.node_runs(node) }
 
@@ -89,6 +89,19 @@ module DeepCover
           it { type_runs.should == {case: {sym: 0, str: 1, EmptyBody: nil}} }
         end
       end
+    end
+
+    context 'with a branch that was entered but not (fully) executed' do
+      let(:node) { Node[<<-RUBY][:if] }
+        if true
+          return (
+            raise
+          )
+        else
+        end rescue false
+      RUBY
+      it { line_runs.should == {1 => {2 => 1, 6 => 0}} }
+      it { type_runs.should == {if: {return: 1, EmptyBody: 0}} }
     end
 
     context 'for the safe navigation' do

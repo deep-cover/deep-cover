@@ -35,7 +35,7 @@ module DeepCover
     end
 
     def branch_runs(branch)
-      source.node_runs(branch)
+      branch.flow_entry_count.nonzero? || source.node_runs(branch)
     end
   end
 end
