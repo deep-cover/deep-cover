@@ -21,7 +21,7 @@ module DeepCover
 
     def results
       each_node.map do |node|
-        branches_runs = node.branches.map { |jump| [jump, source.node_runs(jump)] }.to_h
+        branches_runs = node.branches.map { |jump| [jump, branch_runs(jump)] }.to_h
         [node, branches_runs]
       end.to_h
     end
@@ -29,9 +29,13 @@ module DeepCover
     private
 
     def worst_branch_runs(fork)
-      fork.branches.map { |jump| source.node_runs(jump) }
+      fork.branches.map { |jump| branch_runs(jump) }
           .sort_by { |runs| runs == 0 ? -2 : runs || -1 }
           .first
+    end
+
+    def branch_runs(branch)
+      source.node_runs(branch)
     end
   end
 end
