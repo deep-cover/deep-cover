@@ -26,12 +26,12 @@ module DeepCover
           1 => 'falsy branch',
         },
         ':foo || :bar' => {
-          0 => 'left-hand side',
+          0 => 'right-hand side',
           1 => 'truthy shortcut',
         },
         ':foo && :bar' => {
-          0 => 'left-hand side',
-          [0, 1] => 'left-hand side and falsy shortcut',
+          0 => 'right-hand side',
+          [0, 1] => 'right-hand side and falsy shortcut',
         },
         'case :foo when :bar then :baz;when :qux then :xyz;else;42;end' => {
           0 => '1 when clause',

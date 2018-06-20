@@ -21,7 +21,7 @@ module DeepCover
       def branches_summary(of_branches = branches)
         of_branches.map do |jump|
           if jump == conditional
-            'left-hand side'
+            'right-hand side'
           else
             "#{type == :and ? 'falsy' : 'truthy'} shortcut"
           end
