@@ -18,7 +18,7 @@ module DeepCover
       Analyser::Branch.new(node, **options)
     end
     let(:results) { analyser.results }
-    let(:line_runs) { map(results) { |node| node.expression.line  rescue binding.pry } }
+    let(:line_runs) { map(results) { |node| node.expression.line } }
     let(:type_runs) { map(results, &:type) }
     let(:runs) { analyser.node_runs(node) }
 
