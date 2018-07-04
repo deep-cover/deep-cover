@@ -1,11 +1,11 @@
 AllCops:
   DisplayCopNames: true
   Exclude:
-    - 'spec/char_cover/**/*'
-    - 'spec/cli_fixtures/**/*'
-    - 'spec/samples/**/*'
-    - 'spec/full_usage/**/*'
-    - 'spec/specs_tools.rb'
+    - '**/spec/char_cover/**/*'
+    - '**/spec/cli_fixtures/**/*'
+    - '**/spec/samples/**/*'
+    - '**/spec/full_usage/**/*'
+    - '**/spec/specs_tools.rb'
     - 'bin/**/*'
     - '_*/**/*'
   TargetRubyVersion: 2.1
@@ -188,7 +188,7 @@ Style/SymbolArray:
 Lint/Void:
   Enabled: true
   Exclude:
-    - spec/**/*
+    - core_gem/spec/**/*
 
 Style/ClassVars:
   Enabled: false
@@ -211,7 +211,7 @@ Style/IfUnlessModifier:
 Naming/ConstantName:
   Enabled: true
   Exclude:
-    - lib/deep_cover/node/**/*
+    - deep_cover_core/lib/deep_cover/node/**/*
 
 Style/RescueModifier:
   Enabled: false
@@ -245,8 +245,8 @@ Lint/BooleanSymbol:
 
 Naming/UncommunicativeMethodParamName:
   Exclude:
-    - spec/**/*
+    - core_gem/spec/**/*
 
 Layout/SpaceInsideReferenceBrackets:
   Exclude:
-    - spec/**/*
+    - core_gem/spec/**/*

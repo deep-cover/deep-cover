@@ -1,0 +1,4 @@
+--color
+--exclude-pattern "spec/cli_fixtures/**/*.rb, spec/full_usage/**/*.rb"
+--tag ~slow
+--tag ~skip

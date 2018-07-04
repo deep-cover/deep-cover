@@ -2,7 +2,7 @@
 
 module DeepCover
   require 'slop'
-  require_relative '../../deep-cover'
+  require 'deep-cover'
   bootstrap
 
   module CLI
@@ -24,7 +24,7 @@ module DeepCover
       extend self
 
       def show_version
-        require_relative '../version'
+        require 'deep_cover/version'
         require 'parser'
         puts "deep-cover v#{DeepCover::VERSION}; parser v#{Parser::VERSION}"
       end

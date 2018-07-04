@@ -31,4 +31,6 @@ module DeepCover
       dest_path
     end
   end
+
+  Tools.extend Tools::DumpCoveredCode
 end

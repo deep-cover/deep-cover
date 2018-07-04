@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require_relative 'spec_helper'
 
 module DeepCover
   RSpec.describe 'CLI', :slow do
@@ -27,7 +27,7 @@ module DeepCover
       end
 
       describe 'for a command with options' do
-        let(:command) { %{cd exe; ./deep-cover -o=false exec ruby -I../lib -e 'require "../lib/deep-cover"; puts :hello'} }
+        let(:command) { %{cd exe; ./deep-cover -o=false exec ruby -I../lib -I../core_gem/lib -e 'require "deep-cover"; puts :hello'} }
         it do
           should include 'hello'
           should =~ /No HTML generated/
@@ -40,7 +40,7 @@ module DeepCover
       let(:command) { "cd exe; ./deep-cover ../spec/cli_fixtures/#{path} -o=false --reporter=istanbul --no-bundle #{options}" }
       subject { output }
       describe 'for a simple gem' do
-        let(:path) { 'trivial_gem' }
+        let(:path) { '../../core_gem/spec/cli_fixtures/trivial_gem' }
         it do
           should =~ Regexp.new(%w[trivial_gem.rb 80.65 56.25 62.5 91.67].join('[ |]*'))
           should include '3 examples, 0 failures'

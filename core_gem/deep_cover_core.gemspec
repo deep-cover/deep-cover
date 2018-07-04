@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require_relative 'core_gem/lib/deep_cover/version'
+require_relative 'lib/deep_cover/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'deep-cover'
+  spec.name          = 'deep-cover-core'
   spec.version       = DeepCover::VERSION
   spec.authors       = ['Marc-André Lafortune', 'Maxime Lapointe']
   spec.email         = ['github@marc-andre.ca', 'hunter_spawn@hotmail.com']
 
   spec.summary       = 'In depth coverage of your Ruby code.'
-  spec.description   = 'expression and branch coverage for Ruby.'
+  spec.description   = 'Core functionality for the DeepCover gem.'
   spec.homepage      = 'https://github.com/deep-cover/deep-cover'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features|\w+_gem)/})
+    f.match(%r{^(test|spec|features)/})
   end
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
@@ -24,14 +24,18 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.1.0'
 
   # Main dependency
-  spec.add_runtime_dependency 'deep-cover-core', DeepCover::VERSION
+  spec.add_runtime_dependency 'parser', '~> 2.5.0'
 
-  # CLI
-  spec.add_runtime_dependency 'bundler'
-  spec.add_runtime_dependency 'highline'
-  spec.add_runtime_dependency 'slop', '~> 4.0'
-  spec.add_runtime_dependency 'term-ansicolor'
-  spec.add_runtime_dependency 'with_progress'
+  # Support
+  spec.add_runtime_dependency 'backports', '>= 3.11.0'
+  spec.add_runtime_dependency 'binding_of_caller'
+
+  # Reporters
+  spec.add_runtime_dependency 'sass'
+  spec.add_runtime_dependency 'terminal-table'
+
+  # While in 0.x
+  spec.add_runtime_dependency 'pry'
 
   ### Dev dependencies
   spec.add_development_dependency 'bundler', '~> 1.15'

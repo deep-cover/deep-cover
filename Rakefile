@@ -8,11 +8,12 @@ RuboCop::RakeTask.new(:rubocop) do |t|
   t.options = ['-a'] unless ENV['TRAVIS']
 end
 
-RSpec::Core::RakeTask.new(:spec).tap { |task| task.pattern = 'spec/*_spec.rb, spec/*/*_spec.rb' }
+spec_path = 'spec/*_spec.rb, core_gem/spec/**/*_spec.rb'
+RSpec::Core::RakeTask.new(:spec).tap { |task| task.pattern = spec_path }
 
 desc 'Run all tests'
 RSpec::Core::RakeTask.new('spec:all') do |task|
-  task.pattern = 'spec/*_spec.rb, spec/*/*_spec.rb'
+  task.pattern = spec_path
   task.rspec_opts = '-O .rspec_all'
 end
 
@@ -32,10 +33,11 @@ namespace :dev do
     commands = []
 
     if RUBY_VERSION >= '2.2.2' && (!defined?(RUBY_ENGINE) || RUBY_ENGINE != 'jruby')
-      commands << 'bundle install --gemfile=spec/full_usage/rails51_project/Gemfile'
+      commands << 'bundle install --gemfile=core_gem/spec/full_usage/rails51_project/Gemfile'
     end
     commands << 'bundle install --gemfile=spec/cli_fixtures/simple_rails42_app/Gemfile'
     commands << 'bundle install --gemfile=spec/cli_fixtures/rails_like_gem/Gemfile'
+    commands << 'bundle install --gemfile=core_gem/Gemfile'
 
     commands.each do |command|
       puts "Running: #{command}"

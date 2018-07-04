@@ -3,7 +3,8 @@
 require 'tmpdir'
 
 module DeepCover
-  require_relative '../../deep_cover'
+  require 'deep-cover'
+  require_relative '../dump_covered_code'
   bootstrap
 
   module CLI
@@ -18,7 +19,7 @@ module DeepCover
         unless @root_path.join('Gemfile').exist?
           # E.g. rails/activesupport
           @root_path = @root_path.dirname
-          raise "Can't find Gemfile" unless @root_path.join('Gemfile').exist?
+          raise "Can't find Gemfile in #{@root_path}" unless @root_path.join('Gemfile').exist?
         end
         path = Pathname('~/test_deep_cover').expand_path
         if path.exist?
@@ -115,7 +116,7 @@ module DeepCover
         require 'bundler'
         deps = Bundler::Definition.build(gemfile, nil, nil).dependencies
 
-        return if deps.find { |e| e.name == 'deep-cover' }
+        return if deps.find { |e| e.name.start_with? 'deep-cover' }
 
         content = File.read(gemfile)
         puts "Patching Gemfile #{gemfile}"
@@ -123,6 +124,7 @@ module DeepCover
                               '# This file was modified by DeepCover',
                               content,
                               "gem 'deep-cover', path: '#{File.expand_path(__dir__ + '/../../../')}'",
+                              "gem 'deep-cover-core', path: '#{File.expand_path(__dir__ + '/../../../core_gem')}'",
                               '',
                             ].join("\n"))
       end
