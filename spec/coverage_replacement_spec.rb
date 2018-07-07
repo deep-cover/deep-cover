@@ -7,13 +7,15 @@ require 'coverage'
 require 'rspec/matchers/built_in/operators.rb'
 require 'rspec/matchers/built_in/contain_exactly.rb'
 
+SAMPLES_PATH = File.realpath('samples', __dir__)
+
 module DeepCover
   [::Coverage, CoverageReplacement].each do |cov_module|
     describe cov_module do
       if cov_module == CoverageReplacement
         before do
           DeepCover.configure do
-            paths(paths + ['./spec/samples'])
+            paths(paths + [SAMPLES_PATH])
           end
         end
       end
@@ -24,7 +26,7 @@ module DeepCover
         $LOADED_FEATURES.delete(sample_require_path)
       end
 
-      let(:sample_require_path) { File.realpath('samples/basic_branching.rb', __dir__) }
+      let(:sample_require_path) { "#{SAMPLES_PATH}/basic_branching.rb" }
 
       it 'can be started as many times as desired' do
         cov_module.start.should == nil
