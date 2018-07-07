@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require_relative 'spec_helper'
 require 'deep_cover/core_ext/coverage_replacement'
 require 'coverage'
 # These are autoloaded, but will influence the builtin coverage, so preload them

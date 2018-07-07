@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require_relative 'spec_helper'
 
 RSpec.describe 'DeepCover usage' do
   ['', 'uncovered', 'takeover', 'takeover uncovered', 'no_deep_cover'].each do |args|
