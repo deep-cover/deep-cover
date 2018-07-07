@@ -2,17 +2,19 @@
 
 require_relative 'spec_helper'
 
+FULL_USAGE_PATH = File.realpath('full_usage', __dir__)
+
 RSpec.describe 'DeepCover usage' do
   ['', 'uncovered', 'takeover', 'takeover uncovered', 'no_deep_cover'].each do |args|
     command = "ruby simple/simple.rb #{args}"
     it "`#{command}`" do
-      command.split.should run_successfully.from_dir('spec/full_usage').and_output('Done')
+      command.split.should run_successfully.from_dir(FULL_USAGE_PATH).and_output('Done')
     end
   end
 
   describe '', :slow do
     it do
-      %w(ruby with_configure/test.rb).should run_successfully.from_dir('spec/full_usage').and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
+      %w(ruby with_configure/test.rb).should run_successfully.from_dir(FULL_USAGE_PATH).and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
     end
 
     xit 'Can still require gems when there is no bundler' do
@@ -23,13 +25,13 @@ RSpec.describe 'DeepCover usage' do
     it 'Can `rspec` a rails51 app' do
       skip if RUBY_VERSION < '2.2.2'
       skip if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-      'bundle exec rspec'.should run_successfully.from_dir('spec/full_usage/rails51_project')
+      'bundle exec rspec'.should run_successfully.from_dir("#{FULL_USAGE_PATH}/rails51_project")
     end
 
     it 'Can `rake test` a rails51 app (minitest)' do
       skip if RUBY_VERSION < '2.2.2'
       skip if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-      'bundle exec rake test'.should run_successfully.from_dir('spec/full_usage/rails51_project')
+      'bundle exec rake test'.should run_successfully.from_dir("#{FULL_USAGE_PATH}/rails51_project")
     end
   end
 end
