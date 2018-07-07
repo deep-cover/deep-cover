@@ -32,7 +32,7 @@ end
 def trivial_gem_coverage
   # We can only easily require this at most once, so we have to share...
   $trivial_gem_coverage ||= begin
-    DeepCover.cover(paths: 'spec') { require_relative 'cli_fixtures/trivial_gem/lib/trivial_gem' }
+    DeepCover.cover(paths: '.') { require_relative 'cli_fixtures/trivial_gem/lib/trivial_gem' }
     require_relative 'cli_fixtures/trivial_gem/lib/trivial_gem'
     # Kind of a pain to load the test properly, so cheat...
     TrivialGem.hello
