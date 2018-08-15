@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
-require 'bundler/gem_tasks'
+### Release tasks
+namespace :global do
+  require 'bundler/gem_tasks'
+end
+namespace :core do
+  Bundler::GemHelper.install_tasks(dir: Pathname.pwd.join('core_gem'))
+end
+desc 'Build & release deep-cover and deep-cover-core to rubygems.org'
+task release: ['core:release', 'global:release']
+
+### Tests tasks
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
@@ -20,6 +30,7 @@ end
 multitask default: RUBY_VERSION > '2.1' ? [:rubocop, :spec] : :spec
 multitask 'test:all' => RUBY_VERSION > '2.1' ? [:rubocop, 'spec:all'] : 'spec:all'
 
+#### Utilities
 namespace :dev do
   desc 'Self cover'
   task :cov do

@@ -6,6 +6,7 @@
 /coverage/
 /doc/
 /pkg/
+/core_gem/pkg/
 /spec/reports/
 /tmp/
 .idea
