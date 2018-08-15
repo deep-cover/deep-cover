@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module DeepCover
-  require 'sass'
   require_relative 'base'
   require_relative 'index'
   require_relative 'source'
@@ -46,7 +45,6 @@ module DeepCover
         src = "#{__dir__}/template/assets"
         dest = path.join('assets')
         FileUtils.cp_r(src, dest)
-        compile_stylesheet "#{src}/deep_cover.css.sass", dest.join('deep_cover.css')
         dest.join('deep_cover.css.sass').delete
       end
 

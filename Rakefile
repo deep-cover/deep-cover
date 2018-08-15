@@ -6,9 +6,16 @@ namespace :global do
 end
 namespace :core do
   Bundler::GemHelper.install_tasks(dir: Pathname.pwd.join('core_gem'))
+
+  desc 'Compile sass stylesheet'
+  task 'sass' do
+    require 'sass'
+    dest = "#{__dir__}/core_gem/lib/deep_cover/reporter/html/template/assets/deep_cover.css"
+    compile_stylesheet("#{dest}.sass", dest)
+  end
 end
 desc 'Build & release deep-cover and deep-cover-core to rubygems.org'
-task release: ['core:release', 'global:release']
+task release: ['core:sass', 'core:release', 'global:release']
 
 ### Tests tasks
 require 'rspec/core/rake_task'
@@ -61,4 +68,10 @@ namespace :dev do
       puts "Command succeeded: #{command}"
     end
   end
+end
+
+def compile_stylesheet(source, dest)
+  css = Sass::Engine.for_file(source, style: :expanded).to_css
+  header = '/*** This generated from a sass file, do not modify ***/'
+  File.write(dest, "#{header}\n\n#{css}")
 end
