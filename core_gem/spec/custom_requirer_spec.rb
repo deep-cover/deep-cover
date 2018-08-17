@@ -698,7 +698,7 @@ module DeepCover
 
       it 'outputs some diagnostics if DeepCover creates a syntax error', exclude: :JRuby do
         defined?(TrivialGem).should be_nil # Sanity check
-        path = Pathname.new(__dir__).join('cli_fixtures/trivial_gem/lib/trivial_gem/version.rb')
+        path = Pathname.new(__dir__).join('code_fixtures/trivial_gem/lib/trivial_gem/version.rb')
         # Fake a rewriting problem:
         allow_any_instance_of(DeepCover::CoveredCode).to receive(:instrument_source)
           .and_return("2 + 2 == 4\nthis is invalid ruby)}]")

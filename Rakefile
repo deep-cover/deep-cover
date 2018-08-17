@@ -51,10 +51,10 @@ namespace :dev do
     commands = []
 
     if RUBY_VERSION >= '2.2.2' && (!defined?(RUBY_ENGINE) || RUBY_ENGINE != 'jruby')
-      commands << 'bundle install --gemfile=core_gem/spec/full_usage/rails51_project/Gemfile'
+      commands << 'bundle install --gemfile=core_gem/spec/code_fixtures/rails51_project/Gemfile'
     end
-    commands << 'bundle install --gemfile=spec/cli_fixtures/simple_rails42_app/Gemfile'
-    commands << 'bundle install --gemfile=spec/cli_fixtures/rails_like_gem/Gemfile'
+    commands << 'bundle install --gemfile=spec/code_fixtures/simple_rails42_app/Gemfile'
+    commands << 'bundle install --gemfile=spec/code_fixtures/rails_like_gem/Gemfile'
     commands << 'bundle install --gemfile=core_gem/Gemfile'
 
     commands.each do |command|

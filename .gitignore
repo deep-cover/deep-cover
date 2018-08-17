@@ -15,6 +15,6 @@
 # rspec failure tracking
 .rspec_status
 /Gemfile.local
-/spec/cli_fixtures/covered_trivial_gem/deep_cover/
+/spec/code_fixtures/covered_trivial_gem/deep_cover/
 /deep_cover
 /exe/deep_cover/

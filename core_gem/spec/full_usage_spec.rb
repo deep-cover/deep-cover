@@ -2,36 +2,36 @@
 
 require_relative 'spec_helper'
 
-FULL_USAGE_PATH = File.realpath('full_usage', __dir__)
+FIXTURE_PATH = File.realpath('code_fixtures', __dir__)
 
 RSpec.describe 'DeepCover usage' do
   ['', 'uncovered', 'takeover', 'takeover uncovered', 'no_deep_cover'].each do |args|
     command = "ruby simple/simple.rb #{args}"
     it "`#{command}`" do
-      command.split.should run_successfully.from_dir(FULL_USAGE_PATH).and_output('Done')
+      command.split.should run_successfully.from_dir(FIXTURE_PATH).and_output('Done')
     end
   end
 
   describe '', :slow do
     it do
-      %w(ruby with_configure/test.rb).should run_successfully.from_dir(FULL_USAGE_PATH).and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
+      %w(ruby with_configure/test.rb).should run_successfully.from_dir(FIXTURE_PATH).and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
     end
 
     xit 'Can still require gems when there is no bundler' do
-      'gem install --local spec/cli_fixtures/trivial_gem/pkg/trivial_gem-0.1.0.gem'.should run_successfully
+      'gem install --local spec/code_fixtures/trivial_gem/pkg/trivial_gem-0.1.0.gem'.should run_successfully
       %(ruby -e 'require "./lib/deep_cover"; DeepCover.start; require "trivial_gem"').should run_successfully
     end
 
     it 'Can `rspec` a rails51 app' do
       skip if RUBY_VERSION < '2.2.2'
       skip if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-      'bundle exec rspec'.should run_successfully.from_dir("#{FULL_USAGE_PATH}/rails51_project")
+      'bundle exec rspec'.should run_successfully.from_dir("#{FIXTURE_PATH}/rails51_project")
     end
 
     it 'Can `rake test` a rails51 app (minitest)' do
       skip if RUBY_VERSION < '2.2.2'
       skip if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-      'bundle exec rake test'.should run_successfully.from_dir("#{FULL_USAGE_PATH}/rails51_project")
+      'bundle exec rake test'.should run_successfully.from_dir("#{FIXTURE_PATH}/rails51_project")
     end
   end
 end

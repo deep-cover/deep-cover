@@ -1,5 +1,5 @@
 --color
 --default-path '.'
---exclude-pattern "**/spec/cli_fixtures/**/*.rb, core_gem/spec/full_usage/**/*.rb"
+--exclude-pattern "**/spec/code_fixtures/**/*.rb"
 --tag ~slow
 --tag ~skip

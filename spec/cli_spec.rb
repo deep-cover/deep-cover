@@ -16,7 +16,7 @@ module DeepCover
 
     describe 'deep-cover exec' do
       let(:options) { '' }
-      let(:command) { "cd spec/cli_fixtures/#{path} && ../../../exe/deep-cover -o=false #{options} exec rake" }
+      let(:command) { "cd spec/code_fixtures/#{path} && ../../../exe/deep-cover -o=false #{options} exec rake" }
       subject { output }
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
@@ -37,10 +37,10 @@ module DeepCover
 
     describe 'The output of deep-cover' do
       let(:options) { '' }
-      let(:command) { "cd exe; ./deep-cover ../spec/cli_fixtures/#{path} -o=false --reporter=istanbul --no-bundle #{options}" }
+      let(:command) { "cd exe; ./deep-cover ../spec/code_fixtures/#{path} -o=false --reporter=istanbul --no-bundle #{options}" }
       subject { output }
       describe 'for a simple gem' do
-        let(:path) { '../../core_gem/spec/cli_fixtures/trivial_gem' }
+        let(:path) { '../../core_gem/spec/code_fixtures/trivial_gem' }
         it do
           should =~ Regexp.new(%w[trivial_gem.rb 80.65 56.25 62.5 91.67].join('[ |]*'))
           should include '3 examples, 0 failures'
