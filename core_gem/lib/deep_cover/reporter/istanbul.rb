@@ -167,7 +167,7 @@ module DeepCover
             msg = "\nHTML coverage written to: '#{output}/index.html'"
           end
         end
-        `cd #{dir} && nyc report --reporter=text #{html}` + msg.to_s
+        `cd #{dir} && #{Istanbul.bin_path} report --reporter=text #{html}` + msg.to_s
       end
 
       class << self
@@ -176,7 +176,11 @@ module DeepCover
         end
 
         def available?
-          `nyc --version` >= '11.' rescue false
+          `#{bin_path} --version` >= '11.' rescue false
+        end
+
+        def bin_path
+          ::File.executable?('node_modules/.bin/nyc') ? 'node_modules/.bin/nyc' : 'nyc'
         end
       end
     end
