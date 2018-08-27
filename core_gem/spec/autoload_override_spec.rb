@@ -5,9 +5,10 @@ require_relative 'spec_helper'
 module DeepCover
   RSpec.describe 'AutoloadOverride' do
     def setup_deep_covered_script(ruby_code)
-      deep_cover_path = File.absolute_path('../lib/deep-cover', __dir__)
+      deep_cover_path = File.absolute_path('../lib', __dir__)
       ruby_code = <<-RUBY
-        require #{deep_cover_path.inspect}
+        $LOAD_PATH << '#{deep_cover_path}'
+        require 'deep-cover'
         DeepCover.start
 
         #{ruby_code}
