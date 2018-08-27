@@ -6,14 +6,14 @@ PATH
 PATH
   remote: /Users/work/deep-cover
   specs:
-    deep-cover (0.6.2)
+    deep-cover (0.6.4)
       bundler
-      deep-cover-core (= 0.6.2)
+      deep-cover-core (= 0.6.4)
       highline
       slop (~> 4.0)
       term-ansicolor
       with_progress
-    deep-cover-core (0.6.2)
+    deep-cover-core (0.6.4)
       backports (>= 3.11.0)
       binding_of_caller
       parser (~> 2.5.0)
@@ -24,7 +24,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.0)
-    backports (3.11.3)
+    backports (3.11.4)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
     coderay (1.1.2)
