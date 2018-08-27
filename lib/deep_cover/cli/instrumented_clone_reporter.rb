@@ -55,6 +55,8 @@ module DeepCover
       def style
         if @source_path.join('config/environments/test.rb').exist?
           :rails
+        elsif @source_path.join('core_gem').exist?
+          :self_coverage
         elsif @source_path.join('lib').exist?
           :single_gem
         else # Rails style
@@ -82,6 +84,14 @@ module DeepCover
         include Gem
         def each_gem_path
           yield @main_path
+        end
+      end
+
+      module SelfCoverage
+        include Gem
+        def each_gem_path
+          yield @main_path
+          yield @main_path.join('core_gem')
         end
       end
 
