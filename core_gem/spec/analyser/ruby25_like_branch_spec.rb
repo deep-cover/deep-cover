@@ -347,7 +347,7 @@ module DeepCover
       else_branch[2..-1].should == [1, 9, 1, 11]
     end
 
-    each_code_examples('./spec/char_cover/*.rb', name: 'branch_like_25') do |fn, lines, lineno|
+    each_code_examples(name: 'branch_like_25') do |fn, lines, lineno|
       skip if lines.any? { |line| line.include?('current_ast') }
       lines.join.should have_similar_result_to_ruby(ignore_shortcircuit: true)
     end

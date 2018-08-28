@@ -57,7 +57,7 @@ RSpec::Matchers.define :have_correct_line_coverage do |filename, lines, lineno, 
 end
 
 RSpec.describe 'line coverage' do
-  each_code_examples('./spec/char_cover/*.rb', name: 'line') do |fn, lines, lineno|
+  each_code_examples(name: 'line') do |fn, lines, lineno|
     should have_correct_line_coverage(fn, lines, lineno, allow_partial: true)
   end
 
@@ -69,7 +69,7 @@ RSpec.describe 'line coverage' do
 end
 
 RSpec.describe 'strict line coverage' do
-  each_code_examples('./spec/char_cover/*.rb', name: 'line_strict') do |fn, lines, lineno|
+  each_code_examples(name: 'line_strict') do |fn, lines, lineno|
     # Node, the examples may need to have `# missed_empty_branch` added at the end of lines that
     # are marked as fully covered by the regular comments, but is a fork to a branch with an empty body
     should have_correct_line_coverage(fn, lines, lineno, allow_partial: false)
