@@ -170,17 +170,21 @@ module DeepCover
     end
 
     def with_rb_extension(path)
-      path += '.rb' unless has_supported_extension?(path)
+      path += '.rb' unless find_requirable_extension(path)
       path
     end
 
     def without_extension(path)
-      path = path[0...-3] if has_supported_extension?(path)
-      path
+      if (ext = find_requirable_extension(path))
+        path[0...-ext.length]
+      else
+        path
+      end
     end
 
-    def has_supported_extension?(path)
-      path.end_with?('.rb', '.so')
+    private def find_requirable_extension(path)
+      ext = File.extname(path)
+      REQUIRABLE_EXTENSIONS[ext] && ext
     end
 
     # It is not possible to simply remove an autoload. So, instead, we must change the

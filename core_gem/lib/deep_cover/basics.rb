@@ -19,4 +19,10 @@ module DeepCover
                  }.freeze
 
   OPTIONALLY_COVERED = %i[case_implicit_else default_argument raise trivial_if warn]
+
+  REQUIRABLE_EXTENSIONS = {
+                            '.rb' => :ruby,
+                            '.so' => :native_extension,
+                          }.freeze
+  REQUIRABLE_EXTENSION_KEYS = REQUIRABLE_EXTENSIONS.keys.freeze
 end
