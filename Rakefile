@@ -18,24 +18,28 @@ desc 'Build & release deep-cover and deep-cover-core to rubygems.org'
 task release: ['core:sass', 'core:release', 'global:release']
 
 ### Tests tasks
-require 'rspec/core/rake_task'
-require 'rubocop/rake_task'
+begin
+  require 'rspec/core/rake_task'
+  require 'rubocop/rake_task'
 
-RuboCop::RakeTask.new(:rubocop) do |t|
-  t.options = ['-a'] unless ENV['TRAVIS']
+  RuboCop::RakeTask.new(:rubocop) do |t|
+    t.options = ['-a'] unless ENV['TRAVIS']
+  end
+
+  spec_path = 'spec/*_spec.rb, core_gem/spec/**/*_spec.rb'
+  RSpec::Core::RakeTask.new(:spec).tap { |task| task.pattern = spec_path }
+
+  desc 'Run all tests'
+  RSpec::Core::RakeTask.new('spec:all') do |task|
+    task.pattern = spec_path
+    task.rspec_opts = '-O .rspec_all'
+  end
+
+  multitask default: RUBY_VERSION > '2.1' ? [:rubocop, :spec] : :spec
+  multitask 'test:all' => RUBY_VERSION > '2.1' ? [:rubocop, 'spec:all'] : 'spec:all'
+rescue LoadError
+  puts "Note: rspec or rubocop not installed"
 end
-
-spec_path = 'spec/*_spec.rb, core_gem/spec/**/*_spec.rb'
-RSpec::Core::RakeTask.new(:spec).tap { |task| task.pattern = spec_path }
-
-desc 'Run all tests'
-RSpec::Core::RakeTask.new('spec:all') do |task|
-  task.pattern = spec_path
-  task.rspec_opts = '-O .rspec_all'
-end
-
-multitask default: RUBY_VERSION > '2.1' ? [:rubocop, :spec] : :spec
-multitask 'test:all' => RUBY_VERSION > '2.1' ? [:rubocop, 'spec:all'] : 'spec:all'
 
 #### Utilities
 namespace :dev do
