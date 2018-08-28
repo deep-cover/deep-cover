@@ -22,12 +22,12 @@ module DeepCover
     #
     # An absolute path is returned directly if it exists, otherwise nil is returned
     # without searching anywhere else.
-    def resolve_path(path, extensions_to_try = ['.rb', '.so'])
-      if extensions_to_try
-        extensions_to_try = [''] if extensions_to_try.any? { |ext| path.end_with?(ext) }
-      else
-        extensions_to_try = ['']
-      end
+    def resolve_path(path, try_extensions: true)
+      extensions_to_try = if try_extensions && ['.rb', '.so'].none? { |ext| path.end_with?(ext) }
+                            ['.rb', '.so']
+                          else
+                            ['']
+                          end
 
       abs_path = File.absolute_path(path)
       path = abs_path if path.start_with?('./', '../')
@@ -111,7 +111,7 @@ module DeepCover
     def load(path) # &fallback_block
       path = path.to_s
 
-      found_path = resolve_path(path, nil)
+      found_path = resolve_path(path, try_extensions: false)
 
       if found_path.nil?
         # #load has a final fallback of always trying relative to current work directory
