@@ -23,8 +23,8 @@ module DeepCover
     # An absolute path is returned directly if it exists, otherwise nil is returned
     # without searching anywhere else.
     def resolve_path(path, try_extensions: true)
-      extensions_to_try = if try_extensions && ['.rb', '.so'].none? { |ext| path.end_with?(ext) }
-                            ['.rb', '.so']
+      extensions_to_try = if try_extensions && !REQUIRABLE_EXTENSIONS.include?(File.extname(path))
+                            REQUIRABLE_EXTENSION_KEYS
                           else
                             ['']
                           end
@@ -90,7 +90,7 @@ module DeepCover
 
           @paths_being_required.add(found_path)
           return yield(:not_in_covered_paths) unless DeepCover.within_lookup_paths?(found_path)
-          return yield(:not_supported) if found_path.end_with?('.so')
+          return yield(:not_supported) if REQUIRABLE_EXTENSIONS[File.extname(found_path)] == :native_extension
           return yield(:skipped) if filter && filter.call(found_path)
 
           cover_and_execute(found_path) { |reason| return yield(reason) }
