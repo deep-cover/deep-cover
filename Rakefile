@@ -38,7 +38,7 @@ begin
   multitask default: RUBY_VERSION > '2.1' ? [:rubocop, :spec] : :spec
   multitask 'test:all' => RUBY_VERSION > '2.1' ? [:rubocop, 'spec:all'] : 'spec:all'
 rescue LoadError
-  puts "Note: rspec or rubocop not installed"
+  puts 'Note: rspec or rubocop not installed'
 end
 
 #### Utilities
