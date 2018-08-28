@@ -37,3 +37,7 @@
       return raise
 #>    xxxxxx
     end; foo
+
+### defined?
+    foo if defined? IsNotDefinedAnywhere
+#>  xxx             --------------------
