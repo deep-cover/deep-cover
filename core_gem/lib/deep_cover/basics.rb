@@ -22,7 +22,11 @@ module DeepCover
 
   REQUIRABLE_EXTENSIONS = {
                             '.rb' => :ruby,
-                            '.so' => :native_extension,
-                          }.freeze
+                            ".#{RbConfig::CONFIG['DLEXT']}" => :native_extension,
+                          }
+  unless (RbConfig::CONFIG['DLEXT2'] || '').empty?
+    REQUIRABLE_EXTENSIONS[".#{RbConfig::CONFIG['DLEXT2']}"] = :native_extension
+  end
+  REQUIRABLE_EXTENSIONS.freeze
   REQUIRABLE_EXTENSION_KEYS = REQUIRABLE_EXTENSIONS.keys.freeze
 end

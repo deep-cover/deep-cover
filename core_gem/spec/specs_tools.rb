@@ -85,6 +85,11 @@ module DeepCover
 
     UNIMPORTANT_CHARACTERS = /\s|# missed_empty_branch/
 
+    require 'json'
+    native_extension = REQUIRABLE_EXTENSIONS.key(:native_extension) # '.so', '.bundle' or similar
+    SAMPLE_NATIVE_LIB = $LOADED_FEATURES.grep(%r[^/.*#{native_extension}]).first
+    raise 'failed to find a native lib' unless SAMPLE_NATIVE_LIB
+
     extend self
     attr_accessor :current_ast
 
@@ -146,9 +151,13 @@ module DeepCover
           FileUtils.mkdir_p(path)
         else
           FileUtils.mkdir_p(File.dirname(path))
-          content = <<-RUBY
-            $last_test_tree_file_executed = #{tree_entry.inspect}
-          RUBY
+          content = if REQUIRABLE_EXTENSIONS[File.extname(path)] == :native_extension
+            File.read(SAMPLE_NATIVE_LIB)
+          else
+            <<-RUBY
+              $last_test_tree_file_executed = #{tree_entry.inspect}
+            RUBY
+          end
           File.write(path, content)
         end
       end
