@@ -3,6 +3,7 @@
 require_relative 'spec_helper'
 
 module DeepCover
+  SO = RbConfig::CONFIG['DLEXT'] # so | bundle | jar | ...
   RSpec.describe CustomRequirer do
     let(:lookup_paths) { ['/'] }
     let(:requirer) { CustomRequirer.new(load_paths: [], loaded_features: []) }
@@ -100,7 +101,7 @@ module DeepCover
           $LOADED_FEATURES[0..-1] = requirer.loaded_features
           @result[:ruby] = send(@method_name, require_path)
         rescue LoadError => e
-          if e.message[/file too short/]
+          if e.message[/undefined symbol/] || e.message[/symbol not found/]
             @result[:ruby] = :native_extension
           else
             @result[:ruby] = :not_found
@@ -567,14 +568,14 @@ module DeepCover
       end
 
       it 'indicates that .so files are not supported when the .so is specified and the file is found' do
-        file_tree %w(one/two/test.so)
+        file_tree %W(one/two/test.#{SO})
 
         add_load_path 'one'
-        'two/test.so'.should actually_require(:native_extension)
+        "two/test.#{SO}".should actually_require(:native_extension)
       end
 
       it 'indicates that .so files are not supported when the .so is not specified and the file is found' do
-        file_tree %w(one/two/test.so)
+        file_tree %W(one/two/test.#{SO})
 
         add_load_path 'one'
         'two/test'.should actually_require(:native_extension)
@@ -582,22 +583,22 @@ module DeepCover
 
       it 'indicates not_found for missing .so files' do
         add_load_path 'one'
-        'two/test.so'.should actually_require(:not_found)
+        "two/test#{SO}".should actually_require(:not_found)
       end
 
       it 'prefers .rb files over .so files if in same LOAD_PATH' do
-        file_tree %w(one/two/test.rb
-                     one/two/test.so
+        file_tree %W(one/two/test.rb
+                     one/two/test.#{SO}
                     )
 
         add_load_path 'one'
         'two/test'.should actually_require('one/two/test.rb')
         # Verify that the .so could be found
-        'two/test.so'.should actually_require(:native_extension)
+        "two/test.#{SO}".should actually_require(:native_extension)
       end
 
       it 'prefers .rb files of a later LOAD_PATH over previous .so files' do
-        file_tree %w(one/two/test.so
+        file_tree %W(one/two/test.#{SO}
                      then/two/test.rb
                      )
 
@@ -606,19 +607,19 @@ module DeepCover
 
         'two/test'.should actually_require('then/two/test.rb')
         # Verify that the .so could be found
-        'two/test.so'.should actually_require(:native_extension)
+        "two/test.#{SO}".should actually_require(:native_extension)
       end
 
       it 'prefers .rb files of a previous LOAD_PATH over .so file that follows' do
-        file_tree %w(one/two/test.rb
-                     then/two/test.so
+        file_tree %W(one/two/test.rb
+                     then/two/test.#{SO}
                      )
 
         add_load_path 'one'
         add_load_path 'then'
         'two/test'.should actually_require('one/two/test.rb')
         # Verify that the .so could be found
-        'two/test.so'.should actually_require(:native_extension)
+        "two/test.#{SO}".should actually_require(:native_extension)
       end
 
       # a built-in feature is basically just a single file-name (not an absolute path)
