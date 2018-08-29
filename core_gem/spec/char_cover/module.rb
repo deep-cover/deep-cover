@@ -79,3 +79,37 @@
 #>X
     end.to_s rescue nil
 #>  ---xxxxx
+
+### Empty singleton class
+    class << DeepCover
+    end.to_s
+
+#### Explicit global module
+    class << ::DeepCover
+    end.to_s
+
+#### Scoped module
+    class << DeepCover::Node
+    end.to_s
+
+### Raising
+#### Invalid path
+    class << String::Foo::M
+#>  xxxxx xx            xxx
+    end.to_s rescue nil
+#>  ---xxxxx
+
+#### Invalid (# longer) path
+    class << String::Foo::Bar::M
+#>  xxxxx xx            xxxxxxxx
+    end.to_s rescue nil
+#>  ---xxxxx
+
+#### Raise inside block
+    class << DeepCover
+      42
+      raise
+      44
+#>X
+    end.to_s rescue nil
+#>  ---xxxxx

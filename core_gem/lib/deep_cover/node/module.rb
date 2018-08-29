@@ -54,11 +54,10 @@ module DeepCover
 
     # class << foo
     class Sclass < Node
-      has_child object: Node
-      has_child body: Node,
-                can_be_empty: -> { base_node.loc.end.begin },
-                is_statement: true
-      # TODO
+      define_module_class do
+        has_child object: Node
+      end
+      executed_loc_keys :keyword, :operator
     end
   end
 end
