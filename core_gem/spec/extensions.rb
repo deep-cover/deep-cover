@@ -26,6 +26,7 @@ class RSpec::Core::ExampleGroup
                     when /\(#/
                     when /\(tag/
                     when /\(\s*\)/
+                    when /\(\w+_pending/i
                     when /\(/
                       raise "unexpected '(pattern' in section/title: #{description}. Use (# blabla) if you want it ignored."
                     end
