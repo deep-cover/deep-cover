@@ -21,10 +21,10 @@ module DeepCover
       end
     end
 
-    class Module < Node
+    def self.define_module_class
       check_completion
       has_tracker :body_entry
-      has_child const: {const: ModuleName}
+      yield
       has_child body: Node,
                 can_be_empty: -> { base_node.loc.end.begin },
                 rewrite: '%{body_entry_tracker};%{node}',
@@ -32,25 +32,23 @@ module DeepCover
                 flow_entry_count: :body_entry_tracker_hits
       executed_loc_keys :keyword
 
-      def execution_count
-        body_entry_tracker_hits
+      class_eval do
+        def execution_count # Overrides ExecutedAfterChildren
+          body_entry_tracker_hits
+        end
+      end
+    end
+
+    class Module < Node
+      define_module_class do
+        has_child const: {const: ModuleName}
       end
     end
 
     class Class < Node
-      check_completion
-      has_tracker :body_entry
-      has_child const: {const: ModuleName}
-      has_child inherit: [Node, nil] # TODO
-      has_child body: Node,
-                can_be_empty: -> { base_node.loc.end.begin },
-                rewrite: '%{body_entry_tracker};%{node}',
-                is_statement: true,
-                flow_entry_count: :body_entry_tracker_hits
-      executed_loc_keys :keyword
-
-      def execution_count
-        body_entry_tracker_hits
+      define_module_class do
+        has_child const: {const: ModuleName}
+        has_child inherit: [Node, nil] # TODO
       end
     end
 
