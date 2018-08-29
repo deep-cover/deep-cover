@@ -63,6 +63,47 @@
     DeepCover::SpecConstantsWithOrBis ||= raise
 #>                                    xxx
 
+### Assigned with += and such nonsense
+#### Unscoped no raise
+
+    SpecConstantsSampleUnscopedIncrement = 42
+    DeepCover.silence_warnings do
+      SpecConstantsSampleUnscopedIncrement += 42
+    end
+
+#### Unscoped undefined
+
+    begin
+      SpecUndefined += 42
+#>                  xx xx
+    rescue
+    end
+
+#### Scoped undefined
+
+    begin
+      DeepCover::SpecConstantsSampleMissing::Assignation += 42
+#>                                           xxxxxxxxxxx xx xx
+    rescue
+    end
+
+#### Unscoped bad operation
+
+    SpecConstantsSampleUnscopedFailedIncrement = 42
+    begin
+      SpecConstantsSampleUnscopedFailedIncrement += '42'
+#>                                               xx
+    rescue
+    end
+
+#### Scoped undefined
+
+    DeepCover::SpecConstantsFailedIncrement = 42
+    begin
+      DeepCover::SpecConstantsFailedIncrement += '42'
+#>                                            xx
+    rescue
+    end
 
 ### Skipped Global
 
