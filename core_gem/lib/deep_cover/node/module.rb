@@ -27,7 +27,7 @@ module DeepCover
       has_child const: {const: ModuleName}
       has_child body: Node,
                 can_be_empty: -> { base_node.loc.end.begin },
-                rewrite: '%{body_entry_tracker};%{local}=nil;%{node}',
+                rewrite: '%{body_entry_tracker};%{node}',
                 is_statement: true,
                 flow_entry_count: :body_entry_tracker_hits
       executed_loc_keys :keyword
