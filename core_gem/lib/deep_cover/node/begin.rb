@@ -18,8 +18,7 @@ module DeepCover
         when 'else', '#{'
           %i[begin end]
         else
-          warn 'Unknown context for Begin node'
-          []
+          raise "Unknown context for Begin node: #{loc_hash[:begin].source}"
         end
       end
     end
