@@ -49,6 +49,21 @@
     rescue
     end
 
+#### Assigned with ||=
+
+    DeepCover ||= 42
+#>                xx
+    DeepCover::SpecConstantsWithOr ||= 42
+    DeepCover.send(:remove_const, :SpecConstantsWithOr)
+    begin
+      DeepCover::SpecConstantsSampleMissing::Assignation ||= 42
+                                           xxxxxxxxxxxxx xxx xx
+    rescue
+    end
+    DeepCover::SpecConstantsWithOrBis ||= raise
+#>                                    xxx
+
+
 ### Skipped Global
 
     4 ||  ::Foo
