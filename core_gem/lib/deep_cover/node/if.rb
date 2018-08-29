@@ -19,7 +19,7 @@ module DeepCover
       executed_loc_keys :keyword, :question
 
       def child_can_be_empty(child, name)
-        return false if name == :condition || style == :ternary
+        raise 'Unexpected empty body' if name == :condition || style == :ternary
         if (name == :true_branch) == [:if, :elsif].include?(style)
           (base_node.loc.begin || base_node.children[0].loc.expression.succ).end
         elsif has_else?
@@ -58,7 +58,7 @@ module DeepCover
       end
 
       def deepest_elsif_node
-        return if style != :elsif
+        raise 'Not an elsif' if style != :elsif
         return self if loc_hash[:else] && loc_hash[:else].source == 'else'
         return self if false_branch.is_a?(EmptyBody)
         false_branch.deepest_elsif_node
