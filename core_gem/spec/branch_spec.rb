@@ -39,6 +39,9 @@ module DeepCover
           [0, 1, 2] => '2 when clauses and else',
           2 => 'else',
         },
+        'case :foo when :bar;when :qux;end' => {
+          [0, 2] => '1 when clause and implicit else',
+        },
       }
       tests.merge!('nil&.foo' => {
           0 => 'nil shortcut',
