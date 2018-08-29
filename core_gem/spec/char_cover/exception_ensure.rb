@@ -242,3 +242,17 @@
     ensure
 
     end
+
+#### Empty & without a body ensure (branch_like_25_pending)
+    begin
+
+    ensure
+
+    end
+
+    begin
+#>X
+    ensure
+#>X
+    end if falsx
+#>  xxx
