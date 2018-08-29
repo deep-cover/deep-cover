@@ -1,6 +1,7 @@
 ### Empty module
-    module A
+    x = module A
     end.to_s
+    assert_equal '', x
 
 #### Explicit global module
     module ::B
@@ -39,8 +40,9 @@
 #>     xxxxx
 
 ### Empty class
-    class C
+    x = class C
     end.to_s
+    assert_equal '', x
 
 #### Explicit global module
     class ::N
