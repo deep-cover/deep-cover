@@ -122,6 +122,9 @@ module DeepCover
 
       executed_loc_keys :dot
 
+      extend Forwardable
+      def_delegators :actual_send, :message, :arguments
+
       def has_block?
         parent.is_a?(Block) && parent.child_index_to_name(index) == :call
       end
@@ -132,10 +135,6 @@ module DeepCover
 
       def execution_count
         receiver.flow_completion_count
-      end
-
-      def message
-        actual_send.message
       end
 
       def branches
