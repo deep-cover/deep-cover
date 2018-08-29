@@ -55,7 +55,7 @@ RSpec.describe 'char cover' do
 
   it 'tests against at least one of every node types', :pending, :slow do
     visited = Set.new
-    Dir.glob('./spec/char_cover/*.rb') do |filename|
+    Dir.glob("#{__dir__}/char_cover/*.rb") do |filename|
       ast = DeepCover::CoveredCode.new(path: filename).covered_ast
       ast.each_node do |node|
         visited << node.class
