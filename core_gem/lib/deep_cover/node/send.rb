@@ -144,7 +144,7 @@ module DeepCover
         ]
       end
 
-      def branches_summary(of_branches = branches)
+      def branches_summary(of_branches)
         of_branches.map do |jump|
           jump == actual_send ? 'safe send' : 'nil shortcut'
         end.join(' and ')
