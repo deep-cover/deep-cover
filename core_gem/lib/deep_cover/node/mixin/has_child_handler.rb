@@ -56,11 +56,8 @@ module DeepCover
           when Symbol
             define_method(method_name) do |*args|
               arity = method(action).arity
-              if arity < 0
-                send(action, *args)
-              else
-                send(action, *args[0...arity])
-              end
+              raise NotImplementedError if arity < 0
+              send(action, *args[0...arity])
             end
           when Proc
             define_method(method_name, &action)
