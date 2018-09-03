@@ -16,7 +16,7 @@
 #>    ---xxxxx
     end
     with_block_returning
-    assert_counts(DeepCover::Node::Block, flow_entry: 1, flow_completion: 0, execution: 1)
+    assert_counts(DeepCover::Node::Block, flow_completion: 0, execution: 1)
 
 ### Method raises
 

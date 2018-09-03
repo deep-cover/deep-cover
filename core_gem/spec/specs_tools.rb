@@ -49,7 +49,8 @@ end
 def assert_counts(node_or_lookup, expected)
   expected = {flow_entry: expected, flow_completion: expected, execution: expected} unless expected.is_a? Hash
   node = node.is_a?(DeepCover::Node) ? node : current_ast[node_or_lookup]
-  assert_equal expected, node.counts
+  actual = expected.keys.map {|kind| [kind, node.send(:"#{kind}_count")] }.to_h
+  assert_equal expected, actual
 end
 
 module DeepCover
