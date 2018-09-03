@@ -118,13 +118,13 @@ module DeepCover
       self.class.name.split('::').last.to_sym
     end
 
-    def each_node(order = :postorder, &block)
-      return to_enum :each_node, order unless block_given?
-      yield self unless order == :postorder
+    # Yields its children and itself
+    def each_node(&block)
+      return to_enum :each_node unless block_given?
       children_nodes.each do |child|
-        child.each_node(order, &block)
+        child.each_node(&block)
       end
-      yield self if order == :postorder
+      yield self
       self
     end
 
