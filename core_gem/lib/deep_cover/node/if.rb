@@ -64,7 +64,6 @@ module DeepCover
         false_branch.deepest_elsif_node
       end
 
-
       def has_else?
         !!base_node.loc.to_hash[:else]
       end
