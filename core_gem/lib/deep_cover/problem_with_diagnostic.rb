@@ -49,11 +49,11 @@ module DeepCover
       first_index = line_range.begin - nb_context_line - buffer.first_line
       first_index = 0 if first_index < 0
       last_index = line_range.end + nb_context_line - buffer.first_line
-      last_index = 0 if last_index < 0
 
       lines = buffer.source_lines[first_index..last_index]
+      lines.pop if lines.last.empty?
 
-      Tools.number_lines(lines, lineno: buffer.first_line, bad_linenos: line_range.to_a)
+      Tools.number_lines(lines, lineno: buffer.first_line + first_index, bad_linenos: line_range.to_a)
     end
 
     def buffer
