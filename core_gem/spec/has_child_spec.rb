@@ -64,7 +64,7 @@ module DeepCover
         end
       end
 
-      describe :node_matches_type? do
+      describe :child_index_to_name do
         it 'works' do
           ParentWithRest.child_index_to_name(0, 5).should eql :foo
           ParentWithRest.child_index_to_name(1, 5).should eql :bar
