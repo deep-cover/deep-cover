@@ -91,8 +91,6 @@ module DeepCover
             expected.any? { |exp| node_matches_type?(node, exp) }
           when Class
             node.is_a?(expected)
-          when Symbol
-            node.is_a?(Node) && node.type == expected
           else
             raise "Unrecognized expected type #{expected}"
           end
