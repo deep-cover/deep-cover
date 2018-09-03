@@ -7,10 +7,6 @@ module DeepCover
       super(base_node, parent: parent, index: index, base_children: [])
     end
 
-    def type
-      :EmptyBody
-    end
-
     def loc_hash
       return {} if @position == true
       {expression: @position}

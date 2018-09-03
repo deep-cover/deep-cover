@@ -35,5 +35,11 @@ module DeepCover
       end
       # rubocop:enable Lint/PercentStringArray
     end
+
+    describe :type do
+      Node['42'].type.should == :int
+      Node['42'].parent.type.should == :Root
+      Node['if true;end'].true_branch.type.should == :EmptyBody
+    end
   end
 end
