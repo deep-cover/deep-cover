@@ -9,9 +9,7 @@ module DeepCover
 
       # Returns true iff it is executable and if was successfully executed
       def was_executed?
-        # There is a rare case of non executable nodes that have important data in flow_entry_count / flow_completion_count,
-        # like `if cond; end`, so make sure it's actually executable first...
-        executable? && execution_count > 0
+        execution_count > 0
       end
 
       # Returns the control flow entered the node.
