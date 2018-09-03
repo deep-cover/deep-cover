@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   # Support
   spec.add_runtime_dependency 'backports', '>= 3.11.0'
   spec.add_runtime_dependency 'binding_of_caller'
+  spec.add_runtime_dependency 'term-ansicolor'
 
   # Reporters
   spec.add_runtime_dependency 'terminal-table'

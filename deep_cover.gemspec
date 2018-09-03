@@ -30,7 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'bundler'
   spec.add_runtime_dependency 'highline'
   spec.add_runtime_dependency 'slop', '~> 4.0'
-  spec.add_runtime_dependency 'term-ansicolor'
   spec.add_runtime_dependency 'with_progress'
 
   ### Dev dependencies
