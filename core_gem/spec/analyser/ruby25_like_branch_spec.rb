@@ -348,7 +348,7 @@ module DeepCover
     end
 
     each_code_examples(name: 'branch_like_25') do |fn, lines, lineno|
-      skip if lines.any? { |line| line.include?('current_ast') }
+      skip if lines.any? { |line| line =~ /current_ast|assert_counts/ }
       lines.join.should have_similar_result_to_ruby(ignore_shortcircuit: true)
     end
   end
