@@ -38,8 +38,12 @@ module DeepCover
                 is_statement: true
       executed_loc_keys # none
 
+      def execution_count
+        call.execution_count
+      end
+
       def children_nodes_in_flow_order
-        [call, args] # Similarly to a def, the body is actually not part of the flow of this node...
+        [call] # Similarly to a def, the body (and Args) are actually not part of the flow of this node...
       end
 
       alias_method :rewrite_for_completion, :rewrite

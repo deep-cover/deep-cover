@@ -7,6 +7,17 @@
 #>  ---
       to_s
 
+### Block never completed to
+
+    def with_block_returning
+      42.times do |i|
+        return i if i > 20
+      end.to_s
+#>    ---xxxxx
+    end
+    with_block_returning
+    assert_counts(DeepCover::Node::Block, flow_entry: 1, flow_completion: 0, execution: 1)
+
 ### Method raises
 
     begin
