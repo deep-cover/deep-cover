@@ -7,8 +7,6 @@ $LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
 local_gem_path = File.expand_path('../core_gem', __dir__)
 $LOAD_PATH.unshift "#{local_gem_path}/lib" if Dir.exist?(local_gem_path)
 
-require_relative '../lib/deep_cover_entry'
-
 require 'deep_cover/cli/runner'
 
 DeepCover::CLI::Runner.go
