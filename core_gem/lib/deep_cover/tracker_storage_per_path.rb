@@ -25,8 +25,8 @@ module DeepCover
       TrackerHitsPerPath.new(@index.transform_values(&:tracker_hits))
     end
 
-    def tracker_hits_per_path=(tracker_hits_per_path)
-      tracker_hits_per_path.each do |path, tracker_hits|
+    def tracker_hits_per_path=(new_tracker_hits_per_path)
+      new_tracker_hits_per_path.each do |path, tracker_hits|
         self[path].tracker_hits = tracker_hits
       end
     end
