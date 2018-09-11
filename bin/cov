@@ -2,9 +2,9 @@
 module DeepCover
   require 'bundler/setup'
 
-  require 'deep_cover'
+  require_relative '../core_gem/lib/deep_cover'
   require_relative '../core_gem/spec/specs_tools'
-  require 'deep_cover/cli/debugger'
+  require_relative '../lib/deep_cover/cli/debugger'
 
   example = ARGV[0] || 'simple_if'
   fn = "./core_gem/spec/samples/#{example}.rb"
