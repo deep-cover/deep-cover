@@ -62,8 +62,8 @@ module DeepCover
       self
     end
 
-    def report(**options)
-      case (reporter = options.fetch(:reporter, DEFAULTS[:reporter]).to_sym)
+    def report(reporter: DEFAULTS[:reporter], **options)
+      case reporter.to_sym
       when :html
         msg = if (output = options.fetch(:output, DEFAULTS[:output]))
                 Reporter::HTML.report(self, **options)
