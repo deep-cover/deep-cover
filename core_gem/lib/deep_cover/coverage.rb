@@ -108,7 +108,7 @@ module DeepCover
     end
 
     def analysis(**options)
-      Analysis.new(covered_codes, options)
+      Analysis.new(covered_codes, **options)
     end
 
     private
