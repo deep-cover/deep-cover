@@ -4,7 +4,7 @@ module DeepCover
 
   require_relative '../core_gem/lib/deep_cover'
   require_relative '../core_gem/spec/specs_tools'
-  require_relative '../lib/deep_cover/cli/debugger'
+  require_relative '../lib/deep_cover/expression_debugger'
 
   example = ARGV[0] || 'simple_if'
   fn = "./core_gem/spec/samples/#{example}.rb"
@@ -39,5 +39,5 @@ module DeepCover
     lines, lineno = examples[answer]
   end
 
-  CLI::Debugger.new(lines.join, filename: fn, lineno: lineno, debug: true, profile: ENV['PROF']).show
+  ExpressionDebugger.new(lines.join, filename: fn, lineno: lineno, debug: true, profile: ENV['PROF']).show
 end

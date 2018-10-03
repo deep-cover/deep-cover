@@ -44,8 +44,8 @@ module DeepCover
 
     it 'handles manual require of autoloaded gems which are not yet on the LOAD_PATH' do
       setup_deep_covered_script(<<-RUBY)
-        Object.autoload(:Slop, 'slop')
-        require 'slop'
+        Object.autoload(:Thor, 'thor')
+        require 'thor'
       RUBY
 
       assert_script_runs
@@ -53,8 +53,8 @@ module DeepCover
 
     it 'handles autoload of gem which are not yet on the LOAD_PATH' do
       setup_deep_covered_script(<<-RUBY)
-        Object.autoload(:Slop, 'slop')
-        Slop
+        Object.autoload(:Thor, 'thor')
+        Thor
       RUBY
 
       assert_script_runs
