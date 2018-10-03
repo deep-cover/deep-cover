@@ -71,7 +71,6 @@ module DeepCover
       end
 
       describe 'for a rails app' do
-        let(:options) { 'bundle exec rake' } # Bypass Spring
         let(:path) { 'simple_rails42_app' }
         it do
           should =~ Regexp.new(%w[dummy.rb 100 100 100].join('[ |]*'))
