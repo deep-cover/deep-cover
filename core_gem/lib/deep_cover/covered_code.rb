@@ -79,6 +79,10 @@ module DeepCover
       covered_ast.each_node(*args, &block)
     end
 
+    def setup_tracking_source
+      "#{tracker_storage.setup_source};"
+    end
+
     def covered_source
       @covered_source ||= instrument_source
     end
