@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 require_relative 'core_ext/exec_callbacks'
+require_relative 'tools/after_tests'
 
 module DeepCover
   module AutoRun
     class Runner
-      def initialize(covered_path)
-        @covered_path = covered_path
+      include Tools::AfterTests
+      def initialize
         @saved = !(DeepCover.respond_to?(:running?) && DeepCover.running?)
       end
 
@@ -44,28 +45,11 @@ module DeepCover
       def report(**options)
         coverage.report(**options)
       end
-
-      def after_tests
-        use_at_exit = true
-        if defined?(Minitest)
-          use_at_exit = false
-          Minitest.after_run { yield }
-        end
-        if defined?(Rspec)
-          use_at_exit = false
-          RSpec.configure do |config|
-            config.after(:suite) { yield }
-          end
-        end
-        if use_at_exit
-          at_exit { yield }
-        end
-      end
     end
 
     def self.run!(covered_path)
       @runners ||= {}
-      @runners[covered_path] ||= Runner.new(covered_path).run!
+      @runners[covered_path] ||= Runner.new.run!
     end
   end
 end
