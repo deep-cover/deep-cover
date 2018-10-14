@@ -50,20 +50,12 @@ module DeepCover
       end
     end
 
-    def cover
-      global[nb] ||= Array.new(@tracker_count, 0)
-    end
-
     def line_coverage(**options)
       Analyser::PerLine.new(self, **options).results
     end
 
     def char_cover(**options)
       Analyser::PerChar.new(self, **options).results
-    end
-
-    def tracker_hits(tracker_id)
-      cover.fetch(tracker_id)
     end
 
     def covered_ast
