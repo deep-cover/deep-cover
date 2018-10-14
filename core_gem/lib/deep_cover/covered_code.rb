@@ -20,7 +20,6 @@ module DeepCover
       @path = path &&= Pathname(path)
       @buffer = Parser::Source::Buffer.new('', lineno)
       @buffer.source = source || path.read
-      @tracker_count = 0
       @tracker_storage = tracker_storage
       @local_var = local_var
       @covered_source = instrument_source
