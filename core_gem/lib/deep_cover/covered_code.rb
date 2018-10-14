@@ -5,7 +5,7 @@ module DeepCover
   load_parser
 
   class CoveredCode
-    attr_accessor :covered_source, :buffer, :tracker_storage, :local_var, :path
+    attr_accessor :buffer, :tracker_storage, :local_var, :path
 
     def initialize(
       path: nil,
@@ -22,7 +22,9 @@ module DeepCover
       @buffer.source = source || path.read
       @tracker_storage = tracker_storage
       @local_var = local_var
-      @covered_source = instrument_source
+      @covered_source = nil
+      # We parse the code now so that problems happen early
+      covered_ast
     end
 
     def lineno
@@ -39,7 +41,7 @@ module DeepCover
     end
 
     def execute_code(binding: DeepCover::GLOBAL_BINDING.dup)
-      eval(@covered_source, binding, (@path || '<raw_code>').to_s, lineno) # rubocop:disable Security/Eval
+      eval(covered_source, binding, (@path || '<raw_code>').to_s, lineno) # rubocop:disable Security/Eval
       self
     end
 
@@ -75,6 +77,10 @@ module DeepCover
 
     def each_node(*args, &block)
       covered_ast.each_node(*args, &block)
+    end
+
+    def covered_source
+      @covered_source ||= instrument_source
     end
 
     def instrument_source
