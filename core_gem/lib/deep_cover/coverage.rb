@@ -11,9 +11,8 @@ module DeepCover
 
     attr_reader :tracker_storage_per_path
 
-    def initialize(**options)
+    def initialize
       @covered_code_index = {}
-      @options = options
       @tracker_storage_per_path = TrackerStoragePerPath.new(TrackerBucket[tracker_global])
     end
 
@@ -33,8 +32,8 @@ module DeepCover
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
       @covered_code_index[path] ||= CoveredCode.new(path: path,
                                                     tracker_storage: @tracker_storage_per_path[path],
-                                                    **options,
-                                                    **@options)
+                                                    tracker_global: DeepCover.config.tracker_global,
+                                                    **options)
     end
 
     def covered_code_or_warn(path, **options)
@@ -104,7 +103,7 @@ module DeepCover
     end
 
     def tracker_global
-      @options.fetch(:tracker_global, DEFAULTS[:tracker_global])
+      DeepCover.config.tracker_global
     end
 
     def analysis(**options)
@@ -114,11 +113,11 @@ module DeepCover
     private
 
     def marshal_dump
-      {options: @options, tracker_storage_per_path: @tracker_storage_per_path}
+      {tracker_storage_per_path: @tracker_storage_per_path}
     end
 
-    def marshal_load(options:, tracker_storage_per_path:)
-      initialize(**options)
+    def marshal_load(tracker_storage_per_path:)
+      initialize
       @tracker_storage_per_path = tracker_storage_per_path
     end
   end
