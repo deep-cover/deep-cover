@@ -24,7 +24,7 @@ module DeepCover
 
       require 'yaml'
       env_var = {'DEEP_COVER' => 't',
-                 'DEEP_COVER_OPTIONS' => YAML.dump(processed_options.slice(*DEFAULTS.keys)),
+                 'DEEP_COVER_OPTIONS' => YAML.dump(processed_options.transform_keys(&:to_sym).slice(*DEFAULTS.keys)),
       }
 
       # Clear inspiration from Bundler's kernel_exec
