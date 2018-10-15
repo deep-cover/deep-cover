@@ -28,22 +28,13 @@ module DeepCover
         @saved
       end
 
-      def coverage
-        @coverage ||= if saved?
-                        Coverage.load(@covered_path, with_trackers: false)
-                      else
-                        DeepCover.coverage
-                      end
-      end
-
       def save
         require_relative '../deep_cover'
-        coverage.save(@covered_path) unless saved?
-        coverage.save_trackers(@covered_path)
+        Coverage::Persistence.new(@covered_path).save_trackers(DeepCover::GlobalVariables.tracker_hits_per_paths)
       end
 
       def report(**options)
-        coverage.report(**options)
+        DeepCover.coverage.report(**options)
       end
     end
 

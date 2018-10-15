@@ -9,11 +9,8 @@ module DeepCover
   class Coverage
     include Enumerable
 
-    attr_reader :tracker_storage_per_path
-
     def initialize
       @covered_code_index = {}
-      @tracker_storage_per_path = TrackerStoragePerPath.new(TrackerBucket[tracker_global])
     end
 
     def covered_codes
@@ -31,8 +28,6 @@ module DeepCover
     def covered_code(path, **options)
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
       @covered_code_index[path] ||= CoveredCode.new(path: path,
-                                                    tracker_storage: @tracker_storage_per_path[path],
-                                                    tracker_global: DeepCover.config.tracker_global,
                                                     **options)
     end
 
@@ -50,7 +45,7 @@ module DeepCover
 
     def each
       return to_enum unless block_given?
-      @tracker_storage_per_path.each_key do |path|
+      @covered_code_index.each_key do |path|
         begin
           cov_code = covered_code(path)
         rescue Parser::SyntaxError
@@ -84,21 +79,24 @@ module DeepCover
       end
     end
 
-    def self.load(dest_path, dirname = 'deep_cover', with_trackers: true)
-      Persistence.new(dest_path, dirname).load(with_trackers: with_trackers)
-    end
+    def self.load(dest_path, dirname = 'deep_cover')
+      tracker_hits_per_path = Persistence.new(dest_path, dirname).load_trackers
+      coverage = Coverage.new
 
-    def self.saved?(dest_path, dirname = 'deep_cover')
-      Persistence.new(dest_path, dirname).saved?
-    end
+      tracker_hits_per_path.each do |path, tracker_hits|
+        coverage.covered_code(path, tracker_hits: tracker_hits)
+      end
 
-    def save(dest_path, dirname = 'deep_cover')
-      Persistence.new(dest_path, dirname).save(self)
-      self
+      coverage
     end
 
     def save_trackers(dest_path, dirname = 'deep_cover')
-      Persistence.new(dest_path, dirname).save_trackers(@tracker_storage_per_path.tracker_hits_per_path)
+      tracker_hits_per_path = covered_code_index.map do |path, covered_code|
+        [path, covered_code.tracker_hits]
+      end
+      tracker_hits_per_path = tracker_hits_per_path.to_h
+
+      Persistence.new(dest_path, dirname).save_trackers(tracker_hits_per_path)
       self
     end
 
@@ -108,17 +106,6 @@ module DeepCover
 
     def analysis(**options)
       Analysis.new(covered_codes, **options)
-    end
-
-    private
-
-    def marshal_dump
-      {tracker_storage_per_path: @tracker_storage_per_path}
-    end
-
-    def marshal_load(tracker_storage_per_path:)
-      initialize
-      @tracker_storage_per_path = tracker_storage_per_path
     end
   end
 end
