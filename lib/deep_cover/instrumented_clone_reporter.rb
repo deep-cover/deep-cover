@@ -159,7 +159,6 @@ module DeepCover
                                 coverage: coverage,
                                 dest_path: to_cover)
       end
-      coverage.save(@dest_root.to_s)
     end
 
     def process

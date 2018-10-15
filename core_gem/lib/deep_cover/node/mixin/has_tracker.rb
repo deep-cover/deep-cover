@@ -9,12 +9,8 @@ module DeepCover
       TRACKERS = {}
 
       def initialize(*)
-        @tracker_offset = tracker_storage.allocate_trackers(self.class::TRACKERS.size).begin
+        @tracker_offset = covered_code.allocate_trackers(self.class::TRACKERS.size).begin
         super
-      end
-
-      def tracker_storage
-        covered_code.tracker_storage
       end
 
       def tracker_sources
@@ -33,10 +29,10 @@ module DeepCover
           i = self::TRACKERS[name] = self::TRACKERS.size
           class_eval <<-EVAL, __FILE__, __LINE__ + 1
             def #{name}_tracker_source
-              tracker_storage.tracker_source(@tracker_offset + #{i})
+              covered_code.increment_tracker_source(@tracker_offset + #{i})
             end
             def #{name}_tracker_hits
-              tracker_storage[@tracker_offset + #{i}]
+              covered_code.tracker_hits[@tracker_offset + #{i}]
             end
           EVAL
         end

@@ -5,24 +5,25 @@ module DeepCover
   load_parser
 
   class CoveredCode
-    attr_accessor :buffer, :tracker_storage, :local_var, :path
+    attr_accessor :buffer, :local_var, :path
 
     def initialize(
       path: nil,
       source: nil,
       lineno: 1,
-      tracker_global: DEFAULTS[:tracker_global],
-      tracker_storage: TrackerBucket[tracker_global].create_storage,
-      local_var: '_temp'
+      local_var: '_temp',
+      tracker_hits: nil
     )
       raise 'Must provide either path or source' unless path || source
 
       @path = path &&= Pathname(path)
       @buffer = Parser::Source::Buffer.new('', lineno)
       @buffer.source = source || path.read
-      @tracker_storage = tracker_storage
+      @index = nil # Set in #instrument_source
       @local_var = local_var
-      @covered_source = nil
+      @covered_source = nil # Set in #covered_source
+      @tracker_hits = tracker_hits # Loaded from global in #tracker_hits, or when received right away when loading data
+      @nb_allocated_trackers = 0
       # We parse the code now so that problems happen early
       covered_ast
     end
@@ -80,7 +81,33 @@ module DeepCover
     end
 
     def setup_tracking_source
-      "#{tracker_storage.setup_source};"
+      src = "(#{DeepCover.config.tracker_global}||={})[#{@index}]||=Array.new(#{@nb_allocated_trackers},0)"
+      src += ";(#{DeepCover.config.tracker_global}_p||={})[#{@index}]=#{path.to_s.inspect}" if path
+      src
+    end
+
+    def increment_tracker_source(tracker_id)
+      "#{DeepCover.config.tracker_global}[#{@index}][#{tracker_id}]+=1"
+    end
+
+    def allocate_trackers(nb_needed)
+      return @nb_allocated_trackers...@nb_allocated_trackers if nb_needed == 0
+      prev = @nb_allocated_trackers
+      @nb_allocated_trackers += nb_needed
+      prev...@nb_allocated_trackers
+    end
+
+    def tracker_hits
+      return @tracker_hits if @tracker_hits
+      global_trackers = DeepCover::GlobalVariables.trackers[@index]
+
+      return unless global_trackers
+
+      if global_trackers.size != @nb_allocated_trackers
+        raise "Cannot sync, global[index] is of size #{global_trackers.size} instead of expected #{@nb_allocated_trackers}"
+      end
+
+      @tracker_hits = global_trackers
     end
 
     def covered_source
@@ -88,6 +115,8 @@ module DeepCover
     end
 
     def instrument_source
+      @index ||= self.class.next_global_index
+
       rewriter = Parser::Source::TreeRewriter.new(@buffer)
       covered_ast.each_node do |node|
         node.rewriting_rules.each do |range, rule|
@@ -112,6 +141,7 @@ module DeepCover
 
     def freeze
       unless frozen? # Guard against reentrance
+        tracker_hits
         super
         root.each_node(&:freeze)
       end
@@ -132,6 +162,11 @@ module DeepCover
           #{e}
       MSG
       nil
+    end
+
+    def self.next_global_index
+      @last_allocated_global_index ||= -1
+      @last_allocated_global_index += 1
     end
 
     private

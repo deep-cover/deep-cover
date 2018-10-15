@@ -8,57 +8,21 @@ module DeepCover
       TRACKER_TEMPLATE = 'trackers%{unique}.dct'
 
       attr_reader :dir_path
-      def initialize(dest_path, dirname)
+      def initialize(dest_path, dirname = 'deep_cover')
         @dir_path = Pathname(dest_path).join(dirname).expand_path
       end
 
-      def load(with_trackers: true)
-        saved?
-        cov = load_coverage
-        cov.tracker_storage_per_path.tracker_hits_per_path = load_trackers if with_trackers
-        cov
-      end
-
-      def save(coverage)
-        create_if_needed
-        delete_trackers
-        save_coverage(coverage)
-      end
-
       def save_trackers(tracker_hits_per_path)
-        saved?
+        create_if_needed
         basename = format(TRACKER_TEMPLATE, unique: SecureRandom.urlsafe_base64)
+
         dir_path.join(basename).binwrite(Marshal.dump(
                                              version: DeepCover::VERSION,
                                              tracker_hits_per_path: tracker_hits_per_path,
         ))
       end
 
-      def saved?
-        raise "Can't find folder '#{dir_path}'" unless dir_path.exist?
-        self
-      end
-
-      private
-
-      def create_if_needed
-        dir_path.mkpath
-      end
-
-      def save_coverage(coverage)
-        dir_path.join(BASENAME).binwrite(Marshal.dump(
-                                             version: DeepCover::VERSION,
-                                             coverage: coverage,
-        ))
-      end
-
       # rubocop:disable Security/MarshalLoad
-      def load_coverage
-        Marshal.load(dir_path.join(BASENAME).binread).tap do |version:, coverage:|
-          raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
-          return coverage
-        end
-      end
 
       # returns a TrackerHitsPerPath
       def load_trackers
@@ -70,6 +34,12 @@ module DeepCover
         end.inject(:merge!)
       end
       # rubocop:enable Security/MarshalLoad
+
+      private
+
+      def create_if_needed
+        dir_path.mkpath
+      end
 
       def tracker_files
         basename = format(TRACKER_TEMPLATE, unique: '*')
