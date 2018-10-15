@@ -80,7 +80,7 @@ module DeepCover
     end
 
     def coverage
-      @coverage ||= Coverage.new(tracker_global: config.tracker_global)
+      @coverage ||= Coverage.new
     end
 
     def lookup_paths

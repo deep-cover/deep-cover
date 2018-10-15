@@ -152,7 +152,7 @@ module DeepCover
     end
 
     def cover
-      coverage = Coverage.new(tracker_global: ::DeepCover.config.tracker_global)
+      coverage = Coverage.new
       each_dir_to_cover do |to_cover|
         FileUtils.cp_r(to_cover, to_cover.sub_ext('_original'))
         Tools.dump_covered_code(to_cover,
