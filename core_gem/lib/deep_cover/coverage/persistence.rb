@@ -22,18 +22,15 @@ module DeepCover
         ))
       end
 
-      # rubocop:disable Security/MarshalLoad
-
       # returns a TrackerHitsPerPath
       def load_trackers
         tracker_files.map do |full_path|
-          Marshal.load(full_path.binread).yield_self do |version:, tracker_hits_per_path:|
+          Marshal.load(full_path.binread).yield_self do |version:, tracker_hits_per_path:| # rubocop:disable Security/MarshalLoad
             raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
             tracker_hits_per_path
           end
         end.inject(:merge!)
       end
-      # rubocop:enable Security/MarshalLoad
 
       private
 
