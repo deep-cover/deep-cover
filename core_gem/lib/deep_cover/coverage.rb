@@ -100,10 +100,6 @@ module DeepCover
       self
     end
 
-    def tracker_global
-      DeepCover.config.tracker_global
-    end
-
     def analysis(**options)
       Analysis.new(covered_codes, **options)
     end
