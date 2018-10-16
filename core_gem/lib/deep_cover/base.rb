@@ -41,6 +41,10 @@ module DeepCover
       @started = false
     end
 
+    def delete_trackers(dest_path = '.', dirname = 'deep_cover')
+      Persistence.new(dest_path, dirname).delete_trackers
+    end
+
     def line_coverage(filename)
       coverage.line_coverage(handle_relative_filename(filename), **config.to_h)
     end

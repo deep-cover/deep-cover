@@ -31,6 +31,11 @@ module DeepCover
       end.inject(:merge!)
     end
 
+
+    def delete_trackers
+      tracker_files.each(&:delete)
+    end
+
     private
 
     def create_directory_if_needed
@@ -40,10 +45,6 @@ module DeepCover
     def tracker_files
       basename = format(TRACKER_TEMPLATE, unique: '*')
       Pathname.glob(dir_path.join(basename))
-    end
-
-    def delete_trackers
-      tracker_files.each(&:delete)
     end
   end
 end
