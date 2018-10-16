@@ -13,7 +13,7 @@ module DeepCover
       end
 
       def save_trackers(tracker_hits_per_path)
-        create_if_needed
+        create_directory_if_needed
         basename = format(TRACKER_TEMPLATE, unique: SecureRandom.urlsafe_base64)
 
         dir_path.join(basename).binwrite(Marshal.dump(
@@ -37,7 +37,7 @@ module DeepCover
 
       private
 
-      def create_if_needed
+      def create_directory_if_needed
         dir_path.mkpath
       end
 
