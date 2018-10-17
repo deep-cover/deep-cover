@@ -9,6 +9,10 @@ gemspec
 
 eval_gemfile File.expand_path('Gemfile.local', __dir__) if File.exist?('Gemfile.local')
 
-gem 'deep-cover-core', path: 'core_gem'
+# This is a workaround for rubymine to stop treating the core_gem directory like an external library...
+# https://youtrack.jetbrains.com/issue/RUBY-18315#comment=27-1608735
+gem_name = 'deep-cover-core'
+gem_path = 'core_gem'
+gem gem_name, path: gem_path
 
 gem 'ruby-prof', platforms: :mri
