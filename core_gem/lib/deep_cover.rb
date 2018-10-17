@@ -17,6 +17,7 @@ if ENV['DEEP_COVER_OPTIONS']
 end
 if %w[1 t true].include?(ENV['DEEP_COVER'])
   DeepCover.start
+  DeepCover.delete_trackers
   require_relative 'deep_cover/auto_run'
   DeepCover::AutoRun.run!('.').report!(**DeepCover.config)
 end
