@@ -79,8 +79,8 @@ module DeepCover
       end
     end
 
-    def self.load(dest_path, dirname = 'deep_cover')
-      tracker_hits_per_path = Persistence.new(dest_path, dirname).load_trackers
+    def self.load(cache_directory = DeepCover.config.cache_directory)
+      tracker_hits_per_path = Persistence.new(cache_directory).load_trackers
       coverage = Coverage.new
 
       tracker_hits_per_path.each do |path, tracker_hits|
@@ -90,13 +90,13 @@ module DeepCover
       coverage
     end
 
-    def save_trackers(dest_path, dirname = 'deep_cover')
+    def save_trackers
       tracker_hits_per_path = covered_code_index.map do |path, covered_code|
         [path, covered_code.tracker_hits]
       end
       tracker_hits_per_path = tracker_hits_per_path.to_h
 
-      Persistence.new(dest_path, dirname).save_trackers(tracker_hits_per_path)
+      DeepCover.persistence.save_trackers(tracker_hits_per_path)
       self
     end
 

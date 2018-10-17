@@ -175,7 +175,7 @@ module DeepCover
     end
 
     def report
-      coverage = Coverage.load @dest_root.to_s
+      coverage = Coverage.load
       puts coverage.report(dir: @dest_root.to_s, **@options)
     end
 

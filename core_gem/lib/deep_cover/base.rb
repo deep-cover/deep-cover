@@ -41,8 +41,8 @@ module DeepCover
       @started = false
     end
 
-    def delete_trackers(dest_path = '.', dirname = 'deep_cover')
-      Persistence.new(dest_path, dirname).delete_trackers
+    def delete_trackers
+      persistence.delete_trackers
     end
 
     def line_coverage(filename)
@@ -105,6 +105,10 @@ module DeepCover
 
     def autoload_tracker
       @autoload_tracker ||= AutoloadTracker.new
+    end
+
+    def persistence
+      @persistence ||= Persistence.new(config.cache_directory)
     end
 
     private
