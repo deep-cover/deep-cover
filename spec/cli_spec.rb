@@ -24,6 +24,17 @@ module DeepCover
           should include '3 examples, 0 failures'
           should =~ /No HTML generated/
         end
+
+        it 'clears old trackers' do
+          cache_directory = "spec/code_fixtures/#{path}/deep_cover"
+          Dir.mkdir(cache_directory) unless File.exist?(cache_directory)
+
+          fake_tracker_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          File.write(fake_tracker_path, 'bad data!')
+          output
+
+          File.exist?(fake_tracker_path).should == false
+        end
       end
 
       describe 'for a command with options' do
