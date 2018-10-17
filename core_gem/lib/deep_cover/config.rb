@@ -3,8 +3,10 @@
 module DeepCover
   class Config
     def initialize(notify = nil)
+      @notify = nil
+      @options = {ignore_uncovered: []}
+      set(**DEFAULTS)
       @notify = notify
-      @options = DEFAULTS.dup
     end
 
     def to_hash
@@ -68,6 +70,14 @@ module DeepCover
       end
     end
 
+    def allow_partial(allow_partial = nil)
+      if allow_partial != nil
+        change(:allow_partial, allow_partial)
+      else
+        @options[:allow_partial]
+      end
+    end
+
     def reset
       DEFAULTS.each do |key, value|
         change(key, value)
@@ -78,7 +88,6 @@ module DeepCover
     def set(**options)
       @options[:ignore_uncovered] = [] if options.has_key?(:ignore_uncovered)
       options.each do |key, value|
-        next if key == :allow_partial
         public_send key, value
       end
       self
