@@ -70,6 +70,14 @@ module DeepCover
       end
     end
 
+    def cache_directory(cache_directory = nil)
+      if cache_directory
+        change(:cache_directory, File.expand_path(cache_directory))
+      else
+        @options[:cache_directory]
+      end
+    end
+
     def allow_partial(allow_partial = nil)
       if allow_partial != nil
         change(:allow_partial, allow_partial)
