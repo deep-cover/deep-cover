@@ -15,6 +15,10 @@ require './.deep_cover.rb' if File.exist?('./.deep_cover.rb')
 if ENV['DEEP_COVER_OPTIONS']
   DeepCover.config.set(YAML.load(ENV['DEEP_COVER_OPTIONS']))
 end
+
+# Any sub process should use the same config
+ENV['DEEP_COVER_OPTIONS'] = YAML.dump(DeepCover.config.to_hash)
+
 if %w[1 t true].include?(ENV['DEEP_COVER'])
   DeepCover.start
   DeepCover.delete_trackers
