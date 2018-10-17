@@ -8,7 +8,6 @@ module DeepCover
     class Runner
       include Tools::AfterTests
       def initialize
-        @saved = !(DeepCover.respond_to?(:running?) && DeepCover.running?)
       end
 
       def run!
@@ -23,10 +22,6 @@ module DeepCover
       end
 
       private
-
-      def saved?
-        @saved
-      end
 
       def save
         require_relative '../deep_cover'
