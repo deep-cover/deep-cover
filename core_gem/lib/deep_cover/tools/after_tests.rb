@@ -3,6 +3,8 @@
 module DeepCover
   module Tools
     module AfterTests
+      extend self
+
       def after_tests
         use_at_exit = true
         if defined?(::Minitest)
