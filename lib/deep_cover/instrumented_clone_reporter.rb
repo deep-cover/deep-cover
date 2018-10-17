@@ -162,6 +162,7 @@ module DeepCover
     end
 
     def process
+      DeepCover.delete_trackers
       Bundler.with_clean_env do
         system({'DISABLE_SPRING' => 'true'}, "cd #{@main_path} && #{@options[:command]}")
       end
