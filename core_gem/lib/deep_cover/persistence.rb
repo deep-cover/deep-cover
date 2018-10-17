@@ -7,8 +7,8 @@ module DeepCover
     TRACKER_TEMPLATE = 'trackers%{unique}.dct'
 
     attr_reader :dir_path
-    def initialize(dest_path, dirname = 'deep_cover')
-      @dir_path = Pathname(dest_path).join(dirname).expand_path
+    def initialize(cache_directory)
+      @dir_path = Pathname(cache_directory).expand_path
     end
 
     def save_trackers(tracker_hits_per_path)

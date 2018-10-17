@@ -25,11 +25,12 @@ module DeepCover
 
       def save
         require_relative '../deep_cover'
-        Persistence.new(@covered_path).save_trackers(DeepCover::GlobalVariables.tracker_hits_per_paths)
+        DeepCover.persistence.save_trackers(DeepCover::GlobalVariables.tracker_hits_per_paths)
       end
 
       def report(**options)
-        DeepCover.coverage.report(**options)
+        coverage = Coverage.load
+        coverage.report(**options)
       end
     end
 
