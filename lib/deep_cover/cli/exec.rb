@@ -23,7 +23,7 @@ module DeepCover
       end
 
       require 'yaml'
-      env_var = {'DEEP_COVER' => 't',
+      env_var = {'DEEP_COVER' => 'exec',
                  'DEEP_COVER_OPTIONS' => YAML.dump(processed_options.transform_keys(&:to_sym).slice(*DEFAULTS.keys)),
       }
 

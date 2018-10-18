@@ -2,5 +2,12 @@ source "https://rubygems.org"
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
+if ENV["DEEP_COVER"]
+  # Not in clone mode
+  # Because we use a relative path for the tests, we can't leave it there in clone mode as this directory
+  # gets moved around then bundler gets mad that it can't find the gem anymore.
+  gem "deep-cover-core", path: "../../../core_gem"
+end
+
 # Specify your gem's dependencies in rails_like_gem.gemspec
 gemspec

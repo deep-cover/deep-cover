@@ -45,6 +45,21 @@ module DeepCover
           should =~ /No HTML generated/
         end
       end
+
+      describe 'for a multiple component gem like rails' do
+        let(:expected_errors) { /Errors in another_component_gem/ }
+        let(:options) { '--reporter=istanbul' }
+        let(:path) { 'rails_like_gem' }
+        it do
+          should =~ Regexp.new(%w[component_gem.rb 80 100 50].join('[ |]*'))
+          cov = Process.respond_to?(:fork) ? [100, 50, 100] : [71.43, 50, 50]
+          should =~ Regexp.new(['foo.rb', *cov].join('[ |]*'))
+          should include '1 example, 0 failures'
+          should include 'another_component'
+          should include '2 examples, 1 failure'
+          should include ' another_component_gem/lib/another_component_gem '
+        end
+      end
     end
 
     describe 'The output of deep-cover clone' do
