@@ -1,4 +1,8 @@
 require "bundler/setup"
+if ENV["DEEP_COVER"]
+  # Not in clone mode
+  require "deep-cover"
+end
 require "component_gem"
 
 RSpec.configure do |config|

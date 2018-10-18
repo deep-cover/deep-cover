@@ -25,4 +25,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.15"
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rspec", "~> 3.0"
+  if ENV["DEEP_COVER"]
+    # Not in clone mode
+    spec.add_development_dependency "deep-cover-core"
+  end
 end

@@ -19,9 +19,16 @@ end
 # Any sub process should use the same config
 ENV['DEEP_COVER_OPTIONS'] = YAML.dump(DeepCover.config.to_hash)
 
-if %w[1 t true].include?(ENV['DEEP_COVER'])
+if %w[exec 1 t true].include?(ENV['DEEP_COVER'])
+  # If we spawn more processes, then we don't want them clearing the trackers or doing reports.
+  # We only want them to gather.
+  ENV['DEEP_COVER'] = 'gather'
   DeepCover.start
   DeepCover.delete_trackers
   require_relative 'deep_cover/auto_run'
   DeepCover::AutoRun.run!('.').report!(**DeepCover.config)
+elsif ENV['DEEP_COVER'] == 'gather'
+  DeepCover.start
+  require_relative 'deep_cover/auto_run'
+  DeepCover::AutoRun.run!('.')
 end
