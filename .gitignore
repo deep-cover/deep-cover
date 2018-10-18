@@ -15,6 +15,6 @@ Gemfile.lock
 # rspec failure tracking
 .rspec_status
 /Gemfile.local
-/spec/code_fixtures/covered_trivial_gem/deep_cover/
-/deep_cover
-/exe/deep_cover/
+*.dc
+*.dct
+.nyc_output/
