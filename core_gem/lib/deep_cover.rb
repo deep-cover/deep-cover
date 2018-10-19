@@ -16,7 +16,9 @@ if ENV['DEEP_COVER_OPTIONS']
   DeepCover.config.set(YAML.load(ENV['DEEP_COVER_OPTIONS']))
 end
 
-# Any sub process should use the same config
+# Any sub process should use the same config as this one
+# Just leaving DEEP_COVER_OPTIONS as is means only options passed to this process will propagate,
+# but we want, at the very least, that every sub-process use the same cache_directory.
 ENV['DEEP_COVER_OPTIONS'] = YAML.dump(DeepCover.config.to_hash)
 
 if %w[exec 1 t true].include?(ENV['DEEP_COVER'])
