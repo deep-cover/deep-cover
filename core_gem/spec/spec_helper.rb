@@ -15,6 +15,11 @@ require 'deep_cover'
 require_relative 'specs_tools'
 require_relative 'extensions'
 
+# We wouldn't want some test passing / failing because of trackers from previous tests...
+Dir[File.expand_path(__dir__ + '/../../**/*.dct')].each do |old_tracker_file|
+  File.delete(old_tracker_file)
+end
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'
