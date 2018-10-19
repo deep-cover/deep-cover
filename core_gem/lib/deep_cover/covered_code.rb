@@ -104,7 +104,7 @@ module DeepCover
       return unless global_trackers
 
       if global_trackers.size != @nb_allocated_trackers
-        raise "Cannot sync, global[index] is of size #{global_trackers.size} instead of expected #{@nb_allocated_trackers}"
+        raise "Cannot sync path: #{path.inspect}, global[#{@index}] is of size #{global_trackers.size} instead of expected #{@nb_allocated_trackers}"
       end
 
       @tracker_hits = global_trackers
