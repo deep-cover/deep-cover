@@ -141,6 +141,12 @@ module DeepCover
       patch_main_ruby_files
     end
 
+    def remove_deep_cover_config
+      path = @dest_root.join('.deep_cover.rb')
+      return unless path.exist?
+      File.delete(path)
+    end
+
     def cover
       coverage = Coverage.new
       each_dir_to_cover do |to_cover|
@@ -155,7 +161,7 @@ module DeepCover
       DeepCover.delete_trackers
       require 'bundler'
       Bundler.with_clean_env do
-        system({'DISABLE_SPRING' => 'true'}, "cd #{@main_path} && #{@options[:command]}")
+        system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, "cd #{@main_path} && #{@options[:command]}")
       end
     end
 
@@ -184,6 +190,7 @@ module DeepCover
         copy
         cover
         patch
+        remove_deep_cover_config
         bundle if @options[:bundle]
         process
         restore
