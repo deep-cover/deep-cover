@@ -20,7 +20,7 @@ module DeepCover
       basename = format(TRACKER_TEMPLATE, unique: SecureRandom.urlsafe_base64)
 
       dir_path.join(basename).binwrite(Marshal.dump(
-                                           version: DeepCover::VERSION,
+                                           version: VERSION,
                                            tracker_hits_per_path: tracker_hits_per_path,
       ))
     end
@@ -29,7 +29,7 @@ module DeepCover
     def load_trackers
       tracker_hits_per_path_hashes = tracker_files.map do |full_path|
         Marshal.load(full_path.binread).yield_self do |version:, tracker_hits_per_path:| # rubocop:disable Security/MarshalLoad
-          raise "dump version mismatch: #{version}, currently #{DeepCover::VERSION}" unless version == DeepCover::VERSION
+          raise "dump version mismatch: #{version}, currently #{VERSION}" unless version == VERSION
           tracker_hits_per_path
         end
       end
