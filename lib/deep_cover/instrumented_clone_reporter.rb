@@ -46,7 +46,7 @@ module DeepCover
       content = ruby_file.read
       # Insert our code after leading comments:
       content.sub!(/\A(#.*\n|\s+)*/) do |header|
-        path_to_clone_entry = DeepCover::CORE_GEM_ROOT_DIRECTORY + '/lib/deep_cover/setup/clone_mode_entry'
+        path_to_clone_entry = DeepCover::CORE_GEM_LIB_DIRECTORY + '/deep_cover/setup/clone_mode_entry'
         cache_directory = DeepCover.config.cache_directory.to_s
         tracker_global = DeepCover.config.tracker_global
         statements = ["require #{path_to_clone_entry.inspect}",

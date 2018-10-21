@@ -31,5 +31,5 @@ module DeepCover
   REQUIRABLE_EXTENSIONS.freeze
   REQUIRABLE_EXTENSION_KEYS = REQUIRABLE_EXTENSIONS.keys.freeze
 
-  CORE_GEM_ROOT_DIRECTORY = File.expand_path(__dir__ + '/../..')
+  CORE_GEM_LIB_DIRECTORY = File.expand_path(__dir__ + '/..')
 end
