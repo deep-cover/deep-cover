@@ -45,7 +45,7 @@ end
 namespace :dev do
   desc 'Self cover'
   task :cov do
-    command = "exe/deep-cover . --no-bundle --command 'rake spec:all'"
+    command = "exe/deep-cover clone --no-bundle --command 'rake spec:all'"
     puts command
     system command
   end

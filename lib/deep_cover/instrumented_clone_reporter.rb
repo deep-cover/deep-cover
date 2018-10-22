@@ -42,18 +42,11 @@ module DeepCover
       @copied = true
     end
 
-    def patch_ruby_file(ruby_file)
+    def patch_ruby_file(ruby_file, entry_point_path)
       content = ruby_file.read
       # Insert our code after leading comments:
       content.sub!(/\A(#.*\n|\s+)*/) do |header|
-        path_to_clone_entry = DeepCover::CORE_GEM_LIB_DIRECTORY + '/deep_cover/setup/clone_mode_entry'
-        cache_directory = DeepCover.config.cache_directory.to_s
-        tracker_global = DeepCover.config.tracker_global
-        statements = ["require #{path_to_clone_entry.inspect}",
-                      "DeepCover::CloneModeEntry.setup #{tracker_global.inspect}, #{cache_directory.inspect}",
-                      '',
-                      ]
-        "#{header}#{statements.join(';')}"
+        "#{header}require #{entry_point_path.inspect};"
       end
       ruby_file.write(content)
     end
@@ -119,11 +112,34 @@ module DeepCover
       end
     end
 
+    def create_entry_point_file
+      require 'tempfile'
+      file = Tempfile.new(['deep_cover_entry_point', '.rb'])
+      template = File.read(DeepCover::CORE_GEM_LIB_DIRECTORY + '/deep_cover/setup/clone_mode_entry_template.rb')
+
+      cache_directory = DeepCover.config.cache_directory.to_s
+      tracker_global = DeepCover.config.tracker_global
+
+      # Those are the fake global variables that we actually replace as we copy the template over
+      template.gsub!('$_cache_directory', cache_directory.inspect)
+      template.gsub!('$_global_name', tracker_global.inspect)
+      template.gsub!('$_core_gem_lib_directory', DeepCover::CORE_GEM_LIB_DIRECTORY.inspect)
+
+      file.write(template)
+      file.close
+
+      # We dont want the file to be removed, this way it stays as long as the clones directory does.
+      ObjectSpace.undefine_finalizer(file)
+
+      file.path
+    end
+
     # Back to global functionality
     def patch_main_ruby_files
+      entry_point_path = create_entry_point_file
       each_main_ruby_files do |main|
         puts "Patching #{main}"
-        patch_ruby_file(main)
+        patch_ruby_file(main, entry_point_path)
       end
     end
 
