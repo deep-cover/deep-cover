@@ -22,7 +22,7 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
       create_directory_if_needed
       basename = format(TRACKER_TEMPLATE, unique: SecureRandom.urlsafe_base64)
 
-      dir_path.join(basename).binwrite(Marshal.dump(
+      dir_path.join(basename).binwrite(JSON.dump(
                                            version: VERSION,
                                            tracker_hits_per_path: tracker_hits_per_path,
       ))
@@ -31,7 +31,7 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
     # returns a TrackerHitsPerPath
     def load_trackers
       tracker_hits_per_path_hashes = tracker_files.map do |full_path|
-        Marshal.load(full_path.binread).yield_self do |version:, tracker_hits_per_path:| # rubocop:disable Security/MarshalLoad
+        JSON.parse(full_path.binread).transform_keys(&:to_sym).yield_self do |version:, tracker_hits_per_path:|
           raise "dump version mismatch: #{version}, currently #{VERSION}" unless version == VERSION
           tracker_hits_per_path
         end

@@ -49,6 +49,8 @@ load $_core_gem_lib_directory + '/deep_cover/tools/after_tests.rb'
 
 Thread.current['_deep_cover_top_level_module'] = nil
 
+Object.autoload :JSON, 'json'
+
 # This is really just to make debugging less of a pain, it gives a way to the code to access the anonymous top-level module
 module DeepCover
   CLONE_MODE_ENTRY_TOP_LEVEL_MODULES ||= []
