@@ -62,6 +62,31 @@ module DeepCover
       end
     end
 
+    describe 'deep-cover gather' do
+      let(:options) { '' }
+      let(:command) { "cd spec/code_fixtures/#{path} && ../../../exe/deep-cover gather #{options} rake" }
+      subject { output }
+      describe 'for a simple gem' do
+        let(:path) { 'covered_trivial_gem' }
+
+        it 'keeps old trackers' do
+          fake_tracker_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          File.write(fake_tracker_path, 'bad data!')
+          output
+
+          File.exist?(fake_tracker_path).should == true
+        end
+
+        it 'add a trackers file' do
+          pre_tracker_files = Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"]
+          output
+          post_tracker_files = Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"]
+
+          post_tracker_files.size.should == pre_tracker_files.size + 1
+        end
+      end
+    end
+
     describe 'The output of deep-cover clone' do
       let(:options) { '' }
       let(:extra_args) { '' }
