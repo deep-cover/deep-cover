@@ -87,6 +87,54 @@ module DeepCover
       end
     end
 
+    describe 'deep-cover merge' do
+      let(:options) { '' }
+      let(:command) { "cd spec/code_fixtures/#{path} && ../../../exe/deep-cover merge #{options}" }
+      subject { output }
+
+      before(:each) do
+        # clear trackers
+        Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"].each { |path| File.delete(path) }
+      end
+
+      describe 'for a simple gem' do
+        let(:path) { 'covered_trivial_gem' }
+
+        it 'does nothing if there are no trackers to merge' do
+          output
+          post_tracker_files = Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"]
+          post_tracker_files.size.should == 0
+        end
+
+        it 'it merges every tracker files into one' do
+          trackers1_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          File.write(trackers1_path, Marshal.dump(version: DeepCover::VERSION,
+                                                  tracker_hits_per_path: {'hello1' => [1, 2, 3],
+                                                                          'hello2' => [4, 5, 6],
+                                                                         }))
+
+          trackers2_path = "spec/code_fixtures/#{path}/deep_cover/trackers456.dct"
+          File.write(trackers2_path, Marshal.dump(version: DeepCover::VERSION,
+                                                  tracker_hits_per_path: {'hello1' => [2, 2, 2],
+                                                                          'hello3' => [7, 8, 9],
+                                                                         }))
+
+          output
+
+          File.exist?(trackers1_path).should == false
+          File.exist?(trackers2_path).should == false
+          Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"].size.should == 1
+          result = Marshal.load(File.read(Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"].first)) # rubocop:disable Security/MarshalLoad
+          result.should == {version: DeepCover::VERSION,
+                            tracker_hits_per_path: {'hello1' => [3, 4, 5],
+                                                    'hello2' => [4, 5, 6],
+                                                    'hello3' => [7, 8, 9],
+                                                   },
+                           }
+        end
+      end
+    end
+
     describe 'The output of deep-cover clone' do
       let(:options) { '' }
       let(:extra_args) { '' }

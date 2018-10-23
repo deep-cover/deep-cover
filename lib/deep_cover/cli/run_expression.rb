@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../cli'
-
 module DeepCover
   class CLI
     desc 'run-expression [OPTIONS] expression_to_debug', 'Show coverage results for the given expression'
