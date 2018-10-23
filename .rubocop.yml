@@ -191,6 +191,7 @@ Lint/Void:
   Enabled: true
   Exclude:
     - core_gem/spec/**/*
+    - spec/**/*
 
 Style/ClassVars:
   Enabled: false
