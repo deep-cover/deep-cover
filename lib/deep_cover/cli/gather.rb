@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../cli'
-
 module DeepCover
   class CLI
     # Stop parsing and treat everything as positional argument if

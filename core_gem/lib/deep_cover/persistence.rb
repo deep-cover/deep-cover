@@ -40,6 +40,13 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
       self.class.merge_tracker_hits_per_paths(*tracker_hits_per_path_hashes)
     end
 
+    def merge_persisted_trackers
+      tracker_hits_per_path = load_trackers
+      return if tracker_hits_per_path.empty?
+      tracker_files_before = tracker_files
+      save_trackers(tracker_hits_per_path)
+      tracker_files_before.each(&:delete)
+    end
 
     def delete_trackers
       tracker_files.each(&:delete)
