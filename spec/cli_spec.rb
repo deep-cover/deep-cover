@@ -156,6 +156,44 @@ module DeepCover
       end
     end
 
+    describe 'deep-cover clear' do
+      let(:options) { '' }
+      let(:command) { "cd spec/code_fixtures/#{path} && ../../../exe/deep-cover clear #{options}" }
+      subject { output }
+
+      before(:each) do
+        cache_directory = "spec/code_fixtures/#{path}/deep_cover"
+        Dir.mkdir(cache_directory) unless File.exist?(cache_directory)
+        Dir["#{cache_directory}/*"].each { |path| File.delete(path) }
+      end
+
+      describe 'for a simple gem' do
+        let(:path) { 'covered_trivial_gem' }
+
+        it 'removes trackers if directory becomes empty' do
+          tracker_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          File.write(tracker_path, 'trackers')
+
+          output
+
+          File.exist?(tracker_path).should == false
+          File.exist?(File.dirname(tracker_path)).should == false
+        end
+
+        it 'removes trackers but keep directory and other content' do
+          tracker_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          File.write(tracker_path, 'trackers')
+          other_path = "spec/code_fixtures/#{path}/deep_cover/something.else"
+          File.write(other_path, 'else')
+
+          output
+
+          File.exist?(tracker_path).should == false
+          File.exist?(other_path).should == true
+        end
+      end
+    end
+
     describe 'The output of deep-cover clone' do
       let(:options) { '' }
       let(:extra_args) { '' }
