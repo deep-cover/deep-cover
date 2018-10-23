@@ -47,7 +47,7 @@ module DeepCover
           ignored << option if new_options.delete(cli_option)
         end
 
-        @processed_options = new_options
+        @processed_options = new_options.transform_keys(&:to_sym)
       end
     end
   end
