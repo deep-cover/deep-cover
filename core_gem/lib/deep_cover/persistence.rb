@@ -52,6 +52,14 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
       tracker_files.each(&:delete)
     end
 
+    def clear_directory
+      delete_trackers
+      begin
+        dir_path.rmdir
+      rescue SystemCallError # rubocop:disable Lint/HandleExceptions
+      end
+    end
+
     def self.merge_tracker_hits_per_paths(*tracker_hits_per_path_hashes)
       return {} if tracker_hits_per_path_hashes.empty?
 
