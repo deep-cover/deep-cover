@@ -15,7 +15,7 @@ module DeepCover
 
     def clone(path = '.')
       require_relative '../../instrumented_clone_reporter'
-      InstrumentedCloneReporter.new(path, **processed_options.transform_keys(&:to_sym)).run
+      InstrumentedCloneReporter.new(path, **processed_options).run
     end
   end
 end
