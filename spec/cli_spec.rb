@@ -240,8 +240,10 @@ module DeepCover
       end
     end
 
-    it 'Can run `exe/deep-cover --version`' do
-      'exe/deep-cover --version'.should run_successfully
+    ['exe/deep-cover --version', 'exe/deep-cover', 'exe/deep-cover help'].each do |command|
+      it "Can run `#{command}`" do
+        command.should run_successfully
+      end
     end
   end
 end
