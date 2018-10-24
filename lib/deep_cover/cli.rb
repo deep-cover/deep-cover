@@ -8,6 +8,8 @@ module DeepCover
   bootstrap
 
   class CLI < Thor
+    require_relative 'cli/tools'
+
     # Just fail when you get an unknown option
     check_unknown_options!
 
