@@ -13,12 +13,12 @@ module DeepCover
       end
       list.sort! { |a, b| a[0] <=> b[0] }
 
-      main_commands, list = extract_commands_for_help(list, :exec, :clone)
+      main_commands, list = Tools.extract_commands_for_help(list, :exec, :clone)
 
       shell.say 'Main commands:'
       shell.print_table(main_commands, indent: 2, truncate: true)
 
-      lower_level_commands, list = extract_commands_for_help(list, :gather, :report, :clear, :merge)
+      lower_level_commands, list = Tools.extract_commands_for_help(list, :gather, :report, :clear, :merge)
       shell.say
       shell.say 'Lower-level commands:'
       shell.print_table(lower_level_commands, indent: 2, truncate: true)
@@ -29,16 +29,6 @@ module DeepCover
 
       shell.say
       class_options_help(shell)
-    end
-
-    # Extracts the commands for the help by name, in same order as the names.
-    # Returns the matching and the remaining commands.
-    def self.extract_commands_for_help(commands, *names)
-      matching = names.map do |name|
-        commands.detect { |usage, desc| usage.start_with?("deep-cover #{name}") }
-      end
-      remains = commands - matching
-      [matching, remains]
     end
   end
 end
