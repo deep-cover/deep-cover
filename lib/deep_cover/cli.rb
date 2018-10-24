@@ -19,6 +19,8 @@ module DeepCover
     # Every top-level commands are defined in a different file, which add their method to this class
     DeepCover.require_relative_dir 'cli/commands'
 
+    default_command :short_help
+
     # Adding all of the ignore-something class options
     OPTIONALLY_COVERED_MAP = OPTIONALLY_COVERED.map do |optional|
       [:"ignore_#{optional}", optional]
