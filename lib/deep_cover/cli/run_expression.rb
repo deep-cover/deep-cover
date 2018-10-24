@@ -2,7 +2,7 @@
 
 module DeepCover
   class CLI
-    desc 'run-expression [OPTIONS] expression_to_debug', 'Show coverage results for the given expression'
+    desc "run-expression [OPTIONS] 'ruby code'", 'Show coverage results for the given ruby expression'
     option '--profile', desc: 'use profiler', type: :boolean if RUBY_PLATFORM != 'java'
     option '--debug', aliases: '-d', desc: 'opens an interactive console for debugging', type: :boolean
     def run_expression(expression)
