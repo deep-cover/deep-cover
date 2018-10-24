@@ -10,7 +10,7 @@ module DeepCover
     include Enumerable
 
     def initialize
-      @covered_code_index = {}
+      @covered_code_per_path = {}
     end
 
     def covered_codes
@@ -22,13 +22,13 @@ module DeepCover
     end
 
     def covered_code?(path)
-      @covered_code_index.include?(path)
+      @covered_code_per_path.include?(path)
     end
 
     def covered_code(path, **options)
       raise 'path must be an absolute path' unless Pathname.new(path).absolute?
-      @covered_code_index[path] ||= CoveredCode.new(path: path,
-                                                    **options)
+      @covered_code_per_path[path] ||= CoveredCode.new(path: path,
+                                                       **options)
     end
 
     def covered_code_or_warn(path, **options)
@@ -45,7 +45,7 @@ module DeepCover
 
     def each
       return to_enum unless block_given?
-      @covered_code_index.each_key do |path|
+      @covered_code_per_path.each_key do |path|
         begin
           cov_code = covered_code(path)
         rescue Parser::SyntaxError
@@ -91,7 +91,7 @@ module DeepCover
     end
 
     def save_trackers
-      tracker_hits_per_path = covered_code_index.map do |path, covered_code|
+      tracker_hits_per_path = @covered_code_per_path.map do |path, covered_code|
         [path, covered_code.tracker_hits]
       end
       tracker_hits_per_path = tracker_hits_per_path.to_h
