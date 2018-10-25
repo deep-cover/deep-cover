@@ -89,7 +89,7 @@ module DeepCover
           return yield(:not_found) unless found_path
 
           @paths_being_required.add(found_path)
-          return yield(:not_in_covered_paths) unless DeepCover.within_lookup_paths?(found_path)
+          return yield(:not_in_covered_paths) unless DeepCover.tracked_file_path?(found_path)
           return yield(:not_supported) if REQUIRABLE_EXTENSIONS[File.extname(found_path)] == :native_extension
           return yield(:skipped) if filter && filter.call(found_path)
 
@@ -120,7 +120,7 @@ module DeepCover
       end
 
       return yield(:not_found) unless found_path
-      return yield(:not_in_covered_paths) unless DeepCover.within_lookup_paths?(found_path)
+      return yield(:not_in_covered_paths) unless DeepCover.tracked_file_path?(found_path)
 
       cover_and_execute(found_path) { |reason| return yield(reason) }
 

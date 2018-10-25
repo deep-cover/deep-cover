@@ -17,7 +17,7 @@ module DeepCover
 
     def self.load_iseq_logic(path)
       return unless DeepCover.running?
-      return unless DeepCover.within_lookup_paths?(path)
+      return unless DeepCover.tracked_file_path?(path)
 
       covered_code = DeepCover.coverage.covered_code_or_warn(path)
       return unless covered_code

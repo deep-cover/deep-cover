@@ -5,7 +5,9 @@ require_relative 'spec_helper'
 module DeepCover
   SO = RbConfig::CONFIG['DLEXT'] # so | bundle | jar | ...
   RSpec.describe CustomRequirer do
-    let(:lookup_paths) { ['/'] }
+    # We specify the glob, because otherwise the generated glob will only match .rb files (/**/*.rb), while we want
+    # to also match extensions for the purpose of the tests
+    let(:lookup_globs) { ['/**/*'] }
     let(:requirer) { CustomRequirer.new(load_paths: [], loaded_features: []) }
     before(:each) { $last_test_tree_file_executed = nil }
     around(:each) do |ex|
@@ -23,9 +25,9 @@ module DeepCover
     end
 
     before(:each) do
-      lp = lookup_paths
+      lg = lookup_globs
       DeepCover.configure do
-        paths(lp)
+        paths(lg)
       end
     end
 
@@ -313,7 +315,7 @@ module DeepCover
       end
 
       describe 'when given a lookup root' do
-        let(:lookup_paths) { ["#{root}/other", "#{root}/one/root"] }
+        let(:lookup_globs) { ["#{root}/other", "#{root}/one/root"] }
         let(:calls) { [] }
         before do
           file_tree %w(pwd:one/root/
