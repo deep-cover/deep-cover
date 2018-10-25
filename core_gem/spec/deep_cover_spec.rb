@@ -26,13 +26,18 @@ RSpec.describe DeepCover do
       end
     end
 
-    it "doesn't choke on libs with encoding snafus" do
+    it "doesn't choke on a file with encoding snafus" do
+      $bad_encoding_test = nil
       DeepCover.cover paths: '/' do
         expect do
-          require('rexml/source').should == true
-        end.to output(%r[Can't cover .*rexml/source.rb because of incompatible encoding]).to_stderr
+          Tempfile.open(['bad_encoding_test', '.rb']) do |f|
+            f.write('a_string = "\\xE9"; $bad_encoding_test = :success')
+            f.close
+            require(f.path).should == true
+          end
+        end.to output(/Can't cover .*bad_encoding_test.*\.rb because of incompatible encoding/).to_stderr
       end
-      REXML::SourceFactory.should be_instance_of(Class)
+      $bad_encoding_test.should == :success
     end
   end
 end
