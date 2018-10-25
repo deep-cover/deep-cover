@@ -27,7 +27,7 @@ module DeepCover
       end
 
       config # actualize configuration
-      @lookup_paths = nil
+      @lookup_globs = nil
       @started = true
     end
 
@@ -69,7 +69,7 @@ module DeepCover
       case what
       when :paths
         warn "Changing DeepCover's paths after starting coverage is highly discouraged" if running?
-        @lookup_paths = nil
+        @lookup_globs = nil
       when :tracker_global
         raise NotImplementedError, "Changing DeepCover's tracker global after starting coverage is not supported" if running?
         @coverage = nil
@@ -78,7 +78,7 @@ module DeepCover
 
     def reset
       stop if running?
-      @coverage = @custom_requirer = @autoload_tracker = @lookup_paths = nil
+      @coverage = @custom_requirer = @autoload_tracker = @lookup_globs = nil
       config.reset
       self
     end
@@ -87,16 +87,28 @@ module DeepCover
       @coverage ||= Coverage.new
     end
 
-    def lookup_paths
-      return @lookup_paths if @lookup_paths
-      lookup_paths = config.paths || Dir.getwd
-      lookup_paths = Array(lookup_paths).map { |p| File.expand_path(p) }
-      lookup_paths = ['/'] if lookup_paths.include?('/')
-      @lookup_paths = lookup_paths
+    def lookup_globs
+      return @lookup_globs if @lookup_globs
+      paths = config.paths || Dir.getwd
+      paths = Array(paths).map { |p| File.expand_path(p) }
+      paths = ['/'] if paths.include?('/')
+      globs = paths.map! do |path|
+        if File.directory?(path)
+          # File.join is needed to avoid //**/*.rb
+          File.join(path, '**/*.rb')
+        else
+          # Either a single file's path, a glob, or a path that doesn't exists
+          path
+        end
+      end
+      @lookup_globs = globs
     end
 
-    def within_lookup_paths?(path)
-      lookup_paths.any? { |lookup_path| path.start_with?(lookup_path) }
+    def tracked_file_path?(path)
+      # The flags are to make fnmatch match the same things as Dir.glob... This doesn't seem to be documented anywhere
+      # EXTGLOB: allow matching {lib,app} as either lib or app
+      # PATHNAME: Makes wildcard match not match /, and make /**/ (and pattern starting with **/) be any number of nested directory
+      lookup_globs.any? { |glob| File.fnmatch?(glob, path, File::FNM_EXTGLOB | File::FNM_PATHNAME) }
     end
 
     def custom_requirer
