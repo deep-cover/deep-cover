@@ -25,7 +25,7 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
   def self.save
     return if saved?
 
-    Persistence.new($_cache_directory).save_trackers(GlobalVariables.tracker_hits_per_paths($_global_name))
+    Persistence.new($_cache_directory).save_trackers(GlobalVariables.tracker_hits_per_path($_global_name))
     @saved = true
   end
 

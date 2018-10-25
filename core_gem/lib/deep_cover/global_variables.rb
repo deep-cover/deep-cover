@@ -21,12 +21,12 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
       @path_per_index[global_name] ||= eval("#{global_name}_p ||= {}") # rubocop:disable Security/Eval
     end
 
-    def self.tracker_hits_per_paths(global_name = nil)
+    def self.tracker_hits_per_path(global_name = nil)
       cur_trackers = self.trackers(global_name)
-      tracker_hits_per_paths = path_per_index(global_name).map do |index, path|
+      hits_per_path = path_per_index(global_name).map do |index, path|
         [path, cur_trackers[index]]
       end
-      tracker_hits_per_paths.to_h
+      hits_per_path.to_h
     end
   end
 end

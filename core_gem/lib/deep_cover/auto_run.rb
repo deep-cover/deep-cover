@@ -27,7 +27,7 @@ module DeepCover
       def save
         return if @saved
         require_relative '../deep_cover'
-        DeepCover.persistence.save_trackers(DeepCover::GlobalVariables.tracker_hits_per_paths)
+        DeepCover.persistence.save_trackers(DeepCover::GlobalVariables.tracker_hits_per_path)
         @saved = true
       end
 
