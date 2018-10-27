@@ -58,8 +58,6 @@ begin
       # This tests what happens inside of the gems of a project being run
       DeepCover.configure { paths './uncovered' }
       expected_covered_files = []
-    else
-      DeepCover.configure { paths '.' }
     end
   end
 

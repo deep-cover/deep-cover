@@ -89,8 +89,10 @@ module DeepCover
 
     def lookup_globs
       return @lookup_globs if @lookup_globs
-      paths = config.paths || Dir.getwd
-      paths = Array(paths).map { |p| File.expand_path(p) }
+      paths = Array(config.paths || :auto_detect).dup
+      paths.concat(auto_detected_paths) if paths.delete(:auto_detect)
+
+      paths = paths.map { |p| File.expand_path(p) }
       paths = ['/'] if paths.include?('/')
       globs = paths.map! do |path|
         if File.directory?(path)
@@ -102,6 +104,47 @@ module DeepCover
         end
       end
       @lookup_globs = globs
+    end
+
+    # Auto detects path that we want to cover. This is used when :auto_detect is in the config.paths.
+    # If the results aren't what you expect, then specify the paths yourself.
+    # We want this to work for most project's struture:
+    # * Single gems: just a gem directly in the top-level
+    # * Multi gems: contains multiple gems, each in a dir of the top-level dir (the rails gem does that)
+    # * Hybrid gems: a gem in the top-level dir and one in sub-dirs (the deep-cover gem does that)
+    # * Rails application
+    #
+    # For gems and Rails application, normally, everything to check coverage for is in lib/, and app/.
+    # For other projects, we go for every directories except test/ spec/ bin/ exe/.
+    #
+    # If the current dir has a .gemspec file, we consider it a "root".
+    # In addition, if any sub-dir of the current dir (not recursive) has a .gemspec file, we also consider them as "roots"
+    # If the current dir looks like a Rails application, add it as a "root"
+    # For each "roots", the "tracked dirs" will be "#{root}/app" and "#{root}/lib"
+    #
+    # If no "tracked dirs" exist, fallback to everything in current directory except each of test/ spec/ bin/ exe/.
+    def auto_detected_paths
+      require_relative 'tools/looks_like_rails_project'
+
+      gemspec_paths = Dir['./*.gemspec'] + Dir['./*/*.gemspec']
+      root_paths = gemspec_paths.map!(&File.method(:dirname))
+      root_paths.uniq!
+      root_paths << '.' if !root_paths.include?('.') && Tools::LooksLikeRailsProject.looks_like_rails_project?('.')
+
+      tracked_paths = root_paths.flat_map { |p| [File.join(p, 'app'), File.join(p, 'lib')] }
+      tracked_paths.select! { |p| File.exist?(p) }
+
+      if tracked_paths.empty?
+        # So track every sub-dirs except a couple
+        # The final '/' in Dir[] makes it return directories only, but they will also end with a '/'
+        # So need to include that last '/' in the substracted paths.
+        # TODO: We probably want a cleaner way of filtering out some directories. But for now, that's what we got.
+        tracked_paths = Dir['./*/'] - %w(./autotest/ ./features/ ./spec/ ./test/ ./bin/ ./exe/)
+        # And track every ruby files in the top-level
+        tracked_paths << './*.rb'
+      end
+      tracked_paths
+      # path expansion is done in #lookup_globs
     end
 
     def tracked_file_path?(path)
