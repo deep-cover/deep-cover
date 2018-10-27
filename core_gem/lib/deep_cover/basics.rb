@@ -4,7 +4,7 @@
 module DeepCover
   DEFAULTS = {
                ignore_uncovered: [].freeze,
-               paths: %w[./app ./lib].freeze,
+               paths: [:auto_detect].freeze,
                allow_partial: false,
                tracker_global: '$_cov',
                reporter: :html,
