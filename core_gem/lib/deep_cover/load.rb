@@ -35,7 +35,7 @@ module DeepCover
     def load_parser
       @parser_loaded ||= false # Avoid warning
       return if @parser_loaded
-      silence_warnings do
+      Tools.silence_warnings do
         require 'parser'
         require 'parser/current'
       end
@@ -44,8 +44,8 @@ module DeepCover
     end
 
     def load_pry
-      silence_warnings do # Avoid "WARN: Unresolved specs during Gem::Specification.reset"
-        require 'pry'     # after `pry` calls `Gem.refresh`
+      Tools.silence_warnings do # Avoid "WARN: Unresolved specs during Gem::Specification.reset"
+        require 'pry'           # after `pry` calls `Gem.refresh`
       end
     end
 

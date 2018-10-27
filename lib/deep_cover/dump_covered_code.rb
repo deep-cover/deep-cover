@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DeepCover
-  silence_warnings do
+  Tools.silence_warnings do
     require 'with_progress'
   end
   module Tools::DumpCoveredCode

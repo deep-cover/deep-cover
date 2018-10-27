@@ -67,7 +67,7 @@
 #### Unscoped no raise
 
     SpecConstantsSampleUnscopedIncrement = 42
-    DeepCover.silence_warnings do
+    DeepCover::Tools.silence_warnings do
       SpecConstantsSampleUnscopedIncrement += 42
     end
 
