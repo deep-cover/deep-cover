@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This file is called from `require 'deep-cover'`
+# This file is called from `require 'deep-cover'` and from the CLI
 #
 # This setups the DeepCover environment code-wise.
 

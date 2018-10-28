@@ -4,7 +4,10 @@
 require 'thor'
 
 module DeepCover
-  require 'deep-cover' # This deep-cover requiring deep-cover-core, so this can't use `#require_relative`
+  # can't use `#require_relative`: This is gem deep-cover requiring from gem deep-cover-core
+  # We don't want the config to be loaded right now, because we may move the current_work_dir somewhere else.
+  require 'deep_cover/setup/deep_cover_without_config'
+
   bootstrap
 
   class CLI < Thor
@@ -30,6 +33,8 @@ module DeepCover
       class_option cli_option, type: :boolean, default: default
     end
 
+    class_option :change_directory, desc: 'Runs as if deep-cover was started in <path>', type: :string, aliases: '-C', default: '.'
+
     # exit_code should be non-zero when the parsing fails
     def self.exit_on_failure?
       true
@@ -52,6 +57,28 @@ module DeepCover
         end
 
         @processed_options = new_options.transform_keys(&:to_sym)
+      end
+
+      # Before we actually execute any of the commands, we want to change directory if that option was given.
+      # And then we want to setup the configuration
+      def invoke_command(*args)
+        if options[:change_directory] != '.'
+          root_path = File.expand_path(options[:change_directory])
+          unless File.exist?(root_path)
+            warn set_color(DeepCover::Tools.strip_heredoc(<<-MSG), :red)
+              bad value for option --change_directory: #{root_path.inspect} is not a valid directory
+            MSG
+            exit(1)
+          end
+          Dir.chdir(root_path)
+          # TODO: We need way to turn on DEBUG
+          # warn "(in #{root_path})"
+        end
+
+        # We need to wait until now to setup the configuration, because it will store absolute paths
+        # in ENV['DEEP_COVER_OPTIONS'], so we must wait until the change_directory was applied.
+        require 'deep_cover/setup/deep_cover_config'
+        super
       end
     end
   end
