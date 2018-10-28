@@ -1,16 +1,21 @@
 # frozen_string_literal: true
 
-# This is a template for the setup code used by the clone mode.
-# Clone mode will copy this file and gsub some "global variables" with their value.
+# This file is used by `deep-cover clone`.
+#
+# This is a template for the setup code that clone mode makes the cloned code execute.
+# We don't actually load deep-cover at all. We do need to little parts of it in a non name-clashing way,
+# so this file takes care of this.
+#
+# Clone mode will copy this file and gsub some "global variables" with their actual values.
 # The the fake global variables are: $_cache_directory, $_core_gem_lib_directory, $_global_name
 # This template is important because with the anonymous top-level module, it becomes problematic
 # to call the content of this file from the place that required it. Doing it with a template means
 # that it is not necessary to do anything beyond requiring the file. It feels cleaner than the
 # alternatives I thought of.
-
+#
 # It is important to avoid using any of deep-cover's dependencies (from other gems), because they may not be in
 # the Gemfile of the project being cloned, and so will not be found.
-
+#
 # In order to avoid any possible name clashing with a DeepCover that would be used in the program
 # being covered with clone mode, we create a unique top-level module under which we nest everything
 # that we need. (The main use-case for this is when doing coverage of DeepCover itself)
