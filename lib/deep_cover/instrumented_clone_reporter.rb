@@ -28,7 +28,6 @@ module DeepCover
 
       gem_relative_path = @source_path.relative_path_from(@root_path)
       @main_path = @dest_root.join(gem_relative_path)
-      singleton_class.include self.class.const_get(Tools.camelize(style))
     end
 
     def clear
@@ -40,67 +39,6 @@ module DeepCover
       puts 'Cloning...'
       FileUtils.cp_r(Dir.glob("#{@root_path}/#{GLOB_ALL_CONTENT}"), @dest_root)
       @copied = true
-    end
-
-    def style
-      if @source_path.join('config/environments/test.rb').exist?
-        :rails
-      elsif @source_path.join('core_gem').exist?
-        :self_coverage
-      elsif @source_path.join('lib').exist?
-        :single_gem
-      else # Rails style
-        :gem_collection
-      end
-    end
-
-    # Style specific functionality
-    module Gem
-      def each_main_ruby_files(&block)
-        each_gem_path do |dest_path|
-          main = dest_path.join('lib/*.rb')
-          Pathname.glob(main).select(&:file?).each(&block)
-        end
-      end
-
-      def each_dir_to_cover
-        each_gem_path do |dest_path|
-          yield dest_path.join('lib')
-        end
-      end
-    end
-
-    module SingleGem
-      include Gem
-      def each_gem_path
-        yield @main_path
-      end
-    end
-
-    module SelfCoverage
-      include Gem
-      def each_gem_path
-        yield @main_path
-        yield @main_path.join('core_gem')
-      end
-    end
-
-    module GemCollection
-      include Gem
-      def each_gem_path
-        Pathname.glob(@main_path.join('*/lib')).each { |p| yield p.dirname }
-      end
-    end
-
-    module Rails
-      def each_main_ruby_files
-        yield @main_path.join('config/environments/test.rb')
-      end
-
-      def each_dir_to_cover
-        yield @main_path.join('app')
-        yield @main_path.join('lib')
-      end
     end
 
     def create_entry_point_file
