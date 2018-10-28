@@ -147,8 +147,18 @@ module DeepCover
       path = @dest_root.join('.rubocop.yml')
       return unless path.exist?
       puts 'Patching .rubocop.yml'
-      config = YAML.load(path.read.gsub(/(?<!\w)lib(?!\w)/, 'lib_original'))
-      ((config['AllCops'] ||= {})['Exclude'] ||= []) << 'lib/**/*' << 'app/**/*'
+      config = YAML.load(path.read)
+      all_cop_excludes = ((config['AllCops'] ||= {})['Exclude'] ||= [])
+
+      # Ensure they end with a '/'
+      original_root = File.join(File.expand_path(@root_path), '')
+      clone_root = File.join(File.expand_path(@dest_root), '')
+
+      paths_to_ignore = DeepCover.all_tracked_file_paths
+      paths_to_ignore.select! { |p| p.start_with?(original_root) }
+      paths_to_ignore.map! { |p| p.sub(original_root, clone_root) }
+
+      all_cop_excludes.concat(paths_to_ignore)
       path.write("# This file was modified by DeepCover\n" + YAML.dump(config))
     end
 
