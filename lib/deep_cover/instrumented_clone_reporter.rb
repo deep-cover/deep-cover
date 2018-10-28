@@ -174,10 +174,6 @@ module DeepCover
     end
 
     def cover
-      each_dir_to_cover do |to_cover|
-        FileUtils.cp_r(to_cover, to_cover.sub_ext('_original'))
-      end
-
       Tools.cover_cloned_tree(DeepCover.all_tracked_file_paths,
                               clone_root: @dest_root,
                               original_root: @root_path)
@@ -186,13 +182,6 @@ module DeepCover
     def process
       DeepCover.delete_trackers
       system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, "cd #{@main_path} && #{@options[:command]}")
-    end
-
-    def restore
-      each_dir_to_cover do |to_cover|
-        FileUtils.mv(to_cover, to_cover.sub_ext('_instrumented'))
-        FileUtils.mv(to_cover.sub_ext('_original'), to_cover)
-      end
     end
 
     def report
@@ -207,7 +196,6 @@ module DeepCover
       patch
       remove_deep_cover_config
       process
-      restore
       report
     end
   end
