@@ -5,7 +5,7 @@ module DeepCover
     require 'with_progress'
   end
   module Tools::CoverClonedTree
-    def cover_cloned_tree(original_paths, original_root:, clone_root:)
+    def cover_cloned_tree(original_paths, original_root:, clone_root:) # &block
       # Make sure the directories end with a '/' for safe replacing
       original_root = File.join(File.expand_path(original_root), '')
       clone_root = File.join(File.expand_path(clone_root), '')
@@ -24,8 +24,13 @@ module DeepCover
           paths_with_bad_syntax << original_path
           next
         end
+
+        # Allow a passed block to edit the source that will be written
+        covered_source = covered_code.covered_source
+        covered_source = yield covered_source, original_path, clone_path if block_given?
+
         clone_path.dirname.mkpath
-        clone_path.write(covered_code.covered_source)
+        clone_path.write(covered_source)
       end
 
       unless paths_with_bad_syntax.empty?
