@@ -20,7 +20,7 @@ module DeepCover
 
     describe 'deep-cover exec' do
       let(:options) { '' }
-      let(:command) { "cd spec/code_fixtures/#{path} && ../../../exe/deep-cover exec -o=false #{options} rake" }
+      let(:command) { "exe/deep-cover exec -C=spec/code_fixtures/#{path} -o=false #{options} rake" }
       subject { output }
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
@@ -42,7 +42,7 @@ module DeepCover
       end
 
       describe 'for a command with options' do
-        let(:command) { %{cd exe; ./deep-cover exec -o=false ruby -I../lib -I../core_gem/lib -e 'require "deep-cover"; puts :hello'} }
+        let(:command) { %{exe/deep-cover exec -o=false ruby -Ilib -Icore_gem/lib -e 'require "deep-cover"; puts :hello'} }
         it do
           skip('New thor version is needed')
           should include 'hello'
@@ -68,7 +68,7 @@ module DeepCover
 
     describe 'deep-cover gather' do
       let(:options) { '' }
-      let(:command) { "cd spec/code_fixtures/#{path} && ../../../exe/deep-cover gather #{options} rake" }
+      let(:command) { "exe/deep-cover gather -C=spec/code_fixtures/#{path} #{options} rake" }
       subject { output }
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
@@ -93,7 +93,7 @@ module DeepCover
 
     describe 'deep-cover merge' do
       let(:options) { '' }
-      let(:command) { "cd spec/code_fixtures/#{path} && ../../../exe/deep-cover merge #{options}" }
+      let(:command) { "exe/deep-cover merge -C=spec/code_fixtures/#{path} #{options}" }
       subject { output }
 
       before(:each) do
@@ -141,14 +141,14 @@ module DeepCover
 
     describe 'deep-cover report' do
       let(:options) { '--reporter=istanbul' }
-      let(:command) { "cd spec/code_fixtures/#{path} && ../../../exe/deep-cover report -o=false #{options}" }
+      let(:command) { "exe/deep-cover report -C=spec/code_fixtures/#{path} -o=false #{options}" }
       subject { output }
 
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
         it do
           # Run deep-cover exec to setup initial data
-          exec_output = run_command("cd spec/code_fixtures/#{path} && ../../../exe/deep-cover exec -o=false #{options} rake")
+          exec_output = run_command("exe/deep-cover exec -C=spec/code_fixtures/#{path} -o=false #{options} rake")
           exec_table = exec_output[/^---(.|\n)*\z/]
 
           output.should == exec_table
@@ -158,7 +158,7 @@ module DeepCover
 
     describe 'deep-cover clear' do
       let(:options) { '' }
-      let(:command) { "cd spec/code_fixtures/#{path} && ../../../exe/deep-cover clear #{options}" }
+      let(:command) { "exe/deep-cover clear -C=spec/code_fixtures/#{path} #{options}" }
       subject { output }
 
       before(:each) do
@@ -197,7 +197,7 @@ module DeepCover
     describe 'The output of deep-cover clone' do
       let(:options) { '' }
       let(:extra_args) { '' }
-      let(:command) { "cd exe; ./deep-cover clone -o=false --reporter=istanbul #{options} ../spec/code_fixtures/#{path}" }
+      let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=spec/code_fixtures/#{path} #{options}" }
       subject { output }
       describe 'for a simple gem' do
         let(:path) { '../../core_gem/spec/code_fixtures/trivial_gem' }

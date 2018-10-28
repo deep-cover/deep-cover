@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This file is called from `require 'deep-cover'`
+# This file is called from `require 'deep-cover'` and from the CLI, it may have changed work directory
 #
 # This initializes DeepCover's configuration from a configuration file
 # and from an environment variable, if present.

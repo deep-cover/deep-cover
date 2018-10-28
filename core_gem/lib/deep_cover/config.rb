@@ -89,9 +89,9 @@ module DeepCover
 
     def cache_directory(cache_directory = nil)
       if cache_directory
-        change(:cache_directory, File.expand_path(cache_directory))
+        change(:cache_directory, cache_directory)
       else
-        @options[:cache_directory]
+        File.expand_path(@options[:cache_directory])
       end
     end
 
