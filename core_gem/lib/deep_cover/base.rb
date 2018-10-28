@@ -27,7 +27,7 @@ module DeepCover
       end
 
       config # actualize configuration
-      @lookup_globs = nil
+      @lookup_globs = @all_tracked_file_paths = nil
       @started = true
     end
 
@@ -69,7 +69,7 @@ module DeepCover
       case what
       when :paths
         warn "Changing DeepCover's paths after starting coverage is highly discouraged" if running?
-        @lookup_globs = nil
+        @lookup_globs = @all_tracked_file_paths = nil
       when :tracker_global
         raise NotImplementedError, "Changing DeepCover's tracker global after starting coverage is not supported" if running?
         @coverage = nil
@@ -78,7 +78,7 @@ module DeepCover
 
     def reset
       stop if running?
-      @coverage = @custom_requirer = @autoload_tracker = @lookup_globs = nil
+      @coverage = @custom_requirer = @autoload_tracker = @lookup_globs = @all_tracked_file_paths = nil
       config.reset
       self
     end
@@ -152,6 +152,16 @@ module DeepCover
       # EXTGLOB: allow matching {lib,app} as either lib or app
       # PATHNAME: Makes wildcard match not match /, and make /**/ (and pattern starting with **/) be any number of nested directory
       lookup_globs.any? { |glob| File.fnmatch?(glob, path, File::FNM_EXTGLOB | File::FNM_PATHNAME) }
+    end
+
+    def all_tracked_file_paths
+      return @all_tracked_file_paths.dup if @all_tracked_file_paths
+      paths_found = Dir[*lookup_globs]
+      paths_found.select! { |path| path.end_with?('.rb') }
+      paths_found.select! { |path| File.file?(path) }
+      paths_found.uniq!
+      @all_tracked_file_paths = paths_found
+      @all_tracked_file_paths.dup
     end
 
     def custom_requirer
