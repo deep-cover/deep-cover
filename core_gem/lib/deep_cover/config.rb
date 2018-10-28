@@ -14,6 +14,23 @@ module DeepCover
     end
     alias_method :to_h, :to_hash
 
+    def to_hash_for_serialize
+      hash = to_hash
+      # TODO: (Max) I don't like mixup of configs being partly on DeepCover and Config like that...
+      hash[:paths] = DeepCover.lookup_globs
+      hash[:output] = hash[:output] ? File.expand_path(hash[:output]) : hash[:output]
+      hash[:cache_directory] = File.expand_path(hash[:cache_directory])
+      hash
+    end
+
+    def load_hash_for_serialize(hash)
+      @options.merge!(hash)
+      hash.each_key { |option| @notify.config_changed(option) } if @notify
+      # This was already transformed, it should all be absolute paths / globs, avoid doing it for nothing by setting it right away
+      # TODO: (Max) I don't like mixup of configs being partly on DeepCover and Config like that...
+      DeepCover.instance_variable_set(:@lookup_globs, hash[:paths])
+    end
+
     def ignore_uncovered(*keywords, &block)
       if block
         raise ArgumentError, "wrong number of arguments (given #{keywords.size}, expected 0..1)" if keywords.size > 1
