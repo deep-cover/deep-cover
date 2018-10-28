@@ -3,7 +3,7 @@
 require 'tmpdir'
 
 module DeepCover
-  require_relative 'dump_covered_code'
+  require_relative 'cover_cloned_tree'
 
   class InstrumentedCloneReporter
     include Tools
@@ -164,13 +164,13 @@ module DeepCover
     end
 
     def cover
-      coverage = Coverage.new
       each_dir_to_cover do |to_cover|
         FileUtils.cp_r(to_cover, to_cover.sub_ext('_original'))
-        Tools.dump_covered_code(to_cover,
-                                coverage: coverage,
-                                dest_path: to_cover)
       end
+
+      Tools.cover_cloned_tree(DeepCover.all_tracked_file_paths,
+                              clone_root: @dest_root,
+                              original_root: @root_path)
     end
 
     def process
