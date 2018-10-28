@@ -42,15 +42,6 @@ module DeepCover
       @copied = true
     end
 
-    def patch_ruby_file(ruby_file, entry_point_path)
-      content = ruby_file.read
-      # Insert our code after leading comments:
-      content.sub!(/\A(#.*\n|\s+)*/) do |header|
-        "#{header}require #{entry_point_path.inspect};"
-      end
-      ruby_file.write(content)
-    end
-
     def style
       if @source_path.join('config/environments/test.rb').exist?
         :rails
@@ -134,15 +125,6 @@ module DeepCover
       file.path
     end
 
-    # Back to global functionality
-    def patch_main_ruby_files
-      entry_point_path = create_entry_point_file
-      each_main_ruby_files do |main|
-        puts "Patching #{main}"
-        patch_ruby_file(main, entry_point_path)
-      end
-    end
-
     def patch_rubocop
       path = @dest_root.join('.rubocop.yml')
       return unless path.exist?
@@ -164,7 +146,6 @@ module DeepCover
 
     def patch
       patch_rubocop
-      patch_main_ruby_files
     end
 
     def remove_deep_cover_config
@@ -174,9 +155,14 @@ module DeepCover
     end
 
     def cover
+      entry_point_path = create_entry_point_file
       Tools.cover_cloned_tree(DeepCover.all_tracked_file_paths,
                               clone_root: @dest_root,
-                              original_root: @root_path)
+                              original_root: @root_path) do |source|
+        source.sub(/\A(#.*\n|\s+)*/) do |header|
+          "#{header}require #{entry_point_path.inspect};"
+        end
+      end
     end
 
     def process
