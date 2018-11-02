@@ -109,6 +109,9 @@ Style/FrozenStringLiteralComment:
 Style/NegatedIf:
   Enabled: false
 
+Style/Next:
+  Enabled: false
+
 Style/NumericPredicate:
   Enabled: false
 
