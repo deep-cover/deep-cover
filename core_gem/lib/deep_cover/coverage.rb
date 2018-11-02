@@ -56,7 +56,35 @@ module DeepCover
       self
     end
 
+    # If a file wasn't required, it won't be in the trackers. This adds those mossing files
+    def add_missing_covered_codes
+      top_level_path = DeepCover.config.paths.detect do |path|
+        next unless path.is_a?(String)
+        path = File.expand_path(path)
+        File.dirname(path) == path
+      end
+      if top_level_path
+        # One of the paths is a root path.
+        # Either a mistake, or the user wanted to check everything that gets loaded. Either way,
+        # we will probably hang from searching the files to load. (and then loading them, as there
+        # can be lots of ruby files) We prefer to warn the user and not do anything.
+        suggestion = "#{top_level_path}/**/*.rb"
+        warn ["Because the `paths` configured in DeepCover include #{top_level_path.inspect}, which is a root of your fs, ",
+              'DeepCover will not attempt to find Ruby files that were not required. Your coverage report will not include ',
+              'files that were not instrumented. This is to avoid extremely long wait times. If you actually want this to ',
+              "happen, then replace the specified `paths` with #{suggestion.inspect}.",
+             ].join
+        return
+      end
+
+      DeepCover.all_tracked_file_paths.each do |path|
+        covered_code(path, tracker_hits: :zeroes)
+      end
+      nil
+    end
+
     def report(reporter: DEFAULTS[:reporter], **options)
+      add_missing_covered_codes
       case reporter.to_sym
       when :html
         msg = if (output = options.fetch(:output, DEFAULTS[:output]))
