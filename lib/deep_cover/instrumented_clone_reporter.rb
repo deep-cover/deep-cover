@@ -45,7 +45,16 @@ module DeepCover
     def patch_ruby_file(ruby_file)
       content = ruby_file.read
       # Insert our code after leading comments:
-      content.sub!(/^(#.*\n+)*/) { |header| "#{header}require 'deep_cover/auto_run';DeepCover::AutoRun.run! '#{@dest_root}';" }
+      content.sub!(/\A(#.*\n|\s+)*/) do |header|
+        path_to_clone_entry = DeepCover::CORE_GEM_ROOT_DIRECTORY + '/lib/deep_cover/setup/clone_mode_entry'
+        cache_directory = DeepCover.config.cache_directory.to_s
+        tracker_global = DeepCover.config.tracker_global
+        statements = ["require #{path_to_clone_entry.inspect}",
+                      "DeepCover::CloneModeEntry.setup #{tracker_global.inspect}, #{cache_directory.inspect}",
+                      '',
+                      ]
+        "#{header}#{statements.join(';')}"
+      end
       ruby_file.write(content)
     end
 
@@ -118,24 +127,6 @@ module DeepCover
       end
     end
 
-    def patch_gemfile
-      gemfile = @dest_root.join('Gemfile')
-      require 'bundler'
-      deps = Bundler::Definition.build(gemfile, nil, nil).dependencies
-
-      return if deps.find { |e| e.name.start_with? 'deep-cover' }
-
-      content = File.read(gemfile)
-      puts "Patching Gemfile #{gemfile}"
-      File.write(gemfile, [
-                            '# This file was modified by DeepCover',
-                            content,
-                            "gem 'deep-cover', path: '#{File.expand_path(__dir__ + '/../../')}'",
-                            "gem 'deep-cover-core', path: '#{File.expand_path(__dir__ + '/../../core_gem')}'",
-                            '',
-                          ].join("\n"))
-    end
-
     def patch_rubocop
       path = @dest_root.join('.rubocop.yml')
       return unless path.exist?
@@ -146,7 +137,6 @@ module DeepCover
     end
 
     def patch
-      patch_gemfile
       patch_rubocop
       patch_main_ruby_files
     end
@@ -163,6 +153,7 @@ module DeepCover
 
     def process
       DeepCover.delete_trackers
+      require 'bundler'
       Bundler.with_clean_env do
         system({'DISABLE_SPRING' => 'true'}, "cd #{@main_path} && #{@options[:command]}")
       end
