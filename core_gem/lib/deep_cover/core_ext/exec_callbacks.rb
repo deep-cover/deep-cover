@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../module_override'
-
 # Adds a functionality to add callbacks before an `exec`
 
 module DeepCover
@@ -10,18 +8,17 @@ module DeepCover
       attr_reader :callbacks
 
       def before_exec(&block)
-        self.active = true
         (@callbacks ||= []) << block
       end
     end
+  end
 
-    def exec(*args)
+  [::Kernel, ::Kernel.singleton_class].each do |mod|
+    mod.send(:alias_method, :exec_without_deep_cover, :exec)
+    mod.send(:define_method, :exec) do |*args|
       ExecCallbacks.callbacks.each(&:call)
       exec_without_deep_cover(*args)
     end
-
-    extend ModuleOverride
-    override ::Kernel, ::Kernel.singleton_class
-    self.active = true
   end
+  ::Kernel.send :private, :exec_without_deep_cover
 end
