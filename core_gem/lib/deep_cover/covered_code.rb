@@ -26,6 +26,7 @@ module DeepCover
       @nb_allocated_trackers = 0
       # We parse the code now so that problems happen early
       covered_ast
+      @tracker_hits = Array.new(@nb_allocated_trackers, 0) if @tracker_hits == :zeroes
     end
 
     def lineno
