@@ -10,9 +10,9 @@ module DeepCover
     # matches regular files, .files, ..files, but not '.' or '..'
     GLOB_ALL_CONTENT = '{,.[^.],..?}*'
 
-    def initialize(source_path, **options)
+    def initialize(**options)
       @options = CLI_DEFAULTS.merge(options)
-      @root_path = @source_path = Pathname.new(source_path).expand_path
+      @root_path = @source_path = Pathname.new('.').expand_path
       unless @root_path.join('Gemfile').exist?
         # E.g. rails/activesupport
         @root_path = @root_path.dirname
