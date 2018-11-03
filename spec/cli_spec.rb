@@ -197,7 +197,7 @@ module DeepCover
     describe 'The output of deep-cover clone' do
       let(:options) { '' }
       let(:extra_args) { '' }
-      let(:command) { "cd exe; ./deep-cover clone -o=false --reporter=istanbul --no-bundle #{options} ../spec/code_fixtures/#{path}" }
+      let(:command) { "cd exe; ./deep-cover clone -o=false --reporter=istanbul #{options} ../spec/code_fixtures/#{path}" }
       subject { output }
       describe 'for a simple gem' do
         let(:path) { '../../core_gem/spec/code_fixtures/trivial_gem' }
