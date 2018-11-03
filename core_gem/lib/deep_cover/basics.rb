@@ -13,7 +13,7 @@ module DeepCover
              }.freeze
 
   CLI_DEFAULTS = {
-                   command: 'bundle exec rake',
+                   command: %w(bundle exec rake),
                    process: true,
                    open: false,
                  }.freeze

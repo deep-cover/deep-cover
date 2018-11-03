@@ -105,7 +105,7 @@ module DeepCover
 
     def process
       DeepCover.delete_trackers
-      system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, "cd #{@main_path} && #{@options[:command]}")
+      system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, *@options[:command], chdir: @main_path)
     end
 
     def report
