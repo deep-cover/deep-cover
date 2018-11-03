@@ -10,7 +10,6 @@ module DeepCover
     option '--open', desc: 'open the output coverage', type: :boolean, default: CLI_DEFAULTS[:open]
 
     option '--command', desc: 'command to run tests', type: :string, default: CLI_DEFAULTS[:command], aliases: '-c'
-    option '--process', desc: 'turn off to only redo the reporting', type: :boolean, default: CLI_DEFAULTS[:process]
 
     def clone(path = '.')
       require_relative '../../instrumented_clone_reporter'
