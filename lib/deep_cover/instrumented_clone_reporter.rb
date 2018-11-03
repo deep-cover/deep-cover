@@ -175,10 +175,7 @@ module DeepCover
 
     def process
       DeepCover.delete_trackers
-      require 'bundler'
-      Bundler.with_clean_env do
-        system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, "cd #{@main_path} && #{@options[:command]}")
-      end
+      system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, "cd #{@main_path} && #{@options[:command]}")
     end
 
     def restore
@@ -193,13 +190,6 @@ module DeepCover
       puts coverage.report(dir: @dest_root.to_s, **@options)
     end
 
-    def bundle
-      puts 'Running `bundle install`'
-      Bundler.with_clean_env do
-        `cd #{@dest_root} && bundle`
-      end
-    end
-
     def run
       if @options[:process]
         clear
@@ -207,7 +197,6 @@ module DeepCover
         cover
         patch
         remove_deep_cover_config
-        bundle if @options[:bundle]
         process
         restore
       end
