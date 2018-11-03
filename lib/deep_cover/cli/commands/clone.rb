@@ -11,9 +11,9 @@ module DeepCover
 
     option '--command', desc: 'command to run tests', type: :string, default: CLI_DEFAULTS[:command], aliases: '-c'
 
-    def clone(path = '.')
+    def clone
       require_relative '../../instrumented_clone_reporter'
-      InstrumentedCloneReporter.new(path, **processed_options).run
+      InstrumentedCloneReporter.new(**processed_options).run
     end
   end
 end
