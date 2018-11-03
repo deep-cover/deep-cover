@@ -61,7 +61,8 @@ module DeepCover
         let(:path) { 'rails_like_gem' }
         it do
           should =~ Regexp.new(%w[component_gem.rb 80 100 50].join('[ |]*'))
-          should =~ Regexp.new(%w[foo.rb 100 100 100].join('[ |]*'))
+          cov = Process.respond_to?(:fork) ? [100, 50, 100] : [71.43, 50, 50]
+          should =~ Regexp.new(['foo.rb', *cov].join('[ |]*'))
           should include '1 example, 0 failures'
           should include 'another_component'
           should include '2 examples, 1 failure'
