@@ -191,15 +191,13 @@ module DeepCover
     end
 
     def run
-      if @options[:process]
-        clear
-        copy
-        cover
-        patch
-        remove_deep_cover_config
-        process
-        restore
-      end
+      clear
+      copy
+      cover
+      patch
+      remove_deep_cover_config
+      process
+      restore
       report
     end
   end
