@@ -4,16 +4,19 @@ require 'tmpdir'
 
 module DeepCover
   class CLI
-    desc 'clone [OPTIONS] [PATH]', 'Gets the coverage using clone mode'
+    desc 'clone [OPTIONS] [COMMAND TO RUN]', 'Gets the coverage using clone mode'
     option '--output', desc: 'output folder', type: :string, default: DeepCover.config.output, aliases: '-o'
     option '--reporter', desc: 'reporter to use', type: :string, default: DeepCover.config.reporter
     option '--open', desc: 'open the output coverage', type: :boolean, default: CLI_DEFAULTS[:open]
 
-    option '--command', desc: 'command to run tests', type: :string, default: CLI_DEFAULTS[:command], aliases: '-c'
+    def clone(*command_parts)
+      if command_parts.empty?
+        command_parts = CLI_DEFAULTS[:command]
+        puts "No command specified, using default of: #{command_parts.join(' ')}"
+      end
 
-    def clone
       require_relative '../../instrumented_clone_reporter'
-      InstrumentedCloneReporter.new(**processed_options).run
+      InstrumentedCloneReporter.new(**processed_options.merge(command: command_parts)).run
     end
   end
 end

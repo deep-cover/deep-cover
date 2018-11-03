@@ -8,15 +8,15 @@ module DeepCover
     # so we just stop on a positional argument.
     stop_on_unknown_option! :exec
 
-    desc 'exec [OPTIONS] COMMAND TO RUN', 'Execute the command with coverage activated'
+    desc 'exec [OPTIONS] [COMMAND TO RUN]', 'Execute the command with coverage activated'
     option '--output', desc: 'output folder', type: :string, default: DeepCover.config.output, aliases: '-o'
     option '--reporter', desc: 'reporter to use', type: :string, default: DeepCover.config.reporter
     option '--open', desc: 'open the output coverage', type: :boolean, default: CLI_DEFAULTS[:open]
 
     def exec(*command_parts)
       if command_parts.empty?
-        warn set_color('`exec` needs a command to run', :red)
-        exit(1)
+        command_parts = CLI_DEFAULTS[:command]
+        puts "No command specified, using default of: #{command_parts.join(' ')}"
       end
 
       require 'yaml'
