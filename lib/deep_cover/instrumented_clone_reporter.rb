@@ -13,10 +13,9 @@ module DeepCover
     def initialize(**options)
       @options = CLI_DEFAULTS.merge(options)
       @root_path = @source_path = Pathname.new('.').expand_path
-      unless @root_path.join('Gemfile').exist?
+      if !@root_path.join('Gemfile').exist? && @root_path.dirname.join('Gemfile').exist?
         # E.g. rails/activesupport
         @root_path = @root_path.dirname
-        raise "Can't find Gemfile in #{@root_path}" unless @root_path.join('Gemfile').exist?
       end
       path = Pathname('~/test_deep_cover').expand_path
       if path.exist?

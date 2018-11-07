@@ -199,6 +199,16 @@ module DeepCover
       let(:extra_args) { '' }
       let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=spec/code_fixtures/#{path} #{options}" }
       subject { output }
+
+      describe 'for a simple project (not a gem)' do
+        let(:path) { '../../core_gem/spec/code_fixtures/simple' }
+        let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=spec/code_fixtures/#{path} ruby simple.rb no_deep_cover" }
+        it do
+          should include 'simple.rb'
+          should =~ Regexp.new(%w[beside_simple.rb 100 100 100 100].join('[ |]*'))
+        end
+      end
+
       describe 'for a simple gem' do
         let(:path) { '../../core_gem/spec/code_fixtures/trivial_gem' }
         it do
