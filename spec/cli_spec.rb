@@ -44,7 +44,6 @@ module DeepCover
       describe 'for a command with options' do
         let(:command) { %{exe/deep-cover exec -o=false ruby -Ilib -Icore_gem/lib -e 'require "deep-cover"; puts :hello'} }
         it do
-          skip('New thor version is needed')
           should include 'hello'
           should =~ /No HTML generated/
         end
