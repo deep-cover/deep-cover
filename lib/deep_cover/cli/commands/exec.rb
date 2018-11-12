@@ -22,21 +22,14 @@ module DeepCover
       DeepCover.config.set(**processed_options.slice(*DEFAULTS.keys))
 
       require 'yaml'
-      env_var = {'DEEP_COVER' => 'exec',
+      env_var = {'DEEP_COVER' => 'gather',
                  'DEEP_COVER_OPTIONS' => YAML.dump(DeepCover.config.to_hash_for_serialize),
       }
 
-      # Clear inspiration from Bundler's kernel_exec
-      # https://github.com/bundler/bundler/blob/d44d803357506895555ff97f73e60d593820a0de/lib/bundler/cli/exec.rb#L50
-      begin
-        Kernel.exec(env_var, *command_parts)
-      rescue Errno::EACCES, Errno::ENOEXEC
-        warn set_color("not executable: #{command_parts.first}", :red)
-        exit 126 # Default exit code for that
-      rescue Errno::ENOENT
-        warn set_color("command not found: #{command_parts.first}", :red)
-        exit 127 # Default exit code for that
-      end
+      DeepCover.delete_trackers
+      system(env_var, *command_parts)
+      coverage = Coverage.load
+      puts coverage.report(**processed_options)
     end
   end
 end

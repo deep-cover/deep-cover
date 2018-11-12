@@ -8,21 +8,8 @@ task default: %w(spec)
   task task_name do
     errors = []
 
-    # Because we are using a :path for the test, everything is kinda messy here.
-    # This all shouldn't be required, a simple `require 'deep-cover'` and no need for
-    # the bundler/setup or the with_original_env or the messing around with ENV
-    if ENV["DEEP_COVER"]
-      # Not in clone mode
-      require "bundler/setup"
-      require "deep-cover"
-    end
-    deep_cover_env = [ENV["DEEP_COVER"], ENV["DEEP_COVER_OPTIONS"]]
-
-    Bundler.with_original_env do
-      ENV["DEEP_COVER"], ENV["DEEP_COVER_OPTIONS"] = deep_cover_env
-      FRAMEWORKS.each do |project|
-        system(%(cd #{project} && #{$0} #{task_name} --trace)) || errors << project
-      end
+    FRAMEWORKS.each do |project|
+      system(%(cd #{project} && #{$0} #{task_name} --trace)) || errors << project
     end
     fail("Errors in #{errors.join(', ')}") unless errors.empty?
   end
