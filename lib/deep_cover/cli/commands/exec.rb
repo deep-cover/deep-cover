@@ -19,9 +19,11 @@ module DeepCover
         puts "No command specified, using default of: #{command_parts.join(' ')}"
       end
 
+      DeepCover.config.set(**processed_options.slice(*DEFAULTS.keys))
+
       require 'yaml'
       env_var = {'DEEP_COVER' => 'exec',
-                 'DEEP_COVER_OPTIONS' => YAML.dump(processed_options.slice(*DEFAULTS.keys)),
+                 'DEEP_COVER_OPTIONS' => YAML.dump(DeepCover.config.to_hash_for_serialize),
       }
 
       # Clear inspiration from Bundler's kernel_exec
