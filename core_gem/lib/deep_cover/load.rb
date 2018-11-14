@@ -17,11 +17,27 @@ module DeepCover
         DeepCover.autoload(Tools::Camelize.camelize(module_name), "#{__dir__}/#{module_name}")
       end
       DeepCover.autoload :VERSION, "#{__dir__}/version"
-      Object.autoload :Term, 'term/ansicolor'
-      Object.autoload :Terminal, 'terminal-table'
-      Object.autoload :YAML, 'yaml'
+
       Object.autoload :Forwardable, 'forwardable'
-      Object.autoload :JSON, 'json'
+      Object.autoload :YAML, 'yaml'
+
+      # In ruby 2.2 and less, autoload doesn't work for gems which are not already on the `$LOAD_PATH`.
+      # The fix is to just require right away for those rubies
+      #
+      # Low-level: autoload not working for gems not on the `$LOAD_PATH` is because those rubies don't
+      # call the regular `#require` when triggering an autoload, and the gem system monkey-patches `#require`
+      # so that when a file is not found in the `$LOAD_PATH`, but can be found in an existing gem, that gem's
+      # path is added to the `$LOAD_PATH`
+      {JSON: 'json',
+       Term: 'term/ansicolor',
+       Terminal: 'terminal-table',
+      }.each do |const, require_path|
+        if RUBY_VERSION < '2.3'
+          require require_path
+        else
+          Object.autoload const, require_path
+        end
+      end
     end
 
     def bootstrap
