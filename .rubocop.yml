@@ -122,6 +122,9 @@ Style/PercentLiteralDelimiters:
 Style/RedundantSelf:
   Enabled: false
 
+Style/SpecialGlobalVars:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 
