@@ -105,6 +105,7 @@ module DeepCover
     def process
       DeepCover.delete_trackers
       system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, *@options[:command], chdir: @main_path)
+      $?.exitstatus
     end
 
     def report
@@ -118,8 +119,9 @@ module DeepCover
       cover
       patch
       remove_deep_cover_config
-      process
+      exit_code = process
       report
+      exit(exit_code)
     end
   end
 end

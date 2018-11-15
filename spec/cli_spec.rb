@@ -4,18 +4,20 @@ require_relative 'spec_helper'
 
 module DeepCover
   RSpec.describe 'CLI', :slow do
-    def run_command(command, expected_errors = /^$/)
+    def run_command(command, expected_errors: /^$/, expected_status: 0)
       require 'open3'
-      out, errors, _status = Bundler.with_clean_env do
+      out, errors, status = Bundler.with_clean_env do
         Open3.capture3(command)
       end
       errors.should match expected_errors unless RUBY_PLATFORM == 'java'
+      status.exitstatus.should == expected_status
       out
     end
 
     let(:expected_errors) { /^$/ }
+    let(:expected_status) { 0 }
     let(:output) do
-      run_command(command, expected_errors)
+      run_command(command, expected_errors: expected_errors, expected_status: expected_status)
     end
 
     describe 'deep-cover exec' do
@@ -51,6 +53,7 @@ module DeepCover
 
       describe 'for a multiple component gem like rails' do
         let(:expected_errors) { /Errors in another_component_gem/ }
+        let(:expected_status) { 1 }
         let(:options) { '--reporter=istanbul' }
         let(:path) { 'rails_like_gem' }
         it do
@@ -227,6 +230,7 @@ module DeepCover
 
       describe 'for a multiple component gem like rails' do
         let(:expected_errors) { /Errors in another_component_gem/ }
+        let(:expected_status) { 1 }
         let(:path) { 'rails_like_gem' }
         it do
           should =~ Regexp.new(%w[component_gem.rb 80 100 50].join('[ |]*'))
