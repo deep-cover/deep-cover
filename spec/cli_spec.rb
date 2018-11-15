@@ -91,6 +91,18 @@ module DeepCover
           post_tracker_files.size.should == pre_tracker_files.size + 1
         end
       end
+
+      describe 'for rails_like_gem' do
+        let(:expected_errors) { /Errors in another_component_gem/ }
+        let(:expected_status) { 1 }
+        let(:path) { 'rails_like_gem' }
+
+        it 'returns correct exit code and output' do
+          # Exit_code is tested implicitly by run_command
+          should include '1 example, 0 failures'
+          should include '2 examples, 1 failure'
+        end
+      end
     end
 
     describe 'deep-cover merge' do
