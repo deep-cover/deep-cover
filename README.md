@@ -72,81 +72,71 @@ easy to support it if needed.
 
 ## Installation
 
+Do the appropriate of the installation of the gem, then follow the steps that correspond to your situation.
+
+    # if the project is a gem, add this to your .gemspec and then run `bundle install`
+    spec.add_development_dependency 'deep-cover', '~> 0.7'
+
+    # otherwise if using a Gemfile, add this to it and then run `bundle install`
+    gem 'deep-cover', '~> 0.7', group: :test, require: false
+
+    # otherwise just run:
     gem install deep-cover
 
-First we present the official way. There are also quick and dirty ways to try `deep-cover` without changing much your current setup, which we present afterwards.
 
-### Canonical installation
-
-*1* Add the `deep-cover` gem as a dependency:
-
-For a standalone project (Rails app), add `deep-cover` to your Gemfile:
-
-    gem 'deep-cover', '~> 0.4', group: :test, require: false
-
-Then run `bundle`
-
-For a gem, you want to add `spec.add_development_dependency 'deep-cover', '~> 0.4'` to your `gemspec` file instead.
-
-*2* Require `deep-cover`
-
-You must call `require 'deep-cover'` *before* the code you want to cover is loaded.
-
-Typically, you want to insert that line in your `test/test_helper.rb` or `spec/spec_helper.rb` file at the right place. For example
-
-```
-ENV['RAILS_ENV'] ||= 'test'
-require 'deep-cover' # Must be before the environment is loaded on the next line
-require File.expand_path('../../config/environment', __FILE__)
-require 'rails/test_help'
-# ...
-```
-
-*3* Create a config file (optional)
-
-You may want to create a config file `.deep-cover.rb` at the root of your project, where you can set the config as you wish.
-
-```
-# File .deep-cover.rb
-DeepCover.config do
-  ignore :default_arguments
-  # ...
-end
-```
-
-*4* Launch it
-
-Even after `DeepCover` is `require`d and configured, only a very minimal amount of code is actually loaded and coverage is *not started*.
-
-The easiest way to actually start it is to use `deep-cover exec` instead of `bundle exec`.
-
-For example:
-
-```
-$ deep-cover exec rspec
-# ...all the output of rspec
-# ...coverage report
-```
-
-### Command line interface (for a Rails app or a Gem):
+### Trying `deep-cover` quickly
 
 An easy way to try `deep-cover`, without any configuration needed:
 
-    deep-cover /path/to/rails/app/or/gem
+    deep-cover clone command to run test
+    # ex:
+    deep-cover clone rake test
 
-This assumes your project has a `Gemfile`, and that your default `rake` task is set to execute all tests (otherwise set the `--command` option)
+Check the produced `coverage/index.html`.
 
-It also uses our builtin HTML reporter. Check the produced `coverage/index.html`.
+Note, this is a bit slower and may cause issues in your tests if your use relative paths that lead outside of the directory (Such as a dependency that is in a parent directory).
 
-### Projects using builtin Coverage (including SimpleCov) users
+### Regular setup
 
-To make it easier to transition for projects already using the builtin `Coverage` library (or indirectly those using `SimpleCov`), there is a way to overwrite the `Coverage` library using `deep-cover`'s extended coverage.
+1. Require `deep-cover`
 
-Add to your Gemfile `gem 'deep-cover', require: false`, then run `bundle`.
+    You must call `require 'deep-cover'` **before** the code you want to cover is loaded.
 
-Before you require `coverage` or `simplecov`, do a `require 'deep_cover/builtin_takeover'`.
+    Typically, you want to insert that line **at the very top** of `test/test_helper.rb` or `spec/spec_helper.rb` . If `deep-cover` is required after your code, then it won't be able to detect the coverage.
 
-For example, the `test/test_helper.rb` file for `simplecov` users will look like
+2. Create a config file (optional)
+
+    You may want to create a config file `.deep-cover.rb` at the root of your project, where you can set the config as you wish.
+
+    ```
+    # File .deep-cover.rb
+    DeepCover.config do
+      ignore :default_arguments
+      # ...
+    end
+    ```
+
+3. Launch it
+
+    Even after `DeepCover` is `require`d and configured, only a very minimal amount of code is actually loaded and coverage is *not started*.
+
+    The easiest way to actually start it is to use `deep-cover exec`
+
+    For example:
+
+    ```
+    $ deep-cover exec rspec
+    # ...all the output of rspec
+    # ...coverage report
+    ```
+
+### Already using SimpleCov / builtin Coverage
+
+To make it easier to transition for projects already using the builtin `Coverage` library (such as those using `SimpleCov`), `deep-cover` can inject itself into those tools so that, while you still only have line-by-line coverage information, it becomes stricter, only marking a line as executed if *everything* on it has been executed.
+
+You must call `require 'deep-cover/builtin_takeover'` **before** you require the coverage tool that you normally use.
+
+For example, the `test/test_helper.rb` file for `SimpleCov` users will look like
 
 ```
 require 'deep_cover/builtin_takeover'
@@ -154,6 +144,12 @@ require 'simplecov'
 SimpleCov.start
 # rest of `test_helper.rb`
 ```
+
+Once this is done, simply generate the coverage as you normally would. In order to get detailed information about why a line is not covered, you will need to the regular `deep-cover` mode.
+
+### Online coverage tools such as Code Climate, Coveralls, Codecov
+
+At the moment, those tools do not support deep-cover. It is however possible to use the takeover system to, at least, make them stricter. Follow the explanation in the above section for injecting into `SimpleCov`.
 
 ## Usage
 
@@ -171,8 +167,6 @@ end
 ```
 
 The file `.deep-cover.rb` is loaded automatically when requiring `deep-cover` and is the best place to put the configuration.
-
-*Note*: The configuration block is only executed when `deep-cover` is actually started.
 
 #### Custom filters
 
