@@ -60,6 +60,7 @@ namespace :dev do
     commands << 'bundle install --gemfile=spec/code_fixtures/simple_rails42_app/Gemfile'
     commands << 'bundle install --gemfile=spec/code_fixtures/rails_like_gem/Gemfile'
     commands << 'bundle install --gemfile=core_gem/Gemfile'
+    commands << 'bundle install'
 
     commands.each do |command|
       puts "Running: #{command}"
