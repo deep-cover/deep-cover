@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.7.0
+
 * Switched CLI to rely on Thor instead of Slop
 * Added lower-level CLI commands: gather, merge, report, clear
 * Added `deep-cover clone`, it does what `deep-cover` without commands did.
@@ -13,8 +15,8 @@
 * `deep-cover` now display coverage information for files that were not loaded. This may lower your the coverage results.
 * The configuration for the paths to cover can now receive globs.
 * `deep-cover clone` no longer needs bundler. It still uses a Gemfile, if it finds one, to decide between
-  copying the current directory of the parent one.
-* `deep-cover clone` is more efficient and has less edge cases that could make some files not be covered.
+  copying the current directory or the parent one.
+* `deep-cover clone` is more efficient and has less edge cases that would make some files not be covered.
 
 ## 0.6.3
 
