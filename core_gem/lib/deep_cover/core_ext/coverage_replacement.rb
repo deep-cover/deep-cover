@@ -20,7 +20,10 @@ module DeepCover
         else
           targets = targets.to_hash.slice(*ALL_COVERAGES.keys).select { |_, v| v }
           targets = targets.map { |k, v| [k, !!v] }.to_h
-          raise 'no measuring target is specified' if targets.empty?
+          if targets.empty?
+            raise 'no measuring target is specified' if RUBY_VERSION.start_with?('2.5')
+            targets = OLD_COVERAGE_SENTINEL
+          end
         end
 
         if DeepCover.running?

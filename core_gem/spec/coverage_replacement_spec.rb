@@ -89,17 +89,6 @@ module DeepCover
           end.to raise_error(RuntimeError)
         end
 
-        it 'raises an exception if started with no targets' do
-          expect do
-            cov_module.start({})
-          end.to raise_error(RuntimeError)
-
-          expect do
-            cov_module.start(no_a_valid_one: true)
-          end.to raise_error(RuntimeError)
-        end
-
-
         def ensure_coverage_data(cov_module, coverages_and_have_content)
           peeked = cov_module.peek_result
           result = cov_module.result
@@ -147,19 +136,40 @@ module DeepCover
           ensure_coverage_data(cov_module, branches: true, lines: true, methods: false)
         end
 
-        it 'result has every coverage if started with no arg' do
-          cov_module.start
-          require sample_require_path
+        valid_no_args = {[] => 'no arg'}
+        if RUBY_VERSION >= '2.6'
+          valid_no_args[[{}]] = 'empty hash'
+          valid_no_args[[{no_a_valid_one: true}]] = 'hash_with_bad_name'
+        end
 
-          peeked = cov_module.peek_result
-          result = cov_module.result
-          peeked.should == result
+        valid_no_args.each do |args, description|
+          it "result has line coverage with Hash of Array if started with #{description}" do
+            cov_module.start(*args)
+            require sample_require_path
 
-          result.should be_a Hash
-          file_result = result[sample_require_path]
-          file_result.should be_a Array
+            peeked = cov_module.peek_result
+            result = cov_module.result
+            peeked.should == result
 
-          file_result.should_not be_empty
+            result.should be_a Hash
+            file_result = result[sample_require_path]
+            file_result.should be_a Array
+
+            file_result.should_not be_empty
+          end
+        end
+      end
+
+      # This was restrictive in 2.5, not anymore in 2.6
+      if RUBY_VERSION.start_with?('2.5')
+        it 'raises an exception if started with no targets' do
+          expect do
+            cov_module.start({})
+          end.to raise_error(RuntimeError)
+
+          expect do
+            cov_module.start(no_a_valid_one: true)
+          end.to raise_error(RuntimeError)
         end
       end
     end
