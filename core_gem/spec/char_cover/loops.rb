@@ -57,7 +57,7 @@
 
 #### With break
     while true
-      "here"
+      _here_
       break "here"
       "not here"
 #>X
@@ -93,7 +93,7 @@
     i += 1 while i < 5
 
 #### With break
-    ("here"; break "here"; "not here") while true
+    (_here_; break "here"; "not here") while true
 #>  -      -             - xxxxxxxxxx-
 
 #### With next
@@ -119,7 +119,7 @@
 
 #### With break
     until false
-      "here"
+      _here_
       break "here"
       "not here"
 #>X
@@ -147,7 +147,7 @@
     i += 1 until i >= 5
 
 #### With break
-    ("here"; break "here"; "not here") until false
+    (_here_; break "here"; "not here") until false
 #>  -      -             - xxxxxxxxxx-
 
 #### With next

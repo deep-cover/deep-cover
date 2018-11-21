@@ -153,7 +153,7 @@ module DeepCover
         66
       end
     ###
-      if DeepCover
+      if DeepCover # Comment
         66
       elsif DeepCover::Node
         77

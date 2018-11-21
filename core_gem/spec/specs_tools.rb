@@ -33,6 +33,22 @@ def trux
   true
 end
 
+# Ruby sometimes remove code when literals are present
+# Possibly removing entire conditions if the literal makes it obvious it won't run
+# or just removing a single literal
+# The wrapping underscores are to keep the same length as "here"
+def _here_
+  'here'
+end
+
+# Ruby sometimes remove code when literals are present
+# Possibly removing entire conditions if the literal makes it obvious it won't run
+# or just removing a single literal
+# The wrapping underscores are to keep the same length as "not here"
+def _not_here_
+  'not here'
+end
+
 def current_ast
   DeepCover::Specs.current_ast
 end

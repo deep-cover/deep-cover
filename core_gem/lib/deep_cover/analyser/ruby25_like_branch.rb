@@ -55,11 +55,11 @@ module DeepCover
         cond_info = [:case, *node_loc_infos]
 
         sub_keys = [:when] * (branches.size - 1) + [:else]
-        empty_fallbacks = whens.map { |w| (w.loc_hash[:begin] || w.loc_hash[:expression]).wrap_rwhitespace_and_comments.end }
+        empty_fallbacks = whens.map { |w| wrap_rwhitespace_and_comments_if_ruby25(w.loc_hash[:begin] || w.loc_hash[:expression]).end }
         empty_fallbacks.map!(&:begin)
 
         if loc_hash[:else]
-          empty_fallbacks << loc_hash[:end].begin
+          empty_fallbacks << wrap_rwhitespace_and_comments_if_ruby25(loc_hash[:else]).end
         else
           # DeepCover manually inserts a `else` for Case when there isn't one for tracker purposes.
           # The normal behavior of ruby25's branch coverage when there is no else is to return the loc of the node
@@ -86,7 +86,7 @@ module DeepCover
 
       def handle_csend
         # csend wraps the comment but not the newlines
-        node_range = node.expression.wrap_rwhitespace_and_comments(whitespaces: /\A[ \t\r\f]+/)
+        node_range = wrap_rwhitespace_and_comments_if_ruby25(node.expression, whitespaces: /\A[ \t\r\f]+/)
         cond_info = [:"&.", *node_loc_infos(node_range)]
         false_branch, true_branch = branches
         [cond_info, {[:then, *node_loc_infos(node_range)] => true_branch.execution_count,
@@ -105,22 +105,19 @@ module DeepCover
         if style == :ternary
           empty_fallback_locs = [nil, nil]
         else
+          first_clause_fallback = wrap_rwhitespace_and_comments_if_ruby25(loc_hash[:begin]) if loc_hash[:begin]
+          first_clause_fallback ||= wrap_rwhitespace_and_comments_if_ruby25(condition.expression)
+          # Ruby26 wraps the comments on the same line
+          first_clause_fallback = first_clause_fallback.wrap_final_comment.end
           else_loc = loc_hash[:else]
-
-          first_clause_fallback = loc_hash[:begin]
-          if first_clause_fallback
-            first_clause_fallback = first_clause_fallback.wrap_rwhitespace_and_comments.end
-          elsif else_loc
-            first_clause_fallback = else_loc.begin
-          end
-
           if else_loc
-            second_clause_fallback = else_loc.wrap_rwhitespace_and_comments.end
+            second_clause_fallback = wrap_rwhitespace_and_comments_if_ruby25(else_loc).end
+          else
+            end_loc = root_if_node.loc_hash[:end] # This is nil for modifier ifs
+            second_clause_fallback = end_loc.begin if end_loc
           end
-          end_loc = root_if_node.loc_hash[:end]
-          end_loc = end_loc.begin if end_loc
 
-          empty_fallback_locs = [first_clause_fallback || end_loc, second_clause_fallback || end_loc]
+          empty_fallback_locs = [first_clause_fallback, second_clause_fallback]
         end
         # loc can be nil if the clause can't be empty, such as ternary and modifer if/unless
 
@@ -153,11 +150,13 @@ module DeepCover
                         end_pos = body.instructions.last.expression.end_pos
                         body.instructions.first.expression.with(end_pos: end_pos)
                       else
-                        body.loc_hash[:end].begin
+                        wrap_rwhitespace_and_comments_if_ruby25(body.loc_hash[:begin]).end
                       end
                     elsif body.is_a?(Node::Begin) && !node.body.expressions.empty?
                       end_pos = body.expressions.last.expression.end_pos
                       body.expressions.first.expression.with(end_pos: end_pos)
+                    elsif body.is_a?(Node::EmptyBody)
+                      wrap_rwhitespace_and_comments_if_ruby25(condition.loc_hash[:expression]).end
                     else
                       body
                     end
@@ -167,13 +166,12 @@ module DeepCover
 
       protected
 
-      # If the actual else clause (final one) of an if...elsif...end is empty, then Ruby makes the
-      # node reach the `end` in its branch coverage output
+      # If the actual else clause (final one) of an if...elsif...end is empty, then Ruby25 wraps the final whitespace
       def extend_elsif_range(possible_elsif = node)
         return possible_elsif unless possible_elsif.is_a?(Node::If) && possible_elsif.style == :elsif
         deepest_if = possible_elsif.deepest_elsif_node
         if deepest_if.false_branch.is_a?(Node::EmptyBody)
-          return possible_elsif.expression.with(end_pos: possible_elsif.root_if_node.loc_hash[:end].begin_pos)
+          return wrap_rwhitespace_and_comments_if_ruby25(possible_elsif.expression)
         end
         possible_elsif
       end
@@ -205,6 +203,14 @@ module DeepCover
 
         @loc_index += 1
         [@loc_index, source_range.line, source_range.column, source_range.last_line, source_range.last_column]
+      end
+
+      def wrap_rwhitespace_and_comments_if_ruby25(expression, whitespaces: /\A\s+/)
+        if RUBY_VERSION.start_with?('2.5')
+          expression.wrap_rwhitespace_and_comments(whitespaces: whitespaces)
+        else
+          expression
+        end
       end
     end
   end
