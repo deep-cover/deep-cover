@@ -243,7 +243,7 @@
 
     end
 
-#### Empty & without a body ensure (branch_like_25_pending)
+#### Empty & without a body ensure
     begin
 
     ensure

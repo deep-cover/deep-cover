@@ -107,14 +107,14 @@ module DeepCover
         else
           first_clause_fallback = wrap_rwhitespace_and_comments_if_ruby25(loc_hash[:begin]) if loc_hash[:begin]
           first_clause_fallback ||= wrap_rwhitespace_and_comments_if_ruby25(condition.expression)
-          # Ruby26 wraps the comments on the same line
+          # Ruby26 wraps the comments but only on the same line
+          # No need for condition since Ruby25 wraps all of them
           first_clause_fallback = first_clause_fallback.wrap_final_comment.end
           else_loc = loc_hash[:else]
           if else_loc
             second_clause_fallback = wrap_rwhitespace_and_comments_if_ruby25(else_loc).end
-          else
-            end_loc = root_if_node.loc_hash[:end] # This is nil for modifier ifs
-            second_clause_fallback = end_loc.begin if end_loc
+          elsif !modifier?
+            second_clause_fallback = root_if_node.loc_hash[:end].begin
           end
 
           empty_fallback_locs = [first_clause_fallback, second_clause_fallback]
@@ -128,6 +128,25 @@ module DeepCover
 
         branches_locs = branches
         execution_counts = branches_locs.map(&:execution_count)
+        if modifier?
+          branches_locs = branches_locs.map do |branch|
+            if branch.is_a?(Node::Kwbegin)
+              if branch.instructions.empty?
+                wrap_rwhitespace_and_comments_if_ruby25(branch.loc_hash[:begin]).end
+              elsif branch.instructions.first.is_a?(Node::Ensure)
+                # Kernel.binding.pry
+                end_pos = wrap_rwhitespace_and_comments_if_ruby25(branch.instructions.last.expression).end_pos
+                wrap_rwhitespace_and_comments_if_ruby25(branch.loc_hash[:begin]).end.with(end_pos: end_pos)
+              else
+                end_pos = branch.instructions.last.expression.end_pos
+                branch.loc_hash[:begin].wrap_rwhitespace_and_comments.end.with(end_pos: end_pos)
+              end
+            else
+              branch
+            end
+          end
+        end
+
         branches_locs[1] = extend_elsif_range(branches_locs[1])
 
         clauses_infos = infos_for_branches(branches_locs, sub_keys, empty_fallback_locs, execution_counts: execution_counts, node_range: node_range)
@@ -152,7 +171,7 @@ module DeepCover
                       else
                         wrap_rwhitespace_and_comments_if_ruby25(body.loc_hash[:begin]).end
                       end
-                    elsif body.is_a?(Node::Begin) && !node.body.expressions.empty?
+                    elsif body.is_a?(Node::Begin) && !body.expressions.empty?
                       end_pos = body.expressions.last.expression.end_pos
                       body.expressions.first.expression.with(end_pos: end_pos)
                     elsif body.is_a?(Node::EmptyBody)

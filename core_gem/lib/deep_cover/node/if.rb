@@ -67,6 +67,10 @@ module DeepCover
       def has_else?
         !!base_node.loc.to_hash[:else]
       end
+
+      def modifier?
+        loc_hash[:keyword] && root_if_node.loc_hash[:end].nil?
+      end
     end
   end
 end

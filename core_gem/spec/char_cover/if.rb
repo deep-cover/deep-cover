@@ -123,3 +123,25 @@
 #>              x    -       -      -
     x = trux ? 1 : 2; assert(x == 1)
 #>               x x-       -      -
+
+### Modifier with a begin/end
+    begin
+      'here'
+    end if trux # missed_empty_branch
+
+    begin
+#>X
+      'not here'
+#>X
+    end unless trux
+#>  xxx
+
+#### empty
+    begin
+
+    end if trux # missed_empty_branch
+
+    begin
+#>X
+    end unless trux
+#>  xxx
