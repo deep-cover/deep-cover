@@ -54,6 +54,8 @@ module DeepCover
     end
 
     it 'handles autoload of gem which are not yet on the LOAD_PATH' do
+      skip if RUBY_PLATFORM == 'java'
+
       setup_deep_covered_script(<<-RUBY)
         Object.autoload(:Thor, 'thor')
         Thor
