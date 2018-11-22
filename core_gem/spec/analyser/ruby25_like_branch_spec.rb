@@ -289,9 +289,16 @@ module DeepCover
       end while a < 10
     RUBY
 
-    cases.split("###\n").each_with_index do |code, i|
-      it "sample ##{i} (0-indexed)" do
-        code.should have_similar_result_to_ruby
+    if RUBY_PLATFORM != 'java'
+      cases.split("###\n").each_with_index do |code, i|
+        it "sample ##{i} (0-indexed)" do
+          code.should have_similar_result_to_ruby
+        end
+      end
+
+      each_code_examples(name: 'branch_like_25') do |fn, lines, lineno|
+        skip if lines.any? { |line| line =~ /current_ast|assert_counts/ }
+        lines.join.should have_similar_result_to_ruby(ignore_shortcircuit: true)
       end
     end
 
@@ -345,11 +352,6 @@ module DeepCover
       else_branch, else_hits = branches.detect { |k, v| k.first == :else }
       else_hits.should == 1
       else_branch[2..-1].should == [1, 9, 1, 11]
-    end
-
-    each_code_examples(name: 'branch_like_25') do |fn, lines, lineno|
-      skip if lines.any? { |line| line =~ /current_ast|assert_counts/ }
-      lines.join.should have_similar_result_to_ruby(ignore_shortcircuit: true)
     end
   end
 end
