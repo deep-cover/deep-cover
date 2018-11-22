@@ -102,6 +102,14 @@ module DeepCover
           tmp_loaded_features = $LOADED_FEATURES.dup
           $LOADED_FEATURES[0..-1] = requirer.loaded_features
           @result[:ruby] = send(@method_name, require_path)
+          if RUBY_PLATFORM == 'java'
+            if @result[:ruby] == true && !$LOADED_FEATURES.empty? && $LOADED_FEATURES.last.end_with?('.jar')
+              # JRuby doesn't seems to fail on an empty/bad jar...
+              # So we must manually detect the native_extension here
+              @result[:ruby] = :native_extension
+              $LOADED_FEATURES.pop
+            end
+          end
         rescue LoadError => e
           if e.message[/undefined symbol/] || e.message[/symbol not found/]
             @result[:ruby] = :native_extension
