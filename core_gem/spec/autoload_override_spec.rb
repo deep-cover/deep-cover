@@ -24,7 +24,8 @@ module DeepCover
       ['ruby', script_file.path].should run_successfully.from_dir(File.dirname(script_file.path)).and_output('Done')
     end
 
-    it 'handles manual require of autoloaded bundler which is not yet on the LOAD_PATH (but bunder is builtin to RubyGems)' do
+    it 'handles manual require of autoloaded bundler which is not yet on the LOAD_PATH (but bundler is builtin to RubyGems)' do
+      skip 'Need a more recent version of Rubygems' if Gem::VERSION < '2.7'
       setup_deep_covered_script(<<-RUBY)
         Object.autoload(:Bundler, 'bundler')
         require 'bundler'
@@ -33,7 +34,8 @@ module DeepCover
       assert_script_runs
     end
 
-    it 'handles autoload of bundler which not yet on the LOAD_PATH (but bunder is builtin to RubyGems)' do
+    it 'handles autoload of bundler which not yet on the LOAD_PATH (but bundler is builtin to RubyGems)' do
+      skip 'Need a more recent version of Rubygems' if Gem::VERSION < '2.7'
       setup_deep_covered_script(<<-RUBY)
         Object.autoload(:Bundler, 'bundler')
         Bundler
