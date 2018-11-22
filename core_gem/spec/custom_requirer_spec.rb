@@ -540,24 +540,47 @@ module DeepCover
         'test'.should actually_require('one/test.rb', expected_loaded_feature: 'one/test.rb')
       end
 
-      it 'a ./path keeps symlinks after the current work dir' do
-        file_tree %w(pwd:one/
-                     one/test.rb
-                     one/two/test.rb
+      if RUBY_PLATFORM == 'java' && JRUBY_VERSION >= '9.2.5'
+        # https://github.com/jruby/jruby/issues/5465
+        it "a ./path doesn't keep symlinks after the current work dir" do
+          file_tree %w(pwd:one/
+                       one/test.rb
+                       one/two/test.rb
                     )
-        FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
+          FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
 
-        './sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/sym_two/test.rb')
-      end
+          './sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/two/test.rb')
+        end
 
-      it 'a ../path keeps symlinks after the current work dir' do
-        file_tree %w(pwd:one/deeper/
-                     one/test.rb
-                     one/two/test.rb
+        it "a ../path doesn't keep symlinks after the current work dir" do
+          file_tree %w(pwd:one/deeper/
+                       one/test.rb
+                       one/two/test.rb
                     )
-        FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
+          FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
 
-        '../sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/sym_two/test.rb')
+          '../sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/two/test.rb')
+        end
+      else
+        it 'a ./path keeps symlinks after the current work dir' do
+          file_tree %w(pwd:one/
+                       one/test.rb
+                       one/two/test.rb
+                    )
+          FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
+
+          './sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/sym_two/test.rb')
+        end
+
+        it 'a ../path keeps symlinks after the current work dir' do
+          file_tree %w(pwd:one/deeper/
+                       one/test.rb
+                       one/two/test.rb
+                    )
+          FileUtils.ln_s from_root('one/two'), from_root('one/sym_two')
+
+          '../sym_two/test'.should actually_require('one/two/test.rb', expected_loaded_feature: 'one/sym_two/test.rb')
+        end
       end
 
       # NOTE: This actually happens at OS level (at least on Linux and Mac)

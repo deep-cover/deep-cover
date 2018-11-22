@@ -43,7 +43,11 @@ module DeepCover
 
       if path == abs_path
         paths_with_ext.each do |path_with_ext|
-          return path_with_ext if File.exist?(path_with_ext)
+          next unless File.exist?(path_with_ext)
+
+          # https://github.com/jruby/jruby/issues/5465
+          path_with_ext = File.realpath(path_with_ext) if RUBY_PLATFORM == 'java' && JRUBY_VERSION >= '9.2.5'
+          return path_with_ext
         end
       else
         possible_paths = paths_with_load_paths(paths_with_ext)
