@@ -8,7 +8,7 @@ module DeepCover
 
     def start
       return if running?
-      if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+      if RUBY_PLATFORM == 'java'
         # Autoload is not supported in JRuby. We currently need to use binding_of_caller
         # and that is not available in JRuby. An extension may be able to replace this requirement.
         # require_relative 'core_ext/autoload_overrides'

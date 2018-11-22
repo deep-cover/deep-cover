@@ -54,7 +54,7 @@ namespace :dev do
   task :install do
     commands = []
 
-    if RUBY_VERSION >= '2.2.2' && (!defined?(RUBY_ENGINE) || RUBY_ENGINE != 'jruby')
+    if RUBY_VERSION >= '2.2.2' && RUBY_PLATFORM != 'java'
       commands << 'bundle install --gemfile=core_gem/spec/code_fixtures/rails51_project/Gemfile'
     end
     commands << 'bundle install --gemfile=spec/code_fixtures/simple_rails42_app/Gemfile'

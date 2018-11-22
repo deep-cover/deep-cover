@@ -35,7 +35,7 @@ begin
                                define_here_but_requires_autoloader.rb autoload_here_but_required_by_definer.rb
                                loaded_file.rb)
   expected_covered_files = expected_executed_files
-  if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+  if RUBY_PLATFORM == 'java'
     # Autoload isn't covered by DeepCover for JRuby
     expected_covered_files -= %w(root_module_autoloaded.rb nested_module_autoloaded.rb root_module_autoload_manually_required.rb)
   end

@@ -16,7 +16,7 @@ module DeepCover
       unshift_coverage(result.fetch(filename), lineno)
     end
 
-    if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+    if RUBY_PLATFORM == 'java'
       # Executes the source as if it was in the specified file while
       # builtin coverage information is still captured
       def run_with_line_coverage(source, filename = nil, lineno = 1)
