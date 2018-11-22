@@ -78,6 +78,7 @@ module DeepCover
     # Exceptions raised by the required code bubble up as normal, except for
     # SyntaxError, which is turned into a :cover_failed which calls the fallback_block.
     def require(path) # &fallback_block
+      raise 'Should receive the fallback_block' unless block_given?
       path = path.to_s
 
       found_path = resolve_path(path)
@@ -113,6 +114,7 @@ module DeepCover
     # Same yield/return behavior as CustomRequirer#require, except that it
     # cannot return false #load doesn't care about a file already being executed.
     def load(path) # &fallback_block
+      raise 'Should receive the fallback_block' unless block_given?
       path = path.to_s
 
       found_path = resolve_path(path, try_extensions: false)

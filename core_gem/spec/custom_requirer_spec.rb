@@ -781,7 +781,7 @@ module DeepCover
                          one/two/three/test.rb
         )
 
-        result = requirer.load('test.rb')
+        result = requirer.load('test.rb') { |reason| reason }
         result.should == true
         $last_test_tree_file_executed.should == 'one/two/test.rb'
         requirer.loaded_features.should == []
