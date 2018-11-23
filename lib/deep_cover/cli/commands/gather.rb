@@ -20,17 +20,8 @@ module DeepCover
                  'DEEP_COVER_OPTIONS' => YAML.dump(processed_options.slice(*DEFAULTS.keys)),
       }
 
-      # Clear inspiration from Bundler's kernel_exec
-      # https://github.com/bundler/bundler/blob/d44d803357506895555ff97f73e60d593820a0de/lib/bundler/cli/exec.rb#L50
-      begin
-        Kernel.exec(env_var, *command_parts)
-      rescue Errno::EACCES, Errno::ENOEXEC
-        warn set_color("not executable: #{command_parts.first}", :red)
-        exit 126 # Default exit code for that
-      rescue Errno::ENOENT
-        warn set_color("command not found: #{command_parts.first}", :red)
-        exit 127 # Default exit code for that
-      end
+      exit_code = Tools.run_command_or_exit(shell, env_var, *command_parts)
+      exit(exit_code)
     end
   end
 end
