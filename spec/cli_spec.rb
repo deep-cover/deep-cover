@@ -6,6 +6,9 @@ module DeepCover
   RSpec.describe 'CLI', :slow do
     def run_command(command, expected_errors: /^$/, expected_status: 0)
       require 'open3'
+
+      command = "ruby --dev #{command}" if RUBY_PLATFORM == 'java'
+
       out, errors, status = Bundler.with_clean_env do
         Open3.capture3(command)
       end

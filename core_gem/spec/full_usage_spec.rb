@@ -6,7 +6,7 @@ FIXTURE_PATH = File.realpath('code_fixtures', __dir__)
 
 RSpec.describe 'DeepCover usage' do
   ['', 'uncovered', 'takeover', 'takeover uncovered', 'no_deep_cover'].each do |args|
-    command = "ruby simple/simple.rb #{args}"
+    command = "ruby #{JRUBY_DEV_OPTION} simple/simple.rb #{args}"
     it "`#{command}`" do
       command.split.should run_successfully.from_dir(FIXTURE_PATH).and_output('Done')
     end
@@ -14,12 +14,14 @@ RSpec.describe 'DeepCover usage' do
 
   describe '', :slow do
     it do
-      %w(ruby with_configure/test.rb).should run_successfully.from_dir(FIXTURE_PATH).and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
+      ['ruby', JRUBY_DEV_OPTION, 'with_configure/test.rb'].compact.should(
+          run_successfully.from_dir(FIXTURE_PATH).and_output('[nil, 1, 0, 2, nil, nil, 2, nil, nil]')
+      )
     end
 
     xit 'Can still require gems when there is no bundler' do
       'gem install --local spec/code_fixtures/trivial_gem/pkg/trivial_gem-0.1.0.gem'.should run_successfully
-      %(ruby -e 'require "./lib/deep_cover"; DeepCover.start; require "trivial_gem"').should run_successfully
+      %(ruby #{JRUBY_DEV_OPTION} -e 'require "./lib/deep_cover"; DeepCover.start; require "trivial_gem"').should run_successfully
     end
 
     it 'Can `rspec` a rails51 app' do

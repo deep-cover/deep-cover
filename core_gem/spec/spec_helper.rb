@@ -34,6 +34,13 @@ RSpec.configure do |config|
   end
 end
 
+# This option makes short-lived jruby processes run faster.
+if RUBY_PLATFORM == 'java'
+  JRUBY_DEV_OPTION = '--dev'
+else
+  JRUBY_DEV_OPTION = nil
+end
+
 def trivial_gem_coverage
   # We can only easily require this at most once, so we have to share...
   $trivial_gem_coverage ||= begin
