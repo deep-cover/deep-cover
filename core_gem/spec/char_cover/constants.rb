@@ -49,7 +49,7 @@
     rescue
     end
 
-#### Assigned with ||=
+#### Assigned with ||= (jruby 9.2.5.0+)
 
     DeepCover ||= 42
 #>                xx

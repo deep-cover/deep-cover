@@ -23,6 +23,8 @@ class RSpec::Core::ExampleGroup
                       :skip if RUBY_VERSION >= "2.#{Regexp.last_match(1)}.0"
                     when /\(!jruby/i
                       :skip if RUBY_PLATFORM == 'java'
+                    when /\(jruby (\d(?:\.\d)+)\+/i
+                      :skip if RUBY_PLATFORM == 'java' && JRUBY_VERSION < Regexp.last_match(1)
                     when /\(#/
                     when /\(tag/
                     when /\(\s*\)/
