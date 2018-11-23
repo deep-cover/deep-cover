@@ -184,7 +184,7 @@ module DeepCover
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
 
-        it 'removes trackers if directory becomes empty' do
+        it 'removes directory if it becomes empty' do
           tracker_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
           File.write(tracker_path, 'trackers')
 
