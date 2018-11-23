@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# This launches ruby with the --dev option. This options makes short-lived jruby scripts
+# run much faster. To make it simpler to than the --dev option, this command will also
+# search on the PATH to find the file to execute. So you can do `bin/rubydev rspec`, and
+# it will work as expected, unlike with `ruby`, which expects a direct path to the file.
+
+# You may want to add this function directly to your bashrc
+# This way you can do `rubydev rspec`, instead of having to do `bin/rubydev rspec`
+# Extra alias suggestion: `alias jrspec='rubydev rspec $@'`
+
+rubydev () {
+  if [ -e "$1" ]
+  then
+    ruby --dev $@
+  elif [ -e "`which $1`" ]
+  then
+    ruby --dev "`which $1`" "${@:2}"
+  else
+    echo "Can't find '$1'"
+  fi
+}
+
+rubydev $@
