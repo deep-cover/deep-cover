@@ -732,7 +732,8 @@ module DeepCover
         end
       end
 
-      it 'outputs some diagnostics if DeepCover creates a syntax error', exclude: :JRuby do
+      it 'outputs some diagnostics if DeepCover creates a syntax error' do
+        skip if RUBY_PLATFORM == 'java' && JRUBY_VERSION < '9.2.5'
         defined?(TrivialGem).should be_nil # Sanity check
         path = Pathname.new(__dir__).join('code_fixtures/trivial_gem/lib/trivial_gem/version.rb')
         # Fake a rewriting problem:
