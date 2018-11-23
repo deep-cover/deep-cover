@@ -27,8 +27,7 @@ module DeepCover
       }
 
       DeepCover.delete_trackers
-      system(env_var, *command_parts)
-      exit_code = $?.exitstatus
+      exit_code = Tools.run_command_or_exit(shell, env_var, *command_parts)
       coverage = Coverage.load
       puts coverage.report(**processed_options)
       exit(exit_code)
