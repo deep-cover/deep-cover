@@ -66,7 +66,7 @@ module DeepCover
         end
       end
 
-      if RUBY_VERSION >= '2.5' || cov_module == CoverageReplacement
+      if (RUBY_VERSION >= '2.5' && RUBY_PLATFORM != 'java') || cov_module == CoverageReplacement
         it 'accepts a hash of coverage targets' do
           cov_module.running?.should == false
           cov_module.start(branches: true)
@@ -161,7 +161,7 @@ module DeepCover
       end
 
       # This was restrictive in 2.5, not anymore in 2.6
-      if RUBY_VERSION.start_with?('2.5')
+      if RUBY_VERSION.start_with?('2.5') && RUBY_PLATFORM != 'java'
         it 'raises an exception if started with no targets' do
           expect do
             cov_module.start({})
