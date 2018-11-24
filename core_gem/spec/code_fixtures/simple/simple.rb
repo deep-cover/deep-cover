@@ -92,10 +92,17 @@ begin
   require 'root_module_autoload_manually_required'
 
   TheParentClass.new.setup_implicit_autoload_from_included_module
-  TheParentModule::ImplicitAutoloadFromIncludedModule
-
   TheParentClass.new.setup_kernel_autoload_from_included_module
-  TheParentModule::KernelAutoloadFromIncludedModule
+
+  if RUBY_PLATFORM == 'java'
+    TheParentClass::ImplicitAutoloadFromIncludedModule
+    # Yeah, this is weird
+    # https://github.com/jruby/jruby/issues/5466
+    Object.singleton_class::KernelAutoloadFromIncludedModule
+  else
+    TheParentModule::ImplicitAutoloadFromIncludedModule
+    TheParentModule::KernelAutoloadFromIncludedModule
+  end
 
   require 'define_here_but_requires_autoloader'
 
