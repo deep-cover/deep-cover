@@ -84,10 +84,27 @@ module DeepCover
   load_all
 
   module KernelAutoloadOverride
-    def autoload(name, path)
-      mod = binding.of_caller(1).eval('Module.nesting').first || Object
-      autoload_path = DeepCover.autoload_tracker.autoload_path_for(mod, name, path)
-      mod.autoload_without_deep_cover(name, autoload_path)
+    if RUBY_PLATFORM == 'java'
+      # JRuby has different semantics for Kernel.autoload and Kernel#autoload
+      def autoload(name, path)
+        if Kernel.equal?(self)
+          # Yeah, this is weird
+          # https://github.com/jruby/jruby/issues/5466
+          mod = Object.singleton_class
+        elsif self.is_a?(Module)
+          mod = self
+        else
+          mod = self.class
+        end
+        autoload_path = DeepCover.autoload_tracker.autoload_path_for(mod, name, path)
+        mod.autoload_without_deep_cover(name, autoload_path)
+      end
+    else
+      def autoload(name, path)
+        mod = binding.of_caller(1).eval('Module.nesting').first || Object
+        autoload_path = DeepCover.autoload_tracker.autoload_path_for(mod, name, path)
+        mod.autoload_without_deep_cover(name, autoload_path)
+      end
     end
 
     extend ModuleOverride

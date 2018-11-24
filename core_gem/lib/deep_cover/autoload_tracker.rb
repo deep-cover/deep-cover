@@ -45,34 +45,44 @@ module DeepCover
       autoloads && !autoloads.empty?
     end
 
-    def wrap_require(requested_path, absolute_path_found) # &block
-      entries = entries_for_target(requested_path, absolute_path_found)
-
-      begin
-        entries.each do |entry|
-          mod = entry.mod_if_available
-          next unless mod
-          mod.autoload_without_deep_cover(entry.name, already_loaded_feature)
-        end
-
+    if RUBY_PLATFORM == 'java'
+      # JRuby dislikes that we change the autoload as it is executing an autoload
+      # Things seems to work when we do nothing special
+      def wrap_require(requested_path, absolute_path_found) # &block
         yield
-      ensure
+      end
+    else
+      def wrap_require(requested_path, absolute_path_found) # &block
         entries = entries_for_target(requested_path, absolute_path_found)
-        entries.each do |entry|
-          mod = entry.mod_if_available
-          next unless mod
-          # Putting the autoloads back back since we couldn't complete the require
-          mod.autoload_without_deep_cover(entry.name, entry.interceptor_path)
+
+        begin
+          entries.each do |entry|
+            mod = entry.mod_if_available
+            next unless mod
+            mod.autoload_without_deep_cover(entry.name, already_loaded_feature)
+          end
+
+          yield
+        ensure
+          entries = entries_for_target(requested_path, absolute_path_found)
+          entries.each do |entry|
+            mod = entry.mod_if_available
+            next unless mod
+            # Putting the autoloads back back since we couldn't complete the require
+            mod.autoload_without_deep_cover(entry.name, entry.interceptor_path)
+          end
         end
       end
     end
 
-    # This is only used on MRI, so ObjectSpace is alright.
+    # In JRuby, ObjectSpace.each_object is allowed for Module and Class, so we are good.
     def initialize_autoloaded_paths(mods = ObjectSpace.each_object(Module)) # &do_autoload_block
       mods.each do |mod|
         # Module's constants are shared with Object. But if you set autoloads directly on Module, they
         # appear on multiple classes. So just skip, Object will take care of those.
         next if mod == Module
+        # This happens with JRuby
+        next unless mod.respond_to?(:constants)
 
         if mod.frozen?
           if mod.constants.any? { |name| mod.autoload?(name) }
@@ -82,7 +92,10 @@ module DeepCover
         end
 
         mod.constants.each do |name|
-          path = mod.autoload?(name)
+          # JRuby can talk about deprecated constants here
+          path = Tools.silence_warnings do
+            mod.autoload?(name)
+          end
           next unless path
           interceptor_path = setup_interceptor_for(mod, name, path)
           yield mod, name, interceptor_path
