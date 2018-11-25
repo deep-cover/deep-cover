@@ -21,8 +21,9 @@ module DeepCover
       Object.autoload :Forwardable, 'forwardable'
       Object.autoload :YAML, 'yaml'
 
-      # In ruby 2.2 and less, autoload doesn't work for gems which are not already on the `$LOAD_PATH`.
+      # In ruby 2.2 and in JRuby, autoload doesn't work for gems which are not already on the `$LOAD_PATH`.
       # The fix is to just require right away for those rubies
+      # JRuby issue asking for this to be changed: https://github.com/jruby/jruby/issues/5403
       #
       # Low-level: autoload not working for gems not on the `$LOAD_PATH` is because those rubies don't
       # call the regular `#require` when triggering an autoload, and the gem system monkey-patches `#require`
@@ -32,7 +33,7 @@ module DeepCover
        Term: 'term/ansicolor',
        Terminal: 'terminal-table',
       }.each do |const, require_path|
-        if RUBY_VERSION < '2.3'
+        if RUBY_VERSION < '2.3' || RUBY_PLATFORM == 'java'
           require require_path
         else
           Object.autoload const, require_path
