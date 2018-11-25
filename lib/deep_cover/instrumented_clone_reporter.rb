@@ -42,7 +42,15 @@ module DeepCover
 
     def create_entry_point_file
       require 'tempfile'
-      file = Tempfile.new(['deep_cover_entry_point', '.rb'])
+
+      file = nil
+      # Basically creating a Tempfile, but we don't want it to be automatically removed...
+      # We can't use `ObjectSpace.undefine_finalizer` because it doesn't appear to work on JRuby.
+      # Simplified code straight from `Tempfile#initialize`
+      ::Dir::Tmpname.create(['deep_cover_entry_point', '.rb']) do |tmpname|
+        file = File.open(tmpname, File::RDWR | File::CREAT | File::EXCL, perm: 0o600)
+      end
+
       template = File.read(DeepCover::CORE_GEM_LIB_DIRECTORY + '/deep_cover/setup/clone_mode_entry_template.rb')
 
       cache_directory = DeepCover.config.cache_directory.to_s
@@ -55,9 +63,6 @@ module DeepCover
 
       file.write(template)
       file.close
-
-      # We dont want the file to be removed, this way it stays as long as the clones directory does.
-      ObjectSpace.undefine_finalizer(file)
 
       file.path
     end
