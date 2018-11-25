@@ -104,8 +104,12 @@ module DeepCover
 
     def process
       DeepCover.delete_trackers
-      system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, *@options[:command], chdir: @main_path)
-      $?.exitstatus
+      # JRuby has a weird behavior with chdir. You can't use it with system if you already did a Dir.chdir (which
+      # we may have done to handle the --change-directory option)...
+      Dir.chdir(@main_path) do
+        system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, *@options[:command])
+        $?.exitstatus
+      end
     end
 
     def report
