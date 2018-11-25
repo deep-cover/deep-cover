@@ -66,7 +66,7 @@ module DeepCover
           root_path = File.expand_path(options[:change_directory])
           unless File.exist?(root_path)
             warn set_color(DeepCover::Tools.strip_heredoc(<<-MSG), :red)
-              bad value for option --change_directory: #{root_path.inspect} is not a valid directory
+              bad value for option --change-directory: #{root_path.inspect} is not a valid directory
             MSG
             exit(1)
           end
