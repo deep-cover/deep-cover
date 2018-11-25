@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'tempfile'
+
 module DeepCover
   module Tools::BuiltinCoverage
     def builtin_coverage(source, filename, lineno)
@@ -8,7 +10,7 @@ module DeepCover
       ::Coverage.start
       begin
         Tools.silence_warnings do
-          execute_sample -> { run_with_line_coverage(source, filename, lineno) }
+          execute_sample -> { filename = run_with_line_coverage(source, filename, lineno) }
         end
       ensure
         result = ::Coverage.result
@@ -16,30 +18,21 @@ module DeepCover
       unshift_coverage(result.fetch(filename), lineno)
     end
 
-    if RUBY_PLATFORM == 'java'
-      # Executes the source as if it was in the specified file while
-      # builtin coverage information is still captured
-      def run_with_line_coverage(source, filename = nil, lineno = 1)
-        source = shift_source(source, lineno)
-        Object.to_java.getRuntime.executeScript(source, filename)
-      end
-    else
-      # In ruby 2.0 and 2.1, using 2, 3 or 4 as lineno with RubyVM::InstructionSequence.compile
-      # will cause the coverage result to be truncated.
-      # 1: [1,2,nil,1]
-      # 2: [nil,1,2,nil]
-      # 3: [nil,nil,1,2]
-      # 4: [nil,nil,nil,1]
-      # 5: [nil,nil,nil,nil,1,2,nil,1]
-      # Using 1 and 5 or more do not seem to show this issue.
-      # The workaround is to create the fake lines manually and always use the default lineno
+    def run_with_line_coverage(source, filename = '<code>', lineno = 1)
+      source = shift_source(source, lineno)
+      f = Tempfile.new(['ruby', '.rb'])
+      f.write(source)
+      f.close
 
-      # Executes the source as if it was in the specified file while
-      # builtin coverage information is still captured
-      def run_with_line_coverage(source, filename = nil, lineno = 1)
-        source = shift_source(source, lineno)
-        RubyVM::InstructionSequence.compile(source, filename).eval
+      begin
+        require f.path
+      rescue StandardError => e
+        tempfile_matcher = Regexp.new("\\A#{Regexp.escape(f.path)}(?=:\\d)")
+        e.backtrace.each { |l| l.sub!(tempfile_matcher, filename) }
+        raise
       end
+      $LOADED_FEATURES.delete(f.path)
+      f.path
     end
 
     private
