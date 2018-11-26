@@ -29,28 +29,29 @@ module DeepCover
       let(:sample_require_path) { "#{SAMPLES_PATH}/basic_branching.rb" }
 
       it 'can be started as many times as desired' do
-        cov_module.start.should == nil
-        cov_module.start.should == nil
+        # The silence warnings are for JRuby which warns about using --debug for tracing, but we don't need that.
+        Tools.silence_warnings { cov_module.start }.should == nil
+        Tools.silence_warnings { cov_module.start }.should == nil
       end
 
       it 'allows calling result at most once after each start' do
         expect { cov_module.result }.to raise_error(RuntimeError)
-        cov_module.start
+        Tools.silence_warnings { cov_module.start }
         cov_module.result.should == {}
         expect { cov_module.result }.to raise_error(RuntimeError)
-        cov_module.start.should == nil
+        Tools.silence_warnings { cov_module.start }.should == nil
         cov_module.result.should == {}
       end
 
       if RUBY_VERSION >= '2.3' || cov_module.respond_to?(:peek_result)
         it 'allows calling peek_result many times, once after a start' do
           expect { cov_module.peek_result }.to raise_error(RuntimeError)
-          cov_module.start
+          Tools.silence_warnings { cov_module.start }
           cov_module.peek_result.should == {}
           cov_module.peek_result.should == {}
           cov_module.result.should == {}
           expect { cov_module.peek_result }.to raise_error(RuntimeError)
-          cov_module.start
+          Tools.silence_warnings { cov_module.start }
           cov_module.peek_result.should == {}
           cov_module.peek_result.should == {}
         end
@@ -59,7 +60,7 @@ module DeepCover
       if RUBY_VERSION >= '2.5' || cov_module.respond_to?(:running?)
         it "returns it's current state" do
           cov_module.running?.should == false
-          cov_module.start
+          Tools.silence_warnings { cov_module.start }
           cov_module.running?.should == true
           cov_module.result
           cov_module.running?.should == false
