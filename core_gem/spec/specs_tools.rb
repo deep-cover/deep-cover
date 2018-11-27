@@ -100,7 +100,7 @@ module DeepCover
       lines.chunk { |line| line !~ ANSWER }.each do |is_code, chunk|
         chunk.map!(&:chomp)
         unless is_code
-          raise 'Hey' unless chunk.size == 1
+          raise 'Double #> makes no sense' unless chunk.size == 1
           answer = chunk.first
           if answer.start_with?('#>X')
             answer = NOT_EXECUTED
