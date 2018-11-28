@@ -54,13 +54,14 @@ namespace :dev do
   task :install do
     commands = []
 
-    if RUBY_VERSION >= '2.2.2' && RUBY_PLATFORM != 'java'
-      commands << 'bundle install --gemfile=core_gem/spec/code_fixtures/rails51_project/Gemfile'
-    end
-    commands << 'bundle install --gemfile=spec/code_fixtures/simple_rails42_app/Gemfile'
-    commands << 'bundle install --gemfile=spec/code_fixtures/rails_like_gem/Gemfile'
-    commands << 'bundle install --gemfile=core_gem/Gemfile'
-    commands << 'bundle install'
+    gemfiles = ['',
+                'core_gem/Gemfile',
+                'spec/code_fixtures/simple_rails42_app/Gemfile',
+                'spec/code_fixtures/rails_like_gem/Gemfile',
+               ]
+    gemfiles << 'core_gem/spec/code_fixtures/rails51_project/Gemfile' if RUBY_VERSION >= '2.2.2' && RUBY_PLATFORM != 'java'
+
+    commands += gemfiles.map { |gemfile| "bundle install --gemfile=#{gemfile} --jobs=3 --retry=3" }
 
     commands.each do |command|
       puts "Running: #{command}"
