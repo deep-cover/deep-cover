@@ -13,6 +13,10 @@ module DeepCover
       require_relative 'basics'
       require_relative 'config_setter'
       require_relative 'tools/camelize'
+      require_relative 'tools/ruby_engines'
+      DeepCover.extend(Tools::RubyEngines)
+      Tools.extend(Tools::RubyEngines)
+
       AUTOLOAD.each do |module_name|
         DeepCover.autoload(Tools::Camelize.camelize(module_name), "#{__dir__}/#{module_name}")
       end
