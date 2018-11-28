@@ -9,11 +9,11 @@ rvm:
   - 2.1.10
   - jruby-head
   - jruby-9.1.9.0
-before_install:
+
+install:
   - gem install bundler
+  - rake dev:install
   - npm install -g nyc
-before_script:
-  - bundle exec rake dev:install
 script:
   - bundle exec rake test:all
 matrix:
