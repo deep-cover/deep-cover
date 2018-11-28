@@ -1,5 +1,7 @@
 # Changelog
 
+* We now officially support JRuby. Our test-suite passes with it.
+
 ## 0.7.0
 
 * Switched CLI to rely on Thor instead of Slop

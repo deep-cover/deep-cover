@@ -18,6 +18,4 @@ script:
   - bundle exec rake test:all
 matrix:
   allow_failures:
-  - rvm: jruby-head
-  - rvm: jruby-9.1.9.0
   - rvm: ruby-head
