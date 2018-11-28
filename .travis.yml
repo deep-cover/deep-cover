@@ -10,7 +10,6 @@ rvm:
   - jruby-head
   - jruby-9.1.9.0
 before_install:
-  - gem update --system
   - gem install bundler
   - npm install -g nyc
 before_script:
