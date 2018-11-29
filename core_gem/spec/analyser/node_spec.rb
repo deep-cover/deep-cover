@@ -57,25 +57,25 @@ module DeepCover
             :ok
           end
           foo(:a, :b)
-          RUBY
+      RUBY
 
       it { :raise.should ignore_nodes("raise 'oops'", "'oops'", of: <<-RUBY) }
           raise 'oops' if 1 + 1 == 3
-          RUBY
+      RUBY
 
       it { :trivial_if.should ignore_nodes(42, 'foo(42)', of: <<-RUBY) }
           foo(42) if false
-          RUBY
+      RUBY
 
       it { :warn.should ignore_nodes("warn 'yo'", "'yo'", of: <<-RUBY) }
           warn 'yo' if 1 + 1 == 3
-          RUBY
+      RUBY
 
       it { nil.should ignore_nodes(42, 'foo(42)', of: <<-RUBY) }
           if false
             foo(42) # nocov
           end
-          RUBY
+      RUBY
 
       DeepCover.config.ignore_uncovered :test_custom_filter do
         type == :int
@@ -83,7 +83,7 @@ module DeepCover
 
       it { :test_custom_filter.should ignore_nodes('42', of: <<-RUBY) }
           42 if false
-          RUBY
+      RUBY
     end
   end
 end

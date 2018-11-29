@@ -34,7 +34,7 @@ module DeepCover
           :a
         end
         dummy_method(nil, 'x') || []
-        RUBY
+      RUBY
 
       it { should == {false => [2, 3], true => [1, 5]} }
     end
@@ -45,7 +45,7 @@ module DeepCover
           'x' ||
           42
         )
-        RUBY
+      RUBY
       it { should == {false => [3], true => [1]} }
     end
 
@@ -58,7 +58,7 @@ module DeepCover
             42
           )
         end rescue false
-        RUBY
+      RUBY
       xit { should == {false => [2, 5], true => [1, 3, 4, 7]} }
     end
 
@@ -76,7 +76,7 @@ module DeepCover
           extend self
         end
         M.bar
-        RUBY
+      RUBY
       it { should == {false => [4], true => [1, 2, 3, 7, 8, 10, 12]} }
     end
 
@@ -87,7 +87,7 @@ module DeepCover
           # a comment
           def baz; end
         end
-        RUBY
+      RUBY
       it { should == {true => [1, 2, 4]} }
     end
 
@@ -104,7 +104,7 @@ module DeepCover
           42
         end
         foo
-        RUBY
+      RUBY
       it { should == {true => [1, 2, 3, 4, 8, 11], false => [9]} }
     end
   end

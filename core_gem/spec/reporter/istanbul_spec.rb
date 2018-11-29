@@ -16,7 +16,7 @@ module DeepCover
           if(false)
             dummy_method('example')
           end
-          RUBY
+        RUBY
         it { should have_key :statementMap }
         it { should have_key :s }
         it { subject[:b].should == {'1' => [0, 1]} }
@@ -30,14 +30,14 @@ module DeepCover
         def foo(arg = 42)
           dummy_method
         end
-        RUBY
+      RUBY
       let(:branch_node) { Node[<<-RUBY] }
         if false
           :foo
         else
           :bar
         end
-        RUBY
+      RUBY
       let(:def_node_no_args)    { Node['def foo;end'] }
       let(:block_node)          { Node['1.times { |arg = 42| dummy_method }'] }
       let(:lambda_node)         { Node['->(arg = 42) { dummy_method }'] }

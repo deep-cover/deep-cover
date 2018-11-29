@@ -9,6 +9,15 @@ AllCops:
     - '_*/**/*'
   TargetRubyVersion: 2.1
 
+Layout/ClosingHeredocIndentation:
+  # This one is bugged. When we go to 0.58 or more, enable it!
+  # It does some false positives...
+  Enabled: false
+
+Layout/ClosingParenthesisIndentation:
+  # This one is bugged. When we go to 0.58 or more, enable it!
+  # It basically indent things too much...
+  Enabled: false
 
 Layout/EmptyLines:
   Enabled: false
@@ -78,6 +87,9 @@ Performance/RedundantBlockCall:
   Enabled: false
 
 Rails/FilePath:
+  Enabled: false
+
+Style/AccessModifierDeclarations:
   Enabled: false
 
 Style/AsciiComments:

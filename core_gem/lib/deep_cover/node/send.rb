@@ -114,7 +114,7 @@ module DeepCover
       has_child actual_send: {safe_send: CsendInnerSend},
                 flow_entry_count: :not_nil_tracker_hits
 
-      def initialize(base_node, base_children: base_node.children, **) # rubocop:disable Naming/UncommunicativeMethodParamName [#5436]
+      def initialize(base_node, base_children: base_node.children, **)
         send_without_receiver = base_node.updated(:safe_send, [nil, *base_node.children.drop(1)])
         base_children = [base_children.first, send_without_receiver]
         super

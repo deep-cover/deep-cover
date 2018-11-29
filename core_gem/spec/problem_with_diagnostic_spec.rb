@@ -56,7 +56,7 @@ and include the following diagnostic information:
 | Original exception:
 |   RuntimeError: Bogus exception
 #{original_exception.backtrace.map { |t| "|     #{t}" }.join("\n")}
-      MESSAGE
+        MESSAGE
       end
     end
   end

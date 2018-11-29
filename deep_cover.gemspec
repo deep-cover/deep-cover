@@ -36,6 +36,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 1.15'
   spec.add_development_dependency 'rake', '~> 12.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '0.53.0' # About every single release breaks something
   spec.add_development_dependency 'sass'
+
+  # About every single release breaks something
+  # 0.57.2 is the last version supporting a target of Ruby 2.1
+  # When we go to 0.58.0 or more, go re-enable "Layout/ClosingHeredocIndentation"
+  # When we go to 0.58.0 or more, go re-enable "Layout/ClosingParenthesisIndentation"
+  spec.add_development_dependency 'rubocop', '0.57.2'
 end

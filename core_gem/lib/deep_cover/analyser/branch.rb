@@ -30,8 +30,7 @@ module DeepCover
 
     def worst_branch_runs(fork)
       fork.branches.map { |jump| branch_runs(jump) }
-          .sort_by { |runs| runs == 0 ? -2 : runs || -1 }
-          .first
+          .min_by { |runs| runs == 0 ? -2 : runs || -1 }
     end
 
     def branch_runs(branch)

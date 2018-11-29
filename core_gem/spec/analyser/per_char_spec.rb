@@ -9,7 +9,7 @@ module DeepCover
         raise unless a >= 42
       end
       foo(100)
-      RUBY
+    RUBY
     let(:node) { Node[code] }
     let(:analyser) do
       Analyser::PerChar.new(node, ignore_uncovered: :default_argument)

@@ -29,7 +29,7 @@ module DeepCover
 
     protected
 
-    def convert(node, **) # rubocop:disable Naming/UncommunicativeMethodParamName [#5436]
+    def convert(node, **)
       Analyser::CoveredCodeSource.new(node)
     end
 

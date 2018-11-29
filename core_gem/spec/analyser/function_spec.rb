@@ -16,7 +16,7 @@ module DeepCover
         def bar
         end
         foo; foo
-        RUBY
+      RUBY
       let(:name_runs) { results.map { |node, runs| [node.method_name, runs] }.to_h }
 
       it { name_runs.should == {foo: 2, bar: 0} }
@@ -26,7 +26,7 @@ module DeepCover
       let(:node) { Node[<<-RUBY] }
         42.times{}
         loop{} if false
-        RUBY
+      RUBY
       it { results.values.should == [42, 0] }
     end
   end
