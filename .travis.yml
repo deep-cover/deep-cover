@@ -13,6 +13,7 @@ rvm:
 
 install:
   - gem install bundler
+  - if [ $TRAVIS_RUBY_VERSION = "truffleruby" ]; then bundle config build.nokogiri --use-system-libraries; fi
   - rake dev:install
   - npm install -g nyc
 script:
@@ -21,5 +22,3 @@ matrix:
   allow_failures:
   include:
     - rmv: truffleruby
-      before_install:
-        - bundle config build.nokogiri --use-system-libraries
