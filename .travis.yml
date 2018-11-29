@@ -1,14 +1,15 @@
 sudo: false
 language: ruby
 rvm:
-  - ruby-head
-  - 2.5.0
-  - 2.4.1
-  - 2.3.4
-  - 2.2.7
-  - 2.1.10
-  - jruby-head
-  - jruby-9.1.9.0
+  #- ruby-head
+  #- 2.5.0
+  #- 2.4.1
+  #- 2.3.4
+  #- 2.2.7
+  #- 2.1.10
+  #- jruby-head
+  #- jruby-9.1.9.0
+  - truffleruby
 
 install:
   - gem install bundler
@@ -18,3 +19,7 @@ script:
   - bundle exec rake test:all
 matrix:
   allow_failures:
+  include:
+    - rmv: truffleruby
+      before_install:
+        - bundle config build.nokogiri --use-system-libraries
