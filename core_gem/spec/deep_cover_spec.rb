@@ -5,7 +5,7 @@ require_relative 'spec_helper'
 RSpec.describe DeepCover do
   describe 'cover' do
     after { DeepCover.reset }
-    it 'temporarily overrides (or not in 2.3 +) `require`, `require_relative` and `autoload`' do
+    it 'temporarily overrides (or not in MRI 2.3+) `require`, `require_relative` and `autoload`' do
       methods = %i[require require_relative]
       methods << :autoload unless RUBY_PLATFORM == 'java'
       original = methods.map { |m| method(m).source_location }
@@ -15,11 +15,11 @@ RSpec.describe DeepCover do
           sources = methods.map { |m| method(m).source_location }
         end
         sources.zip(original).each do |now, before|
-          if RUBY_VERSION < '2.3.0' || RUBY_PLATFORM == 'java'
-            now.should_not == before
-          else
+          if RUBY_VERSION >= '2.3.0' && DeepCover.on_mri?
             # We use load_iseq in 2.3+, so no override in that case
             now.should == before
+          else
+            now.should_not == before
           end
         end
         methods.map { |m| method(m).source_location }.should == original

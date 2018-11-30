@@ -84,7 +84,7 @@ module DeepCover
   load_all
 
   module KernelAutoloadOverride
-    if RUBY_PLATFORM == 'java'
+    if DeepCover.on_jruby?
       # JRuby has different semantics for Kernel.autoload and Kernel#autoload
       def autoload(name, path)
         if Kernel.equal?(self)
@@ -96,6 +96,12 @@ module DeepCover
         else
           mod = self.class
         end
+        autoload_path = DeepCover.autoload_tracker.autoload_path_for(mod, name, path)
+        mod.autoload_without_deep_cover(name, autoload_path)
+      end
+    elsif DeepCover.on_truffleruby?
+      def autoload(name, path)
+        mod = Truffle.invoke_primitive(:caller_binding).eval('Module.nesting').first || Object
         autoload_path = DeepCover.autoload_tracker.autoload_path_for(mod, name, path)
         mod.autoload_without_deep_cover(name, autoload_path)
       end

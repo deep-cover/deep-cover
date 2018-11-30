@@ -8,7 +8,7 @@ module DeepCover
 
     def start
       return if running?
-      if RUBY_VERSION >= '2.3.0' && RUBY_PLATFORM != 'java'
+      if RUBY_VERSION >= '2.3.0' && on_mri?
         require_relative 'core_ext/instruction_sequence_load_iseq'
       else
         require_relative 'core_ext/autoload_overrides'
