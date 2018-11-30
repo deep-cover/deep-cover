@@ -73,8 +73,6 @@ end
 CommandExecution = Struct.new(:stdout, :stderr, :exit_code)
 def run_command(command, from_dir: nil)
   require 'open3'
-  options = {}
-  options[:chdir] = from_dir if from_dir
 
   if RUBY_PLATFORM == 'java'
     if command.is_a?(Array)
@@ -87,7 +85,14 @@ def run_command(command, from_dir: nil)
   end
 
   stdout, stderr, status = Bundler.with_clean_env do
-    Open3.capture3(*command, options)
+    if from_dir
+      # TruffleRuby doesn't support chdir on spawn, do we just do chdir ourself all the time
+      Dir.chdir(from_dir) do
+        Open3.capture3(*command)
+      end
+    else
+      Open3.capture3(*command)
+    end
   end
   CommandExecution.new(stdout.chomp, stderr.chomp, status.exitstatus)
 end

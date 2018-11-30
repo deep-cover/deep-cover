@@ -111,6 +111,7 @@ module DeepCover
       DeepCover.delete_trackers
       # JRuby has a weird behavior with chdir. You can't use it with system if you already did a Dir.chdir (which
       # we may have done to handle the --change-directory option)...
+      # However, you can use #spawn with it just fine. Change this to #spawn + wait once TruffleRuby supports :chdir
       Dir.chdir(@main_path) do
         system({'DISABLE_SPRING' => 'true', 'DEEP_COVER_OPTIONS' => nil}, *@options[:command])
         $?.exitstatus
