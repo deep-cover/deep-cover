@@ -18,7 +18,7 @@ module DeepCover
       true
     rescue StandardError => e
       # In our samples, a simple `raise` is expected and doesn't need to be rescued
-      return false if e.is_a?(RuntimeError) && e.message.empty?
+      return false if e.is_a?(RuntimeError) && (e.message.empty? || e.message == 'No current exception')
 
       source = to_execute.covered_source if to_execute.is_a?(CoveredCode)
       raise unless source
