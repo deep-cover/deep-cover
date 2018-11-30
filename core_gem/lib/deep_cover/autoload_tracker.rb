@@ -81,8 +81,15 @@ module DeepCover
         # Module's constants are shared with Object. But if you set autoloads directly on Module, they
         # appear on multiple classes. So just skip, Object will take care of those.
         next if mod == Module
-        # This happens with JRuby
-        next unless mod.respond_to?(:constants)
+
+        begin
+          # This happens with JRuby
+          next unless mod.respond_to?(:constants)
+        rescue StandardError
+          # TruffleRuby has a module with a weird respond_to? which crash. Makes sense to handle it everywhere
+          # since it's just pure ruby code that is kinda wrong.
+          next
+        end
 
         if mod.frozen?
           if mod.constants.any? { |name| mod.autoload?(name) }
