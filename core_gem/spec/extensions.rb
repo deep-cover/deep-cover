@@ -13,25 +13,31 @@ class RSpec::Core::ExampleGroup
           context(section || '(General)') do
             examples.each do |title, (lines, lineno)|
               description = [section, title].join.downcase
-              msg = case description
-                    when /\(pending/i then :pending
-                    when /\(skip/i then next
-                    when /\(#{name}_pending/i then :pending
-                    when /\(ruby 2\.(\d)\+/i
-                      :skip if RUBY_VERSION < "2.#{Regexp.last_match(1)}.0"
-                    when /\(ruby <2\.(\d)/i
-                      :skip if RUBY_VERSION >= "2.#{Regexp.last_match(1)}.0"
-                    when /\(!jruby/i
-                      :skip if RUBY_PLATFORM == 'java'
-                    when /\(jruby (\d(?:\.\d)+)\+/i
-                      :skip if RUBY_PLATFORM == 'java' && JRUBY_VERSION < Regexp.last_match(1)
-                    when /\(#/
-                    when /\(tag/
-                    when /\(\s*\)/
-                    when /\(\w+_pending/i
-                    when /\(/
-                      raise "unexpected '(pattern' in section/title: #{description}. Use (# blabla) if you want it ignored."
-                    end
+              infos = description.scan(/\(.*?\)/)
+              msg = nil
+              infos.each do |info|
+                info = info[1...-1].strip
+                msg = case info
+                      when /^pending/i then :pending
+                      when /^skip/i then :skip
+                      when /^#{name}_pending/i then :pending
+                      when /^ruby 2\.(\d)\+/i
+                        :skip if RUBY_VERSION < "2.#{Regexp.last_match(1)}.0"
+                      when /^ruby <2\.(\d)/i
+                        :skip if RUBY_VERSION >= "2.#{Regexp.last_match(1)}.0"
+                      when /^!jruby/i
+                        :skip if RUBY_PLATFORM == 'java'
+                      when /^jruby (\d(?:\.\d)+)\+/i
+                        :skip if RUBY_PLATFORM == 'java' && JRUBY_VERSION < Regexp.last_match(1)
+                      when /^#/
+                      when /^tag/
+                      when ''
+                      when /^\w+_pending/i
+                      else
+                        raise "unexpected '(pattern' in section/title: #{description}. Use (# #{info}) if you want it ignored."
+                      end
+                break if msg
+              end
               if [section, title].join =~ /\(tag: (\w+)/
                 tag = Regexp.last_match(1).to_sym
               end
