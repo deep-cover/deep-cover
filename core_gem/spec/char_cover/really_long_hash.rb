@@ -1,4 +1,4 @@
-### Really long hash (tag: slow)
+### Really long hash (tag: slow) (!truffleruby)
 # Thanks to domain_name gem for this long hash
 # https://github.com/knu/ruby-domain_name/blob/master/lib/domain_name/etld_data.rb
     class DomainName

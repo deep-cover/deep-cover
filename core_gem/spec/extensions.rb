@@ -29,6 +29,8 @@ class RSpec::Core::ExampleGroup
                         :skip if RUBY_PLATFORM == 'java'
                       when /^jruby (\d(?:\.\d)+)\+/i
                         :skip if RUBY_PLATFORM == 'java' && JRUBY_VERSION < Regexp.last_match(1)
+                      when /^!truffleruby/i
+                        :skip if DeepCover.on_truffleruby?
                       when /^#/
                       when /^tag/
                       when ''
