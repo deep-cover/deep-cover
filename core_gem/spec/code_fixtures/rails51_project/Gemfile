@@ -52,3 +52,6 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# We need 1.1.0 for TruffleRuby
+gem 'concurrent-ruby', '>= 1.1.0'
