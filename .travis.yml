@@ -1,15 +1,15 @@
 sudo: false
 language: ruby
 rvm:
-  #- ruby-head
-  #- 2.6.0
-  #- 2.5.0
-  #- 2.4.1
-  #- 2.3.4
-  #- 2.2.7
-  #- 2.1.10
-  #- jruby-head
-  #- jruby-9.1.9.0
+  - ruby-head
+  - 2.6.0
+  - 2.5.0
+  - 2.4.1
+  - 2.3.4
+  - 2.2.7
+  - 2.1.10
+  - jruby-head
+  - jruby-9.1.9.0
   - truffleruby
 
 install:
@@ -27,5 +27,3 @@ script:
 matrix:
   allow_failures:
     - rvm: ruby-head
-  include:
-    - rmv: truffleruby
