@@ -261,6 +261,7 @@ module DeepCover
       describe 'for a rails app' do
         let(:path) { 'simple_rails42_app' }
         it do
+          skip if RUBY_VERSION >= '2.6.0'
           should =~ Regexp.new(%w[dummy.rb 100 100 100].join('[ |]*'))
           should =~ Regexp.new(%w[user.rb 85.71 100 50].join('[ |]*'))
           should include '2 runs, 2 assertions, 0 failures, 0 errors, 0 skips'
