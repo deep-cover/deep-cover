@@ -111,7 +111,7 @@ module DeepCover
             end
           end
         rescue LoadError => e
-          if e.message[/undefined symbol/] || e.message[/symbol not found/]
+          if e.message[/undefined symbol|symbol not found|Init_.*\(\) not found/]
             @result[:ruby] = :native_extension
           else
             @result[:ruby] = :not_found
@@ -657,12 +657,18 @@ module DeepCover
 
       # a built-in feature is basically just a single file-name (not an absolute path)
       it 'handles ruby built-ins LOADED_FEATURES' do
+        # Everything is always a full path for TruffleRuby, and they use a LOAD_PATH. Makes sense to me.
+        skip if DeepCover.on_truffleruby?
+
         requirer.loaded_features << 'somewhere.rb'
         'somewhere'.should actually_require(false) if RUBY_PLATFORM != 'java'
         'somewhere.rb'.should actually_require(false)
       end
 
       it 'ruby built-ins LOADED_FEATURES hide other matching file from the load_path' do
+        # Everything is always a full path for TruffleRuby, and they use a LOAD_PATH. Makes sense to me.
+        skip if DeepCover.on_truffleruby?
+
         file_tree %w(one/somewhere.rb
                      )
 
