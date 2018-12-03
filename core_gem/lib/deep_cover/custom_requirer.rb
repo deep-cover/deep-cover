@@ -58,7 +58,7 @@ module DeepCover
           next unless File.exist?(possible_path)
           # Ruby 2.5 changed some behaviors of require related to symlinks in $LOAD_PATH
           # https://bugs.ruby-lang.org/issues/10222
-          return File.realpath(possible_path) if RUBY_VERSION >= '2.5'
+          return File.realpath(possible_path) if RUBY_VERSION >= '2.5' || DeepCover.on_truffleruby?
           return possible_path
         end
       end

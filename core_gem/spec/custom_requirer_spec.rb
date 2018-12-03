@@ -523,7 +523,7 @@ module DeepCover
       end
 
       it 'keeps symlinks when going through load_path (Ruby < 2.5)' do
-        skip if RUBY_VERSION >= '2.5'
+        skip if RUBY_VERSION >= '2.5' || DeepCover.on_truffleruby?
         file_tree %w(one/test.rb)
         FileUtils.ln_s from_root('one'), from_root('sym_one')
         add_load_path 'sym_one'
@@ -532,7 +532,7 @@ module DeepCover
       end
 
       it 'symlinks are removed when going through load_path (Ruby >= 2.5)' do
-        skip if RUBY_VERSION < '2.5'
+        skip if RUBY_VERSION < '2.5' && !DeepCover.on_truffleruby?
         file_tree %w(one/test.rb)
         FileUtils.ln_s from_root('one'), from_root('sym_one')
         add_load_path 'sym_one'
