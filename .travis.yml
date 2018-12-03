@@ -23,7 +23,7 @@ install:
   - rake dev:install
   - npm install -g nyc
 script:
-  - bundle exec rspec
+  - bundle exec rake spec:all
 matrix:
   allow_failures:
     - rvm: ruby-head
