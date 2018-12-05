@@ -98,12 +98,12 @@ module DeepCover
         end
 
         # Istanbul doesn't understand how to ignore a branch...
-        def zero_to_something(values)
+        def nil_to_something(values)
           values.map { |v| v || 1 }
         end
 
         def branch_runs
-          branches.values.map { |r| zero_to_something(r.values) }
+          branches.values.map { |r| nil_to_something(r.values) }
         end
 
         def statement_map
