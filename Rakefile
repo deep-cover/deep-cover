@@ -19,12 +19,17 @@ task release: ['core:sass', 'core:release', 'global:release']
 
 ### Tests tasks
 begin
-  require 'rspec/core/rake_task'
   require 'rubocop/rake_task'
 
   RuboCop::RakeTask.new(:rubocop) do |t|
     t.options = ['-a'] unless ENV['TRAVIS']
   end
+rescue LoadError
+  puts 'Note: rubocop not installed'
+end
+
+begin
+  require 'rspec/core/rake_task'
 
   spec_path = 'spec/*_spec.rb, core_gem/spec/**/*_spec.rb'
   RSpec::Core::RakeTask.new(:spec).tap { |task| task.pattern = spec_path }
@@ -34,12 +39,12 @@ begin
     task.pattern = spec_path
     task.rspec_opts = '-O .rspec_all'
   end
-
-  multitask default: RUBY_VERSION > '2.1' ? [:rubocop, :spec] : :spec
-  multitask 'test:all' => RUBY_VERSION > '2.1' ? [:rubocop, 'spec:all'] : 'spec:all'
 rescue LoadError
-  puts 'Note: rspec or rubocop not installed'
+  puts 'Note: rspec not installed'
 end
+
+multitask default: RUBY_VERSION > '2.2' ? [:rubocop, :spec] : :spec
+multitask 'test:all' => RUBY_VERSION > '2.2' ? [:rubocop, 'spec:all'] : 'spec:all'
 
 #### Utilities
 namespace :dev do

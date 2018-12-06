@@ -7,16 +7,22 @@ AllCops:
     - '**/spec/specs_tools.rb'
     - 'bin/**/*'
     - '_*/**/*'
-  TargetRubyVersion: 2.1
+  TargetRubyVersion: 2.2
 
-Layout/ClosingHeredocIndentation:
-  # This one is bugged. When we go to 0.58 or more, enable it!
-  # It does some false positives...
+Gemspec/RequiredRubyVersion:
+  # Yes, we still support ruby 2.1...
+  Enabled: false
+
+Layout/AlignHash:
   Enabled: false
 
 Layout/ClosingParenthesisIndentation:
-  # This one is bugged. When we go to 0.58 or more, enable it!
-  # It basically indent things too much...
+  # It seems to want to indent things more than they should be...
+  # Not sure I like where the discussion is going...
+  # https://github.com/rubocop-hq/rubocop/issues/5975
+  Enabled: false
+
+Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
 Layout/EmptyLines:
@@ -42,6 +48,9 @@ Layout/MultilineArrayBraceLayout:
 
 Layout/MultilineHashBraceLayout:
   EnforcedStyle: new_line
+
+Layout/RescueEnsureAlignment:
+  Enabled: false
 
 # Annoying when used with some api that have blocks with sometimes useful parameters
 Lint/UnusedBlockArgument:
