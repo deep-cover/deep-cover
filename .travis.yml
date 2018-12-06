@@ -10,7 +10,7 @@ rvm:
   - 2.1.10
   - jruby-head
   - jruby-9.1.9.0
-  - truffleruby
+  - truffleruby-1.0.0-rc14
 
 install:
   # The last bundler version that supports our older supported ruby versions is 1.17.3
@@ -20,6 +20,8 @@ install:
   - rvm @global do gem uninstall bundler -a -x || true
   - gem install bundler -v 1.17.3
   - bundle install
+  # Necessary for truffleruby to handle nokogiri
+  - if [[ $TRAVIS_RUBY_VERSION == truffleruby* ]]; then echo We are on truffleruby; bundle config build.nokogiri --use-system-libraries; fi
   - rake dev:install
   - npm install -g nyc
 script:
