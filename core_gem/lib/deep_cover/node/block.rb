@@ -49,7 +49,7 @@ module DeepCover
       alias_method :rewrite_for_completion, :rewrite
       def rewrite
         if call.is_a?(Csend)
-          rewrite_for_completion.gsub('%{node}', Csend::REWRITE_SUFFIX)
+          rewrite_for_completion.gsub('%{node}', Csend::REWRITE_SUFFIX_IN_BLOCK)
         else
           rewrite_for_completion
         end

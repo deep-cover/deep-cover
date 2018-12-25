@@ -107,7 +107,7 @@ module DeepCover
       has_tracker :not_nil
       has_child receiver: Node,
                 rewrite: '(%{local}=%{node};if nil != %{local};%{not_nil_tracker};%{local}=%{local}'
-      REWRITE_SUFFIX = '%{node};%{local};end)'
+      REWRITE_SUFFIX_IN_BLOCK = '%{node};%{local};end)'
 
       has_child actual_send: {safe_send: CsendInnerSend},
                 flow_entry_count: :not_nil_tracker_hits
@@ -128,7 +128,7 @@ module DeepCover
       end
 
       def rewrite
-        REWRITE_SUFFIX unless has_block?
+        '%{node};%{local};end)' unless has_block?
       end
 
       def execution_count
