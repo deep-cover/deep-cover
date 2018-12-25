@@ -100,7 +100,7 @@ module DeepCover
       #      TRACK_my_NOT_NIL
       #      temp = temp&.*actual_send*{block}
       #      TRACK_actual_send_COMPLETION
-      #      t
+      #      temp
       #    else
       #      nil
       #    end
