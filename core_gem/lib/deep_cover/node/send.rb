@@ -101,15 +101,13 @@ module DeepCover
       #      temp = temp&.*actual_send*{block}
       #      TRACK_actual_send_COMPLETION
       #      temp
-      #    else
-      #      nil
       #    end
       # This is split across the children and the CsendInnerSend
       include Branch
       has_tracker :not_nil
       has_child receiver: Node,
                 rewrite: '(%{local}=%{node};if nil != %{local};%{not_nil_tracker};%{local}=%{local}'
-      REWRITE_SUFFIX = '%{node};%{local};else;nil;end)'
+      REWRITE_SUFFIX = '%{node};%{local};end)'
 
       has_child actual_send: {safe_send: CsendInnerSend},
                 flow_entry_count: :not_nil_tracker_hits
