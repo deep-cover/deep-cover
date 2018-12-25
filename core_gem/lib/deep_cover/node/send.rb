@@ -77,7 +77,7 @@ module DeepCover
 
       def rewrite
         # All the rest of the rewriting logic is in Csend
-        '%{node};%{completion_tracker};' unless has_block?
+        '%{node});%{completion_tracker};' unless has_block?
       end
 
       def flow_completion_count
@@ -98,7 +98,7 @@ module DeepCover
       #    temp = *receiver*;
       #    if nil != temp
       #      TRACK_my_NOT_NIL
-      #      temp = temp&.*actual_send*{block}
+      #      temp = (temp&.*actual_send*{block})
       #      TRACK_actual_send_COMPLETION
       #      temp
       #    end
@@ -106,8 +106,8 @@ module DeepCover
       include Branch
       has_tracker :not_nil
       has_child receiver: Node,
-                rewrite: '(%{local}=%{node};if nil != %{local};%{not_nil_tracker};%{local}=%{local}'
-      REWRITE_SUFFIX_IN_BLOCK = '%{node};%{local};end)'
+                rewrite: '(%{local}=%{node};if nil != %{local};%{not_nil_tracker};%{local}=(%{local}'
+      REWRITE_SUFFIX_IN_BLOCK = '%{node});%{local};end)'
 
       has_child actual_send: {safe_send: CsendInnerSend},
                 flow_entry_count: :not_nil_tracker_hits

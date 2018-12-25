@@ -64,6 +64,12 @@
     raise&.to_s
 #>       xxxxxx
 
+#### &.= (branch_like_25_pending)
+    nil&.foo = bar
+#>       xxx x xxxx
+    nil&.foo = *bar
+#>       xxx x xxxx
+
 #### Inside of a block
     1.times do
       123&.to_s # missed_empty_branch
