@@ -106,12 +106,12 @@ Note, this is a bit slower and may cause issues in your tests if your use relati
 
 2. Create a config file (optional)
 
-    You may want to create a config file `.deep-cover.rb` at the root of your project, where you can set the config as you wish.
+    You may want to create a config file `.deep_cover.rb` at the root of your project, where you can set the config as you wish.
 
     ```
-    # File .deep-cover.rb
-    DeepCover.config do
-      ignore :default_arguments
+    # File .deep_cover.rb
+    DeepCover.configure do
+      ignore_uncovered :default_argument
       # ...
     end
     ```
@@ -159,14 +159,14 @@ At the moment, those tools do not support deep-cover. It is however possible to 
 
 ```
 DeepCover.configure do
-  ignore_uncovered :raise, :default_arguments
+  ignore_uncovered :raise, :default_argument
   detect_uncovered :trivial_if
   # TODO
-  cover_paths %w[app lib]
+  paths %w[app lib]
 end
 ```
 
-The file `.deep-cover.rb` is loaded automatically when requiring `deep-cover` and is the best place to put the configuration.
+The file `.deep_cover.rb` is loaded automatically when requiring `deep-cover` and is the best place to put the configuration.
 
 #### Custom filters
 
