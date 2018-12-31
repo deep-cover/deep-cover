@@ -19,3 +19,4 @@ script:
   - bundle exec rake test:all
 matrix:
   allow_failures:
+    - rvm: ruby-head
