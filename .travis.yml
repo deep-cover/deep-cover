@@ -12,7 +12,8 @@ rvm:
   - jruby-9.1.9.0
 
 install:
-  - gem install bundler
+  # The last bundler version that supports our older supported ruby versions is 1.17.3
+  - gem install bundler -v 1.17.3
   - rake dev:install
   - npm install -g nyc
 script:
