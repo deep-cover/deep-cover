@@ -70,22 +70,62 @@ if %w(true 1).include?(ENV['WITHOUT_PENDING'])
   RSpec::Core::Formatters::ProgressFormatter.prepend FormatterOverrides
 end
 
+CommandExecution = Struct.new(:stdout, :stderr, :exit_code)
+def run_command(command, from_dir: nil)
+  require 'open3'
+  options = {}
+  options[:chdir] = from_dir if from_dir
+
+  if RUBY_PLATFORM == 'java'
+    if command.is_a?(Array)
+      command.shift if command[0] == 'ruby'
+      command = %w(ruby --dev) + command
+    else
+      command = command[5..-1] if command.start_with?('ruby ')
+      command = "ruby --dev #{command}"
+    end
+  end
+
+  stdout, stderr, status = Bundler.with_clean_env do
+    Open3.capture3(*command, options)
+  end
+  CommandExecution.new(stdout.chomp, stderr.chomp, status.exitstatus)
+end
+
+RSpec::Matchers.define :have_expected_results do |stdout: nil, stderr: /^$/, exit_code: 0|
+  match do |cmd_exec|
+    raise 'Should receive the result of #run_command' unless cmd_exec.is_a?(CommandExecution)
+    @cmd_exec = cmd_exec
+    @expected_stdout = stdout
+    @expected_stderr = stderr
+    @expected_exit_code = exit_code
+
+    @stdout_ok = stdout.nil? || cmd_exec.stdout.match(stdout)
+    @stderr_ok = stderr.nil? || cmd_exec.stderr.match(stderr)
+    @exit_code_ok = exit_code == cmd_exec.exit_code
+
+    @stdout_ok && @stderr_ok && @exit_code_ok
+  end
+
+  failure_message do
+    messages = []
+    messages << "Bad exit_code: Expected exit_code: #{@expected_exit_code}\nReceived exit_code: #{@cmd_exec.exit_code}" unless @exit_code_ok
+    messages << "Bad stdout: Expected stdout: #{@expected_stdout}\nReceived stdout: #{@cmd_exec.stdout}" unless @stdout_ok
+    messages << "Bad stderr: Expected stderr: #{@expected_stderr}\nReceived stderr: #{@cmd_exec.stderr}" unless @stderr_ok
+
+    messages << "exit_code was as expected: #{@cmd_exec.exit_code}" if @exit_code_ok
+    messages << "Stdout was as expected: #{@cmd_exec.stdout}" if @stdout_ok
+    messages << "Stderr was as expected: #{@cmd_exec.stderr}" if @stderr_ok
+
+    messages.join("\n")
+  end
+end
+
 RSpec::Matchers.define :run_successfully do
   match do |command|
-    require 'open3'
-    options = {}
-    options[:chdir] = @from_dir if @from_dir
-
-    output, errors, status = Bundler.with_clean_env do
-      Open3.capture3(*command, options)
-    end
-    @output = output.chomp
-    @errors = errors.chomp
-    @exit_code = status.exitstatus
-
-    @ouput_ok = @expected_output.nil? || @expected_output == @output
-
-    @exit_code == 0 && @ouput_ok && (@errors == '' || RUBY_PLATFORM == 'java')
+    @matcher = have_expected_results(stdout: @expected_output)
+    run_command(command, from_dir: @from_dir).should @matcher
+    true
   end
 
   chain :and_output do |output|
@@ -97,10 +137,6 @@ RSpec::Matchers.define :run_successfully do
   end
 
   failure_message do
-    [
-      ("expected output '#{@expected_output}', got '#{@output}'" unless @ouput_ok),
-      ("expected exit code 0, got #{@exit_code}" if @exit_code != 0),
-      ("expected no errors, got '#{@errors}'" unless @errors.empty?),
-    ].compact.join(' and ')
+    @matcher.failure_message
   end
 end

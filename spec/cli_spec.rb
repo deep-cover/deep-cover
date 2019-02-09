@@ -4,23 +4,12 @@ require_relative 'spec_helper'
 
 module DeepCover
   RSpec.describe 'CLI', :slow do
-    def run_command(command, expected_errors: /^$/, expected_status: 0)
-      require 'open3'
-
-      command = "ruby --dev #{command}" if RUBY_PLATFORM == 'java'
-
-      out, errors, status = Bundler.with_clean_env do
-        Open3.capture3(command)
-      end
-      errors.should match expected_errors unless RUBY_PLATFORM == 'java'
-      status.exitstatus.should == expected_status
-      out
-    end
-
     let(:expected_errors) { /^$/ }
     let(:expected_status) { 0 }
     let(:output) do
-      run_command(command, expected_errors: expected_errors, expected_status: expected_status)
+      cmd_exec = run_command(command)
+      cmd_exec.should have_expected_results(stderr: expected_errors, exit_code: expected_status)
+      cmd_exec.stdout
     end
 
     describe 'deep-cover exec' do
@@ -165,8 +154,9 @@ module DeepCover
         let(:path) { 'covered_trivial_gem' }
         it do
           # Run deep-cover exec to setup initial data
-          exec_output = run_command("exe/deep-cover exec -C=spec/code_fixtures/#{path} -o=false #{options} rake")
-          exec_table = exec_output[/^---(.|\n)*\z/]
+          cmd_exec = run_command("exe/deep-cover exec -C=spec/code_fixtures/#{path} -o=false #{options} rake")
+          cmd_exec.should have_expected_results
+          exec_table = cmd_exec.stdout[/^---(.|\n)*\z/]
 
           output.should == exec_table
         end
