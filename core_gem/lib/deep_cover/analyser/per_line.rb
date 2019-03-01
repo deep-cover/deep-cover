@@ -12,8 +12,8 @@ module DeepCover
     #          same as :branch, but also:
     #          if an empty branch is not executed, the line has to be marked as not executed.
     #          This is only for empty branches because, if they are not empty, there will already
-    #          be some red from the partial node covering. We don't everything to become red,
-    #          just want 100% coverage to be as hard as branch + node coverage.
+    #          be some red from the partial node covering. We don't want everything to become red,
+    #          simply for 100% coverage to be as hard as branch + node coverage.
     def results
       allow_partial = options.fetch(:allow_partial, true)
       line_hits = Array.new(covered_code.nb_lines + covered_code.lineno - 1)
