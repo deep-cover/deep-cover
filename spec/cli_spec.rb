@@ -259,6 +259,13 @@ module DeepCover
       end
     end
 
+    describe 'deep-cover run-expression' do
+      let(:command) { "exe/deep-cover run-expression '2 + 2 == 4'" }
+      subject { output }
+
+      it { should include 'Node coverage:' }
+    end
+
     ['exe/deep-cover --version', 'exe/deep-cover', 'exe/deep-cover help'].each do |command|
       it "Can run `#{command}`" do
         command.should run_successfully
