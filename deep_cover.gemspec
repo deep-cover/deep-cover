@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
 
   ### Dev dependencies
   spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake', '~> 12.0'
+  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'sass'
 
