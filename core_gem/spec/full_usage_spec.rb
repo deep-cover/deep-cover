@@ -37,6 +37,7 @@ RSpec.describe 'DeepCover usage' do
     end
 
     it 'Does not modify visibility of methods' do
+      skip if RUBY_PLATFORM == 'java'
       'ruby simple/visibility_check.rb'.should run_successfully.from_dir(FIXTURE_PATH).and_output('ok')
     end
   end
