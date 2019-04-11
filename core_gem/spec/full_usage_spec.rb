@@ -35,5 +35,9 @@ RSpec.describe 'DeepCover usage' do
       skip if RUBY_PLATFORM == 'java'
       'bundle exec rake test'.should run_successfully.from_dir("#{FIXTURE_PATH}/rails51_project")
     end
+
+    it 'Does not modify visibility of methods' do
+      'ruby simple/visibility_check.rb'.should run_successfully.from_dir(FIXTURE_PATH).and_output('ok')
+    end
   end
 end

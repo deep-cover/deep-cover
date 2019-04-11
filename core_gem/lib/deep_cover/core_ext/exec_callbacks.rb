@@ -30,4 +30,5 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
     end
   end
   ::Kernel.send :private, original_exec_name
+  ::Kernel.send :private, :exec
 end
