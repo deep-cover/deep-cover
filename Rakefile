@@ -61,7 +61,7 @@ namespace :dev do
 
     gemfiles = ['',
                 'core_gem/Gemfile',
-                'spec/code_fixtures/simple_rails42_app/Gemfile',
+                *('spec/code_fixtures/simple_rails42_app/Gemfile' unless RUBY_VERSION >= '2.6'),
                 'spec/code_fixtures/rails_like_gem/Gemfile',
                ]
     gemfiles << 'core_gem/spec/code_fixtures/rails51_project/Gemfile' if RUBY_VERSION >= '2.2.2' && RUBY_PLATFORM != 'java'
