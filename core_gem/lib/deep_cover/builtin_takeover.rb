@@ -8,3 +8,4 @@ require 'coverage'
 BuiltinCoverage = Coverage
 Object.send(:remove_const, 'Coverage')
 Coverage = DeepCover::CoverageReplacement.dup
+DeepCover::TAKEOVER_IS_ON = true

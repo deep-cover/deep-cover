@@ -116,6 +116,9 @@ module DeepCover
     #
     # If no "tracked dirs" exist, fallback to everything in current directory except each of test/ spec/ bin/ exe/.
     def auto_detected_paths
+      # When taking over, just go for everything
+      return ['.'] if DeepCover.const_defined?('TAKEOVER_IS_ON') && DeepCover::TAKEOVER_IS_ON
+
       require_relative 'tools/looks_like_rails_project'
 
       gemspec_paths = Dir['./*.gemspec'] + Dir['./*/*.gemspec']

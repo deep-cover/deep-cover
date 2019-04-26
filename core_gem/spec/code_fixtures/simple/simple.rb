@@ -33,8 +33,10 @@ begin
                                nested_module_autoloaded.rb root_module_autoload_manually_required.rb
                                implicit_autoload_from_included_module.rb kernel_autoload_from_included_module.rb
                                define_here_but_requires_autoloader.rb autoload_here_but_required_by_definer.rb
-                               loaded_file.rb)
-  expected_covered_files = expected_executed_files
+                               loaded_file.rb covered_by_takeover_only.rb)
+  expected_covered_files = expected_executed_files.dup
+
+  expected_covered_files.delete('covered_by_takeover_only.rb') unless ARGV.include?('takeover')
 
   if ARGV.delete('no_deep_cover')
     expected_covered_files = []
@@ -103,6 +105,7 @@ begin
   require 'define_here_but_requires_autoloader'
 
   load 'loaded_file.rb'
+  test_require('bin/covered_by_takeover_only')
 
   if $executed_files != expected_executed_files
     fail_test "Executed files don't match the expectation:\nExpected: #{expected_executed_files.inspect}\nGot #{$executed_files.inspect}"
