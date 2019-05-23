@@ -167,7 +167,7 @@ module DeepCover
             msg = "\nHTML coverage written to: '#{output}/index.html'"
           end
         end
-        `cd #{dir} && #{Istanbul.bin_path} report --reporter=text #{html}` + msg.to_s
+        `cd #{dir} && #{Istanbul.bin_path} report --exclude-after-remap=false --reporter=text #{html}` + msg.to_s
       end
 
       class << self
