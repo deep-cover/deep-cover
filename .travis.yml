@@ -12,12 +12,8 @@ rvm:
   - jruby-9.1.9.0
 
 install:
-  # The last bundler version that supports our older supported ruby versions is 1.17.3
-  # Uninstalling it sometimes gets refused because of default gems, so we ignore the error
-  # and hope for the best.
-  - gem uninstall bundler -a -x || true
-  - rvm @global do gem uninstall bundler -a -x || true
-  - gem install bundler -v 1.17.3
+  - ruby -v
+  - ./bin/setup_bundler_1_17_3_if_needed
   - bundle install
   - rake dev:install
   - npm install -g nyc

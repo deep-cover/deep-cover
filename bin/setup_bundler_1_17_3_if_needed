@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# The last bundler version that supports our older supported ruby versions is 1.17.3.
+# Bundler 2 supports Ruby 2.3 and up.
+# We use a 4.2 rails project as test for Ruby < 2.6, and it depends on bundler < 2.0.
+# So if Ruby is less than 2.6, we need 1.17.3
+
+def setup_1_17_3
+  `gem uninstall bundler -a -x`
+  `rvm @global do gem uninstall bundler -a -x`
+  `gem install bundler -v 1.17.3`
+end
+
+setup_1_17_3 if RUBY_VERSION < '2.6'
+
