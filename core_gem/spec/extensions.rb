@@ -16,7 +16,8 @@ class RSpec::Core::ExampleGroup
               msg = case description
                     when /\(pending/i then :pending
                     when /\(skip/i then next
-                    when /\(#{name}_pending/i then :pending
+                    when /\(#{name}:(\d.\d)/i
+                      :pending if RUBY_VERSION < Regexp.last_match(1)
                     when /\(ruby 2\.(\d)\+/i
                       :skip if RUBY_VERSION < "2.#{Regexp.last_match(1)}.0"
                     when /\(ruby <2\.(\d)/i

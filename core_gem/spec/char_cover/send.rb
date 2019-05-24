@@ -64,7 +64,7 @@
     raise&.to_s
 #>       xxxxxx
 
-#### &.= (branch_like_25_pending)
+#### &.= (branch_like_25:2.7)
     nil&.foo = bar
 #>       xxx x xxxx
     nil&.foo = *bar
