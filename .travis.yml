@@ -8,8 +8,16 @@ rvm:
   - 2.3.4
   - 2.2.7
   - 2.1.10
-  - jruby-head
-  - jruby-9.1.9.0
+
+matrix:
+  include:
+    # To avoid spamming the travis list with the jdk on each row, we only set it for the jrubies
+    - rvm: jruby-head
+      jdk: openjdk8
+    - rvm: jruby-9.1.9.0
+      jdk: openjdk8
+  allow_failures:
+    - rvm: ruby-head
 
 install:
   - ruby -v
@@ -19,6 +27,3 @@ install:
   - npm install -g nyc
 script:
   - bundle exec rake test:all
-matrix:
-  allow_failures:
-    - rvm: ruby-head
