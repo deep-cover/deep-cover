@@ -26,12 +26,14 @@ RSpec.describe 'DeepCover usage' do
 
     it 'Can `rspec` a rails51 app' do
       skip if RUBY_VERSION < '2.2.2'
+      skip if RUBY_VERSION >= '2.7'
       skip if RUBY_PLATFORM == 'java'
       'bundle exec rspec'.should run_successfully.from_dir("#{FIXTURE_PATH}/rails51_project")
     end
 
     it 'Can `rake test` a rails51 app (minitest)' do
       skip if RUBY_VERSION < '2.2.2'
+      skip if RUBY_VERSION >= '2.7'
       skip if RUBY_PLATFORM == 'java'
       'bundle exec rake test'.should run_successfully.from_dir("#{FIXTURE_PATH}/rails51_project")
     end
