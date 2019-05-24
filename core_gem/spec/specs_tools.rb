@@ -10,7 +10,7 @@ class Array
 end
 
 def clean_env_system(*args)
-  Bundler.with_clean_env do
+  DeepCover::Tools.with_unbundled_env do
     system(*args)
   end
 end

@@ -68,9 +68,11 @@ namespace :dev do
 
     commands += gemfiles.map { |gemfile| "bundle install --gemfile=#{gemfile} --jobs=3 --retry=3" }
 
+    require_relative 'core_gem/lib/deep_cover/tools/with_unbundled_env'
+
     commands.each do |command|
       puts "Running: #{command}"
-      Bundler.with_clean_env do
+      DeepCover::Tools::WithUnbundledEnv.with_unbundled_env do
         unless system(command)
           puts "Failed to run `#{command}`, see above for details. When it is fixed, try running this rake task again."
           exit(1)

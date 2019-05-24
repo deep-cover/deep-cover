@@ -86,7 +86,7 @@ def run_command(command, from_dir: nil)
     end
   end
 
-  stdout, stderr, status = Bundler.with_clean_env do
+  stdout, stderr, status = DeepCover::Tools.with_unbundled_env do
     Open3.capture3(*command, options)
   end
   CommandExecution.new(stdout.chomp, stderr.chomp, status.exitstatus)
