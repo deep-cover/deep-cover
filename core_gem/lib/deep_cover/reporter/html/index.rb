@@ -49,10 +49,9 @@ module DeepCover
 
       # {per_char: Stat, ...} => {per_char: {ignored: ...}, per_char_percent: 55.55, ...}
       def transform_data(data)
-        Tools.merge(
-            data.transform_values(&:to_h),
-            *data.map { |type, stat| {:"#{type}_percent" => stat.percent_covered} }
-        )
+        numbers = data.transform_values(&:to_h)
+        percent = data.to_h { |type, stat| [:"#{type}_percent", stat.percent_covered] }
+        numbers.merge(percent)
       end
     end
   end

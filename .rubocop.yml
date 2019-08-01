@@ -1,3 +1,6 @@
+require:
+  - rubocop-performance
+
 AllCops:
   DisplayCopNames: true
   Exclude:
@@ -7,7 +10,7 @@ AllCops:
     - '**/spec/specs_tools.rb'
     - 'bin/**/*'
     - '_*/**/*'
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.3
 
 Gemspec/RequiredRubyVersion:
   # Yes, we still support ruby 2.1...
@@ -31,13 +34,13 @@ Layout/EmptyLines:
 Layout/EmptyLineBetweenDefs:
   NumberOfEmptyLines: [1, 2]
 
-Layout/FirstParameterIndentation:
+Layout/IndentFirstArgument:
   IndentationWidth: 4
 
-Layout/IndentArray:
+Layout/IndentFirstArrayElement:
   EnforcedStyle: align_brackets
 
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   EnforcedStyle: align_braces
 
 Layout/IndentHeredoc:
@@ -93,9 +96,6 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 Performance/RedundantBlockCall:
-  Enabled: false
-
-Rails/FilePath:
   Enabled: false
 
 Style/AccessModifierDeclarations:
@@ -267,6 +267,9 @@ Style/MixinUsage:
 Style/EvalWithLocation:
   Enabled: false
 
+Gemspec/RubyVersionGlobalsUsage:
+  Enabled: false
+
 Lint/BooleanSymbol:
   Enabled: false
 
@@ -277,3 +280,7 @@ Naming/UncommunicativeMethodParamName:
 Layout/SpaceInsideReferenceBrackets:
   Exclude:
     - core_gem/spec/**/*
+
+# Ruby 2.1 support:
+Style/SafeNavigation:
+  Enabled: false
