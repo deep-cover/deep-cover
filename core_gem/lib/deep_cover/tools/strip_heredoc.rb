@@ -4,7 +4,7 @@ module DeepCover
   module Tools::StripHeredoc
     # In-place implementation copied from active-support.
     IMPLEMENTATION = -> do
-      gsub(/^#{scan(/^[ \t]*(?=\S)/).min}/, ''.freeze).tap do |stripped|
+      gsub(/^#{scan(/^[ \t]*(?=\S)/).min}/, '').tap do |stripped|
         stripped.freeze if frozen?
       end
     end

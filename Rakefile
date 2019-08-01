@@ -43,8 +43,8 @@ rescue LoadError
   puts 'Note: rspec not installed'
 end
 
-multitask default: RUBY_VERSION > '2.2' ? [:rubocop, :spec] : :spec
-multitask 'test:all' => RUBY_VERSION > '2.2' ? [:rubocop, 'spec:all'] : 'spec:all'
+multitask default: RUBY_VERSION >= '2.3' ? [:rubocop, :spec] : :spec
+multitask 'test:all' => RUBY_VERSION >= '2.3' ? [:rubocop, 'spec:all'] : 'spec:all'
 
 #### Utilities
 namespace :dev do

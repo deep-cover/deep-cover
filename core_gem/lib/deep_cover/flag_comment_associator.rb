@@ -11,8 +11,8 @@ module DeepCover
     # @param [Array(Parser::Source::Comment)] comments
     def initialize(covered_code, lookup = 'nocov')
       @covered_code = covered_code
-      @lookup      = /^#[\s#*-]*#{lookup}[\s#*-]*$/
-      @ranges      = nil
+      @lookup       = /^#[\s#*-]*#{lookup}[\s#*-]*$/
+      @ranges       = nil
     end
 
     def include?(range)
