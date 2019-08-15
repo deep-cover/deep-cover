@@ -20,7 +20,7 @@ module DeepCover
       hash = to_hash
       # TODO: (Max) I don't like mixup of configs being partly on DeepCover and Config like that...
       hash[:paths] = DeepCover.lookup_globs
-      hash[:output] = hash[:output] ? File.expand_path(hash[:output]) : hash[:output]
+      hash[:output] &&= File.expand_path(hash[:output])
       hash[:cache_directory] = File.expand_path(hash[:cache_directory])
       hash
     end
