@@ -111,9 +111,9 @@ RSpec::Matchers.define :have_expected_results do |stdout: nil, stderr: /^$/, exi
 
   failure_message do
     messages = []
-    messages << "Bad exit_code: Expected exit_code: #{@expected_exit_code}\nReceived exit_code: #{@cmd_exec.exit_code}" unless @exit_code_ok
-    messages << "Bad stdout: Expected stdout: #{@expected_stdout}\nReceived stdout: #{@cmd_exec.stdout}" unless @stdout_ok
-    messages << "Bad stderr: Expected stderr: #{@expected_stderr}\nReceived stderr: #{@cmd_exec.stderr}" unless @stderr_ok
+    messages << "Bad exit_code: Expected: #{@expected_exit_code}\nReceived: #{@cmd_exec.exit_code}" unless @exit_code_ok
+    messages << "Bad stdout:\nExpected: #{@expected_stdout}\nReceived: #{@cmd_exec.stdout}" unless @stdout_ok
+    messages << "Bad stderr:\nExpected: #{@expected_stderr}\nReceived: #{@cmd_exec.stderr}" unless @stderr_ok
 
     messages << "exit_code was as expected: #{@cmd_exec.exit_code}" if @exit_code_ok
     messages << "Stdout was as expected: #{@cmd_exec.stdout}" if @stdout_ok
