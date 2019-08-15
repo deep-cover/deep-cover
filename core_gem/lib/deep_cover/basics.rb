@@ -10,6 +10,7 @@ module DeepCover
 
   DEFAULTS = {
                paths: [:auto_detect].freeze,
+               exclude_paths: [].freeze,
                allow_partial: false,
                tracker_global: '$_cov',
                reporter: :html,

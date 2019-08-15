@@ -73,16 +73,16 @@ module DeepCover
 
         let(:full_path) { 'core_gem/spec/code_fixtures/with_configure' }
 
-        it { should =~ node_result('12 [+2] / 15') }
+        it { should =~ node_result('15 [+2] / 18') }
 
         describe 'with CLI-level switches' do
           let(:options) { '--ignore-default-argument' }
-          it { should =~ node_result('12 [+3] / 15') }
+          it { should =~ node_result('15 [+3] / 18') }
         end
 
         describe 'with conflicting CLI-level switches' do
           let(:options) { '--no-ignore-raise' }
-          it { should =~ node_result('12 / 15') }
+          it { should =~ node_result('15 / 18') }
         end
       end
     end

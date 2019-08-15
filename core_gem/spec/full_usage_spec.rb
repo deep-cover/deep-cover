@@ -15,13 +15,17 @@ RSpec.describe 'DeepCover usage' do
   describe '', :slow do
     it 'for code that changes the configuration (without .deep_cover.rb)' do
       ['ruby', JRUBY_DEV_OPTION, 'with_configure/test.rb'].compact.should(
-          run_successfully.from_dir(FIXTURE_PATH).and_output('[nil, 1, 1, 2, 0, nil, 2, nil, nil]')
+          run_successfully.from_dir(FIXTURE_PATH).and_output(
+              '{:foo=>[nil, nil, 1, nil, 1, 1, 2, 0, nil, 2, nil, nil], :bar=>nil}'
+          )
       )
     end
 
     it 'for code that changes the configuration (also with .deep_cover.rb)' do
       ['ruby', JRUBY_DEV_OPTION, 'test.rb'].compact.should(
-          run_successfully.from_dir("#{FIXTURE_PATH}/with_configure").and_output('[nil, 1, 1, 2, nil, nil, 2, nil, nil]')
+          run_successfully.from_dir("#{FIXTURE_PATH}/with_configure").and_output(
+              '{:foo=>[nil, nil, 1, nil, 1, 1, 2, nil, nil, 2, nil, nil], :bar=>nil}'
+          )
       )
     end
 

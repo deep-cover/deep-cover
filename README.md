@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/deep-cover/deep-cover.svg?branch=master)](https://travis-ci.org/deep-cover/deep-cover)
 [![Backers on Open Collective](https://opencollective.com/deep-cover/backers/badge.svg)](#backers)
- [![Sponsors on Open Collective](https://opencollective.com/deep-cover/sponsors/badge.svg)](#sponsors) 
+ [![Sponsors on Open Collective](https://opencollective.com/deep-cover/sponsors/badge.svg)](#sponsors)
 
 # DeepCover
 
@@ -163,8 +163,8 @@ At the moment, those tools do not support deep-cover. It is however possible to 
 DeepCover.configure do
   ignore_uncovered :raise, :default_argument
   detect_uncovered :trivial_if
-  # TODO
   paths %w[app lib]
+  exclude_paths ['fixtures', /^lib\/ignore/]
 end
 ```
 

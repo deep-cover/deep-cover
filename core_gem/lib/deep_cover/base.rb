@@ -38,7 +38,9 @@ module DeepCover
     end
 
     def line_coverage(filename)
-      coverage.line_coverage(handle_relative_filename(filename), **config.to_h)
+      filename = handle_relative_filename(filename)
+      return unless coverage.covered_code?(filename)
+      coverage.line_coverage(filename, **config.to_h)
     end
 
     def covered_code(filename)
@@ -62,6 +64,9 @@ module DeepCover
       when :paths
         warn "Changing DeepCover's paths after starting coverage is highly discouraged" if running?
         @lookup_globs = @all_tracked_file_paths = nil
+      when :excluded_paths
+        warn "Changing DeepCover's excluded_paths after starting coverage is highly discouraged" if running?
+        @all_tracked_file_paths = nil
       when :tracker_global
         raise NotImplementedError, "Changing DeepCover's tracker global after starting coverage is not supported" if running?
         @coverage = nil
@@ -77,6 +82,11 @@ module DeepCover
 
     def coverage
       @coverage ||= Coverage.new
+    end
+
+    def lookup_exclusion
+      @lookup_exclusion ||= Regexp.union(*
+        config.exclude_paths.map { |x| Tools.to_regexp(x) })
     end
 
     def lookup_globs
@@ -143,6 +153,7 @@ module DeepCover
     end
 
     def tracked_file_path?(path)
+      return false if lookup_exclusion.match?(path)
       # The flags are to make fnmatch match the same things as Dir.glob... This doesn't seem to be documented anywhere
       # EXTGLOB: allow matching {lib,app} as either lib or app
       # PATHNAME: Makes wildcard match not match /, and make /**/ (and pattern starting with **/) be any number of nested directory
@@ -155,6 +166,7 @@ module DeepCover
       paths_found.select! { |path| path.end_with?('.rb') }
       paths_found.select! { |path| File.file?(path) }
       paths_found.uniq!
+      paths_found.reject! { |path| lookup_exclusion.match?(path) }
       @all_tracked_file_paths = paths_found
       @all_tracked_file_paths.dup
     end

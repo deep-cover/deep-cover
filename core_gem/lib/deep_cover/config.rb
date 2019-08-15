@@ -65,12 +65,17 @@ module DeepCover
         end
       end
 
-      %i[paths tracker_global reporter output cache_directory allow_partial]
+      %i[paths exclude_paths tracker_global reporter output cache_directory allow_partial]
         .concat(OPTIONALLY_COVERED.map { |filter| FILTER_NAME[filter] })
         .each { |attr| define_accessor(attr) }
     end
 
     include AttributeAccessors
+
+    def exclude_paths(paths = NOT_SPECIFIED)
+      paths = Array(paths).dup unless paths == NOT_SPECIFIED
+      super
+    end
 
     def paths(paths = NOT_SPECIFIED)
       paths = Array(paths).dup unless paths == NOT_SPECIFIED

@@ -6,6 +6,7 @@ require 'deep_cover'
 DeepCover.configure do
   ignore_uncovered :default_argument
   paths '.'
+  exclude_paths 'bar'
 end
 
 DeepCover.cover do
@@ -14,4 +15,7 @@ end
 
 require_relative 'run'
 
-p DeepCover.line_coverage('foo')
+out = %w[foo bar].to_h do |f|
+  [f.to_sym, DeepCover.line_coverage(f)]
+end
+p out
