@@ -56,7 +56,7 @@ module DeepCover
       self
     end
 
-    # If a file wasn't required, it won't be in the trackers. This adds those mossing files
+    # If a file wasn't required, it won't be in the trackers. This adds those missing files
     def add_missing_covered_codes
       top_level_path = DeepCover.config.paths.detect do |path|
         next unless path.is_a?(String)
