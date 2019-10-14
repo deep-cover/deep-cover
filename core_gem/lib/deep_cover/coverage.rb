@@ -77,9 +77,16 @@ module DeepCover
         return
       end
 
+      skipped = []
       DeepCover.all_tracked_file_paths.each do |path|
-        covered_code(path, tracker_hits: :zeroes)
+        begin
+          covered_code(path, tracker_hits: :zeroes)
+        rescue Parser::SyntaxError
+          skipped << path
+        end
       end
+      warn "The following files could not be parsed:\n" + skipped.join("\n") unless skipped.empty?
+
       nil
     end
 
