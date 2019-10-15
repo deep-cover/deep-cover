@@ -8,7 +8,7 @@ module DeepCover
       let(:coverage) { trivial_gem_coverage }
 
       describe HTML::Site do
-        let(:site) { HTML::Site.new(coverage, {}) }
+        let(:site) { HTML::Site.new(coverage) }
         it 'renders the index' do
           html = site.render_index
           html.should include '"header":"Nodes"'
@@ -20,7 +20,7 @@ module DeepCover
       end
 
       describe HTML::Index do
-        let(:index) { HTML::Index.new(Reporter::Base.new(coverage.analysis, {})) }
+        let(:index) { HTML::Index.new(Reporter::Base.new(coverage.analysis)) }
         it {
           data = index.stats_to_data
           children = data.first.delete(:children)

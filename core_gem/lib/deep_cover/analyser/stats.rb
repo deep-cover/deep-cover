@@ -23,7 +23,7 @@ module DeepCover
     end
 
     def +(other)
-      self.class.new(to_h.merge(other.to_h) { |k, a, b| a + b })
+      self.class.new(**to_h.merge(other.to_h) { |k, a, b| a + b })
     end
 
     def total
@@ -31,7 +31,7 @@ module DeepCover
     end
 
     def with(**values)
-      self.class.new(to_h.merge(values))
+      self.class.new(**to_h.merge(values))
     end
 
     def potentially_executable

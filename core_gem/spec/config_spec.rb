@@ -52,7 +52,7 @@ module DeepCover
         config.tracker_global('foo')
         config.ignore_uncovered :raise
         other = Config.new
-        other.set(config.to_h)
+        other.set(**config.to_h)
         other.to_h.should == config.to_h
       end
     end
