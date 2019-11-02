@@ -136,7 +136,7 @@ Note, this is a bit slower and may cause issues in your tests if your use relati
 
 To make it easier to transition for projects already using the builtin `Coverage` library (such as those using `SimpleCov`), `deep-cover` can inject itself into those tools so that, while you still only have line-by-line coverage information, it becomes stricter, only marking a line as executed if *everything* on it has been executed.
 
-You must call `require 'deep-cover/builtin_takeover'` **before** you require the coverage tool that you normally use.
+You must call `require 'deep_cover/builtin_takeover'` **before** you require the coverage tool that you normally use.
 
 For example, the `test/test_helper.rb` file for `SimpleCov` users will look like
 
