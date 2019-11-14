@@ -47,13 +47,13 @@ module DeepCover
         raise 'coverage measurement is not enabled' unless running?
         if @started_args == OLD_COVERAGE_SENTINEL
           DeepCover.coverage.covered_codes.map do |covered_code|
-            [covered_code.path.to_s, covered_code.line_coverage(allow_partial: false)]
+            [covered_code.path.to_s, covered_code.line_coverage(**DeepCover.config.to_h)]
           end.to_h
         else
           DeepCover.coverage.covered_codes.map do |covered_code|
             cov = {}
             cov[:branches] = DeepCover::Analyser::Ruby25LikeBranch.new(covered_code).results if @started_args[:branches]
-            cov[:lines] = covered_code.line_coverage(allow_partial: false) if @started_args[:lines]
+            cov[:lines] = covered_code.line_coverage(**DeepCover.config.to_h) if @started_args[:lines]
             cov[:methods] = {} if @started_args[:methods]
             [covered_code.path.to_s, cov]
           end.to_h
