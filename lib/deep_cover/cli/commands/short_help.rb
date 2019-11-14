@@ -15,12 +15,12 @@ module DeepCover
 
       main_commands, _ignored = Tools.extract_commands_for_help(list, :exec, :clone)
 
-      shell.say 'Main command:'
+      shell.say 'Main commands:'
       shell.print_table(main_commands, indent: 2, truncate: true)
 
       shell.say
-      shell.say 'Use `deep-cover help` for a full help with a list of lower-level commands'
-      shell.say 'and information on the available options'
+      shell.say 'More commands:'
+      shell.say '  deep-cover help [COMMAND]  # Full help with a list of lower-level commands and all options'
     end
   end
 end

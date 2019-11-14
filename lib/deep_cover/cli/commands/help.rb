@@ -6,6 +6,7 @@ module DeepCover
     # We override it to make it more to our taste.
 
     # Copied from Thor's default one, then customized
+    desc 'help [COMMAND]', 'Describe all available commands or one specific command', for: :help
     def self.help(shell, subcommand = false)
       list = printable_commands(true, subcommand)
       Thor::Util.thor_classes_in(self).each do |klass|
