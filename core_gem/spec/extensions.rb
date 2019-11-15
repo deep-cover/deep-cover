@@ -25,7 +25,7 @@ class RSpec::Core::ExampleGroup
                     when /\(!jruby/i
                       :skip if RUBY_PLATFORM == 'java'
                     when /\(jruby (\d(?:\.\d)+)\+/i
-                      :skip if RUBY_PLATFORM == 'java' && JRUBY_VERSION < Regexp.last_match(1)
+                      :skip if RUBY_PLATFORM == 'java' && Gem::Version.new(JRUBY_VERSION) < Gem::Version.new(Regexp.last_match(1))
                     when /\(#/
                     when /\(tag/
                     when /\(\s*\)/

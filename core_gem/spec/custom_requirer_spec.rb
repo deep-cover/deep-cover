@@ -540,7 +540,7 @@ module DeepCover
         'test'.should actually_require('one/test.rb', expected_loaded_feature: 'one/test.rb')
       end
 
-      if RUBY_PLATFORM == 'java' && JRUBY_VERSION >= '9.2.5'
+      if RUBY_PLATFORM == 'java' && Gem::Version.new(JRUBY_VERSION) >= Gem::Version.new('9.2.5')
         # https://github.com/jruby/jruby/issues/5465
         it "a ./path doesn't keep symlinks after the current work dir" do
           file_tree %w(pwd:one/
