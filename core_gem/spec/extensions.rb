@@ -18,6 +18,8 @@ class RSpec::Core::ExampleGroup
                     when /\(skip/i then next
                     when /\(#{name}:(\d.\d)/i
                       :pending if RUBY_VERSION < Regexp.last_match(1)
+                    when /\(ruby 2\.(\d)-2\.(\d)/i
+                      :skip if RUBY_VERSION < "2.#{Regexp.last_match(1)}.0" || RUBY_VERSION >= "2.#{Regexp.last_match(2).to_i + 1}.0"
                     when /\(ruby 2\.(\d)\+/i
                       :skip if RUBY_VERSION < "2.#{Regexp.last_match(1)}.0"
                     when /\(ruby <2\.(\d)/i
