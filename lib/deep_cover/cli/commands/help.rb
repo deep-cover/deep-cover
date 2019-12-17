@@ -29,7 +29,8 @@ module DeepCover
       shell.print_table(list, indent: 2, truncate: true)
 
       shell.say
-      class_options_help(shell)
+      print_options(shell, class_options.values, 'Global')
+      shell.say 'Use `deep-cover help CMD` for all options accepted by CMD.'
     end
   end
 end
