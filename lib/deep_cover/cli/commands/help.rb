@@ -12,7 +12,7 @@ module DeepCover
       Thor::Util.thor_classes_in(self).each do |klass|
         list += klass.printable_commands(false)
       end
-      list.sort! { |a, b| a[0] <=> b[0] }
+      list.sort_by!(&:first)
 
       main_commands, list = Tools.extract_commands_for_help(list, :exec, :clone)
 
