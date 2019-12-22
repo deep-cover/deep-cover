@@ -11,6 +11,13 @@ module DeepCover
   bootstrap
 
   class CLI < Thor
+    # Consider defaults only for display
+    def self.build_option(arg, options, scope)
+      default = options.delete(:default)
+      options[:desc] = "#{options[:desc]} (default: #{default})" if default
+      super(arg, options, scope)
+    end
+
     require_relative 'cli/tools'
 
     # Just fail when you get an unknown option
@@ -30,7 +37,7 @@ module DeepCover
     end.to_h.freeze
     OPTIONALLY_COVERED_MAP.each do |cli_option, short_name|
       default = DeepCover.config.ignore_uncovered.include?(short_name)
-      class_option cli_option, type: :boolean, default: default
+      class_option cli_option, type: :boolean, description: "Default: #{default}"
     end
 
     class_option :change_directory, desc: 'Runs as if deep-cover was started in <path>', type: :string, aliases: '-C', default: '.'
@@ -62,7 +69,7 @@ module DeepCover
       # Before we actually execute any of the commands, we want to change directory if that option was given.
       # And then we want to setup the configuration
       def invoke_command(*args)
-        if options[:change_directory] != '.'
+        if options[:change_directory]
           root_path = File.expand_path(options[:change_directory])
           unless File.exist?(root_path)
             warn set_color(DeepCover::Tools.strip_heredoc(<<-MSG), :red)
