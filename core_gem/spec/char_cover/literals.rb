@@ -9,6 +9,16 @@
     'a'..'z'
     a = 42
     1..a
+### Endless Ranges (Ruby 2.6+)
+    x = (42..)
+    y = ('a'..)
+    z = (raise..) rescue nil
+#>      -     xx-
+### Beginless Ranges (Ruby 2.7+)
+    x = (..42)
+    y = (..'a')
+    z = (..raise) rescue nil
+#>      -xx     -
 ### Boolean
     nil
     false

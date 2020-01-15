@@ -56,7 +56,7 @@ module DeepCover
     # (Potentially) dynamic
     module SimpleIfItsChildrenAre
       def simple_literal?
-        children.all?(&:simple_literal?)
+        children.compact.all?(&:simple_literal?)
       end
     end
 
@@ -65,8 +65,8 @@ module DeepCover
       include SimpleIfItsChildrenAre
       include ExecutedAfterChildren
 
-      has_child from: Node
-      has_child to: Node
+      has_child from: [Node, nil]
+      has_child to: [Node, nil]
     end
     Erange = Irange = Range
 
