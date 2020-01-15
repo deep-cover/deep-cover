@@ -3,7 +3,9 @@
     1.0...4.2
     1..(2+2)
     raise..42 rescue nil
-#>         xx
+#>       xxxx
+    42..raise rescue nil
+#>    xx
     'a'..'z'
     a = 42
     1..a

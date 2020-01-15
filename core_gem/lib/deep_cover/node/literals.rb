@@ -63,6 +63,7 @@ module DeepCover
     # Di-atomic
     class Range < Node
       include SimpleIfItsChildrenAre
+      include ExecutedAfterChildren
 
       has_child from: Node
       has_child to: Node
