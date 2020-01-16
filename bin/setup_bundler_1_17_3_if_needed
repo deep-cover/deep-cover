@@ -7,9 +7,9 @@
 # So if Ruby is less than 2.6, we need 1.17.3
 
 def setup_1_17_3
-  `gem uninstall bundler -a -x`
-  `rvm @global do gem uninstall bundler -a -x`
-  `gem install bundler -v 1.17.3`
+  system(*%w(gem uninstall bundler -a -x))
+  system(*%w(rvm @global do gem uninstall bundler -a -x))
+  system(*%w(gem install bundler -v 1.17.3))
 end
 
 setup_1_17_3 if RUBY_VERSION < '2.6'
