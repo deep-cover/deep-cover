@@ -4,7 +4,7 @@ require 'deep_cover'
 
 # Check also .deep_cover.rb file
 DeepCover.configure do
-  detect_uncovered :default_argument
+  ignore_uncovered :default_argument
   paths '.'
 end
 
