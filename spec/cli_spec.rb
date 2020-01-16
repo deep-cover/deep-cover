@@ -14,10 +14,10 @@ module DeepCover
       cmd_exec.should have_expected_results(stderr: expected_errors, exit_code: expected_status)
       cmd_exec.stdout
     end
+    subject { output }
 
     describe 'deep-cover exec' do
       let(:command) { "exe/deep-cover exec -C=#{full_path} -o=false #{options} rake" }
-      subject { output }
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
         it do
@@ -64,7 +64,6 @@ module DeepCover
 
     describe 'deep-cover gather' do
       let(:command) { "exe/deep-cover gather -C=#{full_path} #{options} rake" }
-      subject { output }
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
 
@@ -100,7 +99,6 @@ module DeepCover
 
     describe 'deep-cover merge' do
       let(:command) { "exe/deep-cover merge -C=#{full_path} #{options}" }
-      subject { output }
 
       before(:each) do
         # clear trackers
@@ -148,7 +146,6 @@ module DeepCover
     describe 'deep-cover report' do
       let(:options) { '--reporter=istanbul' }
       let(:command) { "exe/deep-cover report -C=#{full_path} -o=false #{options}" }
-      subject { output }
 
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
@@ -165,7 +162,6 @@ module DeepCover
 
     describe 'deep-cover clear' do
       let(:command) { "exe/deep-cover clear -C=#{full_path} #{options}" }
-      subject { output }
 
       before(:each) do
         cache_directory = "#{full_path}/deep_cover"
@@ -203,7 +199,6 @@ module DeepCover
     describe 'The output of deep-cover clone' do
       let(:extra_args) { '' }
       let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=#{full_path} #{options}" }
-      subject { output }
 
       describe 'for a simple project (not a gem)' do
         let(:path) { '../../core_gem/spec/code_fixtures/simple' }
@@ -259,7 +254,6 @@ module DeepCover
 
     describe 'deep-cover run-expression' do
       let(:command) { "exe/deep-cover run-expression '2 + 2 == 4'" }
-      subject { output }
 
       it { should include 'Node coverage:' }
     end
