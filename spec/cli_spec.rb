@@ -6,6 +6,8 @@ module DeepCover
   RSpec.describe 'CLI', :slow do
     let(:expected_errors) { /^$/ }
     let(:expected_status) { 0 }
+    let(:full_path) { "spec/code_fixtures/#{path}" }
+
     let(:output) do
       cmd_exec = run_command(command)
       cmd_exec.should have_expected_results(stderr: expected_errors, exit_code: expected_status)
@@ -14,7 +16,7 @@ module DeepCover
 
     describe 'deep-cover exec' do
       let(:options) { '' }
-      let(:command) { "exe/deep-cover exec -C=spec/code_fixtures/#{path} -o=false #{options} rake" }
+      let(:command) { "exe/deep-cover exec -C=#{full_path} -o=false #{options} rake" }
       subject { output }
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
@@ -24,10 +26,10 @@ module DeepCover
         end
 
         it 'clears old trackers' do
-          cache_directory = "spec/code_fixtures/#{path}/deep_cover"
+          cache_directory = "#{full_path}/deep_cover"
           Dir.mkdir(cache_directory) unless File.exist?(cache_directory)
 
-          fake_tracker_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          fake_tracker_path = "#{full_path}/deep_cover/trackers123.dct"
           File.write(fake_tracker_path, 'bad data!')
           output
 
@@ -62,13 +64,13 @@ module DeepCover
 
     describe 'deep-cover gather' do
       let(:options) { '' }
-      let(:command) { "exe/deep-cover gather -C=spec/code_fixtures/#{path} #{options} rake" }
+      let(:command) { "exe/deep-cover gather -C=#{full_path} #{options} rake" }
       subject { output }
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
 
         it 'keeps old trackers' do
-          fake_tracker_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          fake_tracker_path = "#{full_path}/deep_cover/trackers123.dct"
           File.write(fake_tracker_path, 'bad data!')
           output
 
@@ -76,9 +78,9 @@ module DeepCover
         end
 
         it 'add a trackers file' do
-          pre_tracker_files = Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"]
+          pre_tracker_files = Dir["#{full_path}/deep_cover/*.dct"]
           output
-          post_tracker_files = Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"]
+          post_tracker_files = Dir["#{full_path}/deep_cover/*.dct"]
 
           post_tracker_files.size.should == pre_tracker_files.size + 1
         end
@@ -99,12 +101,12 @@ module DeepCover
 
     describe 'deep-cover merge' do
       let(:options) { '' }
-      let(:command) { "exe/deep-cover merge -C=spec/code_fixtures/#{path} #{options}" }
+      let(:command) { "exe/deep-cover merge -C=#{full_path} #{options}" }
       subject { output }
 
       before(:each) do
         # clear trackers
-        Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"].each { |path| File.delete(path) }
+        Dir["#{full_path}/deep_cover/*.dct"].each { |path| File.delete(path) }
       end
 
       describe 'for a simple gem' do
@@ -112,18 +114,18 @@ module DeepCover
 
         it 'does nothing if there are no trackers to merge' do
           output
-          post_tracker_files = Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"]
+          post_tracker_files = Dir["#{full_path}/deep_cover/*.dct"]
           post_tracker_files.size.should == 0
         end
 
         it 'it merges every tracker files into one' do
-          trackers1_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          trackers1_path = "#{full_path}/deep_cover/trackers123.dct"
           File.write(trackers1_path, JSON.dump(version: DeepCover::VERSION,
                                                tracker_hits_per_path: {'hello1' => [1, 2, 3],
                                                                        'hello2' => [4, 5, 6],
                                                                          }))
 
-          trackers2_path = "spec/code_fixtures/#{path}/deep_cover/trackers456.dct"
+          trackers2_path = "#{full_path}/deep_cover/trackers456.dct"
           File.write(trackers2_path, JSON.dump(version: DeepCover::VERSION,
                                                tracker_hits_per_path: {'hello1' => [2, 2, 2],
                                                                        'hello3' => [7, 8, 9],
@@ -133,8 +135,8 @@ module DeepCover
 
           File.exist?(trackers1_path).should == false
           File.exist?(trackers2_path).should == false
-          Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"].size.should == 1
-          result = JSON.parse(File.read(Dir["spec/code_fixtures/#{path}/deep_cover/*.dct"].first)).transform_keys(&:to_sym)
+          Dir["#{full_path}/deep_cover/*.dct"].size.should == 1
+          result = JSON.parse(File.read(Dir["#{full_path}/deep_cover/*.dct"].first)).transform_keys(&:to_sym)
           result.should == {version: DeepCover::VERSION,
                             tracker_hits_per_path: {'hello1' => [3, 4, 5],
                                                     'hello2' => [4, 5, 6],
@@ -147,14 +149,14 @@ module DeepCover
 
     describe 'deep-cover report' do
       let(:options) { '--reporter=istanbul' }
-      let(:command) { "exe/deep-cover report -C=spec/code_fixtures/#{path} -o=false #{options}" }
+      let(:command) { "exe/deep-cover report -C=#{full_path} -o=false #{options}" }
       subject { output }
 
       describe 'for a simple gem' do
         let(:path) { 'covered_trivial_gem' }
         it do
           # Run deep-cover exec to setup initial data
-          cmd_exec = run_command("exe/deep-cover exec -C=spec/code_fixtures/#{path} -o=false #{options} rake")
+          cmd_exec = run_command("exe/deep-cover exec -C=#{full_path} -o=false #{options} rake")
           cmd_exec.should have_expected_results
           exec_table = cmd_exec.stdout[/^---(.|\n)*\z/]
 
@@ -165,11 +167,11 @@ module DeepCover
 
     describe 'deep-cover clear' do
       let(:options) { '' }
-      let(:command) { "exe/deep-cover clear -C=spec/code_fixtures/#{path} #{options}" }
+      let(:command) { "exe/deep-cover clear -C=#{full_path} #{options}" }
       subject { output }
 
       before(:each) do
-        cache_directory = "spec/code_fixtures/#{path}/deep_cover"
+        cache_directory = "#{full_path}/deep_cover"
         Dir.mkdir(cache_directory) unless File.exist?(cache_directory)
         Dir["#{cache_directory}/*"].each { |path| File.delete(path) }
       end
@@ -178,7 +180,7 @@ module DeepCover
         let(:path) { 'covered_trivial_gem' }
 
         it 'removes directory if it becomes empty' do
-          tracker_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          tracker_path = "#{full_path}/deep_cover/trackers123.dct"
           File.write(tracker_path, 'trackers')
 
           output
@@ -188,9 +190,9 @@ module DeepCover
         end
 
         it 'removes trackers but keep directory and other content' do
-          tracker_path = "spec/code_fixtures/#{path}/deep_cover/trackers123.dct"
+          tracker_path = "#{full_path}/deep_cover/trackers123.dct"
           File.write(tracker_path, 'trackers')
-          other_path = "spec/code_fixtures/#{path}/deep_cover/something.else"
+          other_path = "#{full_path}/deep_cover/something.else"
           File.write(other_path, 'else')
 
           output
@@ -204,12 +206,12 @@ module DeepCover
     describe 'The output of deep-cover clone' do
       let(:options) { '' }
       let(:extra_args) { '' }
-      let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=spec/code_fixtures/#{path} #{options}" }
+      let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=#{full_path} #{options}" }
       subject { output }
 
       describe 'for a simple project (not a gem)' do
         let(:path) { '../../core_gem/spec/code_fixtures/simple' }
-        let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=spec/code_fixtures/#{path} ruby simple.rb no_deep_cover" }
+        let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=#{full_path} ruby simple.rb no_deep_cover" }
         it do
           should include 'simple.rb'
           should =~ Regexp.new(%w[beside_simple.rb 100 100 100 100].join('[ |]*'))
