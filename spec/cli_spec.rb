@@ -7,6 +7,7 @@ module DeepCover
     let(:expected_errors) { /^$/ }
     let(:expected_status) { 0 }
     let(:options) { '' }
+    let(:path) { 'covered_trivial_gem' }
     let(:full_path) { "spec/code_fixtures/#{path}" }
 
     let(:output) do
@@ -19,7 +20,6 @@ module DeepCover
     describe 'deep-cover exec' do
       let(:command) { "exe/deep-cover exec -C=#{full_path} -o=false #{options} rake" }
       describe 'for a simple gem' do
-        let(:path) { 'covered_trivial_gem' }
         it do
           should include '3 examples, 0 failures'
           should =~ /No HTML generated/
@@ -65,8 +65,6 @@ module DeepCover
     describe 'deep-cover gather' do
       let(:command) { "exe/deep-cover gather -C=#{full_path} #{options} rake" }
       describe 'for a simple gem' do
-        let(:path) { 'covered_trivial_gem' }
-
         it 'keeps old trackers' do
           fake_tracker_path = "#{full_path}/deep_cover/trackers123.dct"
           File.write(fake_tracker_path, 'bad data!')
@@ -106,8 +104,6 @@ module DeepCover
       end
 
       describe 'for a simple gem' do
-        let(:path) { 'covered_trivial_gem' }
-
         it 'does nothing if there are no trackers to merge' do
           output
           post_tracker_files = Dir["#{full_path}/deep_cover/*.dct"]
@@ -148,7 +144,6 @@ module DeepCover
       let(:command) { "exe/deep-cover report -C=#{full_path} -o=false #{options}" }
 
       describe 'for a simple gem' do
-        let(:path) { 'covered_trivial_gem' }
         it do
           # Run deep-cover exec to setup initial data
           cmd_exec = run_command("exe/deep-cover exec -C=#{full_path} -o=false #{options} rake")
@@ -170,8 +165,6 @@ module DeepCover
       end
 
       describe 'for a simple gem' do
-        let(:path) { 'covered_trivial_gem' }
-
         it 'removes directory if it becomes empty' do
           tracker_path = "#{full_path}/deep_cover/trackers123.dct"
           File.write(tracker_path, 'trackers')
