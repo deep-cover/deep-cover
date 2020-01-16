@@ -1,0 +1,1 @@
+gem 'deep-cover', path: '../../../..'

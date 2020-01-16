@@ -1,0 +1,6 @@
+task :default do
+  require 'deep_cover'
+  require_relative 'foo'
+  require_relative 'run'
+  p 'All good!'
+end
