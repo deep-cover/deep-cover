@@ -100,8 +100,10 @@ RSpec::Matchers.define :have_expected_results do |stdout: nil, stderr: /^$/, exi
     @expected_stderr = stderr
     @expected_exit_code = exit_code
 
-    @stdout_ok = stdout.nil? || cmd_exec.stdout.match(stdout)
-    @stderr_ok = stderr.nil? || cmd_exec.stderr.match(stderr)
+    # rubocop:disable Style/CaseEquality
+    @stdout_ok = stdout.nil? || stdout === cmd_exec.stdout # Note: stdout is string or regex
+    @stderr_ok = stderr.nil? || stderr === cmd_exec.stderr # Note: stderr is string or regex
+    # rubocop:enable Style/CaseEquality
     @exit_code_ok = exit_code == cmd_exec.exit_code
 
     @stdout_ok && @stderr_ok && @exit_code_ok
