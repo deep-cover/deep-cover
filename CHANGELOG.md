@@ -48,7 +48,7 @@
 ## 0.4
 
 * Added `deep-cover exec`
-* Automatic loading of `.deep-cover.rb`
+* Automatic loading of `.deep_cover.rb`
 * Support for `# nocov`
 
 ## 0.3
