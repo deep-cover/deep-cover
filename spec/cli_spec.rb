@@ -9,6 +9,8 @@ module DeepCover
     let(:options) { '' }
     let(:path) { 'covered_trivial_gem' }
     let(:full_path) { "spec/code_fixtures/#{path}" }
+    let(:extra) { '' }
+    let(:command) { "exe/deep-cover #{subcommand} -C=#{full_path} #{options} #{extra}" }
 
     let(:output) do
       cmd_exec = run_command(command)
@@ -18,7 +20,8 @@ module DeepCover
     subject { output }
 
     describe 'deep-cover exec' do
-      let(:command) { "exe/deep-cover exec -C=#{full_path} -o=false #{options} rake" }
+      let(:subcommand) { 'exec' }
+      let(:extra) { '-o=false rake' }
       describe 'for a simple gem' do
         it do
           should include '3 examples, 0 failures'
@@ -63,7 +66,8 @@ module DeepCover
     end
 
     describe 'deep-cover gather' do
-      let(:command) { "exe/deep-cover gather -C=#{full_path} #{options} rake" }
+      let(:subcommand) { 'gather' }
+      let(:extra) { 'rake' }
       describe 'for a simple gem' do
         it 'keeps old trackers' do
           fake_tracker_path = "#{full_path}/deep_cover/trackers123.dct"
@@ -96,7 +100,7 @@ module DeepCover
     end
 
     describe 'deep-cover merge' do
-      let(:command) { "exe/deep-cover merge -C=#{full_path} #{options}" }
+      let(:subcommand) { 'merge' }
 
       before(:each) do
         # clear trackers
@@ -140,8 +144,8 @@ module DeepCover
     end
 
     describe 'deep-cover report' do
-      let(:options) { '--reporter=istanbul' }
-      let(:command) { "exe/deep-cover report -C=#{full_path} -o=false #{options}" }
+      let(:options) { '-o=false --reporter=istanbul' }
+      let(:subcommand) { 'report' }
 
       describe 'for a simple gem' do
         it do
@@ -156,7 +160,7 @@ module DeepCover
     end
 
     describe 'deep-cover clear' do
-      let(:command) { "exe/deep-cover clear -C=#{full_path} #{options}" }
+      let(:subcommand) { 'clear' }
 
       before(:each) do
         cache_directory = "#{full_path}/deep_cover"
@@ -190,12 +194,12 @@ module DeepCover
     end
 
     describe 'The output of deep-cover clone' do
-      let(:extra_args) { '' }
-      let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=#{full_path} #{options}" }
+      let(:subcommand) { 'clone' }
+      let(:options) { '-o=false --reporter=istanbul' }
 
       describe 'for a simple project (not a gem)' do
         let(:path) { '../../core_gem/spec/code_fixtures/simple' }
-        let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=#{full_path} ruby simple.rb no_deep_cover" }
+        let(:extra) { 'ruby simple.rb no_deep_cover' }
         it do
           should include 'simple.rb'
           should =~ Regexp.new(%w[beside_simple.rb 100 100 100 100].join('[ |]*'))
@@ -246,7 +250,8 @@ module DeepCover
     end
 
     describe 'deep-cover run-expression' do
-      let(:command) { "exe/deep-cover run-expression '2 + 2 == 4'" }
+      let(:subcommand) { 'run-expression' }
+      let(:extra) { "'2 + 2 == 4'" }
 
       it { should include 'Node coverage:' }
     end
