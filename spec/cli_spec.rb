@@ -6,6 +6,7 @@ module DeepCover
   RSpec.describe 'CLI', :slow do
     let(:expected_errors) { /^$/ }
     let(:expected_status) { 0 }
+    let(:options) { '' }
     let(:full_path) { "spec/code_fixtures/#{path}" }
 
     let(:output) do
@@ -15,7 +16,6 @@ module DeepCover
     end
 
     describe 'deep-cover exec' do
-      let(:options) { '' }
       let(:command) { "exe/deep-cover exec -C=#{full_path} -o=false #{options} rake" }
       subject { output }
       describe 'for a simple gem' do
@@ -63,7 +63,6 @@ module DeepCover
     end
 
     describe 'deep-cover gather' do
-      let(:options) { '' }
       let(:command) { "exe/deep-cover gather -C=#{full_path} #{options} rake" }
       subject { output }
       describe 'for a simple gem' do
@@ -100,7 +99,6 @@ module DeepCover
     end
 
     describe 'deep-cover merge' do
-      let(:options) { '' }
       let(:command) { "exe/deep-cover merge -C=#{full_path} #{options}" }
       subject { output }
 
@@ -166,7 +164,6 @@ module DeepCover
     end
 
     describe 'deep-cover clear' do
-      let(:options) { '' }
       let(:command) { "exe/deep-cover clear -C=#{full_path} #{options}" }
       subject { output }
 
@@ -204,7 +201,6 @@ module DeepCover
     end
 
     describe 'The output of deep-cover clone' do
-      let(:options) { '' }
       let(:extra_args) { '' }
       let(:command) { "exe/deep-cover clone -o=false --reporter=istanbul -C=#{full_path} #{options}" }
       subject { output }
