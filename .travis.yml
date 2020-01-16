@@ -21,6 +21,7 @@ matrix:
 
 install:
   - ruby -v
+  - gem -v
   - ./bin/setup_bundler_1_17_3_if_needed
   - bundle install
   - rake dev:install
