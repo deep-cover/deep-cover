@@ -63,6 +63,28 @@ module DeepCover
           should include 'nent_gem/lib/another_component_gem'
         end
       end
+
+      describe 'for a project with custom options' do
+        let(:extra) { '-o=false bundle exec rake' }
+
+        def node_result(str)
+          /foo.rb +\| #{Regexp.escape(str)}/
+        end
+
+        let(:full_path) { 'core_gem/spec/code_fixtures/with_configure' }
+
+        it { should =~ node_result('12 [+2] / 15') }
+
+        describe 'with CLI-level switches' do
+          let(:options) { '--ignore-default-argument' }
+          it { should =~ node_result('12 [+3] / 15') }
+        end
+
+        describe 'with conflicting CLI-level switches' do
+          let(:options) { '--no-ignore-raise' }
+          it { should =~ node_result('12 / 15') }
+        end
+      end
     end
 
     describe 'deep-cover gather' do
