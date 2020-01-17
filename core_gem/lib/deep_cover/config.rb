@@ -57,40 +57,26 @@ module DeepCover
       end
     end
 
+    module AttributeAccessors
+      %i[paths tracker_global reporter output cache_directory allow_partial].each do |attr|
+        define_method(attr) do |arg = NOT_SPECIFIED|
+          return @options[attr] if arg == NOT_SPECIFIED
+
+          change(attr, arg)
+        end
+      end
+    end
+
+    include AttributeAccessors
+
     def paths(paths = NOT_SPECIFIED)
-      return @options[:paths] if paths == NOT_SPECIFIED
-
-      change(:paths, Array(paths).dup)
-    end
-
-    def tracker_global(tracker_global = NOT_SPECIFIED)
-      return @options[:tracker_global] if tracker_global == NOT_SPECIFIED
-
-      change(:tracker_global, tracker_global)
-    end
-
-    def reporter(reporter = NOT_SPECIFIED)
-      return @options[:reporter] if reporter == NOT_SPECIFIED
-
-      change(:reporter, reporter)
-    end
-
-    def output(path_or_false = NOT_SPECIFIED)
-      return @options[:output] if path_or_false == NOT_SPECIFIED
-
-      change(:output, path_or_false)
+      paths = Array(paths).dup unless paths == NOT_SPECIFIED
+      super
     end
 
     def cache_directory(cache_directory = NOT_SPECIFIED)
-      return File.expand_path(@options[:cache_directory]) if cache_directory == NOT_SPECIFIED
-
-      change(:cache_directory, cache_directory)
-    end
-
-    def allow_partial(allow_partial = NOT_SPECIFIED)
-      return @options[:allow_partial] if allow_partial == NOT_SPECIFIED
-
-      change(:allow_partial, allow_partial)
+      return File.expand_path(super) if cache_directory == NOT_SPECIFIED
+      super
     end
 
     def reset
