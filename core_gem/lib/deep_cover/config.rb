@@ -2,6 +2,8 @@
 
 module DeepCover
   class Config
+    NOT_SPECIFIED = Object.new
+
     def initialize(notify = nil)
       @notify = nil
       @options = {ignore_uncovered: []}
@@ -55,52 +57,40 @@ module DeepCover
       end
     end
 
-    def paths(paths = nil)
-      if paths
-        change(:paths, Array(paths).dup)
-      else
-        @options[:paths]
-      end
+    def paths(paths = NOT_SPECIFIED)
+      return @options[:paths] if paths == NOT_SPECIFIED
+
+      change(:paths, Array(paths).dup)
     end
 
-    def tracker_global(tracker_global = nil)
-      if tracker_global
-        change(:tracker_global, tracker_global)
-      else
-        @options[:tracker_global]
-      end
+    def tracker_global(tracker_global = NOT_SPECIFIED)
+      return @options[:tracker_global] if tracker_global == NOT_SPECIFIED
+
+      change(:tracker_global, tracker_global)
     end
 
-    def reporter(reporter = nil)
-      if reporter
-        change(:reporter, reporter)
-      else
-        @options[:reporter]
-      end
+    def reporter(reporter = NOT_SPECIFIED)
+      return @options[:reporter] if reporter == NOT_SPECIFIED
+
+      change(:reporter, reporter)
     end
 
-    def output(path_or_false = nil)
-      if path_or_false != nil
-        change(:output, path_or_false)
-      else
-        @options[:output]
-      end
+    def output(path_or_false = NOT_SPECIFIED)
+      return @options[:output] if path_or_false == NOT_SPECIFIED
+
+      change(:output, path_or_false)
     end
 
-    def cache_directory(cache_directory = nil)
-      if cache_directory
-        change(:cache_directory, cache_directory)
-      else
-        File.expand_path(@options[:cache_directory])
-      end
+    def cache_directory(cache_directory = NOT_SPECIFIED)
+      return File.expand_path(@options[:cache_directory]) if cache_directory == NOT_SPECIFIED
+
+      change(:cache_directory, cache_directory)
     end
 
-    def allow_partial(allow_partial = nil)
-      if allow_partial != nil
-        change(:allow_partial, allow_partial)
-      else
-        @options[:allow_partial]
-      end
+    def allow_partial(allow_partial = NOT_SPECIFIED)
+      return @options[:allow_partial] if allow_partial == NOT_SPECIFIED
+
+      change(:allow_partial, allow_partial)
     end
 
     def reset
