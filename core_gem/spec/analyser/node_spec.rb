@@ -17,7 +17,7 @@ module DeepCover
 
     def matches?(option)
       node = Node[@source]
-      with = Analyser::Node.new(node, ignore_uncovered: option)
+      with = Analyser::Node.new(node, **{FILTER_NAME[option] => true})
       without = Analyser::Node.new(node)
       @matchers = [*results(without), *results(with)].map { |a| match_array(a) }
       expected = [@nodes, [], [], @nodes]

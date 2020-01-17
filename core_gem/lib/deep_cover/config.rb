@@ -6,7 +6,7 @@ module DeepCover
 
     def initialize(notify = nil)
       @notify = nil
-      @options = {ignore_uncovered: []}
+      @options = {}
       set(**DEFAULTS)
       @notify = notify
     end
@@ -38,33 +38,36 @@ module DeepCover
         raise ArgumentError, "wrong number of arguments (given #{keywords.size}, expected 0..1)" if keywords.size > 1
         keywords << Node.unique_filter if keywords.empty?
         Node.create_filter(keywords.first, &block)
+        AttributeAccessors.define_accessor(FILTER_NAME[keywords.first])
       end
-      if keywords.empty?
-        @options[:ignore_uncovered]
-      else
+      unless keywords.empty?
         keywords = check_uncovered(keywords)
-        change(:ignore_uncovered, @options[:ignore_uncovered] | keywords)
+        set(keywords.to_h { |kind| [FILTER_NAME[kind], true] })
       end
+      Config.options_to_ignored(**@options)
     end
 
     def detect_uncovered(*keywords)
       raise ArgumentError, 'No block is accepted' if block_given?
-      if keywords.empty?
-        OPTIONALLY_COVERED - @options[:ignore_uncovered]
-      else
+      unless keywords.empty?
         keywords = check_uncovered(keywords)
-        change(:ignore_uncovered, @options[:ignore_uncovered] - keywords)
+        set(keywords.to_h { |kind| [FILTER_NAME[kind], false] })
       end
+      OPTIONALLY_COVERED - Config.options_to_ignored(**@options)
     end
 
     module AttributeAccessors
-      %i[paths tracker_global reporter output cache_directory allow_partial].each do |attr|
+      def self.define_accessor(attr)
         define_method(attr) do |arg = NOT_SPECIFIED|
           return @options[attr] if arg == NOT_SPECIFIED
 
           change(attr, arg)
         end
       end
+
+      %i[paths tracker_global reporter output cache_directory allow_partial]
+        .concat(OPTIONALLY_COVERED.map { |filter| FILTER_NAME[filter] })
+        .each { |attr| define_accessor(attr) }
     end
 
     include AttributeAccessors
@@ -95,11 +98,15 @@ module DeepCover
     end
 
     def set(**options)
-      @options[:ignore_uncovered] = [] if options.has_key?(:ignore_uncovered)
       options.each do |key, value|
         self[key] = value
       end
       self
+    end
+
+    def self.options_to_ignored(**options)
+      OPTIONALLY_COVERED
+        .select { |filter| options[FILTER_NAME[filter]] }
     end
 
     private

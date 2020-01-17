@@ -35,7 +35,7 @@ module DeepCover
       it { runs.should == 0 }
 
       context 'when ignoring trivial ifs' do
-        let(:options) { {ignore_uncovered: :trivial_if} }
+        let(:options) { {ignore_trivial_if: true} }
         it { line_runs.should == {1 => {2 => nil, 4 => 1}} }
         it { type_runs.should == {if: {send: nil, str: 1}} }
         it { runs.should == nil }
@@ -84,7 +84,7 @@ module DeepCover
         it { line_runs.should == {1 => {3 => 0, 5 => 1, 6 => 0}} }
         it { type_runs.should == {case: {sym: 0, str: 1, EmptyBody: 0}} }
         context 'when ignoring implicit else' do
-          let(:options) { {ignore_uncovered: %w[case_implicit_else]} }
+          let(:options) { {ignore_case_implicit_else: true} }
           it { line_runs.should == {1 => {3 => 0, 5 => 1, 6 => nil}} }
           it { type_runs.should == {case: {sym: 0, str: 1, EmptyBody: nil}} }
         end

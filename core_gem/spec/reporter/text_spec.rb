@@ -14,7 +14,7 @@ module DeepCover
         it { should == fixtures.join('text_report_no_ignored.txt').read.chomp }
       end
       describe 'with ignored' do
-        let(:options) { {ignore_uncovered: %i[raise default_argument]} }
+        let(:options) { {ignore_raise: true, ignore_default_argument: true} }
         it { should == fixtures.join('text_report_with_ignored.txt').read.chomp }
       end
     end

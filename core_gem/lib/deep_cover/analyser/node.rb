@@ -8,10 +8,11 @@ module DeepCover
       'Nodes'
     end
 
-    def initialize(source, ignore_uncovered: [], **options)
+    def initialize(source, **options)
       @cache = {}.compare_by_identity
       super
-      @allow_filters = Array(ignore_uncovered).map { |kind| Node.filter_to_method_name(kind) }
+      @allow_filters = Config.options_to_ignored(**options)
+                             .map { |kind| Node.filter_to_method_name(kind) }
       @nocov_ranges = FlagCommentAssociator.new(covered_code)
     end
 

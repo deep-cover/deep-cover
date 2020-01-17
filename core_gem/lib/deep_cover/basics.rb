@@ -2,14 +2,20 @@
 
 # Basic constants without any dependencies are here
 module DeepCover
+  OPTIONALLY_COVERED = %i[case_implicit_else default_argument raise trivial_if warn]
+
+  FILTER_NAME = Hash.new { |h, k| h[k] = :"ignore_#{k}" }
+
+  ignore_defaults = OPTIONALLY_COVERED.to_h { |opt| [FILTER_NAME[opt], false] }
+
   DEFAULTS = {
-               ignore_uncovered: [].freeze,
                paths: [:auto_detect].freeze,
                allow_partial: false,
                tracker_global: '$_cov',
                reporter: :html,
                output: './coverage',
                cache_directory: './deep_cover',
+               **ignore_defaults,
              }.freeze
 
   CLI_DEFAULTS = {
@@ -17,8 +23,6 @@ module DeepCover
                    process: true,
                    open: false,
                  }.freeze
-
-  OPTIONALLY_COVERED = %i[case_implicit_else default_argument raise trivial_if warn]
 
   REQUIRABLE_EXTENSIONS = {
                             '.rb' => :ruby,

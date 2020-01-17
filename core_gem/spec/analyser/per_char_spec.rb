@@ -12,7 +12,7 @@ module DeepCover
     RUBY
     let(:node) { Node[code] }
     let(:analyser) do
-      Analyser::PerChar.new(node, ignore_uncovered: :default_argument)
+      Analyser::PerChar.new(node, ignore_default_argument: true)
     end
     let(:stats) { analyser.stats }
 

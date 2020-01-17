@@ -8,7 +8,7 @@ module DeepCover
 
     describe :ignore_uncovered do
       def result
-        config.to_h[:ignore_uncovered]
+        config.ignore_uncovered
       end
 
       it 'be modified by {ignore|detect}_uncovered}' do

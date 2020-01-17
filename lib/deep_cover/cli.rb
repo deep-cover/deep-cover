@@ -25,11 +25,9 @@ module DeepCover
     default_command :short_help
 
     # Adding all of the ignore-something class options
-    OPTIONALLY_COVERED_MAP = OPTIONALLY_COVERED.map do |optional|
-      [:"ignore_#{optional}", optional]
-    end.to_h.freeze
-    OPTIONALLY_COVERED_MAP.each do |cli_option, short_name|
-      default = DeepCover.config.ignore_uncovered.include?(short_name)
+    OPTIONALLY_COVERED.each do |filter|
+      cli_option = FILTER_NAME[filter]
+      default = DeepCover.config[cli_option]
       class_option cli_option, type: :boolean, default: default
     end
 
@@ -49,12 +47,6 @@ module DeepCover
 
         new_options = options.dup
         new_options[:output] = false if ['false', 'f', ''].include?(new_options[:output])
-
-        # Turn all the ignore-x into entries in :ignore_uncovered
-        ignored = new_options[:ignore_uncovered] = []
-        OPTIONALLY_COVERED_MAP.each do |cli_option, option|
-          ignored << option if new_options.delete(cli_option)
-        end
 
         @processed_options = new_options.transform_keys(&:to_sym)
       end
