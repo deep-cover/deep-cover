@@ -110,10 +110,18 @@ module DeepCover
       self
     end
 
+    def [](opt)
+      public_send(opt)
+    end
+
+    def []=(opt, value)
+      public_send(opt, value)
+    end
+
     def set(**options)
       @options[:ignore_uncovered] = [] if options.has_key?(:ignore_uncovered)
       options.each do |key, value|
-        public_send key, value
+        self[key] = value
       end
       self
     end

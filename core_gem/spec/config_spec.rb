@@ -56,5 +56,18 @@ module DeepCover
         other.to_h.should == config.to_h
       end
     end
+
+    describe :[] do
+      it 'works' do
+        config[:tracker_global].should == DEFAULTS[:tracker_global]
+      end
+    end
+
+    describe :[]= do
+      it 'works' do
+        config[:tracker_global] = 'dummy'
+        config.tracker_global.should == 'dummy'
+      end
+    end
   end
 end
