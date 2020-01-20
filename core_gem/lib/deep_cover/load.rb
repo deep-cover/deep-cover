@@ -9,6 +9,7 @@ module DeepCover
                  ]
 
     def load_absolute_basics
+      require_relative 'backports'
       require_relative 'base'
       require_relative 'basics'
       require_relative 'config_setter'
@@ -44,7 +45,6 @@ module DeepCover
     def bootstrap
       @bootstrapped ||= false # Avoid warning
       return if @bootstrapped
-      require_relative 'backports'
       require_relative 'tools'
       @bootstrapped = true
     end
