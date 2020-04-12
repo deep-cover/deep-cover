@@ -60,7 +60,7 @@ module DeepCover
         end
       end
 
-      def self.save(coverage, output:, **options)
+      def self.save(coverage, output: DEFAULTS[:output], **options)
         Site.new(coverage, output: output, **options).save
       end
     end
