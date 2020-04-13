@@ -36,7 +36,7 @@ gem 'jbuilder', '~> 2.5'
 
 group :development, :test do
   gem 'deep-cover-core', path: '../../..'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '< 4' # https://github.com/rspec/rspec-rails/pull/2319
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
