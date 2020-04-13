@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.1.0'
 
   # Main dependency
-  spec.add_runtime_dependency 'parser', '>= 2.5', '< 2.7'
+  spec.add_runtime_dependency 'parser', '>= 2.5'
 
   # Support
   spec.add_runtime_dependency 'backports', '>= 3.11.0'
