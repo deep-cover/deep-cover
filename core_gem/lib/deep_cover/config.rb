@@ -42,7 +42,7 @@ module DeepCover
       end
       unless keywords.empty?
         keywords = check_uncovered(keywords)
-        set(keywords.to_h { |kind| [FILTER_NAME[kind], true] })
+        set(**keywords.to_h { |kind| [FILTER_NAME[kind], true] })
       end
       Config.options_to_ignored(**@options)
     end
