@@ -2,6 +2,10 @@
 
 * We now officially support JRuby. Our test-suite passes with it.
 
+## 0.8.0
+
+* Support for `exclude_paths` config [#56]
+
 ## 0.7.0
 
 * Switched CLI to rely on Thor instead of Slop
