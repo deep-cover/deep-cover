@@ -2,6 +2,7 @@ sudo: false
 language: ruby
 rvm:
   - ruby-head
+  - 2.7.1
   - 2.6.0
   - 2.5.0
   - 2.4.1
