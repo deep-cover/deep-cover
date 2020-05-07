@@ -80,7 +80,7 @@ Do the appropriate of the installation of the gem, then follow the steps that co
     spec.add_development_dependency 'deep-cover', '~> 0.7'
 
     # otherwise if using a Gemfile, add this to it and then run `bundle install`
-    gem 'deep-cover', '~> 0.7', group: :test, require: false
+    gem 'deep-cover', '~> 0.7', group: :test
 
     # otherwise just run:
     gem install deep-cover
@@ -105,6 +105,9 @@ Note, this is a bit slower and may cause issues in your tests if your use relati
     You must call `require 'deep-cover'` **before** the code you want to cover is loaded.
 
     Typically, you want to insert that line **at the very top** of `test/test_helper.rb` or `spec/spec_helper.rb` . If `deep-cover` is required after your code, then it won't be able to detect the coverage.
+
+    Note that if some of your tests run by launching another process, that process will have to `require 'deep-cover'` also. For example you could insert `require 'deep-cover' if ENV['DEEP_COVER']` at the beginning of `lib/my_awesome_gem.rb`, before all the `require_relative 'my_awesome_gem/fabulous_core_part_1'`, ...
+    Note that the environment variable `DEEP_COVER` is set by `deep-cover exec` or `DeepCover.start`.
 
 2. Create a config file (optional)
 
