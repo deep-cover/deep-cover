@@ -172,7 +172,7 @@ module DeepCover
 
       class << self
         def report(coverage, **options)
-          new(coverage, options).report
+          new(coverage, **options).report
         end
 
         def available?

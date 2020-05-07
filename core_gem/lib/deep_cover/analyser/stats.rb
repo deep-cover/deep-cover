@@ -48,7 +48,7 @@ module DeepCover
     memoize :percent
 
     def percent
-      Analyser::StatsBase.new(to_h.transform_values { |v| (100 * v).fdiv(total).round(DECIMALS) })
+      Analyser::StatsBase.new(**to_h.transform_values { |v| (100 * v).fdiv(total).round(DECIMALS) })
     end
   end
 end

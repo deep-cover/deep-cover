@@ -51,7 +51,7 @@ module DeepCover
       raise ArgumentError, 'No block is accepted' if block_given?
       unless keywords.empty?
         keywords = check_uncovered(keywords)
-        set(keywords.to_h { |kind| [FILTER_NAME[kind], false] })
+        set(**keywords.to_h { |kind| [FILTER_NAME[kind], false] })
       end
       OPTIONALLY_COVERED - Config.options_to_ignored(**@options)
     end
