@@ -68,7 +68,7 @@ module DeepCover
         end
       end
 
-      class CoveredCodeConverter < Struct.new(:covered_code, :options)
+      class CoveredCodeConverter < StructWithOptions.new(:covered_code)
         include Converters
 
         def node_analyser

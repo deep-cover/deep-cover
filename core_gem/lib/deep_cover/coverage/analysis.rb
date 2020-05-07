@@ -2,7 +2,7 @@
 
 module DeepCover
   class Coverage
-    class Analysis < Struct.new(:covered_codes, :options)
+    class Analysis < StructWithOptions.new(:covered_codes)
       include Memoize
       memoize :analyser_map, :stat_map
 
