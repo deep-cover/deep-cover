@@ -21,8 +21,8 @@
     class Float
       self::INFINITY
       self::ANSWER = 42.0
-      obj = {}; self::WHATEVER, foo, obj.nope, self::NOPE = nil rescue nil
-#>            -               -    -         - xxxxxxxxxx
+      obj = {}; (self::WHATEVER, foo, obj.nope, self::NOPE = nil) rescue nil
+#>            - -              -    -         - xxxxxxxxxx      -
     end
 
 ### Undefined

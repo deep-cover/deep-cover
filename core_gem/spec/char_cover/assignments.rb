@@ -95,8 +95,8 @@
 
 ### Multiple with raise
 
-    a, dummy_method.foo, c = 1 rescue nil
-#>   -                 - x
+    (a, dummy_method.foo, c = 1) rescue nil
+#>  - -                 - x    -
     a, raise.foo, c = 1
 #>   -      xxxx- x
 
