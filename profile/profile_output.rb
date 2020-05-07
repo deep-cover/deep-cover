@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Run with:
 #   bundle exec ruby profile/profile_output.rb
 

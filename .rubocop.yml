@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - '**/spec/char_cover/**/*'
     - '**/spec/code_fixtures/**/*'
+    - '**/profile/fixtures/**/*'
     - '**/spec/samples/**/*'
     - '**/spec/specs_tools.rb'
     - 'bin/**/*'
