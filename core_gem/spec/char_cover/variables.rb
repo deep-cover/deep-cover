@@ -23,16 +23,20 @@
 
 
 ### Class
-    @@foo = 1
-    dummy_method @@foo
-    self.class.remove_class_variable(:@@foo)
+    class SomeClass
+      @@foo = 1
+      dummy_method @@foo
+    end
 
 #### Raise
-    (@@bar = raise) rescue nil
-#>  -xxxxx x      -
+    class SomeClass
+      @@bar = nil
+      (@@bar = raise) rescue nil
+#>    -xxxxx x      -
 
-    dummy_method raise, @@bar rescue nil
-#>  xxxxxxxxxxxx      - xxxxx
+      dummy_method raise, @@bar rescue nil
+#>    xxxxxxxxxxxx      - xxxxx
+    end
 
 
 ### Global

@@ -11,6 +11,7 @@ module DeepCover
     def self.new(*args)
       Struct.new(*args, :options).tap do |klass|
         klass.include Initializer
+        klass.define_singleton_method(:new, Class.method(:new))
       end
     end
   end
