@@ -6,7 +6,7 @@ require 'coverage'
 
 module DeepCover
   RSpec.describe Analyser::Ruby25LikeBranch do
-    next if RUBY_VERSION < '2.5'
+    next if RUBY_VERSION < '2.5' || RUBY_VERSION > '2.6'
     Execution = Struct.new(:code, :ruby_result, :dc_result, :raw_dc_result)
 
     def run_dc_ruby25_like_branch(**args)
