@@ -31,10 +31,7 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
     # returns a TrackerHitsPerPath
     def load_trackers
       tracker_hits_per_path_hashes = tracker_files.map do |full_path|
-        JSON.parse(full_path.binread).transform_keys(&:to_sym).yield_self do |version:, tracker_hits_per_path:|
-          raise "dump version mismatch: #{version}, currently #{VERSION}" unless version == VERSION
-          tracker_hits_per_path
-        end
+        check_tracker_file(**JSON.parse(full_path.binread).transform_keys(&:to_sym))
       end
 
       self.class.merge_tracker_hits_per_paths(*tracker_hits_per_path_hashes)
@@ -87,6 +84,11 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
     end
 
     private
+
+    def check_tracker_file(version:, tracker_hits_per_path:)
+      raise "dump version mismatch: #{version}, currently #{VERSION}" unless version == VERSION
+      tracker_hits_per_path
+    end
 
     def create_directory_if_needed
       dir_path.mkpath
