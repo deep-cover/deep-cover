@@ -53,7 +53,7 @@ module top_level_module::DeepCover # rubocop:disable Naming/ClassAndModuleCamelC
       delete_trackers
       begin
         dir_path.rmdir
-      rescue SystemCallError # rubocop:disable Lint/HandleExceptions
+      rescue SystemCallError # rubocop:disable Lint/SuppressedException
       end
     end
 

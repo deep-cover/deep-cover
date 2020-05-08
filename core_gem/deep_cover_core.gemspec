@@ -45,7 +45,7 @@ Gem::Specification.new do |spec|
   # About every single release breaks something
   # Ruby 2.1 is no longer supported
   if RUBY_VERSION >= '2.3.0'
-    spec.add_development_dependency 'rubocop', '~> 0.74.0'
+    spec.add_development_dependency 'rubocop', '~> 0.81.0'
     spec.add_development_dependency 'rubocop-performance'
   end
 end

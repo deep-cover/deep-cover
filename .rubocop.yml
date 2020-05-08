@@ -17,7 +17,7 @@ Gemspec/RequiredRubyVersion:
   # Yes, we still support ruby 2.1...
   Enabled: false
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
 Layout/ClosingParenthesisIndentation:
@@ -35,16 +35,16 @@ Layout/EmptyLines:
 Layout/EmptyLineBetweenDefs:
   NumberOfEmptyLines: [1, 2]
 
-Layout/IndentFirstArgument:
+Layout/FirstArgumentIndentation:
   IndentationWidth: 4
 
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: align_brackets
 
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: align_braces
 
-Layout/IndentHeredoc:
+Layout/HeredocIndentation:
   Enabled: false
 
 Layout/MultilineArrayBraceLayout:
@@ -80,7 +80,7 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 
 # Really, you aim for less than that, but we won't bug you unless you reach 150
-Metrics/LineLength:
+Layout/LineLength:
   IgnoreCopDirectives: true
   Max: 150
 
@@ -176,7 +176,8 @@ Style/GlobalVars:
   Enabled: false
 
 Style/FormatStringToken:
-  EnforcedStyle: template
+  Enabled: false
+  # EnforcedStyle: template
 
 Style/MutableConstant:
   Enabled: false # TODO: - Remove me one asap
@@ -188,9 +189,9 @@ Naming/PredicateName:
   NamePrefix:
       - is_
       - have_
-  NamePrefixBlacklist:
+  ForbiddenPrefixes:
       - have_
-  NameWhitelist:
+  AllowedMethods:
       - is_statement
       - is_child_statement
 
@@ -229,6 +230,21 @@ Style/NilComparison:
 
 Style/NonNilCheck:
   Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
 
 Lint/EmptyWhen:
   Enabled: false
@@ -274,7 +290,7 @@ Gemspec/RubyVersionGlobalsUsage:
 Lint/BooleanSymbol:
   Enabled: false
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Exclude:
     - core_gem/spec/**/*
 

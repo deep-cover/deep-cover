@@ -3,7 +3,7 @@
 require_relative 'spec_helper'
 
 module DeepCover
-  # rubocop:disable Layout/IndentFirstHashElement
+  # rubocop:disable Layout/FirstHashElementIndentation
   # rubocop:disable Performance/RedundantMerge
   RSpec.describe Node::Branch do
     describe :branches_summary do
@@ -58,6 +58,6 @@ module DeepCover
       end
     end
   end
-  # rubocop:enable Layout/IndentFirstHashElement
+  # rubocop:enable Layout/FirstHashElementIndentation
   # rubocop:enable Performance/RedundantMerge
 end
