@@ -301,3 +301,6 @@ Layout/SpaceInsideReferenceBrackets:
 # Ruby 2.1 support:
 Style/SafeNavigation:
   Enabled: false
+
+Performance/RegexpMatch:
+  Enabled: false
