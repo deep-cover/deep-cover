@@ -2,6 +2,12 @@
 
 * We now officially support JRuby. Our test-suite passes with it.
 
+## 1.0.0
+
+* `deep-cover run-expression` accepts STDIN
+
+* API should be stable enough :-)
+
 ## 0.8.0
 
 * Support for `exclude_paths` config [#56]

@@ -205,10 +205,6 @@ To run one of the specs in `spec`:
 
 More details in the [contributing guide](https://github.com/deep-cover/deep-cover/blob/master/CONTRIBUTING.md).
 
-### Status
-
-Currently in development. *Alpha stage, API still subject to change*. Best time to get involved though ;-)
-
 ## Contributing
 
 Please ask questions on StackOverflow.com. Maintainers monitor the tag `deep-cover.rb`.
