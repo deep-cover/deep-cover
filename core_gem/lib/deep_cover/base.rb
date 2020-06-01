@@ -190,7 +190,7 @@ module DeepCover
         relative_to = File.dirname(caller(2..2).first.partition(/\.rb:\d/).first)
         filename = File.absolute_path(filename, relative_to)
       end
-      filename += '.rb' unless filename =~ /\.rb$/
+      filename += '.rb' unless filename.end_with? 'rb'
       filename
     end
   end
