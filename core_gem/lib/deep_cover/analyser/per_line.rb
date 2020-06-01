@@ -35,7 +35,7 @@ module DeepCover
     end
 
     def missed_empty_branch?(node)
-      node.is_a?(Node::Branch) && node.branches.any? { |b| b.is_a?(Node::EmptyBody) && !Tools.covered?(node_runs(b)) }
+      node.is_a?(Node::Branch) && node.branches.any? { |b| b.is_a?(Node::EmptyBody) && node_runs(b) == 0 }
     end
   end
 end
