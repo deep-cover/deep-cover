@@ -93,13 +93,13 @@ begin
   TheParentClass.new.setup_kernel_autoload_from_included_module
 
   if RUBY_PLATFORM == 'java'
-    TheParentClass::ImplicitAutoloadFromIncludedModule
+    _avoid_warning = TheParentClass::ImplicitAutoloadFromIncludedModule
     # Yeah, this is weird
     # https://github.com/jruby/jruby/issues/5466
-    Object.singleton_class::KernelAutoloadFromIncludedModule
+    _avoid_warning = Object.singleton_class::KernelAutoloadFromIncludedModule
   else
-    TheParentModule::ImplicitAutoloadFromIncludedModule
-    TheParentModule::KernelAutoloadFromIncludedModule
+    _avoid_warning = TheParentModule::ImplicitAutoloadFromIncludedModule
+    _avoid_warning = TheParentModule::KernelAutoloadFromIncludedModule
   end
 
   require 'define_here_but_requires_autoloader'

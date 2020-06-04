@@ -13,6 +13,7 @@ module DeepCover
         def executed_loc_keys(*loc_keys)
           # #flatten allows passing an empty array to be explicit
           loc_keys = loc_keys.flatten
+          undef_method :executed_loc_keys
           define_method :executed_loc_keys do
             loc_keys
           end

@@ -3,11 +3,11 @@
 module DeepCover
   bootstrap
 
-  require_relative_dir 'coverage'
-
   # A collection of CoveredCode
   class Coverage
     include Enumerable
+
+    DeepCover.require_relative_dir 'coverage'
 
     def initialize
       @covered_code_per_path = {}

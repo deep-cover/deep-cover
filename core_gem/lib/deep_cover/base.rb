@@ -90,7 +90,7 @@ module DeepCover
     end
 
     def lookup_globs
-      return @lookup_globs if @lookup_globs
+      return @lookup_globs if defined?(@lookup_globs) && @lookup_globs
       paths = Array(config.paths || :auto_detect).dup
       paths.concat(auto_detected_paths) if paths.delete(:auto_detect)
 

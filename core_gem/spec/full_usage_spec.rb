@@ -6,7 +6,10 @@ FIXTURE_PATH = File.realpath('code_fixtures', __dir__)
 
 RSpec.describe 'DeepCover usage' do
   ['', 'uncovered', 'takeover', 'takeover uncovered', 'no_deep_cover'].each do |args|
-    command = "ruby #{JRUBY_DEV_OPTION} simple/simple.rb #{args}"
+    if RUBY_PLATFORM != 'java'
+      warnings_if_not_jruby = '-w'
+    end
+    command = "ruby #{warnings_if_not_jruby} #{JRUBY_DEV_OPTION} simple/simple.rb #{args}"
     it "`#{command}`" do
       command.split.should run_successfully.from_dir(FIXTURE_PATH).and_output('Done')
     end
