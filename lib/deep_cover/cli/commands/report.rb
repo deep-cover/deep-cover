@@ -12,7 +12,7 @@ module DeepCover
       puts coverage.report(**processed_options)
 
       overall_coverage = coverage.analysis.overall
-      minimum_coverage = processed_options.fetch('minimum-coverage'.to_sym, 0).to_f
+      minimum_coverage = processed_options[:'minimum-coverage'].to_f
       if overall_coverage < minimum_coverage
         puts "Overall coverage #{format('%.2f', overall_coverage)} is less than minimum #{format('%.2f', minimum_coverage)}"
         exit 1

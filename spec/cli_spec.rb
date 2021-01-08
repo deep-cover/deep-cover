@@ -166,7 +166,7 @@ module DeepCover
     end
 
     describe 'deep-cover report' do
-      let(:options) { '-o=false --reporter=istanbul' }
+      let(:options) { '--reporter=istanbul' }
       let(:subcommand) { 'report' }
 
       describe 'for a simple gem' do
@@ -177,6 +177,16 @@ module DeepCover
           exec_table = cmd_exec.stdout[/^---(.|\n)*\z/]
 
           output.should == exec_table
+        end
+      end
+
+      context 'given a minimum coverage option' do
+        let(:options) { "#{super()} --minimum-coverage 99" }
+        let(:expected_status) { 1 }
+        it 'exits with error' do
+          cmd_exec = run_command("exe/deep-cover exec -C=#{full_path} -o=false #{options} rake")
+          cmd_exec.should have_expected_results
+          output.should match /Overall coverage \d\d\.\d\d is less than minimum 99.00/
         end
       end
     end

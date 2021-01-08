@@ -12,6 +12,7 @@ module DeepCover
     option '--output', desc: 'output folder', type: :string, default: DeepCover.config.output, aliases: '-o'
     option '--reporter', desc: 'reporter to use', type: :string, default: DeepCover.config.reporter
     option '--open', desc: 'open the output coverage', type: :boolean, default: CLI_DEFAULTS[:open]
+    option '--minimum-coverage', desc: 'minimum coverage percent', type: :numeric, default: 0
 
     def exec(*command_parts)
       if command_parts.empty?
