@@ -2,6 +2,10 @@
 
 * We now officially support JRuby. Our test-suite passes with it.
 
+## 1.1.0
+
+* Add `--minimum-coverage` option [#73]
+
 ## 1.0.0
 
 * `deep-cover run-expression` accepts STDIN
