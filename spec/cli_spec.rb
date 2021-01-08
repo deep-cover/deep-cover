@@ -186,7 +186,7 @@ module DeepCover
         it 'exits with error' do
           cmd_exec = run_command("exe/deep-cover exec -C=#{full_path} -o=false #{options} rake")
           cmd_exec.should have_expected_results
-          output.should match /Overall coverage \d\d\.\d\d is less than minimum 99.00/
+          output.should match(/Overall coverage \d\d\.\d\d is less than minimum 99.00/)
         end
       end
     end
