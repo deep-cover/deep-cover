@@ -214,7 +214,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/deep-c
 ## Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/udeep-cover/deep-cover/graphs/contributors"><img src="https://opencollective.com/deep-cover/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/deep-cover/deep-cover/graphs/contributors"><img src="https://opencollective.com/deep-cover/contributors.svg?width=890&button=false" /></a>
 
 
 ## Backers
