@@ -1,14 +1,14 @@
 [![Build Status](https://travis-ci.org/deep-cover/deep-cover.svg?branch=master)](https://travis-ci.org/deep-cover/deep-cover)
 [![Backers on Open Collective](https://opencollective.com/deep-cover/backers/badge.svg)](#backers)
- [![Sponsors on Open Collective](https://opencollective.com/deep-cover/sponsors/badge.svg)](#sponsors)
+[![Sponsors on Open Collective](https://opencollective.com/deep-cover/sponsors/badge.svg)](#sponsors)
 
 # DeepCover
 
 Deep Cover aims to be the best coverage tool for Ruby code:
 
-* more accurate line coverage
-* branch coverage
-* can be used as a drop-in replacement for the built-in Coverage library.
+- more accurate line coverage
+- branch coverage
+- can be used as a drop-in replacement for the built-in Coverage library.
 
 It reports a more accurate picture of your code usage. In particular a line is considered covered if and only if it is entirely executed:
 
@@ -40,19 +40,19 @@ end
 
 These examples are direct outputs from our HTML reporter:
 
-* [Rails' `activesupport`](https://deep-cover.github.io/rails-cover/activesupport/)
-* [Rails' `activerecord`](https://deep-cover.github.io/rails-cover/activerecord/)
+- [Rails' `activesupport`](https://deep-cover.github.io/rails-cover/activesupport/)
+- [Rails' `activerecord`](https://deep-cover.github.io/rails-cover/activerecord/)
 
 ## DeepCover vs builtin coverage
 
-Feature            | MRI        | DeepCover
--------------------|:----------:|:--------:
-Line coverage      |  partial   |  ✓
-Node coverage      |  no        |  ✓
-Branch coverage    |  partial   |  ✓
-Method coverage    |  ✓         |  ~
-Slowdown           |  < 1%      |  ~20%
-Platform support   |  Ruby 2.5+ |  Ruby 2.1+, JRuby
+| Feature          |    MRI    |    DeepCover     |
+| ---------------- | :-------: | :--------------: |
+| Line coverage    |  partial  |        ✓         |
+| Node coverage    |    no     |        ✓         |
+| Branch coverage  |  partial  |        ✓         |
+| Method coverage  |     ✓     |        ~         |
+| Slowdown         |   < 1%    |       ~20%       |
+| Platform support | Ruby 2.5+ | Ruby 2.1+, JRuby |
 
 **Line coverage**: MRI doesn't cover some lines (e.g. `when some_value`).
 
@@ -60,16 +60,16 @@ Platform support   |  Ruby 2.5+ |  Ruby 2.1+, JRuby
 
 **Method coverage**: MRI considers every method defined, including methods defined on objects or via `define_method`, `class_eval`, etc. For Istanbul output, DeepCover has a different approach and covers all `def` and all blocks.
 
-**Branch coverage**     | MRI | DeepCover
-------------------------|:---:|:--------:
-`if` / `unless` / `?:`  |  ✓  |    ✓
-`case` / `when`         |  ✓  |    ✓
-`❘❘` / `&&`             |  no |    ✓
-`foo&.bar`              |  ✓  |    ✓
-`{❘foo = 42, bar: 43❘}` |  no |    ✓
-`while` / `until`       |  ✓  |    !
+| **Branch coverage**     | MRI | DeepCover |
+| ----------------------- | :-: | :-------: |
+| `if` / `unless` / `?:`  |  ✓  |     ✓     |
+| `case` / `when`         |  ✓  |     ✓     |
+| `❘❘` / `&&`             | no  |     ✓     |
+| `foo&.bar`              |  ✓  |     ✓     |
+| `{❘foo = 42, bar: 43❘}` | no  |     ✓     |
+| `while` / `until`       |  ✓  |     !     |
 
-*Note on loops (!)*: DeepCover doesn't consider loops to be branches, but it's
+_Note on loops (!)_: DeepCover doesn't consider loops to be branches, but it's
 easy to support it if needed.
 
 ## Installation
@@ -84,7 +84,6 @@ Do the appropriate of the installation of the gem, then follow the steps that co
 
     # otherwise just run:
     gem install deep-cover
-
 
 ### Trying `deep-cover` quickly
 
@@ -102,42 +101,42 @@ Note, this is a bit slower and may cause issues in your tests if your use relati
 
 1. Require `deep-cover`
 
-    You must call `require 'deep-cover'` **before** the code you want to cover is loaded.
+   You must call `require 'deep-cover'` **before** the code you want to cover is loaded.
 
-    Typically, you want to insert that line **at the very top** of `test/test_helper.rb` or `spec/spec_helper.rb` . If `deep-cover` is required after your code, then it won't be able to detect the coverage.
+   Typically, you want to insert that line **at the very top** of `test/test_helper.rb` or `spec/spec_helper.rb` . If `deep-cover` is required after your code, then it won't be able to detect the coverage.
 
-    Note that if some of your tests run by launching another process, that process will have to `require 'deep-cover'` also. For example you could insert `require 'deep-cover' if ENV['DEEP_COVER']` at the beginning of `lib/my_awesome_gem.rb`, before all the `require_relative 'my_awesome_gem/fabulous_core_part_1'`, ...
-    Note that the environment variable `DEEP_COVER` is set by `deep-cover exec` or `DeepCover.start`.
+   Note that if some of your tests run by launching another process, that process will have to `require 'deep-cover'` also. For example you could insert `require 'deep-cover' if ENV['DEEP_COVER']` at the beginning of `lib/my_awesome_gem.rb`, before all the `require_relative 'my_awesome_gem/fabulous_core_part_1'`, ...
+   Note that the environment variable `DEEP_COVER` is set by `deep-cover exec` or `DeepCover.start`.
 
 2. Create a config file (optional)
 
-    You may want to create a config file `.deep_cover.rb` at the root of your project, where you can set the config as you wish.
+   You may want to create a config file `.deep_cover.rb` at the root of your project, where you can set the config as you wish.
 
-    ```
-    # File .deep_cover.rb
-    DeepCover.configure do
-      ignore_uncovered :default_argument
-      # ...
-    end
-    ```
+   ```
+   # File .deep_cover.rb
+   DeepCover.configure do
+     ignore_uncovered :default_argument
+     # ...
+   end
+   ```
 
 3. Launch it
 
-    Even after `DeepCover` is `require`d and configured, only a very minimal amount of code is actually loaded and coverage is *not started*.
+   Even after `DeepCover` is `require`d and configured, only a very minimal amount of code is actually loaded and coverage is _not started_.
 
-    The easiest way to actually start it is to use `deep-cover exec`
+   The easiest way to actually start it is to use `deep-cover exec`
 
-    For example:
+   For example:
 
-    ```
-    $ deep-cover exec rspec
-    # ...all the output of rspec
-    # ...coverage report
-    ```
+   ```
+   $ deep-cover exec rspec
+   # ...all the output of rspec
+   # ...coverage report
+   ```
 
 ### Already using SimpleCov / builtin Coverage
 
-To make it easier to transition for projects already using the builtin `Coverage` library (such as those using `SimpleCov`), `deep-cover` can inject itself into those tools so that, while you still only have line-by-line coverage information, it becomes stricter, only marking a line as executed if *everything* on it has been executed.
+To make it easier to transition for projects already using the builtin `Coverage` library (such as those using `SimpleCov`), `deep-cover` can inject itself into those tools so that, while you still only have line-by-line coverage information, it becomes stricter, only marking a line as executed if _everything_ on it has been executed.
 
 You must call `require 'deep_cover/builtin_takeover'` **before** you require the coverage tool that you normally use.
 
@@ -216,13 +215,11 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/deep-c
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <a href="https://github.com/deep-cover/deep-cover/graphs/contributors"><img src="https://opencollective.com/deep-cover/contributors.svg?width=890&button=false" /></a>
 
-
 ## Backers
 
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/deep-cover#backer)]
 
 <a href="https://opencollective.com/deep-cover#backers" target="_blank"><img src="https://opencollective.com/deep-cover/backers.svg?width=890"></a>
-
 
 ## Sponsors
 
@@ -238,8 +235,6 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/deep-cover/sponsor/7/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/7/avatar.svg"></a>
 <a href="https://opencollective.com/deep-cover/sponsor/8/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/deep-cover/sponsor/9/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/9/avatar.svg"></a>
-
-
 
 ## License
 
