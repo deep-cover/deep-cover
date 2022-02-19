@@ -2,6 +2,15 @@
 [![Backers on Open Collective](https://opencollective.com/deep-cover/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/deep-cover/sponsors/badge.svg)](#sponsors)
 
+# Maintenance status
+
+Deep Cover has not been updated for Ruby 3.x new syntax features, in particular:
+
+- pattern match
+- `{x:}` notation
+
+Unfortunately, both co-authors are occupied contributing to other projects and can offer only minimal maintenance: complete PRs will be accepted and we welcome applications if you are interested in becoming a maintainer for this project.
+
 # DeepCover
 
 Deep Cover aims to be the best coverage tool for Ruby code:
@@ -214,27 +223,6 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/deep-c
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <a href="https://github.com/deep-cover/deep-cover/graphs/contributors"><img src="https://opencollective.com/deep-cover/contributors.svg?width=890&button=false" /></a>
-
-## Backers
-
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/deep-cover#backer)]
-
-<a href="https://opencollective.com/deep-cover#backers" target="_blank"><img src="https://opencollective.com/deep-cover/backers.svg?width=890"></a>
-
-## Sponsors
-
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/deep-cover#sponsor)]
-
-<a href="https://opencollective.com/deep-cover/sponsor/0/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/deep-cover/sponsor/1/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/deep-cover/sponsor/2/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/deep-cover/sponsor/3/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/deep-cover/sponsor/4/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/deep-cover/sponsor/5/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/deep-cover/sponsor/6/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/deep-cover/sponsor/7/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/deep-cover/sponsor/8/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/deep-cover/sponsor/9/website" target="_blank"><img src="https://opencollective.com/deep-cover/sponsor/9/avatar.svg"></a>
 
 ## License
 
